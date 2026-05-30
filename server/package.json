@@ -1,7 +1,8 @@
 {
-  "name": "solar-epc-server",
+  "name": "ingenieria-erp-server",
   "version": "1.0.0",
-  "description": "Solar EPC ERP & Financial Intelligence Platform - API",
+  "description": "ARRAYS INGENIERIA — ERP & Financial Intelligence Platform (API)",
+  "author": "Siddhant Kumar",
   "type": "module",
   "main": "src/index.js",
   "scripts": {

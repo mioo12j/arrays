@@ -22,7 +22,6 @@ import reportsRoutes from './routes/reports.routes.js';
 import documentsRoutes from './routes/documents.routes.js';
 import auditRoutes from './routes/audit.routes.js';
 import quotesRoutes from './routes/quotes.routes.js';
-import vaultRoutes from './routes/vault.routes.js';
 import companyRoutes from './routes/company.routes.js';
 
 import { notFound, errorHandler } from './middleware/error.js';
@@ -69,7 +68,6 @@ app.use('/api/reports', reportsRoutes);
 app.use('/api/documents', documentsRoutes);
 app.use('/api/audit', auditRoutes);
 app.use('/api/quotes', quotesRoutes);
-app.use('/api/vault', vaultRoutes);
 app.use('/api/company', companyRoutes);
 
 app.use(notFound);

@@ -39,8 +39,13 @@ async function seedCategories() {
 async function main() {
   // eslint-disable-next-line no-console
   console.log('[seed] Seeding users ...');
-  await upsertUser('System Admin', 'admin@ingenieria.com', 'Admin@123', 'admin');
-  await upsertUser('Operations Clerk', 'operator@ingenieria.com', 'Operator@123', 'operator');
+  // Login IDs (stored in the email/identifier column).
+  await upsertUser('System Admin', 'admin', 'admin@123', 'admin');
+  await upsertUser('Operations Clerk', 'operator', 'operator@123', 'operator');
+  // Remove any older demo accounts so only the configured IDs remain.
+  await pool.query(
+    `DELETE FROM users WHERE email IN ('admin@ingenieria.com','operator@ingenieria.com','admin@solarepc.com','operator@solarepc.com')`
+  );
 
   // eslint-disable-next-line no-console
   console.log('[seed] Seeding expense categories ...');

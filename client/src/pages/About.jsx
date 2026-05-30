@@ -62,6 +62,10 @@ export default function About() {
           </div>
         </Card>
       </div>
+
+      <p className="mt-6 text-center text-xs text-slate-400">
+        {company.name} — Financial Intelligence Platform · Designed &amp; developed by Siddhant Kumar
+      </p>
     </div>
   );
 }

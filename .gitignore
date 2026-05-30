@@ -1,0 +1,19 @@
+# Internal tooling / editor files — not part of the application
+.claude/
+.vscode/
+.idea/
+
+# Dependencies & build output
+node_modules/
+dist/
+build/
+
+# Env & logs
+.env
+*.log
+server/server.log
+server/server.err*.log
+
+# OS
+.DS_Store
+Thumbs.db

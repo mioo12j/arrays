@@ -23,7 +23,6 @@ import Audit from './pages/Audit.jsx';
 import Users from './pages/Users.jsx';
 import Quotes from './pages/Quotes.jsx';
 import QuoteBuilder from './pages/QuoteBuilder.jsx';
-import Vault from './pages/Vault.jsx';
 import About from './pages/About.jsx';
 
 function Protected({ children, adminOnly }) {
@@ -62,7 +61,6 @@ export default function App() {
         <Route path="/quotes" element={<Quotes />} />
         <Route path="/quotes/new" element={<QuoteBuilder />} />
         <Route path="/quotes/:id" element={<QuoteBuilder />} />
-        <Route path="/vault" element={<Vault />} />
         <Route path="/about" element={<About />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/audit" element={<Protected adminOnly><Audit /></Protected>} />

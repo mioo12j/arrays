@@ -1,27 +1,31 @@
 import { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
-import { Sun, Loader2, ArrowRight } from 'lucide-react';
+import { Sun, Loader2, ArrowRight, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { apiError } from '../api/client.js';
 import { company } from '../config/company.js';
+import Modal from '../components/ui/Modal.jsx';
 
 export default function Login() {
   const { user, login } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState('admin@ingenieria.com');
-  const [password, setPassword] = useState('Admin@123');
+  const [loginId, setLoginId] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [welcome, setWelcome] = useState(false);
 
-  if (user) return <Navigate to="/" replace />;
+  if (user && !welcome) return <Navigate to="/" replace />;
 
   const submit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
     try {
-      await login(email.trim().toLowerCase(), password);
-      navigate('/');
+      const u = await login(loginId.trim().toLowerCase(), password);
+      // Admin-only welcome pop-up (shown once, right after login).
+      if (u?.role === 'admin') setWelcome(true);
+      else navigate('/');
     } catch (err) {
       setError(apiError(err));
     } finally {
@@ -73,7 +77,7 @@ export default function Login() {
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600 text-white">
               <Sun size={22} />
             </div>
-            <span className="text-lg font-bold">Solar EPC ERP</span>
+            <span className="text-lg font-bold">{company.shortName}</span>
           </div>
 
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Welcome back</h2>
@@ -81,12 +85,28 @@ export default function Login() {
 
           <form onSubmit={submit} className="mt-8 space-y-4">
             <div>
-              <label className="label">Email</label>
-              <input className="input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <label className="label">ID</label>
+              <input
+                className="input"
+                type="text"
+                autoComplete="username"
+                placeholder="Enter your ID"
+                value={loginId}
+                onChange={(e) => setLoginId(e.target.value)}
+                required
+              />
             </div>
             <div>
               <label className="label">Password</label>
-              <input className="input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+              <input
+                className="input"
+                type="password"
+                autoComplete="current-password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
             </div>
 
             {error && (
@@ -99,14 +119,37 @@ export default function Login() {
               {loading ? <Loader2 className="animate-spin" size={18} /> : <>Sign in <ArrowRight size={18} /></>}
             </button>
           </form>
-
-          <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-500 dark:border-slate-800 dark:bg-slate-900">
-            <p className="font-semibold text-slate-600 dark:text-slate-300">Demo credentials</p>
-            <p className="mt-1">Admin — admin@solarepc.com / Admin@123</p>
-            <p>Operator — operator@solarepc.com / Operator@123</p>
-          </div>
         </div>
       </div>
+
+      {/* Admin-only welcome pop-up */}
+      <Modal
+        open={welcome}
+        onClose={() => { setWelcome(false); navigate('/'); }}
+        title={`Welcome to ${company.shortName}`}
+        size="sm"
+        footer={
+          <button className="btn-primary" onClick={() => { setWelcome(false); navigate('/'); }}>
+            Continue
+          </button>
+        }
+      >
+        <div className="text-center">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-brand-50 text-brand-600 dark:bg-brand-900/30 dark:text-brand-300">
+            <ShieldCheck size={28} />
+          </div>
+          <p className="text-base font-semibold text-slate-900 dark:text-white">
+            Welcome, Lieutenant General Dr. A.R. Prasad, AVSM, VSM, ADC, Ph.D.
+          </p>
+          <p className="mt-1 text-sm font-medium text-slate-500">
+            Former Signal Officer-in-Chief &amp; Senior Colonel Commandant
+          </p>
+          <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+            Thank you for leading {company.shortName} with vision, excellence, and integrity.
+            We wish you a productive and successful day ahead.
+          </p>
+        </div>
+      </Modal>
     </div>
   );
 }

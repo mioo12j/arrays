@@ -72,7 +72,7 @@ export default function Sidebar({ open, onClose }) {
         </nav>
 
         <div className="border-t border-slate-100 px-5 py-4 text-[11px] text-slate-400 dark:border-slate-800">
-          v1.0 • Enterprise Edition
+          v1.0 • Built by Siddhant Kumar
         </div>
       </aside>
     </>
