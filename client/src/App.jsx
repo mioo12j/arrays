@@ -21,15 +21,17 @@ import ProjectDetail from './pages/ProjectDetail.jsx';
 import Reports from './pages/Reports.jsx';
 import Audit from './pages/Audit.jsx';
 import Users from './pages/Users.jsx';
+import System from './pages/System.jsx';
 import Quotes from './pages/Quotes.jsx';
 import QuoteBuilder from './pages/QuoteBuilder.jsx';
 import About from './pages/About.jsx';
 
-function Protected({ children, adminOnly }) {
-  const { user, loading, isAdmin } = useAuth();
+function Protected({ children, adminOnly, editorOnly }) {
+  const { user, loading, isAdmin, isEditor } = useAuth();
   if (loading) return <div className="flex h-full items-center justify-center"><Loading /></div>;
   if (!user) return <Navigate to="/login" replace />;
   if (adminOnly && !isAdmin) return <Navigate to="/" replace />;
+  if (editorOnly && !isEditor) return <Navigate to="/" replace />;
   return children;
 }
 
@@ -65,6 +67,7 @@ export default function App() {
         <Route path="/reports" element={<Reports />} />
         <Route path="/audit" element={<Protected adminOnly><Audit /></Protected>} />
         <Route path="/users" element={<Protected adminOnly><Users /></Protected>} />
+        <Route path="/system" element={<Protected editorOnly><System /></Protected>} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

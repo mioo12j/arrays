@@ -9,8 +9,9 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto"; -- gen_random_uuid()
 
 -- Enums ---------------------------------------------------------------------
 DO $$ BEGIN
-  CREATE TYPE user_role          AS ENUM ('admin', 'operator');
+  CREATE TYPE user_role          AS ENUM ('admin', 'operator', 'editor');
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+-- 'editor' = super-admin (added separately in migrate.js for existing DBs).
 
 DO $$ BEGIN
   CREATE TYPE payment_mode       AS ENUM ('neft','rtgs','imps','upi','net_banking','cheque','cash','other');
@@ -63,6 +64,7 @@ CREATE TABLE IF NOT EXISTS users (
   password_hash TEXT        NOT NULL,
   role          user_role   NOT NULL DEFAULT 'operator',
   is_active     BOOLEAN     NOT NULL DEFAULT true,
+  is_protected  BOOLEAN     NOT NULL DEFAULT false,  -- super-admin: cannot be removed/altered by others
   last_login_at TIMESTAMPTZ,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -501,6 +503,9 @@ GROUP BY c.id, c.name, c.opening_balance;
 --  Document Vault. Safe to re-run.
 -- ============================================================================
 CREATE EXTENSION IF NOT EXISTS pg_trgm;  -- fuzzy vendor name matching
+
+-- Super-admin protection flag (for existing databases)
+ALTER TABLE users ADD COLUMN IF NOT EXISTS is_protected BOOLEAN NOT NULL DEFAULT false;
 
 -- Vendor Master enrichment -------------------------------------------------
 ALTER TABLE vendors ADD COLUMN IF NOT EXISTS material_type TEXT;

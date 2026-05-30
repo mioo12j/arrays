@@ -3,13 +3,13 @@
 import bcrypt from 'bcryptjs';
 import { pool } from '../config/db.js';
 
-async function upsertUser(name, email, password, role) {
+async function upsertUser(name, email, password, role, isProtected = false) {
   const hash = await bcrypt.hash(password, 10);
   await pool.query(
-    `INSERT INTO users (name, email, password_hash, role)
-     VALUES ($1,$2,$3,$4)
-     ON CONFLICT (email) DO UPDATE SET name=EXCLUDED.name, role=EXCLUDED.role`,
-    [name, email, hash, role]
+    `INSERT INTO users (name, email, password_hash, role, is_protected)
+     VALUES ($1,$2,$3,$4,$5)
+     ON CONFLICT (email) DO UPDATE SET name=EXCLUDED.name, role=EXCLUDED.role, is_protected=EXCLUDED.is_protected`,
+    [name, email, hash, role, isProtected]
   );
 }
 
@@ -40,6 +40,7 @@ async function main() {
   // eslint-disable-next-line no-console
   console.log('[seed] Seeding users ...');
   // Login IDs (stored in the email/identifier column).
+  await upsertUser('Editor', 'editor', 'editor@123', 'editor', true); // super-admin, protected
   await upsertUser('System Admin', 'admin', 'admin@123', 'admin');
   await upsertUser('Operations Clerk', 'operator', 'operator@123', 'operator');
   // Remove any older demo accounts so only the configured IDs remain.

@@ -16,6 +16,11 @@ async function migrate() {
   } catch {
     /* type not created yet — schema.sql creates it with 'employee' included */
   }
+  try {
+    await pool.query("ALTER TYPE user_role ADD VALUE IF NOT EXISTS 'editor'");
+  } catch {
+    /* type not created yet — schema.sql creates it with 'editor' included */
+  }
 
   const sql = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8');
   // eslint-disable-next-line no-console

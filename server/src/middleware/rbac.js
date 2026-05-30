@@ -11,4 +11,7 @@ export function requireRole(...roles) {
   };
 }
 
-export const adminOnly = requireRole('admin');
+// 'editor' is a super-admin: every admin privilege, plus exclusive rights
+// (data tools, managing protected users).
+export const adminOnly = requireRole('admin', 'editor');
+export const editorOnly = requireRole('editor');

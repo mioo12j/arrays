@@ -1,7 +1,7 @@
 import {
   LayoutDashboard, FolderKanban, ArrowUpRight, ArrowDownLeft, FileText,
   Building2, Users, Banknote, ScrollText, BarChart3, ShieldCheck, UserCog,
-  Calculator, Info, UserRound,
+  Calculator, Info, UserRound, DatabaseZap,
 } from 'lucide-react';
 
 // `adminOnly` hides the item from operators.
@@ -28,6 +28,7 @@ export const NAV = [
     { to: '/reports', label: 'Reports & Exports', icon: BarChart3 },
     { to: '/audit', label: 'Audit Log', icon: ScrollText, adminOnly: true },
     { to: '/users', label: 'User Management', icon: UserCog, adminOnly: true },
+    { to: '/system', label: 'Data Management', icon: DatabaseZap, editorOnly: true },
   ]},
   { section: 'Company', items: [
     { to: '/about', label: 'About', icon: Info },

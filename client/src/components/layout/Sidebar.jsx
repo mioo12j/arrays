@@ -6,7 +6,7 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import { company } from '../../config/company.js';
 
 export default function Sidebar({ open, onClose }) {
-  const { isAdmin } = useAuth();
+  const { isAdmin, isEditor } = useAuth();
 
   return (
     <>
@@ -38,7 +38,7 @@ export default function Sidebar({ open, onClose }) {
 
         <nav className="flex-1 overflow-y-auto px-3 py-4">
           {NAV.map((group) => {
-            const items = group.items.filter((i) => !i.adminOnly || isAdmin);
+            const items = group.items.filter((i) => (!i.adminOnly || isAdmin) && (!i.editorOnly || isEditor));
             if (!items.length) return null;
             return (
               <div key={group.section} className="mb-5">
