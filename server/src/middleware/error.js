@@ -20,5 +20,6 @@ export function errorHandler(err, _req, res, _next) {
   }
   // eslint-disable-next-line no-console
   console.error('[error]', err);
-  res.status(500).json({ error: 'Internal server error' });
+  // Internal ERP — surface the message (not the stack) to aid debugging.
+  res.status(500).json({ error: 'Internal server error', detail: err.message });
 }

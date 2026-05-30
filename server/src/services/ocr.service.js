@@ -7,10 +7,7 @@
 // ============================================================================
 import fs from 'node:fs';
 import path from 'node:path';
-import { execFile } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const IMAGE_EXT = new Set(['.png', '.jpg', '.jpeg', '.webp', '.bmp']);
 
 /** Run raw text extraction for a file on disk. */
@@ -30,28 +27,30 @@ export async function extractText(filePath, mimeType = '') {
   return '';
 }
 
-function extractPdf(filePath) {
-  // Parse in an isolated child process. pdf-parse bundles a very old pdf.js whose
-  // global state corrupts across repeated calls in a long-lived process (causing
-  // intermittent "Invalid number"/"bad XRef" errors). A fresh process per parse
-  // is reliable and keeps any parser crash from affecting the API server.
-  return new Promise((resolve) => {
-    const worker = path.join(__dirname, 'pdf-worker.mjs');
-    execFile(
-      process.execPath,
-      [worker, filePath],
-      { maxBuffer: 20 * 1024 * 1024, timeout: 60000 },
-      (err, stdout, stderr) => {
-        if (err) {
-          // eslint-disable-next-line no-console
-          console.error('[ocr] pdf worker failed:', (stderr || err.message || '').toString().slice(0, 200));
-          resolve('');
-        } else {
-          resolve(stdout || '');
-        }
-      }
-    );
-  });
+async function extractPdf(filePath) {
+  // Parse in-process with the modern, stateless pdfjs-dist. (Earlier we spawned a
+  // child process to isolate pdf-parse's buggy old pdf.js, but pdfjs-dist is
+  // stateless per getDocument — so in-process is safe and uses far less memory,
+  // which matters on small cloud instances like Render's 512 MB free tier.)
+  const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+  const data = new Uint8Array(fs.readFileSync(filePath));
+  const doc = await pdfjs.getDocument({ data, useSystemFonts: true, isEvalSupported: false }).promise;
+  let out = '';
+  for (let p = 1; p <= doc.numPages; p++) {
+    const page = await doc.getPage(p);
+    const content = await page.getTextContent();
+    let lastY = null;
+    for (const item of content.items) {
+      const y = item.transform ? item.transform[5] : null;
+      if (lastY !== null && y !== null && Math.abs(y - lastY) > 2) out += '\n';
+      else if (out && !out.endsWith('\n')) out += ' ';
+      out += item.str;
+      lastY = y;
+    }
+    out += '\n';
+  }
+  try { await doc.cleanup(); await doc.destroy(); } catch { /* ignore */ }
+  return out;
 }
 
 async function extractImage(filePath) {

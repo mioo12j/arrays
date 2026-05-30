@@ -48,8 +48,34 @@ router.post(
       await db.query(`UPDATE documents SET entity='bank_statements', entity_id=$1 WHERE id=$2`,
         [statement.id, doc.id]);
 
+      // Sanitize parsed values so a mis-read number/string can never overflow a
+      // column or poison the transaction (which would 500 the whole upload).
+      const NUM_MAX = 1e13;                       // safe for NUMERIC(16,2)
+      const num = (v, nullable = false) => {
+        const n = Number(v);
+        if (!Number.isFinite(n) || Math.abs(n) >= NUM_MAX) return nullable ? null : 0;
+        return n;
+      };
+      const intc = (v) => { const n = parseInt(v, 10); return Number.isFinite(n) && Math.abs(n) < 2147483647 ? n : null; };
+      const str = (v, len) => (v == null || v === '' ? null : String(v).slice(0, len));
+      const date = (v) => (v && /^\d{4}-\d{2}-\d{2}$/.test(String(v)) ? v : null);
+
       let matched = 0, unmatched = 0, duplicate = 0;
-      for (const line of lines) {
+      for (const raw of lines) {
+        const line = {
+          txn_date: date(raw.txn_date),
+          description: str(raw.description, 500),
+          reference_id: str(raw.reference_id, 80),
+          debit: num(raw.debit),
+          credit: num(raw.credit),
+          balance: num(raw.balance, true),
+          mode: str(raw.mode, 16),
+          account_number: str(raw.account_number, 40),
+          beneficiary: str(raw.beneficiary, 160),
+          txn_time: str(raw.txn_time, 40),
+          currency: str(raw.currency, 8) || 'INR',
+          serial_no: intc(raw.serial_no),
+        };
         const m = await matchLine(db, line);
         if (m.status === 'matched') matched++;
         else if (m.status === 'duplicate') duplicate++;
