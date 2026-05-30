@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(psql --version)",
+      "Bash(git --version)",
+      "PowerShell(node --version; npm --version; \\(Get-Command psql -ErrorAction SilentlyContinue\\).Source; Write-Output \"---\"; \\(Get-Command pg_ctl -ErrorAction SilentlyContinue\\).Source)",
+      "PowerShell(winget install --id OpenJS.NodeJS.LTS --silent --accept-source-agreements --accept-package-agreements --disable-interactivity)",
+      "mcp__Claude_Preview__preview_start"
+    ]
+  }
+}

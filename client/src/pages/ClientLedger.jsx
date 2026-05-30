@@ -1,0 +1,79 @@
+import { useParams, Link } from 'react-router-dom';
+import { ArrowLeft, FileDown, Users } from 'lucide-react';
+import { download } from '../api/client.js';
+import { useFetch } from '../lib/useFetch.js';
+import { Card, Loading, Table, Badge } from '../components/ui/index.jsx';
+import { inr, fmtDate } from '../lib/format.js';
+
+export default function ClientLedger() {
+  const { id } = useParams();
+  const { data, loading } = useFetch(`/clients/${id}/ledger`);
+  if (loading) return <Loading />;
+  if (!data) return null;
+  const { client, summary, entries, invoices } = data;
+
+  return (
+    <div>
+      <Link to="/clients" className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-brand-600">
+        <ArrowLeft size={16} /> Back to clients
+      </Link>
+
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-600 text-white"><Users size={22} /></div>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{client.name}</h1>
+            <p className="text-sm text-slate-500">{client.gstin || 'Client'}</p>
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <button className="btn-ghost" onClick={() => download(`/reports/client-ledger/${id}?format=xlsx`)}><FileDown size={16} /> Excel</button>
+          <button className="btn-ghost" onClick={() => download(`/reports/client-ledger/${id}?format=pdf`)}><FileDown size={16} /> PDF</button>
+        </div>
+      </div>
+
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <Card><p className="text-xs font-semibold uppercase text-slate-400">Total Billed</p><p className="mt-1 text-2xl font-bold text-slate-900 dark:text-white">{inr(summary.total_billed)}</p></Card>
+        <Card><p className="text-xs font-semibold uppercase text-slate-400">Total Received</p><p className="mt-1 text-2xl font-bold text-emerald-600">{inr(summary.total_received)}</p></Card>
+        <Card><p className="text-xs font-semibold uppercase text-slate-400">Outstanding</p><p className="mt-1 text-2xl font-bold text-amber-600">{inr(summary.outstanding)}</p></Card>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <Card className="!p-0">
+          <div className="border-b border-slate-100 px-5 py-4 dark:border-slate-800"><h3 className="font-semibold text-slate-800 dark:text-slate-100">Ledger Entries</h3></div>
+          <Table
+            columns={[{ header: 'Date' }, { header: 'Description' }, { header: 'Type' }, { header: 'Amount', align: 'right' }, { header: 'Balance', align: 'right' }]}
+            rows={entries}
+            empty="No ledger activity."
+            renderRow={(e) => (
+              <>
+                <td className="td whitespace-nowrap">{fmtDate(e.entry_date)}</td>
+                <td className="td max-w-[180px] truncate" title={e.description}>{e.description || '—'}</td>
+                <td className="td"><Badge tone={e.direction === 'debit' ? 'blue' : 'green'}>{e.direction === 'debit' ? 'Billed' : 'Received'}</Badge></td>
+                <td className="td text-right">{inr(e.amount)}</td>
+                <td className="td text-right font-semibold">{inr(e.running_balance)}</td>
+              </>
+            )}
+          />
+        </Card>
+
+        <Card className="!p-0">
+          <div className="border-b border-slate-100 px-5 py-4 dark:border-slate-800"><h3 className="font-semibold text-slate-800 dark:text-slate-100">Invoices</h3></div>
+          <Table
+            columns={[{ header: 'Invoice #' }, { header: 'Status' }, { header: 'Total', align: 'right' }, { header: 'Received', align: 'right' }]}
+            rows={invoices}
+            empty="No invoices."
+            renderRow={(i) => (
+              <>
+                <td className="td font-medium">{i.invoice_number}</td>
+                <td className="td"><Badge status={i.status} /></td>
+                <td className="td text-right">{inr(i.total_amount)}</td>
+                <td className="td text-right text-emerald-600">{inr(i.amount_received)}</td>
+              </>
+            )}
+          />
+        </Card>
+      </div>
+    </div>
+  );
+}
