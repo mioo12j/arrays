@@ -105,6 +105,32 @@ function firstMatch(text, patterns) {
   return null;
 }
 
+// Field labels — used to know where one value ends when a statement/screenshot
+// bleeds two columns onto one OCR line.
+const FIELD_LABELS = /(reference\s*id|ref\.?\s*id|from\s*account|to\s*account|amount|payment\s*type|payment\s*date|value\s*date|network|transaction\s*status|status|remarks?|narration|beneficiary|payee|utr|ifsc|a\/c|account)/i;
+
+function cutAtLabel(s) {
+  if (!s) return null;
+  let out = String(s).trim();
+  const idx = out.slice(1).search(FIELD_LABELS);
+  if (idx >= 0) out = out.slice(0, idx + 1);
+  return out.replace(/[\s:|_-]+$/, '').trim() || null;
+}
+
+// Capture a labelled value that may continue onto following (wrapped) lines.
+function multilineValue(lines, labelRe) {
+  const idx = lines.findIndex((l) => labelRe.test(l));
+  if (idx < 0) return null;
+  const head = lines[idx].replace(new RegExp(`^.*?${labelRe.source}\\s*[:\\-]?\\s*`, 'i'), '');
+  const parts = head ? [head] : [];
+  for (let i = idx + 1; i < Math.min(lines.length, idx + 4); i++) {
+    const ln = lines[i];
+    if (!ln || FIELD_LABELS.test(ln)) break; // stop at the next field
+    parts.push(ln);
+  }
+  return parts.join(' ').trim() || null;
+}
+
 /**
  * Parse structured payment fields from raw OCR/PDF text.
  * Returns best-effort values; the operator verifies/corrects them in the UI.
@@ -119,9 +145,12 @@ export function parsePaymentFields(text) {
     t.match(/amount\s*[:\-]?\s*(?:₹|rs\.?|inr)?\s*([0-9][0-9,]*\.?[0-9]{0,2})/i);
   if (amtMatch) amount = Number(amtMatch[1].replace(/,/g, ''));
 
-  // Reference / UTR / transaction id
+  // Reference / UTR / Ref. ID. Require a separator after the label so we don't
+  // partial-match words like "reference" in a sentence (e.g. the success banner).
   const reference = firstMatch(t, [
-    /\b(?:utr|rrn|ref(?:erence)?(?:\s*(?:no|id|number))?|txn(?:\s*id)?|transaction\s*(?:id|no))\s*[:\-]?\s*([A-Za-z0-9]{6,30})/i,
+    /\b(?:utr|rrn)\b\s*[:\-]?\s*\[?([A-Za-z0-9]{6,30})\]?/i,
+    /\bref(?:erence|\.)?\s*id\s*[:\-]\s*\[?([A-Za-z0-9]{6,30})\]?/i,
+    /\b(?:txn|transaction)\s*(?:id|no)\s*[:\-]\s*\[?([A-Za-z0-9]{6,30})\]?/i,
     /\b([A-Z]{2,6}\d{8,20})\b/,
   ]);
 
@@ -131,14 +160,26 @@ export function parsePaymentFields(text) {
   ]);
   const paymentDate = toISODate(dateMatch) || toISODate(t);
 
-  // Beneficiary / payee
-  const beneficiary = firstMatch(t, [
-    /\b(?:beneficiary(?:\s*name)?|payee|to|paid\s*to|credited\s*to)\s*[:\-]?\s*([A-Za-z0-9 .&'@_-]{3,60})/i,
-  ]);
+  const lines = t.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
 
-  // Account details (masked acc no)
-  const account = firstMatch(t, [
-    /\b(?:a\/c|acc(?:ount)?(?:\s*(?:no|number))?)\s*[:\-]?\s*([Xx*\d]{4,20})/i,
+  // Beneficiary = the "To Account" holder name (NOT "From Account" = sender).
+  let beneficiary = cutAtLabel(firstMatch(t, [
+    /\bto\s*account\s*[:\-]?\s*([A-Za-z][^\n]{1,60})/i,
+    /\b(?:beneficiary(?:\s*name)?|payee\s*name|payee|credited\s*to|paid\s*to)\s*[:\-]?\s*([A-Za-z][^\n]{1,60})/i,
+  ]));
+
+  // If "To Account" held a NUMBER, that's the beneficiary account (not a name).
+  let toAccountNo = null;
+  const toAcctRaw = firstMatch(t, [/\bto\s*account\s*[:\-]?\s*([Xx*\d][\dXx*\s-]{8,25})/i]);
+  if (toAcctRaw && /\d{9,}/.test(toAcctRaw.replace(/\s/g, ''))) {
+    toAccountNo = toAcctRaw.replace(/[\s-]/g, '');
+    if (beneficiary && /^[\dXx*\s-]+$/.test(beneficiary)) beneficiary = null;
+  }
+
+  // Account details = the BENEFICIARY account only. Never "From Account"
+  // (that is the sender's own account number).
+  const account = toAccountNo || firstMatch(t, [
+    /\b(?:beneficiary|credit|payee)\s*(?:a\/c|acc(?:ount)?)\s*(?:no\.?|number)?\s*[:\-]?\s*([Xx*\d]{9,20})/i,
   ]);
 
   // Network / mode
@@ -151,12 +192,10 @@ export function parsePaymentFields(text) {
   const modeMap = { RTGS: 'rtgs', NEFT: 'neft', IMPS: 'imps', UPI: 'upi' };
   const paymentMode = network ? modeMap[network] : null;
 
-  // Remarks / narration / note (auto-extracted from the proof — distinct from
-  // the operator's manual comment). Covers bank + UPI screenshot wordings.
-  const remarks = firstMatch(t, [
-    /\b(?:remarks?|narration|description|purpose|note|message|reason|paid\s*for|payment\s*for|comments?)\s*[:\-]?\s*([A-Za-z0-9 .,&'/_()-]{3,90})/i,
-    /\b(?:upi\s*ref(?:erence)?(?:\s*(?:id|no))?)\s*[:\-]?\s*([A-Za-z0-9 .,&'/_-]{3,60})/i,
-  ]);
+  // Remarks / narration — captured in FULL, including wrapped continuation lines
+  // (e.g. a remark that spills onto a second/third line in the screenshot).
+  const remarks = cutAtLabel(multilineValue(lines, /(?:remarks?|narration|description|purpose|note)/i))
+    || cutAtLabel(firstMatch(t, [/\b(?:upi\s*ref(?:erence)?(?:\s*(?:id|no))?)\s*[:\-]?\s*([A-Za-z0-9 .,&'/_-]{3,60})/i]));
 
   return {
     reference_id: reference,

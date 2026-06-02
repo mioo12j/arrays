@@ -14,8 +14,11 @@ const isEditor = (req) => req.user.role === 'editor';
 router.get(
   '/',
   asyncHandler(async (_req, res) => {
+    // The protected super-admin (editor) is hidden from User Management — it
+    // still functions and is still recorded in the Audit Log.
     const { rows } = await query(
-      'SELECT id, name, email, role, is_active, is_protected, last_login_at, created_at FROM users ORDER BY created_at DESC'
+      `SELECT id, name, email, role, is_active, is_protected, last_login_at, created_at
+       FROM users WHERE NOT is_protected ORDER BY created_at DESC`
     );
     res.json(rows);
   })

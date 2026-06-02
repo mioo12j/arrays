@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Loader2, ShieldCheck, User, Crown, Lock } from 'lucide-react';
+import { Plus, Loader2, ShieldCheck, User } from 'lucide-react';
 import { api, apiError } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -39,9 +39,7 @@ export default function Users() {
             renderRow={(u) => (
               <>
                 <td className="td font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                  {u.role === 'editor' ? <Crown size={15} className="text-purple-500" />
-                    : u.role === 'admin' ? <ShieldCheck size={15} className="text-brand-500" />
-                    : <User size={15} className="text-slate-400" />}
+                  {u.role === 'admin' ? <ShieldCheck size={15} className="text-brand-500" /> : <User size={15} className="text-slate-400" />}
                   {u.name}
                 </td>
                 <td className="td font-mono text-xs">{u.email}</td>
@@ -49,15 +47,9 @@ export default function Users() {
                 <td className="td"><Badge tone={u.is_active ? 'green' : 'red'}>{u.is_active ? 'Active' : 'Disabled'}</Badge></td>
                 <td className="td text-slate-500">{u.last_login_at ? fmtDateTime(u.last_login_at) : 'Never'}</td>
                 <td className="td text-right">
-                  {u.is_protected ? (
-                    <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-400">
-                      <Lock size={12} /> Protected
-                    </span>
-                  ) : (
-                    <button className="btn-ghost !py-1 !px-2.5 !text-xs" onClick={() => toggleActive(u)}>
-                      {u.is_active ? 'Disable' : 'Enable'}
-                    </button>
-                  )}
+                  <button className="btn-ghost !py-1 !px-2.5 !text-xs" onClick={() => toggleActive(u)}>
+                    {u.is_active ? 'Disable' : 'Enable'}
+                  </button>
                 </td>
               </>
             )}
