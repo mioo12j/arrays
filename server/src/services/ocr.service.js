@@ -117,6 +117,24 @@ function cutAtLabel(s) {
   return out.replace(/[\s:|_-]+$/, '').trim() || null;
 }
 
+// In a two-column screenshot, a right-column field (e.g. "Network: NEFT") can be
+// OCR-read in the MIDDLE of a wrapped remark. This removes those bleed segments
+// (each requires a recognizable value, to avoid deleting real remark words) while
+// preserving the original word order of the remark.
+function stripColumnBleed(s) {
+  if (!s) return null;
+  const out = (' ' + String(s) + ' ')
+    .replace(/\bnetwork\s*:?\s*(?:neft|rtgs|imps|upi)\b/ig, ' ')
+    .replace(/\bpayment\s*type\s*:?\s*(?:one\s*time|recurring|immediate|scheduled)\b/ig, ' ')
+    .replace(/\btransaction\s*status\s*:?\s*(?:success|failed|pending|processed)\b/ig, ' ')
+    .replace(/\bfrom\s*account\s*:?\s*[\dXx*]{6,}/ig, ' ')
+    .replace(/\bpayment\s*date\s*:?\s*\d{1,2}[/\-.]\d{1,2}[/\-.]\d{2,4}/ig, ' ')
+    .replace(/\bamount\s*:?\s*(?:inr|rs\.?|₹)?\s*[\d,]+\.\d{2}/ig, ' ')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+  return out || null;
+}
+
 // Capture a labelled value that may continue onto following (wrapped) lines.
 function multilineValue(lines, labelRe) {
   const idx = lines.findIndex((l) => labelRe.test(l));
@@ -194,7 +212,7 @@ export function parsePaymentFields(text) {
 
   // Remarks / narration — captured in FULL, including wrapped continuation lines
   // (e.g. a remark that spills onto a second/third line in the screenshot).
-  const remarks = cutAtLabel(multilineValue(lines, /(?:remarks?|narration|description|purpose|note)/i))
+  const remarks = stripColumnBleed(multilineValue(lines, /(?:remarks?|narration|description|purpose|note)/i))
     || cutAtLabel(firstMatch(t, [/\b(?:upi\s*ref(?:erence)?(?:\s*(?:id|no))?)\s*[:\-]?\s*([A-Za-z0-9 .,&'/_-]{3,60})/i]));
 
   return {
