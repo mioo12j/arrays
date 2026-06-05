@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { DatabaseZap, Trash2, Sparkles, Loader2, AlertTriangle, CloudUpload, Copy, Check } from 'lucide-react';
 import { api, apiError } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
+import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../components/ui/Toast.jsx';
 import Modal from '../components/ui/Modal.jsx';
 import { Card, PageHeader } from '../components/ui/index.jsx';
@@ -10,6 +11,7 @@ const SYNC_COMMAND = 'cd server\nnpm run sync';
 
 export default function System() {
   const toast = useToast();
+  const { isEditor } = useAuth();
   const [busy, setBusy] = useState('');
   const [confirm, setConfirm] = useState(null); // 'demo' | 'clear'
   const [typed, setTyped] = useState('');
@@ -49,16 +51,19 @@ export default function System() {
     <div>
       <PageHeader
         title="Data Management"
-        subtitle="Super-admin tools to load a demo dataset for showcasing, or wipe everything to go live."
+        subtitle="Publish your local data to the cloud so the admin can view it on the web."
       />
 
+      {isEditor && (
       <div className="mb-4 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-900/50 dark:bg-amber-900/10">
         <AlertTriangle className="mt-0.5 shrink-0 text-amber-600" size={18} />
         <p className="text-sm text-amber-800 dark:text-amber-300">
-          These actions affect the <strong>entire portal</strong> and cannot be undone. User accounts are always preserved.
+          The demo / clear actions affect the <strong>entire portal</strong> and cannot be undone. User accounts are always preserved.
         </p>
       </div>
+      )}
 
+      {isEditor && (
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {/* Load demo */}
         <Card>
@@ -94,8 +99,9 @@ export default function System() {
           </div>
         </Card>
       </div>
+      )}
 
-      {/* Publish to Cloud */}
+      {/* Publish to Cloud — available to all users (operator publishes their entries) */}
       <Card className="mt-4">
         <div className="flex flex-col gap-4 md:flex-row md:items-start">
           <div className="rounded-xl bg-emerald-50 p-3 text-emerald-600 dark:bg-emerald-900/30"><CloudUpload size={22} /></div>

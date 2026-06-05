@@ -28,7 +28,7 @@ export const NAV = [
     { to: '/reports', label: 'Reports & Exports', icon: BarChart3 },
     { to: '/audit', label: 'Audit Log', icon: ScrollText, adminOnly: true },
     { to: '/users', label: 'User Management', icon: UserCog, adminOnly: true },
-    { to: '/system', label: 'Data Management', icon: DatabaseZap, editorOnly: true },
+    { to: '/system', label: 'Data Management', icon: DatabaseZap },
   ]},
   { section: 'Company', items: [
     { to: '/about', label: 'About', icon: Info },

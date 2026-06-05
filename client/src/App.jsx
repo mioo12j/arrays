@@ -67,7 +67,7 @@ export default function App() {
         <Route path="/reports" element={<Reports />} />
         <Route path="/audit" element={<Protected adminOnly><Audit /></Protected>} />
         <Route path="/users" element={<Protected adminOnly><Users /></Protected>} />
-        <Route path="/system" element={<Protected editorOnly><System /></Protected>} />
+        <Route path="/system" element={<System />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

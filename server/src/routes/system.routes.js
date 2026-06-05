@@ -8,11 +8,12 @@ import { clearAllData, seedDemo } from '../services/system.service.js';
 import { syncToCloud } from '../services/sync.service.js';
 
 const router = Router();
-router.use(authenticate, editorOnly); // super-admin (editor) only
+router.use(authenticate); // all routes require login
 
-// Wipe every operational record (keeps users + expense categories).
+// Destructive tools (clear / demo) are editor-only.
 router.post(
   '/clear-data',
+  editorOnly,
   asyncHandler(async (req, res) => {
     await withTransaction((db) => clearAllData(db));
     await audit(req, { action: 'delete', entity: 'system', changes: { cleared: true } });
@@ -20,9 +21,10 @@ router.post(
   })
 );
 
-// Load a realistic demo dataset (clears first, then seeds).
+// Load a realistic demo dataset (clears first, then seeds) — editor-only.
 router.post(
   '/seed-demo',
+  editorOnly,
   asyncHandler(async (req, res) => {
     const summary = await withTransaction((db) => seedDemo(db, req.user.id));
     await audit(req, { action: 'create', entity: 'system', changes: { demo: summary } });
@@ -30,7 +32,7 @@ router.post(
   })
 );
 
-// Whether cloud publishing is configured on this (local) instance.
+// Whether cloud publishing is configured on this (local) instance. (any user)
 router.get('/cloud-status', (_req, res) => {
   res.json({ configured: !!process.env.CLOUD_DATABASE_URL });
 });
