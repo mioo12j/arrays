@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { Plus, Search, Upload, Loader2, Sparkles, Paperclip, FileDown } from 'lucide-react';
 import { api, apiError, download } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
+import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../components/ui/Toast.jsx';
 import Modal from '../components/ui/Modal.jsx';
-import { Card, PageHeader, Loading, Table, Field } from '../components/ui/index.jsx';
-import { inr, fmtDate } from '../lib/format.js';
+import { Card, PageHeader, Loading, Table, Field, Badge, DescList, DescRow } from '../components/ui/index.jsx';
+import { inr, fmtDate, fmtDateTime } from '../lib/format.js';
 import { PRESETS, presetRange } from '../lib/dateRange.js';
 
 const BLANK = {
@@ -30,6 +31,7 @@ export default function Receipts() {
   const { data: projects } = useFetch('/projects');
   const { data: invoices } = useFetch('/invoices');
   const [open, setOpen] = useState(false);
+  const [detail, setDetail] = useState(null);
 
   return (
     <div>
@@ -81,6 +83,7 @@ export default function Receipts() {
             ]}
             rows={receipts || []}
             empty="No receipts yet."
+            onRowClick={(r) => setDetail(r)}
             renderRow={(r) => (
               <>
                 <td className="td whitespace-nowrap">{fmtDate(r.credited_date)}</td>
@@ -103,12 +106,53 @@ export default function Receipts() {
           clients={clients} projects={projects} invoices={invoices}
         />
       )}
+
+      {detail && <ReceiptDetail receipt={detail} onClose={() => setDetail(null)} />}
     </div>
+  );
+}
+
+// Read-only detail view for a single receipt.
+function ReceiptDetail({ receipt: r, onClose }) {
+  const deductions =
+    Number(r.tds_amount || 0) + Number(r.retention_amount || 0) + Number(r.deduction_amount || 0);
+  return (
+    <Modal open onClose={onClose} title="Receipt Details" size="lg"
+      footer={<button className="btn-ghost" onClick={onClose}>Close</button>}>
+      <div className="mb-5 flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-800">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Amount Credited</p>
+          <p className="text-2xl font-bold text-emerald-600">{inr(r.credited_amount)}</p>
+        </div>
+        {deductions > 0 && (
+          <div className="text-right">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Total Deductions</p>
+            <p className="text-lg font-semibold text-amber-600">{inr(deductions)}</p>
+          </div>
+        )}
+      </div>
+
+      <DescList>
+        <DescRow label="Date">{fmtDate(r.credited_date)}</DescRow>
+        <DescRow label="Reference" mono>{r.reference_id}</DescRow>
+        <DescRow label="Client">{r.client_name}</DescRow>
+        <DescRow label="Linked Invoice">{r.invoice_number}</DescRow>
+        <DescRow label="Account Details" mono>{r.account_details}</DescRow>
+        <DescRow label="Project">{r.project_name}</DescRow>
+        <DescRow label="TDS">{Number(r.tds_amount) ? inr(r.tds_amount) : null}</DescRow>
+        <DescRow label="Retention">{Number(r.retention_amount) ? inr(r.retention_amount) : null}</DescRow>
+        <DescRow label="Other Deduction">{Number(r.deduction_amount) ? inr(r.deduction_amount) : null}</DescRow>
+        <DescRow label="Deduction Reason">{r.deduction_reason}</DescRow>
+        <DescRow label="Recorded On">{fmtDateTime(r.created_at)}</DescRow>
+        <DescRow label="Comment / Notes" wide>{r.comment}</DescRow>
+      </DescList>
+    </Modal>
   );
 }
 
 function ReceiptModal({ onClose, onSaved, clients, projects, invoices }) {
   const toast = useToast();
+  const { canImport } = useAuth();
   const [form, setForm] = useState(BLANK);
   const [documentId, setDocumentId] = useState(null);
   const [extracting, setExtracting] = useState(false);
@@ -172,6 +216,7 @@ function ReceiptModal({ onClose, onSaved, clients, projects, invoices }) {
           {saving ? <Loader2 className="animate-spin" size={16} /> : 'Save Receipt'}
         </button>
       </>}>
+      {canImport && (
       <div className="mb-5 rounded-xl border-2 border-dashed border-emerald-200 bg-emerald-50/50 p-4 dark:border-emerald-900 dark:bg-emerald-900/10">
         <div className="flex items-center gap-3">
           <div className="rounded-lg bg-emerald-100 p-2 text-emerald-600 dark:bg-emerald-900/40"><Sparkles size={18} /></div>
@@ -187,6 +232,7 @@ function ReceiptModal({ onClose, onSaved, clients, projects, invoices }) {
         </div>
         {documentId && <p className="mt-2 flex items-center gap-1.5 text-xs font-medium text-emerald-600"><Paperclip size={12} /> Proof attached & processed</p>}
       </div>
+      )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label="Credited Amount" required>

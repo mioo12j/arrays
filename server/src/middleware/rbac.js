@@ -15,3 +15,20 @@ export function requireRole(...roles) {
 // (data tools, managing protected users).
 export const adminOnly = requireRole('admin', 'editor');
 export const editorOnly = requireRole('editor');
+
+// Blocks the (cloud-facing) admin role from CPU-heavy import / OCR / parse
+// endpoints. The admin is a read-and-export role; the operator does all data
+// entry locally. This protects the free-tier cloud server from being pegged by
+// OCR (tesseract / pdfjs) and spreadsheet parsing. Operators and the editor
+// super-admin are still allowed to import.
+export function noImportForAdmin(req, _res, next) {
+  if (req.user?.role === 'admin') {
+    return next(
+      new ApiError(
+        403,
+        'Importing & uploading is disabled for the admin account. The admin can view and export everything; data entry and imports are done from the operator’s computer.'
+      )
+    );
+  }
+  next();
+}

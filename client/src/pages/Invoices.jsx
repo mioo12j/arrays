@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { Plus, Search, Loader2, FileDown, Upload } from 'lucide-react';
 import { api, apiError, download } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
+import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../components/ui/Toast.jsx';
 import Modal from '../components/ui/Modal.jsx';
 import { Card, PageHeader, Loading, Table, Badge, Field } from '../components/ui/index.jsx';
@@ -11,6 +12,7 @@ const STATUSES = ['draft', 'raised', 'sent', 'partially_paid', 'paid', 'overdue'
 
 export default function Invoices() {
   const toast = useToast();
+  const { canImport } = useAuth();
   const [filters, setFilters] = useState({ search: '', status: '', type: '' });
   const qs = new URLSearchParams(Object.fromEntries(Object.entries(filters).filter(([, v]) => v))).toString();
   const { data: invoices, loading, refetch } = useFetch(`/invoices?${qs}`, [qs]);
@@ -43,9 +45,11 @@ export default function Invoices() {
         subtitle="Proforma & GST tax invoices with settlement tracking."
         actions={<>
           <button className="btn-ghost" onClick={() => download('/reports/invoices?format=xlsx')}><FileDown size={16} /> Export</button>
-          <button className="btn-ghost" onClick={() => fileRef.current?.click()} disabled={importing}>
-            {importing ? <Loader2 className="animate-spin" size={16} /> : <Upload size={16} />} Import
-          </button>
+          {canImport && (
+            <button className="btn-ghost" onClick={() => fileRef.current?.click()} disabled={importing}>
+              {importing ? <Loader2 className="animate-spin" size={16} /> : <Upload size={16} />} Import
+            </button>
+          )}
           <input ref={fileRef} type="file" accept="image/*,application/pdf,.xlsx,.xls,.csv" className="hidden" onChange={onImport} />
           <button className="btn-primary" onClick={() => { setPrefill(null); setOpen(true); }}><Plus size={16} /> New Invoice</button>
         </>}

@@ -25,6 +25,7 @@ import System from './pages/System.jsx';
 import Quotes from './pages/Quotes.jsx';
 import QuoteBuilder from './pages/QuoteBuilder.jsx';
 import About from './pages/About.jsx';
+import Help from './pages/Help.jsx';
 
 function Protected({ children, adminOnly, editorOnly }) {
   const { user, loading, isAdmin, isEditor } = useAuth();
@@ -64,6 +65,7 @@ export default function App() {
         <Route path="/quotes/new" element={<QuoteBuilder />} />
         <Route path="/quotes/:id" element={<QuoteBuilder />} />
         <Route path="/about" element={<About />} />
+        <Route path="/help" element={<Help />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/audit" element={<Protected adminOnly><Audit /></Protected>} />
         <Route path="/users" element={<Protected adminOnly><Users /></Protected>} />

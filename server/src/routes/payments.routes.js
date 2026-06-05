@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { query, withTransaction, pool } from '../config/db.js';
 import { asyncHandler, ApiError } from '../utils/asyncHandler.js';
 import { authenticate } from '../middleware/auth.js';
+import { noImportForAdmin } from '../middleware/rbac.js';
 import { audit } from '../middleware/audit.js';
 import { upload } from '../middleware/upload.js';
 import { saveDocument } from '../services/document.service.js';
@@ -36,6 +37,7 @@ async function postPaymentLedger(db, pay, userId) {
 // corrects the fields and POSTs to /api/payments to save.
 router.post(
   '/extract',
+  noImportForAdmin,
   upload.single('file'),
   asyncHandler(async (req, res) => {
     if (!req.file) throw new ApiError(400, 'A payment proof file is required');

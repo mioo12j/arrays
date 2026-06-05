@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Upload, Loader2, CheckCircle2, AlertCircle, Copy, ChevronRight } from 'lucide-react';
 import { api, apiError } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
+import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../components/ui/Toast.jsx';
 import Modal from '../components/ui/Modal.jsx';
 import { Card, PageHeader, Loading, Table, Badge, Field } from '../components/ui/index.jsx';
@@ -10,6 +11,7 @@ import { fmtDate, fmtDateTime } from '../lib/format.js';
 
 export default function Reconciliation() {
   const toast = useToast();
+  const { canImport } = useAuth();
   const { data: statements, loading, refetch } = useFetch('/reconciliation/statements');
   const { data: summary, refetch: refetchSummary } = useFetch('/reconciliation/summary');
   const [open, setOpen] = useState(false);
@@ -27,7 +29,7 @@ export default function Reconciliation() {
       <PageHeader
         title="Bank Statement Reconciliation"
         subtitle="Upload a monthly statement — the system auto-matches transactions and flags what needs review."
-        actions={<button className="btn-primary" onClick={() => setOpen(true)}><Upload size={16} /> Upload Statement</button>}
+        actions={canImport ? <button className="btn-primary" onClick={() => setOpen(true)}><Upload size={16} /> Upload Statement</button> : null}
       />
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">

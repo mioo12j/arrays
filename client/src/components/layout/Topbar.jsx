@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { Menu, Moon, Sun, LogOut, ChevronDown, ShieldCheck, UserCircle2 } from 'lucide-react';
+import { Menu, Moon, Sun, LogOut, ChevronDown, ShieldCheck, UserCircle2, Languages } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { useI18n } from '../../context/I18nContext.jsx';
 
 function useDarkMode() {
   const [dark, setDark] = useState(() => localStorage.getItem('epc_theme') === 'dark');
@@ -13,6 +14,7 @@ function useDarkMode() {
 
 export default function Topbar({ onMenu }) {
   const { user, logout } = useAuth();
+  const { lang, toggle: toggleLang } = useI18n();
   const [dark, toggleDark] = useDarkMode();
   const [menuOpen, setMenuOpen] = useState(false);
   const ref = useRef(null);
@@ -36,6 +38,15 @@ export default function Topbar({ onMenu }) {
       </div>
 
       <div className="flex items-center gap-2">
+        <button
+          onClick={toggleLang}
+          className="flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-sm font-semibold text-slate-500 transition hover:bg-slate-100 dark:hover:bg-slate-800"
+          title="Switch language"
+          data-no-i18n
+        >
+          <Languages size={18} />
+          <span>{lang === 'hi' ? 'हिं' : 'EN'}</span>
+        </button>
         <button
           onClick={toggleDark}
           className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 dark:hover:bg-slate-800"

@@ -43,9 +43,13 @@ export function AuthProvider({ children }) {
   // 'editor' is a super-admin — it has every admin power, plus exclusive tools.
   const isEditor = user?.role === 'editor';
   const isAdmin = user?.role === 'admin' || isEditor;
+  // The plain admin is a cloud-facing view/export role. Importing & OCR (which
+  // are CPU-heavy on the free cloud tier) are reserved for the operator and the
+  // editor super-admin, who run the app locally.
+  const canImport = !!user && user.role !== 'admin';
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, isAdmin, isEditor }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, isAdmin, isEditor, canImport }}>
       {children}
     </AuthContext.Provider>
   );

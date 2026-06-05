@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { Plus, Search, Loader2, ChevronRight, Upload } from 'lucide-react';
 import { api, apiError } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
+import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../components/ui/Toast.jsx';
 import Modal from '../components/ui/Modal.jsx';
 import { Card, PageHeader, Loading, Table, Badge, Field } from '../components/ui/index.jsx';
@@ -9,6 +10,7 @@ import { inr } from '../lib/format.js';
 
 export default function Vendors() {
   const toast = useToast();
+  const { canImport } = useAuth();
   const { data: vendors, loading, refetch } = useFetch('/vendors');
   const [open, setOpen] = useState(false);
   const [importing, setImporting] = useState(false);
@@ -36,9 +38,11 @@ export default function Vendors() {
         title="Vendor Master"
         subtitle="Vendor-wise ledgers, beneficiary accounts and auto-mapping intelligence."
         actions={<>
-          <button className="btn-ghost" onClick={() => fileRef.current?.click()} disabled={importing}>
-            {importing ? <Loader2 className="animate-spin" size={16} /> : <Upload size={16} />} Import List
-          </button>
+          {canImport && (
+            <button className="btn-ghost" onClick={() => fileRef.current?.click()} disabled={importing}>
+              {importing ? <Loader2 className="animate-spin" size={16} /> : <Upload size={16} />} Import List
+            </button>
+          )}
           <input ref={fileRef} type="file" accept=".xlsx,.xls,.csv" className="hidden" onChange={onImport} />
           <button className="btn-primary" onClick={() => setOpen(true)}><Plus size={16} /> New Vendor</button>
         </>}

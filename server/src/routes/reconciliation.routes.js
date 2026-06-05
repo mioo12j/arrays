@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { query, withTransaction } from '../config/db.js';
 import { asyncHandler, ApiError } from '../utils/asyncHandler.js';
 import { authenticate } from '../middleware/auth.js';
+import { noImportForAdmin } from '../middleware/rbac.js';
 import { audit } from '../middleware/audit.js';
 import { upload } from '../middleware/upload.js';
 import { saveDocument } from '../services/document.service.js';
@@ -15,6 +16,7 @@ router.use(authenticate);
 // ── Upload a monthly statement -> parse -> auto-match ────────────────────────
 router.post(
   '/statements',
+  noImportForAdmin,
   upload.single('file'),
   asyncHandler(async (req, res) => {
     if (!req.file) throw new ApiError(400, 'A bank statement file is required');

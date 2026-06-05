@@ -1,7 +1,7 @@
 import {
   LayoutDashboard, FolderKanban, ArrowUpRight, ArrowDownLeft, FileText,
   Building2, Users, Banknote, ScrollText, BarChart3, ShieldCheck, UserCog,
-  Calculator, Info, UserRound, DatabaseZap,
+  Calculator, Info, UserRound, DatabaseZap, HelpCircle,
 } from 'lucide-react';
 
 // `adminOnly` hides the item from operators.
@@ -31,6 +31,7 @@ export const NAV = [
     { to: '/system', label: 'Data Management', icon: DatabaseZap },
   ]},
   { section: 'Company', items: [
+    { to: '/help', label: 'Help & Guide', icon: HelpCircle },
     { to: '/about', label: 'About', icon: Info },
   ]},
 ];

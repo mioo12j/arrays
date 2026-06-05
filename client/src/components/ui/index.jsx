@@ -77,6 +77,26 @@ export function Badge({ children, tone, status, className }) {
   );
 }
 
+// Read-only definition list — used by the payment / receipt detail views.
+export function DescList({ children, className }) {
+  return <dl className={clsx('grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2', className)}>{children}</dl>;
+}
+
+export function DescRow({ label, children, wide, mono }) {
+  const empty =
+    children === undefined || children === null || children === '' ||
+    (Array.isArray(children) && children.length === 0);
+  if (empty) return null;
+  return (
+    <div className={wide ? 'sm:col-span-2' : ''}>
+      <dt className="text-xs font-semibold uppercase tracking-wide text-slate-400">{label}</dt>
+      <dd className={clsx('mt-0.5 break-words text-sm text-slate-800 dark:text-slate-100', mono && 'font-mono')}>
+        {children}
+      </dd>
+    </div>
+  );
+}
+
 export function Field({ label, children, required, hint }) {
   return (
     <div>

@@ -2,10 +2,11 @@ import { useState, useRef } from 'react';
 import { Plus, Search, Upload, Loader2, Sparkles, Paperclip, FileDown } from 'lucide-react';
 import { api, apiError, download } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
+import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../components/ui/Toast.jsx';
 import Modal from '../components/ui/Modal.jsx';
-import { Card, PageHeader, Loading, Badge, Table, Field } from '../components/ui/index.jsx';
-import { inr, fmtDate, titleCase } from '../lib/format.js';
+import { Card, PageHeader, Loading, Badge, Table, Field, DescList, DescRow } from '../components/ui/index.jsx';
+import { inr, fmtDate, fmtDateTime, titleCase } from '../lib/format.js';
 import { PRESETS, presetRange } from '../lib/dateRange.js';
 
 const BLANK = {
@@ -34,6 +35,7 @@ export default function Payments() {
   const { data: categories } = useFetch('/categories');
 
   const [open, setOpen] = useState(false);
+  const [detail, setDetail] = useState(null);
   const fileRef = useRef(null);
   const attachId = useRef(null);
 
@@ -116,6 +118,7 @@ export default function Payments() {
             ]}
             rows={payments || []}
             empty="No payments recorded yet. Click “New Payment” to upload your first proof."
+            onRowClick={(p) => setDetail(p)}
             renderRow={(p) => (
               <>
                 <td className="td whitespace-nowrap">{fmtDate(p.payment_date)}</td>
@@ -134,7 +137,7 @@ export default function Payments() {
                 </td>
                 <td className="td text-right">
                   {p.invoice_status === 'pending' && (
-                    <button className="btn-ghost !py-1 !px-2.5 !text-xs" onClick={() => pickInvoice(p.id)}>
+                    <button className="btn-ghost !py-1 !px-2.5 !text-xs" onClick={(e) => { e.stopPropagation(); pickInvoice(p.id); }}>
                       <Paperclip size={12} /> Attach
                     </button>
                   )}
@@ -154,12 +157,65 @@ export default function Payments() {
           vendors={vendors} employees={employees} projects={projects} sites={sites} categories={categories}
         />
       )}
+
+      {detail && (
+        <PaymentDetail
+          payment={detail}
+          onClose={() => setDetail(null)}
+          onAttach={(id) => { setDetail(null); pickInvoice(id); }}
+        />
+      )}
     </div>
+  );
+}
+
+// Read-only detail view for a single payment — every field that was recorded.
+function PaymentDetail({ payment: p, onClose, onAttach }) {
+  return (
+    <Modal open onClose={onClose} title="Payment Details" size="lg"
+      footer={<button className="btn-ghost" onClick={onClose}>Close</button>}>
+      <div className="mb-5 flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-800">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Amount Paid</p>
+          <p className="text-2xl font-bold text-red-600">{inr(p.amount)}</p>
+        </div>
+        <Badge status={p.invoice_status} />
+      </div>
+
+      <DescList>
+        <DescRow label="Date">{fmtDate(p.payment_date)}</DescRow>
+        <DescRow label="Reference / UTR" mono>{p.reference_id}</DescRow>
+        <DescRow label="Paid To">
+          {p.vendor_name || p.employee_name || p.beneficiary_name || '—'}
+          {p.employee_name && <Badge tone="purple" className="ml-1">Employee</Badge>}
+        </DescRow>
+        <DescRow label="Beneficiary (on proof)">{p.beneficiary_name}</DescRow>
+        <DescRow label="Account Details" mono>{p.account_details}</DescRow>
+        <DescRow label="Payment Mode">{p.payment_mode ? p.payment_mode.toUpperCase() : null}</DescRow>
+        <DescRow label="Network Type">{p.network_type}</DescRow>
+        <DescRow label="Category">{p.category_name}</DescRow>
+        <DescRow label="Project / Site">
+          {p.project_name ? `${p.project_name}${p.site_name ? ` · ${p.site_name}` : ''}` : null}
+        </DescRow>
+        <DescRow label="Material Type">{p.material_type}</DescRow>
+        <DescRow label="Tags">{p.tags?.length ? p.tags.join(', ') : null}</DescRow>
+        <DescRow label="Recorded On">{fmtDateTime(p.created_at)}</DescRow>
+        <DescRow label="Bank Remark (auto-extracted)" wide>{p.bank_remarks}</DescRow>
+        <DescRow label="Comment (entered by operator)" wide>{p.comment}</DescRow>
+      </DescList>
+
+      {p.invoice_status === 'pending' && onAttach && (
+        <button className="btn-ghost mt-5" onClick={() => onAttach(p.id)}>
+          <Paperclip size={14} /> Attach Invoice
+        </button>
+      )}
+    </Modal>
   );
 }
 
 function PaymentModal({ onClose, onSaved, vendors, employees, projects, sites, categories }) {
   const toast = useToast();
+  const { canImport } = useAuth();
   const [form, setForm] = useState(BLANK);
   const [documentId, setDocumentId] = useState(null);
   const [extracting, setExtracting] = useState(false);
@@ -243,7 +299,8 @@ function PaymentModal({ onClose, onSaved, vendors, employees, projects, sites, c
         </>
       }
     >
-      {/* Step 1 — upload & OCR */}
+      {/* Step 1 — upload & OCR (operator-only; OCR is disabled for the admin) */}
+      {canImport && (
       <div className="mb-5 rounded-xl border-2 border-dashed border-brand-200 bg-brand-50/50 p-4 dark:border-brand-900 dark:bg-brand-900/10">
         <div className="flex items-center gap-3">
           <div className="rounded-lg bg-brand-100 p-2 text-brand-600 dark:bg-brand-900/40">
@@ -265,6 +322,7 @@ function PaymentModal({ onClose, onSaved, vendors, employees, projects, sites, c
           </p>
         )}
       </div>
+      )}
 
       {/* Step 2 — verify extracted fields */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

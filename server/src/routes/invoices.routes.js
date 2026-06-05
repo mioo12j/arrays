@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { query, withTransaction } from '../config/db.js';
 import { asyncHandler, ApiError } from '../utils/asyncHandler.js';
 import { authenticate } from '../middleware/auth.js';
+import { noImportForAdmin } from '../middleware/rbac.js';
 import { audit } from '../middleware/audit.js';
 import { upload } from '../middleware/upload.js';
 import { saveDocument } from '../services/document.service.js';
@@ -14,6 +15,7 @@ router.use(authenticate);
 // Import an invoice file (PDF/scan/Excel) and auto-extract fields for review.
 router.post(
   '/extract',
+  noImportForAdmin,
   upload.single('file'),
   asyncHandler(async (req, res) => {
     if (!req.file) throw new ApiError(400, 'An invoice file is required');
