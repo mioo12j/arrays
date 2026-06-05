@@ -1,15 +1,20 @@
 import { useState } from 'react';
-import { DatabaseZap, Trash2, Sparkles, Loader2, AlertTriangle } from 'lucide-react';
+import { DatabaseZap, Trash2, Sparkles, Loader2, AlertTriangle, CloudUpload, Copy, Check } from 'lucide-react';
 import { api, apiError } from '../api/client.js';
+import { useFetch } from '../lib/useFetch.js';
 import { useToast } from '../components/ui/Toast.jsx';
 import Modal from '../components/ui/Modal.jsx';
 import { Card, PageHeader } from '../components/ui/index.jsx';
+
+const SYNC_COMMAND = 'cd server\nnpm run sync';
 
 export default function System() {
   const toast = useToast();
   const [busy, setBusy] = useState('');
   const [confirm, setConfirm] = useState(null); // 'demo' | 'clear'
   const [typed, setTyped] = useState('');
+  const [copied, setCopied] = useState(false);
+  const { data: cloud } = useFetch('/system/cloud-status');
 
   const run = async (kind) => {
     setBusy(kind);
@@ -23,6 +28,21 @@ export default function System() {
       }
     } catch (e) { toast.error(apiError(e)); }
     finally { setBusy(''); setConfirm(null); setTyped(''); }
+  };
+
+  const publish = async () => {
+    setBusy('publish');
+    try {
+      const { data } = await api.post('/system/sync-to-cloud');
+      toast.success(`Published ${data.total} records to the cloud. The admin can now view them on the web.`);
+    } catch (e) { toast.error(apiError(e)); }
+    finally { setBusy(''); }
+  };
+
+  const copyCmd = () => {
+    navigator.clipboard?.writeText(SYNC_COMMAND);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
@@ -74,6 +94,43 @@ export default function System() {
           </div>
         </Card>
       </div>
+
+      {/* Publish to Cloud */}
+      <Card className="mt-4">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start">
+          <div className="rounded-xl bg-emerald-50 p-3 text-emerald-600 dark:bg-emerald-900/30"><CloudUpload size={22} /></div>
+          <div className="flex-1">
+            <h3 className="font-semibold text-slate-900 dark:text-white">Publish to Cloud</h3>
+            <p className="mt-1 text-sm text-slate-500">
+              Pushes your <strong>local data</strong> to the cloud so the admin can review everything on the web.
+              Uploaded files (proofs, statements) stay on this computer — only the data is published, keeping the
+              cloud fast and light. Run this after you've finished entering data.
+            </p>
+
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+              <button className="btn-primary" onClick={publish} disabled={busy === 'publish' || cloud?.configured === false}>
+                {busy === 'publish' ? <Loader2 className="animate-spin" size={16} /> : <CloudUpload size={16} />} Publish to Cloud Now
+              </button>
+              {cloud && (
+                <span className={`text-xs font-medium ${cloud.configured ? 'text-emerald-600' : 'text-amber-600'}`}>
+                  {cloud.configured ? '● Cloud target configured' : '● Set CLOUD_DATABASE_URL in server/.env to enable'}
+                </span>
+              )}
+            </div>
+
+            <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">Or run from the command prompt</p>
+            <div className="mt-1 flex items-center gap-2">
+              <pre className="flex-1 overflow-x-auto rounded-lg bg-slate-900 px-3 py-2 text-xs text-slate-100">{SYNC_COMMAND}</pre>
+              <button className="btn-ghost !px-2.5" onClick={copyCmd} title="Copy command">
+                {copied ? <Check size={16} className="text-emerald-500" /> : <Copy size={16} />}
+              </button>
+            </div>
+            <p className="mt-1 text-xs text-slate-400">
+              (One-time setup: <code>$env:CLOUD_DATABASE_URL="…your Neon URL…"</code> before <code>npm run sync</code>, or add it to <code>server/.env</code>.)
+            </p>
+          </div>
+        </div>
+      </Card>
 
       {/* Confirmation modal */}
       <Modal

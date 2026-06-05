@@ -11,7 +11,9 @@ const { Pool } = pg;
 // Cloud Postgres (Neon/Supabase/Render) requires SSL and is usually provided as
 // a single DATABASE_URL. Locally we use discrete PG* vars with no SSL.
 const useUrl = !!env.db.url;
-const ssl = env.db.ssl || useUrl ? { rejectUnauthorized: false } : false;
+const isLocalUrl = useUrl && /@(localhost|127\.0\.0\.1)[:/]/.test(env.db.url);
+// Cloud connections need SSL; localhost (incl. a localhost DATABASE_URL) must not.
+const ssl = ((useUrl && !isLocalUrl) || env.db.ssl) ? { rejectUnauthorized: false } : false;
 
 export const pool = new Pool(
   useUrl
