@@ -108,10 +108,13 @@ export async function preview(db, { branchId, docType = 'INV', branchCode = '' }
 export async function ensureDefault(db) {
   const { rows } = await db.query('SELECT id FROM gst_number_series LIMIT 1');
   if (rows.length) return;
-  const b = (await db.query('SELECT id, code FROM gst_branches ORDER BY is_default DESC LIMIT 1')).rows[0];
+  // branch_id NULL = applies to ALL branches; the {BRANCH} token fills from the
+  // branch the document is created under, so every branch gets numbered.
+  // padding 5 keeps the number ≤16 chars (the IRP limit) for branch codes ≤4 chars,
+  // e.g. BR03/26-27/00015 (16). HO/26-27/00001 (14).
   await db.query(
     `INSERT INTO gst_number_series (branch_id, doc_type, name, prefix, padding, next_number, fy_reset, current_fy)
-     VALUES ($1,'INV','Tax Invoice','{BRANCH}/{FY}/',6,1,TRUE,$2)`,
-    [b?.id || null, financialYear()]
+     VALUES (NULL,'INV','Tax Invoice (all branches)','{BRANCH}/{FY}/',5,1,TRUE,$1)`,
+    [financialYear()]
   );
 }

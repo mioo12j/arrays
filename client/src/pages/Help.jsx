@@ -357,6 +357,41 @@ const SECTIONS = [
     },
   },
   {
+    id: 'gstterms', icon: FileText,
+    en: {
+      title: 'GST terms explained (plain language)',
+      steps: [
+        'GSTIN — the 15-character GST registration number of a business. The first 2 digits are the state; the system checks its format and check-digit.',
+        'HSN — the product/service code that decides the tax rate. Goods invoices for turnover above ₹5 crore must use at least a 6-digit HSN.',
+        'e-Invoice — a regular invoice that has been registered with the government portal (the IRP).',
+        'IRP — the Invoice Registration Portal that registers e-invoices and returns the IRN.',
+        'IRN — the unique Invoice Reference Number the IRP gives back, along with an acknowledgement number and a signed QR code. It is the legal proof of registration.',
+        'e-Way Bill — a separate transport document required when goods move. It has two parts.',
+        'Part A — the supply/invoice details (who, what, value). Part B — the transport details (vehicle number, or transport document for rail/air/ship).',
+        'GSP — a GST Suvidha Provider: the licensed channel through which software talks to the government portals in Live mode.',
+        'Maker-Checker — the person who prepares a document (maker/operator) is not the one who submits or cancels it (checker/admin). This prevents mistakes and fraud.',
+        'Audit Mode — a read-only login for auditors: they can view and export everything but cannot change anything.',
+        'Simulation vs Live — Simulation practises everything safely with no real government submission; Live submits real compliance data. The banner at the top always tells you which mode you are in.',
+      ],
+    },
+    hi: {
+      title: 'GST शब्द सरल भाषा में',
+      steps: [
+        'GSTIN — किसी व्यवसाय का 15-अक्षर का GST पंजीकरण नंबर। पहले 2 अंक राज्य हैं; सिस्टम इसका प्रारूप व चेक-डिजिट जाँचता है।',
+        'HSN — उत्पाद/सेवा कोड जो कर दर तय करता है। ₹5 करोड़ से ऊपर टर्नओवर के माल चालान में कम-से-कम 6-अंकीय HSN आवश्यक है।',
+        'e-Invoice — एक सामान्य चालान जो सरकारी पोर्टल (IRP) पर पंजीकृत हो चुका है।',
+        'IRP — Invoice Registration Portal, जो e-invoice पंजीकृत करता है और IRN लौटाता है।',
+        'IRN — IRP द्वारा दिया गया अनूठा Invoice Reference Number, पावती संख्या व हस्ताक्षरित QR कोड सहित — पंजीकरण का कानूनी प्रमाण।',
+        'e-Way Bill — माल परिवहन के समय आवश्यक एक अलग दस्तावेज़, जिसके दो भाग होते हैं।',
+        'Part A — आपूर्ति/चालान विवरण; Part B — परिवहन विवरण (वाहन संख्या, या रेल/वायु/जहाज़ हेतु परिवहन दस्तावेज़)।',
+        'GSP — GST Suvidha Provider: Live मोड में सॉफ़्टवेयर जिसके माध्यम से सरकारी पोर्टल से बात करता है।',
+        'Maker-Checker — जो दस्तावेज़ तैयार करता है (ऑपरेटर) वही उसे जमा/रद्द नहीं करता (एडमिन)। यह ग़लती व धोखाधड़ी रोकता है।',
+        'Audit Mode — ऑडिटर हेतु केवल-पठन लॉगिन: सब देख व निर्यात कर सकते हैं, बदल नहीं सकते।',
+        'Simulation बनाम Live — Simulation सब कुछ सुरक्षित अभ्यास कराता है, कोई वास्तविक सरकारी प्रस्तुति नहीं; Live वास्तविक डेटा भेजता है। ऊपर की पट्टी हमेशा मोड बताती है।',
+      ],
+    },
+  },
+  {
     id: 'troubleshooting', icon: Search,
     en: {
       title: 'Fixing common errors',

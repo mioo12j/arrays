@@ -97,6 +97,12 @@ if (fs.existsSync(path.join(clientDist, 'index.html'))) {
 app.use(notFound);
 app.use(errorHandler);
 
+// Apply persisted integration config (email / GST credentials / mode) into the
+// environment at boot, so going Live needs no source-code edit (§5).
+import('./services/gst/configService.js')
+  .then((m) => m.applyRuntimeConfig(pool))
+  .catch((e) => console.error('[config] applyRuntimeConfig failed:', e.message));
+
 app.listen(env.port, () => {
   // eslint-disable-next-line no-console
   console.log(`\n  ${company.name} — ERP API running on http://localhost:${env.port}`);

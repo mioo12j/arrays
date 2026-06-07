@@ -48,6 +48,77 @@ export async function setMaintenanceMode(db, mode, message, userId) {
   return { mode, message };
 }
 
+// ── §5 Integration & Environment Management ────────────────────────────────
+// Map config fields → process.env vars so going Live needs no code edits.
+const ENV_MAP = {
+  gst: { mode: 'GST_MODE', clientId: 'GST_CLIENT_ID', clientSecret: 'GST_CLIENT_SECRET', apiKey: 'GST_API_KEY', gspUsername: 'GST_GSP_USER', gspPassword: 'GST_GSP_PASS', irpUrl: 'GST_IRP_URL', ewbUrl: 'GST_EWB_URL' },
+  email: { smtpHost: 'GST_SMTP_HOST', smtpPort: 'GST_SMTP_PORT', username: 'GST_SMTP_USER', password: 'GST_SMTP_PASS', sender: 'GST_SMTP_FROM', replyTo: 'GST_SMTP_REPLYTO' },
+};
+const SECRET_FIELDS = new Set(['clientSecret', 'apiKey', 'gspPassword', 'password']);
+
+function applyToEnv(type, values) {
+  const map = ENV_MAP[type] || {};
+  for (const [field, env] of Object.entries(map)) {
+    if (values[field] !== undefined && values[field] !== null && values[field] !== '') process.env[env] = String(values[field]);
+  }
+}
+
+// On boot: load persisted integration config from app_config into process.env.
+export async function applyRuntimeConfig(db) {
+  for (const type of ['gst', 'email']) {
+    const v = await get(db, `integration_${type}`, null);
+    if (v) applyToEnv(type, v);
+  }
+}
+
+export async function getIntegrations(db) {
+  const out = {};
+  for (const type of ['gst', 'email', 'sms', 'whatsapp', 'cloud']) {
+    const v = (await get(db, `integration_${type}`, {})) || {};
+    // Never return secrets to the client — only "configured" flags + masked hint.
+    const safe = {};
+    for (const [k, val] of Object.entries(v)) safe[k] = SECRET_FIELDS.has(k) ? (val ? '••••••••' : '') : val;
+    out[type] = { ...safe, _hasSecrets: Object.keys(v).some((k) => SECRET_FIELDS.has(k) && v[k]) };
+  }
+  out.gst.mode = process.env.GST_MODE || 'simulation';
+  return out;
+}
+
+export async function setIntegration(db, type, values, userId) {
+  if (!['gst', 'email', 'sms', 'whatsapp', 'cloud'].includes(type)) throw new ApiError(400, 'Unknown integration.');
+  const prev = (await get(db, `integration_${type}`, {})) || {};
+  const next = { ...prev };
+  for (const [k, val] of Object.entries(values || {})) {
+    if (val === undefined) continue;
+    // keep existing secret if the masked placeholder was submitted unchanged
+    if (SECRET_FIELDS.has(k) && (val === '' || val === '••••••••')) continue;
+    next[k] = val;
+  }
+  await set(db, `integration_${type}`, next, userId);
+  applyToEnv(type, next);
+  const changed = Object.keys(values || {}).filter((k) => !SECRET_FIELDS.has(k)).map((k) => `${k}=${values[k]}`).join(', ');
+  await recordAudit(db, { objectType: 'system', objectId: userId, eventType: 'integration_changed', message: `${type} integration updated${changed ? ` (${changed})` : ''}`, userId });
+  return getIntegrations(db);
+}
+
+export async function testEmail(db) {
+  const c = (await get(db, 'integration_email', {})) || {};
+  const missing = ['smtpHost', 'smtpPort', 'sender'].filter((f) => !c[f]);
+  if (missing.length) return { ok: false, status: 'failed', message: `Missing: ${missing.join(', ')}` };
+  // Real SMTP send requires a mail library (nodemailer) — wire it in production.
+  return { ok: true, status: process.env.GST_SMTP_HOST ? 'configured' : 'simulated', message: process.env.GST_SMTP_HOST ? `SMTP ${c.smtpHost}:${c.smtpPort} configured. Add a mail library to actually send.` : 'Simulation — fields valid; codes are shown on screen.' };
+}
+
+export async function testGst(db) {
+  const c = (await get(db, 'integration_gst', {})) || {};
+  const mode = process.env.GST_MODE || 'simulation';
+  if (mode === 'live') {
+    const have = !!(c.clientId && c.clientSecret);
+    return { ok: have, status: have ? 'credentials present' : 'missing credentials', mode, message: have ? 'Live credentials configured. A live auth handshake will be attempted on first submission.' : 'Live mode selected but client id/secret are not set.' };
+  }
+  return { ok: true, status: 'simulation', mode, message: 'Simulation mode — valid-format IRN/EWB returned locally; no real submission.' };
+}
+
 // ── #11 Configuration export ───────────────────────────────────────────────
 export async function exportConfig(db) {
   const q = async (sql, p = []) => (await db.query(sql, p)).rows;

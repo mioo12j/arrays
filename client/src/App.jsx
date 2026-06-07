@@ -43,6 +43,7 @@ import GstReadiness from './pages/GstReadiness.jsx';
 import GstSystem from './pages/GstSystem.jsx';
 import GstBranding from './pages/GstBranding.jsx';
 import GstFeed from './pages/GstFeed.jsx';
+import GstIntegrations from './pages/GstIntegrations.jsx';
 
 function Protected({ children, adminOnly, editorOnly }) {
   const { user, loading, isAdmin, isEditor } = useAuth();
@@ -96,6 +97,7 @@ export default function App() {
         <Route path="/gst/readiness" element={<Protected adminOnly><GstReadiness /></Protected>} />
         <Route path="/gst/system" element={<Protected adminOnly><GstSystem /></Protected>} />
         <Route path="/gst/branding" element={<Protected adminOnly><GstBranding /></Protected>} />
+        <Route path="/gst/integrations" element={<Protected adminOnly><GstIntegrations /></Protected>} />
         <Route path="/gst/feed" element={<GstFeed />} />
         <Route path="/gst/reports" element={<GstReports />} />
         <Route path="/about" element={<About />} />

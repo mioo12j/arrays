@@ -89,6 +89,15 @@ router.post('/maintenance', requirePerm(PERMS.ADMIN), asyncHandler(async (req, r
   res.json(await tx((db) => config.setMaintenanceMode(db, req.body?.mode, req.body?.message, uid(req))));
 }));
 
+// ── §5 Integration & Environment Management Center ─────────────────────────
+router.get('/integrations', requirePerm(PERMS.ADMIN), asyncHandler(async (_req, res) => res.json(await config.getIntegrations(pool))));
+router.post('/integrations', requirePerm(PERMS.ADMIN), asyncHandler(async (req, res) => {
+  await tx((db) => otp.assertForAction(db, { token: req.body?.otpToken, action: 'config_change', userId: uid(req) }));
+  res.json(await tx((db) => config.setIntegration(db, req.body?.type, req.body?.values || {}, uid(req))));
+}));
+router.post('/integrations/test-email', requirePerm(PERMS.ADMIN), asyncHandler(async (_req, res) => res.json(await config.testEmail(pool))));
+router.post('/integrations/test-gst', requirePerm(PERMS.ADMIN), asyncHandler(async (_req, res) => res.json(await config.testGst(pool))));
+
 // ── #11 Configuration export ───────────────────────────────────────────────
 router.get('/config/export', requirePerm(PERMS.ADMIN), asyncHandler(async (req, res) => {
   await recordAccess(req, { action: 'export', detail: { report: 'configuration' } });

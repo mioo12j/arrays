@@ -12,7 +12,8 @@
     "migrate": "node src/db/migrate.js",
     "clear": "node src/db/clear-data.js",
     "sync": "node src/db/sync-to-cloud.js",
-    "gst:seed": "node src/db/gst-seed.js"
+    "gst:seed": "node src/db/gst-seed.js",
+    "gst:demo": "node src/db/gst-demo.js"
   },
   "dependencies": {
     "adm-zip": "^0.5.16",

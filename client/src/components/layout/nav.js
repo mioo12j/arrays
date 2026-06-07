@@ -3,7 +3,7 @@ import {
   Building2, Users, Banknote, ScrollText, BarChart3, ShieldCheck, UserCog,
   Calculator, Info, UserRound, DatabaseZap, HelpCircle, FileCheck2, Truck, ReceiptText,
   GitCompareArrows, Bell, Activity, HeartPulse, Building2 as BranchIcon, Hash,
-  CalendarClock, DatabaseBackup, UploadCloud, Stethoscope, ClipboardCheck, Settings, Palette, Rss,
+  CalendarClock, DatabaseBackup, UploadCloud, Stethoscope, ClipboardCheck, Settings, Palette, Rss, Plug,
 } from 'lucide-react';
 
 // `adminOnly` hides the item from operators.
@@ -43,6 +43,7 @@ export const NAV = [
     { to: '/gst/readiness', label: 'Production Readiness', icon: ClipboardCheck, adminOnly: true },
     { to: '/gst/system', label: 'System Control', icon: Settings, adminOnly: true },
     { to: '/gst/branding', label: 'Branding', icon: Palette, adminOnly: true },
+    { to: '/gst/integrations', label: 'Integrations', icon: Plug, adminOnly: true },
     { to: '/gst/reports', label: 'Compliance Reports', icon: BarChart3 },
   ]},
   { section: 'Intelligence', items: [

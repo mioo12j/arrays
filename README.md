@@ -315,6 +315,22 @@ epc/
 
 ---
 
+## Documentation
+
+| Document | For |
+|---|---|
+| [`docs/ADMIN_GUIDE.md`](docs/ADMIN_GUIDE.md) | Administrators — users, branches, series, integrations, branding, backup, maintenance |
+| [`docs/DEVELOPER.md`](docs/DEVELOPER.md) | Developers — project structure, architecture layers, services, API, engines, DB |
+| [`docs/ERROR_CODES.md`](docs/ERROR_CODES.md) | Error-code reference (AUTH/SEC/EINV/EWB/PDF/IMPORT/BACKUP/GST) with cause + fix |
+| [`docs/PRODUCTION_READINESS_REPORT.md`](docs/PRODUCTION_READINESS_REPORT.md) | Security/compliance/performance/PDF/DR/UAT reports + deployment checklist + verdict |
+| In-app **Help & Guide** | End users — getting started, GST terms, step-by-step workflows, troubleshooting (bilingual EN/हिं) |
+
+To load a ready-to-demo dataset: `cd server && npm run gst:demo` (branches, customers,
+e-invoices across statuses, e-way bills, comments, versions, saved views, a verified backup
+and demo branding — the system looks actively used).
+
+---
+
 ### Bilingual UI
 The entire interface switches between **English and Hindi** instantly from the
 top-bar toggle (EN / हिं), and the choice is remembered — so language is never a
