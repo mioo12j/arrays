@@ -9,7 +9,7 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto"; -- gen_random_uuid()
 
 -- Enums ---------------------------------------------------------------------
 DO $$ BEGIN
-  CREATE TYPE user_role          AS ENUM ('admin', 'operator', 'editor');
+  CREATE TYPE user_role          AS ENUM ('admin', 'operator', 'editor', 'auditor');
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 -- 'editor' = super-admin (added separately in migrate.js for existing DBs).
 

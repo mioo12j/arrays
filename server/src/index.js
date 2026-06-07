@@ -1,6 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { env } from './config/env.js';
 import { pool } from './config/db.js';
 import { company } from './config/company.js';
@@ -24,7 +27,9 @@ import auditRoutes from './routes/audit.routes.js';
 import quotesRoutes from './routes/quotes.routes.js';
 import companyRoutes from './routes/company.routes.js';
 import systemRoutes from './routes/system.routes.js';
+import gstRoutes from './routes/gst.routes.js';
 
+import { UPLOAD_ROOT } from './middleware/upload.js';
 import { notFound, errorHandler } from './middleware/error.js';
 
 const app = express();
@@ -71,6 +76,23 @@ app.use('/api/audit', auditRoutes);
 app.use('/api/quotes', quotesRoutes);
 app.use('/api/company', companyRoutes);
 app.use('/api/system', systemRoutes);
+app.use('/api/gst', gstRoutes);
+
+// Serve uploaded assets (branding logos/signatures/stamps) for in-app preview.
+app.use('/uploads', express.static(UPLOAD_ROOT));
+
+// ── Serve the built frontend (single-port "desktop" mode) ───────────────────
+// When client/dist exists, this same server hosts the UI too, so the operator
+// only needs ONE process on ONE port (http://localhost:4000). Any non-/api
+// route falls back to index.html so the SPA router can handle it.
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const clientDist = path.resolve(__dirname, '../../client/dist');
+if (fs.existsSync(path.join(clientDist, 'index.html'))) {
+  app.use(express.static(clientDist));
+  app.get(/^(?!\/api\/).*/, (_req, res) => res.sendFile(path.join(clientDist, 'index.html')));
+  // eslint-disable-next-line no-console
+  console.log(`  Serving frontend from ${clientDist}`);
+}
 
 app.use(notFound);
 app.use(errorHandler);

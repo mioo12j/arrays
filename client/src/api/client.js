@@ -4,10 +4,12 @@ const baseURL = import.meta.env.VITE_API_URL || '/api';
 
 export const api = axios.create({ baseURL });
 
-// Attach the JWT on every request.
+// Attach the JWT (and the active GST branch context) on every request.
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('epc_token');
   if (token) config.headers.Authorization = `Bearer ${token}`;
+  const branch = localStorage.getItem('gst_branch');
+  if (branch && branch !== 'all') config.headers['x-gst-branch'] = branch;
   return config;
 });
 

@@ -21,11 +21,23 @@ async function migrate() {
   } catch {
     /* type not created yet — schema.sql creates it with 'editor' included */
   }
+  try {
+    await pool.query("ALTER TYPE user_role ADD VALUE IF NOT EXISTS 'auditor'");
+  } catch {
+    /* type not created yet — schema.sql creates it with 'auditor' included */
+  }
 
   const sql = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8');
   // eslint-disable-next-line no-console
   console.log('[migrate] Applying schema.sql ...');
   await pool.query(sql);
+
+  // GST compliance module schema (separate file; depends on users + invoices).
+  const gstSql = fs.readFileSync(path.join(__dirname, 'gst-schema.sql'), 'utf8');
+  // eslint-disable-next-line no-console
+  console.log('[migrate] Applying gst-schema.sql ...');
+  await pool.query(gstSql);
+
   // eslint-disable-next-line no-console
   console.log('[migrate] Done.');
   await pool.end();

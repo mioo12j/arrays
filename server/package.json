@@ -11,9 +11,11 @@
     "seed": "node src/db/seed.js",
     "migrate": "node src/db/migrate.js",
     "clear": "node src/db/clear-data.js",
-    "sync": "node src/db/sync-to-cloud.js"
+    "sync": "node src/db/sync-to-cloud.js",
+    "gst:seed": "node src/db/gst-seed.js"
   },
   "dependencies": {
+    "adm-zip": "^0.5.16",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -25,6 +27,7 @@
     "pdfjs-dist": "^4.7.76",
     "pdfkit": "^0.15.0",
     "pg": "^8.12.0",
+    "qrcode": "^1.5.4",
     "tesseract.js": "^5.1.0",
     "xlsx": "^0.18.5",
     "zod": "^3.23.8"

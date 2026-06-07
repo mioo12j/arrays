@@ -1,7 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { Menu, Moon, Sun, LogOut, ChevronDown, ShieldCheck, UserCircle2, Languages } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import { Menu, Moon, Sun, LogOut, ChevronDown, ShieldCheck, UserCircle2, Languages, Building } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useI18n } from '../../context/I18nContext.jsx';
+import { useBranch } from '../../context/BranchContext.jsx';
+import GlobalSearch from '../gst/GlobalSearch.jsx';
 
 function useDarkMode() {
   const [dark, setDark] = useState(() => localStorage.getItem('epc_theme') === 'dark');
@@ -15,6 +18,9 @@ function useDarkMode() {
 export default function Topbar({ onMenu }) {
   const { user, logout } = useAuth();
   const { lang, toggle: toggleLang } = useI18n();
+  const { branches, branchId, setBranchId } = useBranch();
+  const location = useLocation();
+  const onGst = location.pathname.startsWith('/gst');
   const [dark, toggleDark] = useDarkMode();
   const [menuOpen, setMenuOpen] = useState(false);
   const ref = useRef(null);
@@ -31,13 +37,20 @@ export default function Topbar({ onMenu }) {
         <Menu size={20} />
       </button>
 
-      <div className="hidden flex-1 sm:block">
-        <p className="text-sm font-medium text-slate-400">
-          {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
-        </p>
+      <div className="hidden flex-1 items-center sm:flex">
+        <GlobalSearch />
       </div>
 
       <div className="flex items-center gap-2">
+        {onGst && branches.length > 0 && (
+          <div className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2 py-1.5 dark:border-slate-700 dark:bg-slate-900" data-no-i18n>
+            <Building size={15} className="text-slate-400" />
+            <select className="bg-transparent text-sm font-medium text-slate-700 focus:outline-none dark:text-slate-200" value={branchId} onChange={(e) => setBranchId(e.target.value)} title="Active branch / GSTIN">
+              <option value="all">All branches</option>
+              {branches.map((b) => <option key={b.id} value={b.id}>{b.code} — {b.name}</option>)}
+            </select>
+          </div>
+        )}
         <button
           onClick={toggleLang}
           className="flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-sm font-semibold text-slate-500 transition hover:bg-slate-100 dark:hover:bg-slate-800"

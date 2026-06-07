@@ -26,6 +26,23 @@ import Quotes from './pages/Quotes.jsx';
 import QuoteBuilder from './pages/QuoteBuilder.jsx';
 import About from './pages/About.jsx';
 import Help from './pages/Help.jsx';
+import GstDashboard from './pages/GstDashboard.jsx';
+import GstCompliance from './pages/GstCompliance.jsx';
+import GstReports from './pages/GstReports.jsx';
+import GstRecon from './pages/GstRecon.jsx';
+import GstNotifications from './pages/GstNotifications.jsx';
+import GstHealth from './pages/GstHealth.jsx';
+import GstActivity from './pages/GstActivity.jsx';
+import GstBranches from './pages/GstBranches.jsx';
+import GstSeries from './pages/GstSeries.jsx';
+import GstImport from './pages/GstImport.jsx';
+import GstSchedules from './pages/GstSchedules.jsx';
+import GstBackup from './pages/GstBackup.jsx';
+import GstDiagnostics from './pages/GstDiagnostics.jsx';
+import GstReadiness from './pages/GstReadiness.jsx';
+import GstSystem from './pages/GstSystem.jsx';
+import GstBranding from './pages/GstBranding.jsx';
+import GstFeed from './pages/GstFeed.jsx';
 
 function Protected({ children, adminOnly, editorOnly }) {
   const { user, loading, isAdmin, isEditor } = useAuth();
@@ -64,6 +81,23 @@ export default function App() {
         <Route path="/quotes" element={<Quotes />} />
         <Route path="/quotes/new" element={<QuoteBuilder />} />
         <Route path="/quotes/:id" element={<QuoteBuilder />} />
+        <Route path="/gst" element={<GstDashboard />} />
+        <Route path="/gst/compliance" element={<GstCompliance />} />
+        <Route path="/gst/reconciliation" element={<GstRecon />} />
+        <Route path="/gst/notifications" element={<GstNotifications />} />
+        <Route path="/gst/activity" element={<GstActivity />} />
+        <Route path="/gst/health" element={<Protected adminOnly><GstHealth /></Protected>} />
+        <Route path="/gst/branches" element={<Protected adminOnly><GstBranches /></Protected>} />
+        <Route path="/gst/number-series" element={<Protected adminOnly><GstSeries /></Protected>} />
+        <Route path="/gst/import" element={<Protected adminOnly><GstImport /></Protected>} />
+        <Route path="/gst/schedules" element={<GstSchedules />} />
+        <Route path="/gst/backup" element={<Protected adminOnly><GstBackup /></Protected>} />
+        <Route path="/gst/diagnostics" element={<Protected adminOnly><GstDiagnostics /></Protected>} />
+        <Route path="/gst/readiness" element={<Protected adminOnly><GstReadiness /></Protected>} />
+        <Route path="/gst/system" element={<Protected adminOnly><GstSystem /></Protected>} />
+        <Route path="/gst/branding" element={<Protected adminOnly><GstBranding /></Protected>} />
+        <Route path="/gst/feed" element={<GstFeed />} />
+        <Route path="/gst/reports" element={<GstReports />} />
         <Route path="/about" element={<About />} />
         <Route path="/help" element={<Help />} />
         <Route path="/reports" element={<Reports />} />

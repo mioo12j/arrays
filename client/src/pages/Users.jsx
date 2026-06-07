@@ -8,8 +8,8 @@ import Modal from '../components/ui/Modal.jsx';
 import { PageHeader, Card, Loading, Table, Badge, Field } from '../components/ui/index.jsx';
 import { fmtDateTime } from '../lib/format.js';
 
-const roleTone = { editor: 'purple', admin: 'blue', operator: 'slate' };
-const roleLabel = { editor: 'Editor', admin: 'Admin', operator: 'Operator' };
+const roleTone = { editor: 'purple', admin: 'blue', operator: 'slate', auditor: 'amber' };
+const roleLabel = { editor: 'Editor', admin: 'Admin', operator: 'Operator', auditor: 'Auditor' };
 
 export default function Users() {
   const toast = useToast();
@@ -91,6 +91,7 @@ function UserModal({ onClose, onSaved, isEditor }) {
           <select className="input" value={form.role} onChange={set('role')}>
             <option value="operator">Operator</option>
             <option value="admin">Admin</option>
+            <option value="auditor">Auditor (read-only)</option>
             {isEditor && <option value="editor">Editor (super-admin)</option>}
           </select>
         </Field>

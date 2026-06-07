@@ -309,6 +309,83 @@ const SECTIONS = [
     },
   },
   {
+    id: 'gst', icon: FileText,
+    en: {
+      title: 'GST Compliance — e-Invoice & e-Way Bill',
+      steps: [
+        'Open the "GST Compliance" section in the left menu. The workspace shows e-Invoices on one side and e-Way Bills on the other — they are separate legal documents.',
+        'To raise an e-Invoice: click "New e-Invoice", fill the document, seller, buyer and item blocks (the buyer GSTIN has a "Check" button to validate it), then Save. If you leave the document number blank it is auto-numbered from the series.',
+        'Open the draft, click "Validate", then "Submit → IRN". The system registers it and returns the IRN, acknowledgement number and signed QR code. Download the PDF or signed JSON anytime.',
+        'To make an e-Way Bill: open an e-Invoice and use "Generate EWB from this invoice", or create one directly. Add Part B (vehicle / transport document) and click "Generate EWB".',
+        'The top banner always tells you the mode: amber "SIMULATION" (safe practice — nothing is sent to the government) or red "LIVE".',
+        'Use the Reconciliation Center, Alerts, Activity Log and API Health (under GST Compliance) to stay on top of mismatches, expiring e-way bills and failures.',
+      ],
+    },
+    hi: {
+      title: 'GST अनुपालन — e-Invoice और e-Way Bill',
+      steps: [
+        'बाएँ मेनू में "GST Compliance" खोलें। कार्यक्षेत्र एक ओर e-Invoice और दूसरी ओर e-Way Bill दिखाता है — ये अलग-अलग कानूनी दस्तावेज़ हैं।',
+        'e-Invoice बनाने हेतु: "New e-Invoice" पर क्लिक करें, दस्तावेज़, विक्रेता, खरीदार और आइटम भरें (खरीदार GSTIN को जाँचने के लिए "Check" बटन है), फिर सहेजें। दस्तावेज़ संख्या खाली छोड़ने पर शृंखला से स्वतः नंबर मिलता है।',
+        'ड्राफ्ट खोलें, "Validate" फिर "Submit → IRN" पर क्लिक करें। सिस्टम इसे दर्ज करता है और IRN, पावती संख्या व हस्ताक्षरित QR कोड लौटाता है। कभी भी PDF या signed JSON डाउनलोड करें।',
+        'e-Way Bill बनाने हेतु: किसी e-Invoice से "Generate EWB" का उपयोग करें, या सीधे बनाएँ। Part B (वाहन / परिवहन दस्तावेज़) जोड़ें और "Generate EWB" पर क्लिक करें।',
+        'ऊपर की पट्टी हमेशा मोड बताती है: एम्बर "SIMULATION" (सुरक्षित अभ्यास — सरकार को कुछ नहीं भेजा जाता) या लाल "LIVE"।',
+        'बेमेल, समाप्त हो रहे e-way bill और विफलताओं पर नज़र रखने के लिए Reconciliation, Alerts, Activity Log और API Health का उपयोग करें।',
+      ],
+    },
+  },
+  {
+    id: 'security', icon: ShieldCheck,
+    en: {
+      title: 'Security Verification (2-step) for sensitive actions',
+      steps: [
+        'Legally sensitive actions — cancelling an IRN or e-Way Bill, restoring a backup — require two-step verification.',
+        'Step 1: re-enter your account password to confirm it is really you.',
+        'Step 2: enter the verification code. In Simulation the code is shown on screen; in production it is emailed to your registered address.',
+        'You get a limited number of tries; too many wrong codes temporarily lock the attempt. Every attempt (success or failure, with time and IP) is written to the permanent audit log.',
+        'Maker-checker: the person who prepares a document is not the same person who submits or cancels it — that needs an Admin (checker).',
+      ],
+    },
+    hi: {
+      title: 'संवेदनशील कार्यों हेतु सुरक्षा सत्यापन (2-चरण)',
+      steps: [
+        'कानूनी रूप से संवेदनशील कार्य — IRN या e-Way Bill रद्द करना, बैकअप पुनर्स्थापित करना — दो-चरणीय सत्यापन माँगते हैं।',
+        'चरण 1: यह पुष्टि करने हेतु कि यह वाकई आप हैं, अपना खाता पासवर्ड फिर से दर्ज करें।',
+        'चरण 2: सत्यापन कोड दर्ज करें। Simulation में कोड स्क्रीन पर दिखता है; production में यह आपके पंजीकृत पते पर ईमेल किया जाता है।',
+        'आपको सीमित प्रयास मिलते हैं; बहुत अधिक ग़लत कोड प्रयास को अस्थायी रूप से लॉक कर देते हैं। हर प्रयास (सफल या असफल, समय व IP सहित) स्थायी ऑडिट लॉग में दर्ज होता है।',
+        'Maker-checker: जो दस्तावेज़ तैयार करता है वही उसे जमा या रद्द नहीं करता — इसके लिए एडमिन (चेकर) चाहिए।',
+      ],
+    },
+  },
+  {
+    id: 'troubleshooting', icon: Search,
+    en: {
+      title: 'Fixing common errors',
+      steps: [
+        'App won’t open / blank page: make sure the engine is running — double-click "Start ARRAYS ERP", or open http://localhost:4000. If still stuck, restart the computer (PostgreSQL starts automatically).',
+        '"Internal server error" on upload: the file type or size may be unsupported — use PDF, image, or Excel/CSV under the size limit. Re-try; the error detail names the cause.',
+        'Invoice won’t submit: click "Validate" first — every red error must be fixed. Common ones: invalid GSTIN (use the Check button), HSN must be 6-digit for turnover above ₹5 cr, item or value missing.',
+        '"Duplicate document number": that number already exists in this branch. Use a different number, or confirm the override with a reason.',
+        'e-Way Bill rejected: road transport needs a valid vehicle number; rail/air/ship need a transport document number and date. Distance must be 0–4000 km.',
+        '"Security verification required": this action needs the 2-step password + code. Complete it to proceed.',
+        'Admin can’t see Import/Upload buttons: that is by design — imports run on the operator’s computer to keep the cloud fast. Use the operator login for data entry.',
+        'Check the Diagnostics page (admin) — it tells you instantly if the database, storage, backup, adapter or any engine has a problem, with a recommended fix.',
+      ],
+    },
+    hi: {
+      title: 'सामान्य त्रुटियाँ ठीक करना',
+      steps: [
+        'ऐप नहीं खुल रहा / खाली पृष्ठ: सुनिश्चित करें कि इंजन चल रहा है — "Start ARRAYS ERP" डबल-क्लिक करें, या http://localhost:4000 खोलें। फिर भी अटके तो कंप्यूटर पुनः चालू करें (PostgreSQL स्वतः शुरू होता है)।',
+        'अपलोड पर "Internal server error": फ़ाइल प्रकार/आकार असमर्थित हो सकता है — सीमा के भीतर PDF, छवि, या Excel/CSV उपयोग करें। पुनः प्रयास करें; त्रुटि विवरण कारण बताता है।',
+        'चालान जमा नहीं हो रहा: पहले "Validate" करें — हर लाल त्रुटि ठीक करनी होगी। आम: अमान्य GSTIN (Check बटन), ₹5 करोड़ से ऊपर टर्नओवर पर HSN 6-अंकीय आवश्यक, आइटम/मूल्य गायब।',
+        '"Duplicate document number": यह संख्या इस शाखा में पहले से है। अलग संख्या उपयोग करें, या कारण सहित ओवरराइड पुष्टि करें।',
+        'e-Way Bill अस्वीकृत: सड़क परिवहन को वैध वाहन संख्या चाहिए; रेल/वायु/जहाज़ को परिवहन दस्तावेज़ संख्या व दिनांक। दूरी 0–4000 किमी होनी चाहिए।',
+        '"Security verification required": इस कार्य हेतु 2-चरण पासवर्ड + कोड चाहिए। आगे बढ़ने के लिए पूरा करें।',
+        'एडमिन को Import/Upload बटन नहीं दिखते: यह जानबूझकर है — आयात ऑपरेटर के कंप्यूटर पर चलते हैं ताकि क्लाउड तेज़ रहे। डेटा प्रविष्टि हेतु ऑपरेटर लॉगिन उपयोग करें।',
+        'Diagnostics पृष्ठ (एडमिन) देखें — यह तुरंत बताता है कि डेटाबेस, स्टोरेज, बैकअप, एडाप्टर या किसी इंजन में समस्या है या नहीं, सुझाए गए समाधान सहित।',
+      ],
+    },
+  },
+  {
     id: 'language', icon: Languages,
     en: {
       title: 'Changing the Language',
