@@ -43,6 +43,7 @@ import GstReadiness from './pages/GstReadiness.jsx';
 import GstSystem from './pages/GstSystem.jsx';
 import GstBranding from './pages/GstBranding.jsx';
 import GstFeed from './pages/GstFeed.jsx';
+import { ActivityHub, ReportsHub, SystemStatusHub, DataAdminHub } from './pages/Hubs.jsx';
 import GstIntegrations from './pages/GstIntegrations.jsx';
 
 function Protected({ children, adminOnly, editorOnly }) {
@@ -102,10 +103,15 @@ export default function App() {
         <Route path="/gst/reports" element={<GstReports />} />
         <Route path="/about" element={<About />} />
         <Route path="/help" element={<Help />} />
-        <Route path="/reports" element={<Reports />} />
+        {/* Consolidated hubs (merge several screens into one tabbed page) */}
+        <Route path="/reports" element={<ReportsHub />} />
+        <Route path="/activity" element={<ActivityHub />} />
+        <Route path="/status" element={<SystemStatusHub />} />
+        <Route path="/system" element={<DataAdminHub />} />
+        {/* Standalone routes kept so existing deep links still work */}
+        <Route path="/reports/financial" element={<Reports />} />
         <Route path="/audit" element={<Protected adminOnly><Audit /></Protected>} />
         <Route path="/users" element={<Protected adminOnly><Users /></Protected>} />
-        <Route path="/system" element={<System />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
