@@ -1,16 +1,49 @@
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, FileDown, Users } from 'lucide-react';
+import { ArrowLeft, FileDown, Users, ShieldCheck } from 'lucide-react';
 import { download } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
 import { Card, Loading, Table, Badge } from '../components/ui/index.jsx';
 import { inr, fmtDate } from '../lib/format.js';
+
+const GST_TONE = { compliant: 'green', attention: 'red', pending: 'amber', none: 'slate' };
+const GST_LABEL = { compliant: 'Compliant', attention: 'Needs attention', pending: 'Pending IRN', none: 'No GST activity' };
+
+function GstPanel({ gst }) {
+  if (!gst) return null;
+  const metrics = [
+    ['e-Invoices', gst.einvoices], ['IRNs generated', gst.irns],
+    ['e-Way Bills', gst.ewbs], ['Active EWBs', gst.activeEwbs],
+    ['Total GST value', inr(gst.gstValue)], ['Last GST txn', gst.lastTxn ? fmtDate(gst.lastTxn) : '—'],
+  ];
+  return (
+    <Card className="mb-6">
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="flex items-center gap-2 font-semibold text-slate-800 dark:text-slate-100">
+          <ShieldCheck size={18} className="text-brand-600" /> GST Compliance
+        </h3>
+        <div className="flex items-center gap-3">
+          <Badge tone={GST_TONE[gst.status] || 'slate'}>{GST_LABEL[gst.status] || gst.status}</Badge>
+          <Link to="/gst/compliance" className="text-sm font-medium text-brand-600 hover:underline">Open workspace →</Link>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        {metrics.map(([label, val]) => (
+          <div key={label} className="rounded-lg bg-slate-50 px-3 py-2 dark:bg-slate-800/50">
+            <p className="text-[11px] font-semibold uppercase text-slate-400">{label}</p>
+            <p className="mt-0.5 text-base font-bold text-slate-900 dark:text-white">{val}</p>
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}
 
 export default function ClientLedger() {
   const { id } = useParams();
   const { data, loading } = useFetch(`/clients/${id}/ledger`);
   if (loading) return <Loading />;
   if (!data) return null;
-  const { client, summary, entries, invoices } = data;
+  const { client, summary, entries, invoices, gst } = data;
 
   return (
     <div>
@@ -37,6 +70,8 @@ export default function ClientLedger() {
         <Card><p className="text-xs font-semibold uppercase text-slate-400">Total Received</p><p className="mt-1 text-2xl font-bold text-emerald-600">{inr(summary.total_received)}</p></Card>
         <Card><p className="text-xs font-semibold uppercase text-slate-400">Outstanding</p><p className="mt-1 text-2xl font-bold text-amber-600">{inr(summary.outstanding)}</p></Card>
       </div>
+
+      <GstPanel gst={gst} />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card className="!p-0">

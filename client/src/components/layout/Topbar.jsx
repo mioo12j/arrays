@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Menu, Moon, Sun, LogOut, ChevronDown, ShieldCheck, UserCircle2, Languages, Building } from 'lucide-react';
+import { Menu, Moon, Sun, LogOut, ChevronDown, ShieldCheck, UserCircle2, Languages, Building, Search, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useI18n } from '../../context/I18nContext.jsx';
 import { useBranch } from '../../context/BranchContext.jsx';
@@ -23,6 +23,7 @@ export default function Topbar({ onMenu }) {
   const onGst = location.pathname.startsWith('/gst');
   const [dark, toggleDark] = useDarkMode();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileSearch, setMobileSearch] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
@@ -42,6 +43,13 @@ export default function Topbar({ onMenu }) {
       </div>
 
       <div className="flex items-center gap-2">
+        <button
+          onClick={() => setMobileSearch(true)}
+          className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 dark:hover:bg-slate-800 sm:hidden"
+          title="Search"
+        >
+          <Search size={18} />
+        </button>
         {onGst && branches.length > 0 && (
           <div className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2 py-1.5 dark:border-slate-700 dark:bg-slate-900" data-no-i18n>
             <Building size={15} className="text-slate-400" />
@@ -103,6 +111,15 @@ export default function Topbar({ onMenu }) {
           )}
         </div>
       </div>
+
+      {mobileSearch && (
+        <div className="absolute inset-x-0 top-0 z-30 flex h-16 items-center gap-2 border-b border-slate-200 bg-white px-4 dark:border-slate-800 dark:bg-slate-900 sm:hidden">
+          <div className="flex-1"><GlobalSearch /></div>
+          <button onClick={() => setMobileSearch(false)} className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800" title="Close search">
+            <X size={20} />
+          </button>
+        </div>
+      )}
     </header>
   );
 }

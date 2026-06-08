@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, FileDown, Building2, Plus, Loader2, CreditCard } from 'lucide-react';
+import { ArrowLeft, FileDown, Building2, Plus, Loader2, CreditCard, ShieldCheck } from 'lucide-react';
 import { api, apiError, download } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
 import { useToast } from '../components/ui/Toast.jsx';
@@ -27,8 +27,9 @@ export default function VendorLedger() {
 
   if (loading) return <Loading />;
   if (!data) return null;
-  const { vendor, summary, entries } = data;
+  const { vendor, summary, entries, gst } = data;
   const accounts = vendorDetail?.accounts || [];
+  const valTone = { valid: 'green', warning: 'amber', invalid: 'red' };
 
   return (
     <div>
@@ -74,6 +75,33 @@ export default function VendorLedger() {
         <Card><p className="text-xs font-semibold uppercase text-slate-400">Opening Balance</p><p className="mt-1 text-2xl font-bold text-slate-900 dark:text-white">{inr(vendor.opening_balance)}</p></Card>
         <Card><p className="text-xs font-semibold uppercase text-slate-400">Outstanding</p><p className="mt-1 text-2xl font-bold text-amber-600">{inr(summary.balance)}</p></Card>
       </div>
+
+      {gst && (
+        <Card className="mb-6">
+          <h3 className="mb-3 flex items-center gap-2 font-semibold text-slate-800 dark:text-slate-100">
+            <ShieldCheck size={18} className="text-brand-600" /> GST Status
+          </h3>
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-2 text-sm">
+            <div><span className="text-slate-400">GSTIN: </span><span className="font-mono font-semibold">{gst.gstin}</span></div>
+            {gst.validation ? (
+              <>
+                <div className="flex items-center gap-2"><span className="text-slate-400">Validation:</span>
+                  <Badge tone={valTone[gst.validation.result] || 'slate'}>{gst.validation.result}</Badge></div>
+                {gst.validation.portalStatus && <div><span className="text-slate-400">Portal status: </span><span className="font-medium">{gst.validation.portalStatus}</span></div>}
+                {gst.validation.stateName && <div><span className="text-slate-400">State: </span><span className="font-medium">{gst.validation.stateName}</span></div>}
+                <div><span className="text-slate-400">Checked: </span><span className="font-medium">{fmtDate(gst.validation.checkedAt)}</span></div>
+              </>
+            ) : (
+              <div className="flex items-center gap-2 text-slate-500">
+                <Badge tone="slate">Not yet validated</Badge>
+                <Link to="/gst/compliance" className="font-medium text-brand-600 hover:underline">Validate in GST workspace →</Link>
+              </div>
+            )}
+            <div><span className="text-slate-400">Related GST docs: </span><span className="font-semibold">{gst.relatedDocs}</span></div>
+          </div>
+          <p className="mt-2 text-xs text-slate-400">Filing history (GSTR) will populate automatically once a live GSP is connected.</p>
+        </Card>
+      )}
 
       <Card className="!p-0">
         <div className="border-b border-slate-100 px-5 py-4 dark:border-slate-800">

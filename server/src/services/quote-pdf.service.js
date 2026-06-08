@@ -6,7 +6,9 @@ const BRAND = '#' + (company.brandColor || '1d4ed8');
 const INK = '#0f172a';
 const MUTE = '#64748b';
 const LINE = '#e2e8f0';
-const inr = (n) => '₹' + new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(Number(n || 0));
+// pdfkit's standard Helvetica (WinAnsi) has no ₹ glyph (it prints as "¹"); use
+// an ASCII "Rs " prefix that renders correctly on every platform.
+const inr = (n) => 'Rs ' + new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(Number(n || 0));
 const TYPE_LABEL = {
   residential: 'Residential Rooftop', rooftop: 'Rooftop Solar', commercial: 'Commercial',
   industrial: 'Industrial', institutional: 'Institutional', government: 'Government',
@@ -164,6 +166,7 @@ export function streamQuotePdf(res, quote) {
   const range = doc.bufferedPageRange();
   for (let i = range.start; i < range.start + range.count; i++) {
     doc.switchToPage(i);
+    doc.page.margins.bottom = 0;   // footer sits in the margin band — stop pdfkit from auto-paginating
     const fy = doc.page.height - 50;
     doc.moveTo(M, fy).lineTo(M + W, fy).strokeColor(LINE).lineWidth(0.5).stroke();
     doc.font('Helvetica').fontSize(7).fillColor(MUTE)

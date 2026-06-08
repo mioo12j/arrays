@@ -441,13 +441,35 @@ const SECTIONS = [
   },
 ];
 
+// ── Help Center categories — each section is filed under one category so the
+//   guide reads as a structured knowledge base, not a flat list. ─────────────
+const CATS = [
+  { id: 'all', en: 'All topics', hi: 'सभी विषय' },
+  { id: 'start', en: 'Getting Started', hi: 'शुरुआत' },
+  { id: 'workflows', en: 'Daily Workflows', hi: 'रोज़ के कार्य' },
+  { id: 'gst', en: 'GST Compliance', hi: 'GST अनुपालन' },
+  { id: 'security', en: 'Security & Roles', hi: 'सुरक्षा व भूमिकाएँ' },
+  { id: 'help', en: 'Troubleshooting', hi: 'समस्या-समाधान' },
+];
+const CAT_OF = {
+  start: 'start', dashboard: 'start', language: 'start', publish: 'start',
+  payments: 'workflows', receipts: 'workflows', invoices: 'workflows', reconciliation: 'workflows',
+  vendors: 'workflows', employees: 'workflows', clients: 'workflows', quotes: 'workflows',
+  projects: 'workflows', reports: 'workflows',
+  gst: 'gst', gstterms: 'gst',
+  roles: 'security', security: 'security',
+  troubleshooting: 'help',
+};
+
 export default function Help() {
   const { lang } = useI18n();
   const [q, setQ] = useState('');
+  const [cat, setCat] = useState('all');
   const isHi = lang === 'hi';
 
   const query = q.trim().toLowerCase();
   const visible = SECTIONS.filter((s) => {
+    if (cat !== 'all' && CAT_OF[s.id] !== cat) return false;
     if (!query) return true;
     const c = s[isHi ? 'hi' : 'en'];
     return (
@@ -455,6 +477,10 @@ export default function Help() {
       c.steps.some((st) => st.toLowerCase().includes(query))
     );
   });
+  // group visible sections by category, preserving CATS order
+  const grouped = CATS.filter((k) => k.id !== 'all')
+    .map((k) => ({ cat: k, items: visible.filter((s) => CAT_OF[s.id] === k.id) }))
+    .filter((g) => g.items.length > 0);
 
   return (
     <div>
@@ -481,10 +507,27 @@ export default function Help() {
         </div>
       </Card>
 
-      {/* Quick links */}
+      {/* Category filter */}
+      <div className="mb-4 flex flex-wrap gap-2">
+        {CATS.map((k) => (
+          <button
+            key={k.id}
+            onClick={() => setCat(k.id)}
+            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+              cat === k.id
+                ? 'bg-brand-600 text-white shadow-sm'
+                : 'border border-slate-200 bg-white text-slate-600 hover:border-brand-300 hover:text-brand-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300'
+            }`}
+          >
+            {k[isHi ? 'hi' : 'en']}
+          </button>
+        ))}
+      </div>
+
+      {/* Quick links (within current category, when not searching) */}
       {!query && (
         <div className="mb-5 flex flex-wrap gap-2">
-          {SECTIONS.map((s) => (
+          {visible.map((s) => (
             <a
               key={s.id}
               href={`#${s.id}`}
@@ -496,32 +539,42 @@ export default function Help() {
         </div>
       )}
 
-      <div className="space-y-4">
-        {visible.map((s) => {
-          const c = s[isHi ? 'hi' : 'en'];
-          return (
-            <Card key={s.id} id={s.id} className="scroll-mt-20">
-              <div className="flex items-start gap-4">
-                <div className="shrink-0 rounded-xl bg-brand-50 p-3 text-brand-600 dark:bg-brand-900/30">
-                  <s.icon size={22} />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{c.title}</h3>
-                  <ol className="mt-3 space-y-2">
-                    {c.steps.map((step, i) => (
-                      <li key={i} className="flex gap-3 text-sm text-slate-600 dark:text-slate-300">
-                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-100 text-[11px] font-bold text-brand-700 dark:bg-brand-900/40 dark:text-brand-300">
-                          {i + 1}
-                        </span>
-                        <span>{step}</span>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              </div>
-            </Card>
-          );
-        })}
+      <div className="space-y-6">
+        {grouped.map((g) => (
+          <section key={g.cat.id}>
+            <h2 className="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-400">
+              {g.cat[isHi ? 'hi' : 'en']}
+              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500 dark:bg-slate-800">{g.items.length}</span>
+            </h2>
+            <div className="space-y-4">
+              {g.items.map((s) => {
+                const c = s[isHi ? 'hi' : 'en'];
+                return (
+                  <Card key={s.id} id={s.id} className="scroll-mt-20">
+                    <div className="flex items-start gap-4">
+                      <div className="shrink-0 rounded-xl bg-brand-50 p-3 text-brand-600 dark:bg-brand-900/30">
+                        <s.icon size={22} />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{c.title}</h3>
+                        <ol className="mt-3 space-y-2">
+                          {c.steps.map((step, i) => (
+                            <li key={i} className="flex gap-3 text-sm text-slate-600 dark:text-slate-300">
+                              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-100 text-[11px] font-bold text-brand-700 dark:bg-brand-900/40 dark:text-brand-300">
+                                {i + 1}
+                              </span>
+                              <span>{step}</span>
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
+          </section>
+        ))}
         {visible.length === 0 && (
           <Card><p className="text-center text-sm text-slate-400">{isHi ? 'कोई परिणाम नहीं मिला।' : 'No matching help topics.'}</p></Card>
         )}

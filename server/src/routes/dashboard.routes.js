@@ -2,9 +2,20 @@ import { Router } from 'express';
 import { query } from '../config/db.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { authenticate } from '../middleware/auth.js';
+import { dashboardGst } from '../services/gst/rollupService.js';
 
 const router = Router();
 router.use(authenticate);
+
+// GET /api/dashboard/gst  — GST compliance summary surfaced on the main dashboard
+router.get(
+  '/gst',
+  asyncHandler(async (_req, res) => {
+    let gst = { todayIrns: 0, activeEwbs: 0, expiringEwbs: 0, complianceAlerts: 0, failedSubmissions: 0, recent: [] };
+    try { gst = await dashboardGst(); } catch { /* GST module optional */ }
+    res.json(gst);
+  })
+);
 
 // GET /api/dashboard/summary  — headline KPIs
 router.get(

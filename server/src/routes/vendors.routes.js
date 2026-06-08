@@ -6,6 +6,7 @@ import { noImportForAdmin } from '../middleware/rbac.js';
 import { audit } from '../middleware/audit.js';
 import { upload } from '../middleware/upload.js';
 import { parseVendorFile } from '../services/vendor-import.service.js';
+import { vendorGst } from '../services/gst/rollupService.js';
 
 const router = Router();
 router.use(authenticate);
@@ -84,10 +85,14 @@ router.get(
 
     const { rows: bView } = await query('SELECT * FROM v_vendor_balances WHERE vendor_id=$1', [req.params.id]);
 
+    let gst = null;
+    try { gst = await vendorGst(vendor[0].gstin); } catch { /* GST module optional */ }
+
     res.json({
       vendor: vendor[0],
       summary: bView[0] || { balance: vendor[0].opening_balance || 0, total_paid: 0 },
       entries: ledger,
+      gst,
     });
   })
 );

@@ -4,8 +4,12 @@
 //  populate naturally — the system looks actively used, no empty screens.
 // ============================================================================
 
+import fs from 'node:fs';
 import { pool, withTransaction } from '../config/db.js';
 import { gstinCheckDigit } from '../services/gst/validation.js';
+import { generateBrandingAssets } from '../../scripts/gen-branding.js';
+import { UPLOAD_ROOT } from '../middleware/upload.js';
+import path from 'node:path';
 import * as branches from '../services/gst/branchService.js';
 import * as series from '../services/gst/seriesService.js';
 import * as einv from '../services/gst/einvoiceService.js';
@@ -17,6 +21,7 @@ import * as backups from '../services/gst/backupService.js';
 import * as branding from '../services/gst/brandingService.js';
 
 const log = (...a) => console.log('[gst-demo]', ...a);
+const hasAsset = (name) => (fs.existsSync(path.join(UPLOAD_ROOT, name)) ? name : undefined);
 const daysAgo = (n) => { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); };
 const mkGstin = (state, pan, entity = '1') => { const base = `${state}${pan}${entity}Z`; return base + gstinCheckDigit(base); };
 
@@ -61,6 +66,9 @@ async function main() {
   const userId = (await pool.query("SELECT id FROM users WHERE email IN ('editor','admin') ORDER BY (email='editor') DESC LIMIT 1")).rows[0]?.id;
   if (!userId) throw new Error('No editor/admin user found — run npm run seed first.');
 
+  log('generating branding image assets (logo, stamp, signature)…');
+  generateBrandingAssets({ silent: true });
+
   log('ensuring branches + series + branding…');
   await withTransaction((db) => branches.ensureDefault(db));
   await withTransaction((db) => series.ensureDefault(db));
@@ -81,6 +89,9 @@ async function main() {
     terms: 'Payment due within 30 days of invoice date. Goods once sold will not be taken back. Interest @18% p.a. on delayed payments. Subject to Madhubani jurisdiction.',
     disclaimer: 'This is a digitally generated, IRP-registered tax invoice and does not require a physical signature. E. & O. E.',
     watermark: 'ORIGINAL',
+    logoFile: hasAsset('demo-logo.png'),
+    stampFile: hasAsset('demo-stamp.png'),
+    signatureFile: hasAsset('demo-signature.png'),
   }, userId));
 
   log('creating e-invoices…');

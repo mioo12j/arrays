@@ -1,5 +1,4 @@
 # Internal tooling / editor files — not part of the application
-.claude/
 .vscode/
 .idea/
 
@@ -13,6 +12,9 @@ build/
 *.log
 server/server.log
 server/server.err*.log
+
+# Runtime artifacts — backups and uploaded files stay local, never committed
+server/backups/
 
 # OS
 .DS_Store

@@ -3,6 +3,7 @@ import { query } from '../config/db.js';
 import { asyncHandler, ApiError } from '../utils/asyncHandler.js';
 import { authenticate } from '../middleware/auth.js';
 import { audit } from '../middleware/audit.js';
+import { customerGst } from '../services/gst/rollupService.js';
 
 const router = Router();
 router.use(authenticate);
@@ -49,11 +50,16 @@ router.get(
     );
     const { rows: bView } = await query('SELECT * FROM v_client_balances WHERE client_id=$1', [req.params.id]);
 
+    // Read-only GST compliance rollup (linked by GSTIN); never blocks the ledger.
+    let gst = null;
+    try { gst = await customerGst(client[0].gstin); } catch { /* GST module optional */ }
+
     res.json({
       client: client[0],
       summary: bView[0] || { total_billed: 0, total_received: 0, outstanding: 0 },
       entries: ledger,
       invoices,
+      gst,
     });
   })
 );

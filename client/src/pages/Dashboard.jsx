@@ -1,6 +1,6 @@
 import {
   ArrowUpRight, ArrowDownLeft, Wallet, FileWarning, Banknote, FolderKanban,
-  TrendingUp, AlertTriangle,
+  TrendingUp, AlertTriangle, FileCheck2, Truck, Clock, XCircle, ShieldCheck,
 } from 'lucide-react';
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid,
@@ -47,9 +47,11 @@ export default function Dashboard() {
   const { data: vendorSpend } = useFetch('/dashboard/vendor-spend');
   const { data: aging } = useFetch('/dashboard/receivable-aging');
   const { data: clientRevenue } = useFetch('/dashboard/client-revenue');
+  const { data: gst } = useFetch('/dashboard/gst');
 
   if (loading) return <Loading label="Loading dashboard…" />;
   const s = summary || {};
+  const g = gst || {};
 
   return (
     <div>
@@ -72,6 +74,37 @@ export default function Dashboard() {
         <StatCard icon={Banknote} label="Reconciliation Pending" value={s.reconciliation_pending ?? 0} tone="red" to="/reconciliation" />
         <StatCard icon={FolderKanban} label="Active Projects" value={s.active_projects ?? 0} tone="brand" to="/projects" />
       </div>
+
+      {/* GST compliance summary — surfaced from the (otherwise isolated) GST module */}
+      <div className="mb-2 mt-8 flex items-center justify-between">
+        <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-400">
+          <ShieldCheck size={15} /> GST Compliance
+        </h2>
+        <Link to="/gst/compliance" className="text-sm font-medium text-brand-600 hover:underline">Open GST workspace →</Link>
+      </div>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-5">
+        <StatCard icon={FileCheck2} label="Today's IRNs" value={g.todayIrns ?? 0} tone="green" to="/gst/compliance" />
+        <StatCard icon={Truck} label="Active e-Way Bills" value={g.activeEwbs ?? 0} tone="brand" to="/gst/compliance" />
+        <StatCard icon={Clock} label="Expiring (24h)" value={g.expiringEwbs ?? 0} tone="amber" to="/gst/notifications" />
+        <StatCard icon={AlertTriangle} label="Compliance Alerts" value={g.complianceAlerts ?? 0} tone="amber" to="/gst/notifications" />
+        <StatCard icon={XCircle} label="Failed Submissions" value={g.failedSubmissions ?? 0} tone="red" to="/gst/health" />
+      </div>
+      {g.recent?.length > 0 && (
+        <Card className="mt-4 !p-0">
+          <div className="border-b border-slate-100 px-5 py-3 dark:border-slate-800"><h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200">Recent Compliance Activity</h3></div>
+          <div className="divide-y divide-slate-100 dark:divide-slate-800">
+            {g.recent.map((r, i) => (
+              <div key={i} className="flex items-center gap-3 px-5 py-2.5">
+                <Badge tone={r.kind === 'e-Invoice' ? 'blue' : 'purple'}>{r.kind}</Badge>
+                <span className="min-w-0 flex-1 truncate text-sm font-medium text-slate-700 dark:text-slate-200">{r.docNo || '—'}{r.party ? <span className="font-normal text-slate-400"> · {r.party}</span> : null}</span>
+                {r.ref && <span className="hidden font-mono text-xs text-slate-400 sm:inline">{r.ref}</span>}
+                <Badge status={r.status} />
+                <span className="text-xs text-slate-400">{fmtDate(r.at)}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
 
       {/* Charts */}
       <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">

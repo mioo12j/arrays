@@ -22,8 +22,33 @@ export default function GstBranding() {
     try { await api.post('/gst/branding', { ...f, branchId: branchId || undefined }); toast.success('Branding saved'); refetch(); }
     catch (e) { toast.error(apiError(e)); } finally { setSaving(false); }
   };
+  // Recommended specs per asset (PDF preserves aspect ratio, so off-ratio images letterbox rather than stretch).
+  const SPECS = {
+    logo: { rec: '1200 × 1200 px', fmt: 'PNG, transparent background', aspect: 1, tol: 0.35, minPx: 200 },
+    signature: { rec: '1200 × 400 px', fmt: 'PNG, transparent background', aspect: 3, tol: 0.8, minPx: 150 },
+    stamp: { rec: '1200 × 1200 px', fmt: 'PNG, transparent background', aspect: 1, tol: 0.35, minPx: 200 },
+  };
+  const MAX_BYTES = 3 * 1024 * 1024;
+  const inspectImage = (slot, file) => new Promise((resolve) => {
+    const warns = [];
+    if (!/png|jpe?g/i.test(file.type)) warns.push('Use a PNG or JPG file (PNG with a transparent background is recommended).');
+    if (file.size > MAX_BYTES) warns.push(`File is ${(file.size / 1048576).toFixed(1)} MB — keep it under 3 MB so PDFs stay fast and light.`);
+    const spec = SPECS[slot];
+    const url = URL.createObjectURL(file);
+    const img = new window.Image();
+    img.onload = () => {
+      const w = img.naturalWidth, h = img.naturalHeight; URL.revokeObjectURL(url);
+      if (Math.min(w, h) < spec.minPx) warns.push(`Low resolution (${w} × ${h} px) — it may look blurry in print. Recommended ${spec.rec}.`);
+      if (Math.abs(w / h - spec.aspect) > spec.tol) warns.push(`Shape is ${(w / h).toFixed(2)}:1; the recommended shape is about ${spec.aspect}:1 (${spec.rec}). It will be centred with blank space rather than stretched.`);
+      resolve(warns);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(['This file could not be read as an image — please choose a valid PNG or JPG.']); };
+    img.src = url;
+  });
   const uploadAsset = async (slot, file) => {
     if (!file) return;
+    const warns = await inspectImage(slot, file);
+    if (warns.length && !window.confirm(`This ${slot} image may not look ideal:\n\n• ${warns.join('\n• ')}\n\nUpload it anyway?`)) return;
     try { const fd = new FormData(); fd.append('file', file); fd.append('slot', slot); if (branchId) fd.append('branchId', branchId); await api.post('/gst/branding/asset', fd); toast.success(`${slot} uploaded`); refetch(); }
     catch (e) { toast.error(apiError(e)); }
   };
@@ -61,10 +86,18 @@ export default function GstBranding() {
               {f._assets?.[key] ? <img src={`/uploads/${f._assets[key]}`} alt={slot} className="max-h-20" /> : <Image size={28} className="text-slate-300" />}
             </div>
             <button className="btn-ghost !text-sm" onClick={() => ref.current?.click()}><Upload size={14} /> Upload {slot}</button>
-            <input ref={ref} type="file" accept="image/*" className="hidden" onChange={(e) => uploadAsset(slot, e.target.files?.[0])} />
+            <input ref={ref} type="file" accept="image/png,image/jpeg" className="hidden" onChange={(e) => uploadAsset(slot, e.target.files?.[0])} />
+            <p className="mt-2 text-[11px] leading-tight text-slate-400">
+              Recommended <span className="font-semibold text-slate-500 dark:text-slate-300">{SPECS[slot].rec}</span><br />
+              {SPECS[slot].fmt} · max 3 MB · aspect ratio preserved
+            </p>
           </Card>
         ))}
       </div>
+      <p className="mt-2 text-xs text-slate-400">
+        Images are scaled to fit and centred in the PDF — the aspect ratio is always preserved, so pictures are never stretched or distorted.
+        Off-ratio or low-resolution uploads trigger a warning before saving.
+      </p>
 
       <Card className="mt-4">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
