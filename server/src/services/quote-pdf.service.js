@@ -1,6 +1,33 @@
 // Branded, client-ready quotation PDF for ARRAYS INGENIERIA.
+// Branding (logo / signature / stamp / header / footer / terms / disclaimer /
+// watermark) flows in from the Branding Manager, matching the GST PDF engine.
+import fs from 'node:fs';
+import path from 'node:path';
 import PDFDocument from 'pdfkit';
 import { company } from '../config/company.js';
+import { UPLOAD_ROOT } from '../middleware/upload.js';
+
+function brandFile(branding, key) {
+  const name = branding?.[key];
+  if (!name) return null;
+  const p = path.join(UPLOAD_ROOT, name);
+  return fs.existsSync(p) ? p : null;
+}
+function fitImage(doc, file, x, y, boxW, boxH) {
+  if (!file) return false;
+  try { doc.image(file, x, y, { fit: [boxW, boxH], align: 'center', valign: 'center' }); return true; }
+  catch { return false; }
+}
+function quoteWatermark(doc, text) {
+  if (!text) return;
+  const sx = doc.x, sy = doc.y;
+  doc.save();
+  doc.rotate(-45, { origin: [doc.page.width / 2, doc.page.height / 2] });
+  doc.fontSize(70).fillColor('#1d4ed8').fillOpacity(0.05)
+    .text(String(text).toUpperCase(), 0, doc.page.height / 2 - 44, { width: doc.page.width, align: 'center', lineBreak: false });
+  doc.fillOpacity(1).restore();
+  doc.x = sx; doc.y = sy;
+}
 
 const BRAND = '#' + (company.brandColor || '1d4ed8');
 const INK = '#0f172a';
@@ -15,7 +42,7 @@ const TYPE_LABEL = {
   ground_mount: 'Ground Mount', utility: 'Utility-Scale',
 };
 
-export function streamQuotePdf(res, quote) {
+export function streamQuotePdf(res, quote, branding = {}) {
   const doc = new PDFDocument({ size: 'A4', margin: 40, bufferPages: true });
   const safe = String(quote.quote_number || 'quote').replace(/[^\x20-\x7E]/g, '').replace(/["\\]/g, '');
   res.setHeader('Content-Type', 'application/pdf');
@@ -27,18 +54,21 @@ export function streamQuotePdf(res, quote) {
   const bottom = () => doc.page.height - 70;
   const ensure = (need) => { if (doc.y + need > bottom()) doc.addPage(); };
 
-  // ── Header band (compact company name) ────────────────────────────────────
+  // ── Header band (logo + company) ──────────────────────────────────────────
   doc.rect(0, 0, doc.page.width, 96).fill(BRAND);
-  doc.fillColor('#fff').font('Helvetica-Bold').fontSize(19).text(company.pdfName, M, 20, { width: W - 150 });
+  let hx = M;
+  if (fitImage(doc, brandFile(branding, 'logoFile'), M, 22, 52, 52)) hx = M + 62;
+  doc.fillColor('#fff').font('Helvetica-Bold').fontSize(18).text(branding.headerText || company.pdfName, hx, 20, { width: W - 150 - (hx - M), lineBreak: false });
   doc.font('Helvetica').fontSize(7.5).fillColor('#dbeafe')
-    .text(company.tagline, M, 44)
-    .text(`GSTIN ${company.gstin}  |  CIN ${company.cin}`, M, 56)
-    .text(company.address, M, 67, { width: W - 150 })
-    .text(`${company.email}  |  ${company.certifications.join(' · ')}`, M, 78, { width: W - 150 });
+    .text(company.tagline, hx, 44, { lineBreak: false })
+    .text(`GSTIN ${company.gstin}  |  CIN ${company.cin}`, hx, 56, { lineBreak: false })
+    .text(company.address, hx, 67, { width: W - 150 - (hx - M), lineBreak: false })
+    .text(`${branding.contactInfo || company.email}  |  ${company.certifications.join(' · ')}`, hx, 78, { width: W - 150 - (hx - M), lineBreak: false });
   doc.font('Helvetica-Bold').fontSize(22).fillColor('#fff').text('QUOTATION', M, 24, { width: W, align: 'right' });
   doc.font('Helvetica').fontSize(9).fillColor('#dbeafe')
     .text(quote.quote_number + (quote.version > 1 ? `  (Rev ${quote.version})` : ''), M, 50, { width: W, align: 'right' });
   doc.y = 112;
+  quoteWatermark(doc, branding.watermark);
 
   // ── Meta grid ─────────────────────────────────────────────────────────────
   const fmtDate = (d) => (d ? new Date(d).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—');
@@ -118,28 +148,66 @@ export function streamQuotePdf(res, quote) {
   costBreakdownChart(doc, M, doc.y, W * 0.46, quote.line_items || []);
   doc.y = Math.max(doc.y, ty) + 10;
 
-  // ── Solar benefits / ROI ──────────────────────────────────────────────────
-  if (Number(quote.annual_savings) > 0) {
-    ensure(120);
-    section(doc, 'Why Solar — Value & Return on Investment');
+  // ── Why Solar — value, ROI & environmental impact ─────────────────────────
+  {
+    const st = solarStats(quote);
+    ensure(190);
+    section(doc, 'Why Go Solar — Returns & Environmental Impact');
+
+    // headline financial cards
     const cards = [
-      ['Annual Savings', inr(quote.annual_savings)],
-      ['Payback Period', `${quote.payback_years} yrs`],
-      ['25-Year Savings', inr(quote.lifetime_savings)],
-      ['Net Investment', inr(quote.net_cost || quote.total_amount)],
+      ['Annual Savings', inr(st.annualSave), 'on your electricity bill'],
+      ['Payback Period', `${st.payback.toFixed(1)} yrs`, 'to recover the investment'],
+      ['25-Year Savings', inr(st.lifeSave), 'cumulative, with tariff rise'],
+      ['Lifetime ROI', `${st.roi.toFixed(0)}%`, 'return on net investment'],
     ];
-    const cw = W / 4;
-    const cy = doc.y;
+    const cw = W / 4, cy = doc.y;
     cards.forEach((c, i) => {
       const x = M + i * cw;
-      doc.roundedRect(x + 3, cy, cw - 6, 44, 6).fill('#f1f5f9');
-      doc.fillColor(MUTE).font('Helvetica').fontSize(7.5).text(c[0].toUpperCase(), x + 9, cy + 8, { width: cw - 18 });
-      doc.fillColor(BRAND).font('Helvetica-Bold').fontSize(12).text(c[1], x + 9, cy + 20, { width: cw - 18 });
+      doc.roundedRect(x + 3, cy, cw - 6, 50, 6).fill('#eff6ff');
+      doc.fillColor(MUTE).font('Helvetica').fontSize(7).text(c[0].toUpperCase(), x + 9, cy + 7, { width: cw - 18 });
+      doc.fillColor(BRAND).font('Helvetica-Bold').fontSize(13).text(c[1], x + 9, cy + 18, { width: cw - 18, lineBreak: false });
+      doc.fillColor('#94a3b8').font('Helvetica').fontSize(6.5).text(c[2], x + 9, cy + 37, { width: cw - 18, lineBreak: false });
     });
-    doc.y = cy + 54;
-    doc.font('Helvetica').fontSize(8).fillColor(MUTE).text(
-      'Solar adoption reduces grid dependency and energy cost, provides 25+ years of clean generation, ' +
-      'lowers carbon footprint, and delivers a strong long-term return after a short payback period.',
+    doc.y = cy + 60;
+
+    // environmental + generation strip
+    const env = [
+      ['Clean Energy / yr', `${Math.round(st.genYear).toLocaleString('en-IN')} units`],
+      ['CO2 Avoided / yr', `${st.co2Year.toFixed(1)} tonnes`],
+      ['25-yr CO2 Avoided', `${Math.round(st.co2Life)} tonnes`],
+      ['Trees Equivalent', `${Math.round(st.trees).toLocaleString('en-IN')} trees`],
+      ['Effective Cost', `Rs ${st.effUnit.toFixed(2)}/unit`],
+    ];
+    const ew = W / env.length, ey = doc.y;
+    env.forEach((c, i) => {
+      const x = M + i * ew;
+      doc.roundedRect(x + 2, ey, ew - 4, 40, 5).fill('#f0fdf4');
+      doc.fillColor('#15803d').font('Helvetica').fontSize(6.5).text(c[0].toUpperCase(), x + 7, ey + 7, { width: ew - 14 });
+      doc.fillColor('#166534').font('Helvetica-Bold').fontSize(10.5).text(c[1], x + 7, ey + 19, { width: ew - 14, lineBreak: false });
+    });
+    doc.y = ey + 50;
+
+    // 25-year cumulative savings chart
+    ensure(86);
+    const chTop = doc.y, chH = 64, chW = W;
+    doc.font('Helvetica-Bold').fontSize(8).fillColor(BRAND).text('Cumulative Savings over 25 Years (indicative)', M, chTop);
+    const pts = st.cumulative;            // [{year, value}] at 5-year milestones
+    const maxV = Math.max(...pts.map((p) => p.value), 1);
+    const baseY = chTop + 14 + chH, bw = chW / pts.length;
+    pts.forEach((p, i) => {
+      const bh = Math.max(2, (p.value / maxV) * chH);
+      const x = M + i * bw + bw * 0.2;
+      doc.rect(x, baseY - bh, bw * 0.6, bh).fill(i === pts.length - 1 ? '#059669' : BRAND);
+      doc.fillColor(MUTE).font('Helvetica').fontSize(6.5).text(`Yr ${p.year}`, M + i * bw, baseY + 3, { width: bw, align: 'center' });
+      doc.fillColor(INK).font('Helvetica-Bold').fontSize(6.5).text(compactInr(p.value), M + i * bw, baseY - bh - 9, { width: bw, align: 'center', lineBreak: false });
+    });
+    doc.y = baseY + 14;
+
+    doc.font('Helvetica').fontSize(7.5).fillColor(MUTE).text(
+      `A ${quote.capacity_kw} kW solar plant generates clean power for 25+ years, cutting your grid dependency and rising tariff exposure. ` +
+      `After a ${st.payback.toFixed(1)}-year payback it effectively delivers electricity at about Rs ${st.effUnit.toFixed(2)}/unit — a fraction of grid rates — ` +
+      'while avoiding significant CO2 emissions. Figures are indicative estimates based on typical Indian generation, tariff escalation and grid-emission factors.',
       M, doc.y, { width: W });
     doc.moveDown(0.6);
   }
@@ -154,13 +222,16 @@ export function streamQuotePdf(res, quote) {
       doc.moveDown(0.6);
     });
 
-  // ── Signature block ───────────────────────────────────────────────────────
-  ensure(70);
+  // ── Signature block (with branded signature + stamp) ──────────────────────
+  ensure(76);
   doc.moveDown(1);
   const sy = doc.y;
-  doc.font('Helvetica').fontSize(8).fillColor(MUTE).text(`For ${company.pdfName}`, M + W - 200, sy, { width: 200, align: 'right' });
-  doc.moveTo(M + W - 200, sy + 36).lineTo(M + W, sy + 36).strokeColor('#94a3b8').lineWidth(0.6).stroke();
-  doc.fillColor(INK).font('Helvetica-Bold').fontSize(8.5).text('Authorized Signatory', M + W - 200, sy + 40, { width: 200, align: 'right' });
+  fitImage(doc, brandFile(branding, 'stampFile'), M + W - 250, sy, 60, 48);
+  fitImage(doc, brandFile(branding, 'signatureFile'), M + W - 175, sy, 110, 44);
+  doc.font('Helvetica').fontSize(8).fillColor(MUTE).text(`For ${branding.headerText || company.pdfName}`, M + W - 200, sy - 2, { width: 200, align: 'right', lineBreak: false });
+  doc.moveTo(M + W - 200, sy + 46).lineTo(M + W, sy + 46).strokeColor('#94a3b8').lineWidth(0.6).stroke();
+  doc.fillColor(INK).font('Helvetica-Bold').fontSize(8.5).text('Authorized Signatory', M + W - 200, sy + 50, { width: 200, align: 'right' });
+  doc.y = sy + 64;
 
   // ── Footer on every page ──────────────────────────────────────────────────
   const range = doc.bufferedPageRange();
@@ -170,12 +241,42 @@ export function streamQuotePdf(res, quote) {
     const fy = doc.page.height - 50;
     doc.moveTo(M, fy).lineTo(M + W, fy).strokeColor(LINE).lineWidth(0.5).stroke();
     doc.font('Helvetica').fontSize(7).fillColor(MUTE)
-      .text(`${company.bank.name}  •  A/c ${company.bank.accountNumber}  •  ${company.bank.branch}`, M, fy + 6, { width: W * 0.8 })
-      .text(`Page ${i - range.start + 1} of ${range.count}`, M, fy + 6, { width: W, align: 'right' })
-      .text(`Prices valid until the date stated. System-generated by ${company.shortName} ERP.`, M, fy + 17, { width: W });
+      .text(`${company.bank.name}  •  A/c ${company.bank.accountNumber}  •  ${company.bank.branch}`, M, fy + 6, { width: W * 0.8, lineBreak: false })
+      .text(`Page ${i - range.start + 1} of ${range.count}`, M, fy + 6, { width: W, align: 'right', lineBreak: false })
+      .text(branding.footerText || `Prices valid until the date stated. System-generated by ${company.shortName} ERP.`, M, fy + 17, { width: W, lineBreak: false });
+    if (branding.disclaimer) doc.fontSize(6).fillColor('#94a3b8').text(branding.disclaimer, M, fy + 27, { width: W, lineBreak: false });
   }
   doc.flushPages();
   doc.end();
+}
+
+// Indicative solar generation / savings / environmental model (Indian averages).
+function solarStats(quote) {
+  const cap = Number(quote.capacity_kw || 0);
+  const YIELD = 1450;                       // kWh per kWp per year
+  const CO2 = 0.82;                         // kg CO2 per kWh (India grid)
+  const ESC = 0.03;                         // 3% annual tariff escalation
+  const genYear = cap * YIELD;
+  const genLife = genYear * 25 * 0.91;      // ~9% cumulative degradation over 25y
+  const annualSave = Number(quote.annual_savings) || genYear * 8;       // fallback ₹8/unit
+  const netCost = Number(quote.net_cost) || Number(quote.total_amount) || 0;
+  const payback = Number(quote.payback_years) || (annualSave ? netCost / annualSave : 0);
+  const cumAt = (yrs) => annualSave * ((Math.pow(1 + ESC, yrs) - 1) / ESC);   // growing annuity
+  const lifeSave = Number(quote.lifetime_savings) || cumAt(25);
+  const roi = netCost ? (lifeSave / netCost) * 100 : 0;
+  const co2Year = (genYear * CO2) / 1000;   // tonnes/yr
+  const co2Life = (genLife * CO2) / 1000;
+  const trees = co2Life / 0.55;             // ~0.55 t CO2 sequestered per tree over 25y
+  const effUnit = genLife ? netCost / genLife : 0;
+  const cumulative = [5, 10, 15, 20, 25].map((year) => ({ year, value: cumAt(year) }));
+  return { genYear, genLife, annualSave, netCost, payback, lifeSave, roi, co2Year, co2Life, trees, effUnit, cumulative };
+}
+function compactInr(n) {
+  n = Number(n || 0);
+  if (n >= 1e7) return 'Rs ' + (n / 1e7).toFixed(1) + 'Cr';
+  if (n >= 1e5) return 'Rs ' + (n / 1e5).toFixed(1) + 'L';
+  if (n >= 1e3) return 'Rs ' + (n / 1e3).toFixed(0) + 'k';
+  return 'Rs ' + Math.round(n);
 }
 
 function metaCell(doc, x, y, label, value, w) {

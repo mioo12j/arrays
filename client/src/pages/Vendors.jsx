@@ -72,7 +72,13 @@ export default function Vendors() {
                 <td className="td">{v.category || '—'}</td>
                 <td className="td font-mono text-xs">{v.gstin || '—'}</td>
                 <td className="td text-right">{inr(v.total_paid)}</td>
-                <td className="td text-right font-semibold text-amber-600">{inr(v.balance)}</td>
+                <td className="td text-right">
+                  {Number(v.balance) > 0
+                    ? <span className="font-semibold text-amber-600">{inr(v.balance)}</span>
+                    : Number(v.balance) < 0
+                      ? <span className="text-emerald-600" title="You have paid more than billed (advance / payment without a recorded bill)">{inr(0)} <span className="text-[11px] text-slate-400">· adv {inr(-v.balance)}</span></span>
+                      : <span className="text-slate-400">{inr(0)}</span>}
+                </td>
                 <td className="td">{v.pending_invoices > 0 ? <Badge tone="amber">{v.pending_invoices}</Badge> : '—'}</td>
                 <td className="td text-right"><ChevronRight size={16} className="text-slate-300" /></td>
               </>

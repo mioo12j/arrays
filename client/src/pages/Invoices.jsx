@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Plus, Search, Loader2, FileDown, Upload } from 'lucide-react';
+import { Plus, Search, Loader2, FileDown, Upload, ShieldCheck } from 'lucide-react';
 import { api, apiError, download } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -78,7 +78,7 @@ export default function Invoices() {
           <Table
             columns={[
               { header: 'Invoice #' }, { header: 'Type' }, { header: 'Client' }, { header: 'Project' },
-              { header: 'Due' }, { header: 'Total', align: 'right' }, { header: 'Balance', align: 'right' }, { header: 'Status' },
+              { header: 'Due' }, { header: 'Total', align: 'right' }, { header: 'Balance', align: 'right' }, { header: 'Status' }, { header: 'e-Invoice' },
             ]}
             rows={invoices || []}
             empty="No invoices yet."
@@ -92,6 +92,13 @@ export default function Invoices() {
                 <td className="td text-right">{inr(i.total_amount)}</td>
                 <td className="td text-right font-semibold text-amber-600">{inr(i.balance_due)}</td>
                 <td className="td"><Badge status={i.status} /></td>
+                <td className="td" onClick={(e) => e.stopPropagation()}>
+                  {i.einvoice_irn
+                    ? <a href="/gst/compliance" className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 hover:underline" title={`IRN ${i.einvoice_irn}`}><ShieldCheck size={13} /> IRN</a>
+                    : i.einvoice_id
+                      ? <a href="/gst/compliance" className="text-xs font-medium text-amber-600 hover:underline">In progress</a>
+                      : <span className="text-xs text-slate-300">—</span>}
+                </td>
               </>
             )}
           />

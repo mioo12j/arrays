@@ -431,8 +431,28 @@ router.post('/branding/asset', requirePerm(PERMS.ADMIN), upload.single('file'), 
   const out = await tx((db) => (req.body.branchId ? brandingSvc.setForBranch(db, req.body.branchId, patch, uid(req)) : brandingSvc.set(db, patch, uid(req))));
   res.status(201).json(out);
 }));
+const SAMPLE_QUOTE = {
+  quote_number: 'SAMPLE/Q/26-27/0001', version: 1, client_name: 'SAMPLE CUSTOMER PVT LTD',
+  project_name: 'Rooftop Solar — Sample', site_name: 'Sample Site', issue_date: new Date(), valid_until: new Date(Date.now() + 15 * 864e5),
+  project_type: 'commercial', capacity_kw: 100, per_watt: 45,
+  line_items: [
+    { item: 'Mono PERC Modules 540Wp', qty: 185, unit: 'Nos', rate: 11500, amount: 2127500 },
+    { item: 'String Inverter 50kW', qty: 2, unit: 'Nos', rate: 320000, amount: 640000 },
+    { item: 'Mounting Structure + BOS', qty: 1, unit: 'Lot', rate: 700000, amount: 700000 },
+  ],
+  subtotal: 3467500, contingency_amount: 50000, margin_amount: 500000, taxable_amount: 4017500, gst_amount: 321400, total_amount: 4338900,
+  cost_amount: 3467500, subsidy_amount: 0, net_cost: 4338900, annual_savings: 1200000, payback_years: 4.2,
+  notes: 'Grid-tied rooftop with net metering. Sample preview document.',
+};
+
 router.get('/branding/preview', requirePerm(PERMS.VIEW), asyncHandler(async (req, res) => {
-  const buf = await brandingSvc.preview(pool, req.query.type || 'einvoice', req.query.branch_id);
+  const type = req.query.type || 'einvoice';
+  if (type === 'quote') {
+    const { streamQuotePdf } = await import('../services/quote-pdf.service.js');
+    const brand = await brandingSvc.getForBranch(pool, req.query.branch_id);
+    return streamQuotePdf(res, SAMPLE_QUOTE, brand);
+  }
+  const buf = await brandingSvc.preview(pool, type, req.query.branch_id);
   res.setHeader('Content-Type', 'application/pdf');
   res.setHeader('Content-Disposition', `inline; filename="branding-preview.pdf"`);
   res.send(buf);

@@ -1,10 +1,11 @@
 import { Router } from 'express';
-import { query, withTransaction } from '../config/db.js';
+import { query, withTransaction, pool } from '../config/db.js';
 import { asyncHandler, ApiError } from '../utils/asyncHandler.js';
 import { authenticate } from '../middleware/auth.js';
 import { audit } from '../middleware/audit.js';
 import { calculateQuote } from '../services/quote-calc.service.js';
 import { streamQuotePdf } from '../services/quote-pdf.service.js';
+import * as branding from '../services/gst/brandingService.js';
 
 const router = Router();
 router.use(authenticate);
@@ -199,7 +200,9 @@ router.get(
     );
     if (!rows[0]) throw new ApiError(404, 'Quote not found');
     const quote = { ...rows[0], client_name: rows[0].client_name || rows[0].client_full_name };
-    streamQuotePdf(res, quote);
+    let brand = {};
+    try { brand = await branding.get(pool); } catch { /* branding optional */ }
+    streamQuotePdf(res, quote, brand);
   })
 );
 

@@ -18,11 +18,11 @@ function Metric({ icon: Icon, label, value, tone = 'text-slate-700', bg = 'bg-sl
   const body = (
     <Card className="!p-4">
       <div className="flex items-center justify-between">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{label}</p>
-          <p className="mt-1 text-2xl font-bold text-slate-900 dark:text-white">{value}</p>
+        <div className="min-w-0">
+          <p className="truncate text-xs font-semibold uppercase tracking-wide text-slate-400">{label}</p>
+          <p className="mt-1 truncate text-xl font-bold tabular-nums text-slate-900 dark:text-white" title={String(value ?? '')}>{value}</p>
         </div>
-        <div className={`rounded-xl p-2.5 ${bg} ${tone}`}><Icon size={20} /></div>
+        <div className={`shrink-0 rounded-xl p-2.5 ${bg} ${tone}`}><Icon size={20} /></div>
       </div>
     </Card>
   );
@@ -38,7 +38,13 @@ export default function GstDashboard() {
   const e = data.einvoice || {};
   const w = data.ewb || {};
   const c = data.charts || {};
-  const money = (v) => inr(v).replace('.00', '');
+  // Compact ₹ so large values never overflow the metric boxes.
+  const money = (v) => {
+    const n = Number(v || 0);
+    if (Math.abs(n) >= 1e7) return `₹${(n / 1e7).toFixed(2)} Cr`;
+    if (Math.abs(n) >= 1e5) return `₹${(n / 1e5).toFixed(2)} L`;
+    return inr(n).replace('.00', '');
+  };
 
   return (
     <div>
@@ -64,7 +70,7 @@ export default function GstDashboard() {
 
       {/* e-Invoice metrics */}
       <h3 className="mb-2 text-sm font-semibold text-slate-500">e-Invoices</h3>
-      <div className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4 xl:grid-cols-8">
+      <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
         <Metric icon={FileText} label="Total" value={e.total} to="/gst/compliance" />
         <Metric icon={FileClock} label="Draft" value={e.draft} tone="text-slate-600" bg="bg-slate-100" />
         <Metric icon={FileClock} label="Pending" value={e.pending_submission} tone="text-amber-600" bg="bg-amber-100" />
@@ -77,7 +83,7 @@ export default function GstDashboard() {
 
       {/* EWB metrics */}
       <h3 className="mb-2 text-sm font-semibold text-slate-500">e-Way Bills</h3>
-      <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
+      <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         <Metric icon={CheckCircle2} label="Active" value={w.active} tone="text-emerald-600" bg="bg-emerald-100" />
         <Metric icon={Timer} label="Expiring Soon" value={w.expiring_soon} tone="text-amber-600" bg="bg-amber-100" />
         <Metric icon={CalendarX2} label="Expired" value={w.expired} tone="text-red-600" bg="bg-red-100" />

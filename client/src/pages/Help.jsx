@@ -439,6 +439,102 @@ const SECTIONS = [
       ],
     },
   },
+  {
+    id: 'invoicelink', icon: FileText,
+    en: {
+      title: 'Invoices and e-Invoices are connected',
+      steps: [
+        'An invoice in “Invoices” and an e-Invoice in “GST Compliance” are the same sale — one is your business record, the other is the government-registered (IRP) version.',
+        'On the Invoices list, the “e-Invoice” column shows the link: a green “IRN” means a government-registered e-Invoice exists for that invoice; “In progress” means a draft e-Invoice is being prepared; “—” means none yet.',
+        'They are matched automatically when the e-Invoice is created from the invoice, or when both share the same document number — so you never double-count the same sale.',
+        'Click the IRN link to jump straight to the GST Compliance workspace for that document.',
+        'Tip: keep the invoice number identical on both so the link is detected automatically.',
+      ],
+    },
+    hi: {
+      title: 'चालान और e-Invoice आपस में जुड़े हैं',
+      steps: [
+        '“चालान” में एक चालान और “GST Compliance” में एक e-Invoice एक ही बिक्री हैं — एक आपका व्यापारिक रिकॉर्ड है, दूसरा सरकार-पंजीकृत (IRP) रूप।',
+        'चालान सूची में “e-Invoice” कॉलम लिंक दिखाता है: हरा “IRN” = उस चालान के लिए सरकार-पंजीकृत e-Invoice मौजूद है; “In progress” = ड्राफ्ट तैयार हो रहा है; “—” = अभी कोई नहीं।',
+        'जब e-Invoice चालान से बनाया जाता है, या दोनों का दस्तावेज़ नंबर समान होता है, तब वे स्वतः जुड़ जाते हैं — इसलिए एक ही बिक्री दो बार नहीं गिनी जाती।',
+        'उस दस्तावेज़ के लिए सीधे GST Compliance कार्यक्षेत्र पर जाने हेतु IRN लिंक पर क्लिक करें।',
+        'सुझाव: दोनों पर चालान संख्या समान रखें ताकि लिंक स्वतः पहचाना जाए।',
+      ],
+    },
+  },
+  {
+    id: 'quoteproposal', icon: Calculator,
+    en: {
+      title: 'Quotations & Solar Proposals',
+      steps: [
+        'Open “Quotes & Estimation” → “New Quote”. Enter the client, system size (kW), per-watt rate and the bill of quantities (modules, inverter, structure, BOS).',
+        'The tool computes subtotal, contingency, margin, taxable value, GST and the grand total automatically. Add any government subsidy to show the net effective cost.',
+        'Download the PDF: it is fully branded (your logo, signature, stamp, terms) and includes a “Why Go Solar” section — annual savings, payback period, 25-year ROI, clean units generated, CO₂ avoided, trees-equivalent and a 25-year savings chart.',
+        'These solar figures are indicative estimates (based on typical Indian generation and tariff rise) designed to help the customer see how profitable switching to solar is.',
+        'Set the branding once in GST Compliance → Branding; it applies to quotations, invoices and e-way bills alike. Use “Preview Quotation” there to see a sample.',
+      ],
+    },
+    hi: {
+      title: 'कोटेशन और सौर प्रस्ताव',
+      steps: [
+        '“कोटेशन और अनुमान” → “नया कोट” खोलें। ग्राहक, सिस्टम आकार (kW), प्रति-वाट दर और सामग्री सूची (मॉड्यूल, इन्वर्टर, स्ट्रक्चर, BOS) दर्ज करें।',
+        'उपकरण उप-योग, आकस्मिकता, मार्जिन, कर-योग्य मूल्य, GST और कुल राशि स्वतः गणना करता है। शुद्ध प्रभावी लागत दिखाने हेतु कोई सरकारी सब्सिडी जोड़ें।',
+        'PDF डाउनलोड करें: यह पूरी तरह ब्रांडेड है (लोगो, हस्ताक्षर, मुहर, शर्तें) और इसमें “Why Go Solar” अनुभाग है — वार्षिक बचत, पेबैक अवधि, 25-वर्षीय ROI, उत्पन्न स्वच्छ यूनिट, टाला गया CO₂, पेड़-समतुल्य और 25-वर्षीय बचत चार्ट।',
+        'ये सौर आँकड़े सांकेतिक अनुमान हैं (सामान्य भारतीय उत्पादन व टैरिफ वृद्धि पर आधारित) ताकि ग्राहक देख सके कि सौर पर जाना कितना लाभदायक है।',
+        'ब्रांडिंग एक बार GST Compliance → Branding में सेट करें; यह कोटेशन, चालान और e-way bill सभी पर लागू होती है। वहाँ “Preview Quotation” से नमूना देखें।',
+      ],
+    },
+  },
+  {
+    id: 'backupsafe', icon: ShieldCheck,
+    en: {
+      title: 'Backups & keeping your data safe',
+      steps: [
+        'Open “GST Compliance → Backup & Recovery”. Click “Backup Now” to create a full-system backup (all tables + attachments) as a single ZIP with a checksum.',
+        'Use “Verify” to confirm a backup is intact, “DR Test” for a safe recovery rehearsal, and “Preview Restore” to see what a restore would change before doing it.',
+        'Restores are additive and non-destructive (they never overwrite existing records), and need 2-step verification.',
+        'Download the ZIP regularly and keep a copy off the computer (a pen-drive or cloud drive) for true safety.',
+        'The app warns you on the dashboard and at close if today’s backup is missing. Set a retention policy so old backups clean up automatically.',
+      ],
+    },
+    hi: {
+      title: 'बैकअप और आपके डेटा की सुरक्षा',
+      steps: [
+        '“GST Compliance → Backup & Recovery” खोलें। पूर्ण-सिस्टम बैकअप (सभी तालिकाएँ + संलग्नक) एक ZIP के रूप में चेकसम सहित बनाने हेतु “Backup Now” पर क्लिक करें।',
+        'बैकअप सही है यह पुष्टि करने हेतु “Verify”, सुरक्षित रिकवरी अभ्यास हेतु “DR Test”, और पुनर्स्थापना से पहले क्या बदलेगा देखने हेतु “Preview Restore” उपयोग करें।',
+        'पुनर्स्थापना additive व non-destructive है (मौजूदा रिकॉर्ड कभी अधिलेखित नहीं होते), और इसके लिए 2-चरण सत्यापन चाहिए।',
+        'ZIP नियमित रूप से डाउनलोड करें और एक प्रति कंप्यूटर से बाहर (पेन-ड्राइव या क्लाउड ड्राइव) रखें — असली सुरक्षा हेतु।',
+        'यदि आज का बैकअप नहीं हुआ तो ऐप डैशबोर्ड पर और बंद करते समय चेतावनी देता है। पुराने बैकअप स्वतः साफ़ हों इसके लिए retention नीति सेट करें।',
+      ],
+    },
+  },
+  {
+    id: 'faq', icon: Search,
+    en: {
+      title: 'Frequently Asked Questions',
+      steps: [
+        'Do I need internet? No — the app runs on this computer. Internet is only needed to “Publish to Cloud” or, later, for live GST submission.',
+        'Is my data safe in the cloud? Only your data (not the heavy files) is sent when you click Publish; files stay on this computer.',
+        'Why can’t the Admin import? To keep the free cloud fast, imports/uploads run on the operator’s computer; the Admin views and exports everything.',
+        'What is Simulation vs Live? Simulation practises everything safely with no real government submission; Live submits real compliance data. The top banner always shows the mode.',
+        'A vendor shows ₹0 outstanding but I paid them — that’s correct: a payment without a recorded bill is shown as an “advance”, not as money you owe.',
+        'How do I change my password? Top-right menu → your profile → change password. Change the default passwords before going live.',
+        'How do I go live for GST? In GST Compliance → Integrations, enter your GSP/IRP credentials and SMTP, then switch the mode to Live — no code changes needed.',
+      ],
+    },
+    hi: {
+      title: 'अक्सर पूछे जाने वाले प्रश्न',
+      steps: [
+        'क्या इंटरनेट चाहिए? नहीं — ऐप इसी कंप्यूटर पर चलता है। इंटरनेट केवल “क्लाउड पर प्रकाशित” या बाद में लाइव GST प्रस्तुति हेतु चाहिए।',
+        'क्या मेरा डेटा क्लाउड में सुरक्षित है? Publish पर केवल आपका डेटा (भारी फ़ाइलें नहीं) भेजा जाता है; फ़ाइलें इसी कंप्यूटर पर रहती हैं।',
+        'एडमिन आयात क्यों नहीं कर सकता? मुफ़्त क्लाउड तेज़ रखने हेतु आयात/अपलोड ऑपरेटर के कंप्यूटर पर होते हैं; एडमिन सब देखता व निर्यात करता है।',
+        'Simulation बनाम Live क्या है? Simulation सब कुछ सुरक्षित अभ्यास कराता है, कोई वास्तविक सरकारी प्रस्तुति नहीं; Live वास्तविक डेटा भेजता है। ऊपर की पट्टी हमेशा मोड दिखाती है।',
+        'विक्रेता ₹0 बकाया दिखाता है पर मैंने भुगतान किया — यह सही है: बिना दर्ज बिल के भुगतान “अग्रिम” के रूप में दिखता है, बकाया के रूप में नहीं।',
+        'पासवर्ड कैसे बदलूँ? ऊपर-दाईं मेनू → प्रोफ़ाइल → पासवर्ड बदलें। लाइव होने से पहले डिफ़ॉल्ट पासवर्ड बदलें।',
+        'GST लाइव कैसे करूँ? GST Compliance → Integrations में अपने GSP/IRP क्रेडेंशियल व SMTP दर्ज करें, फिर मोड Live कर दें — कोई कोड बदलाव नहीं।',
+      ],
+    },
+  },
 ];
 
 // ── Help Center categories — each section is filed under one category so the
@@ -456,9 +552,10 @@ const CAT_OF = {
   payments: 'workflows', receipts: 'workflows', invoices: 'workflows', reconciliation: 'workflows',
   vendors: 'workflows', employees: 'workflows', clients: 'workflows', quotes: 'workflows',
   projects: 'workflows', reports: 'workflows',
-  gst: 'gst', gstterms: 'gst',
-  roles: 'security', security: 'security',
-  troubleshooting: 'help',
+  gst: 'gst', gstterms: 'gst', invoicelink: 'gst',
+  quoteproposal: 'workflows',
+  roles: 'security', security: 'security', backupsafe: 'security',
+  troubleshooting: 'help', faq: 'help',
 };
 
 export default function Help() {

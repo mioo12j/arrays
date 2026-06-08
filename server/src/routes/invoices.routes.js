@@ -55,10 +55,16 @@ router.get(
     const whereSql = clauses.length ? `WHERE ${clauses.join(' AND ')}` : '';
     const { rows } = await query(
       `SELECT i.*, c.name AS client_name, pr.name AS project_name,
-        (i.total_amount - i.amount_received) AS balance_due
+        (i.total_amount - i.amount_received) AS balance_due,
+        ei.id AS einvoice_id, ei.irn AS einvoice_irn, ei.status::text AS einvoice_status
        FROM invoices i
        LEFT JOIN clients c ON c.id=i.client_id
        LEFT JOIN projects pr ON pr.id=i.project_id
+       LEFT JOIN LATERAL (
+         SELECT e.id, e.irn, e.status FROM gst_einvoices e
+         WHERE e.source_invoice_id = i.id OR e.doc_no = i.invoice_number
+         ORDER BY (e.irn IS NOT NULL) DESC, e.created_at DESC LIMIT 1
+       ) ei ON TRUE
        ${whereSql}
        ORDER BY i.issue_date DESC NULLS LAST, i.created_at DESC LIMIT 500`,
       p
@@ -71,10 +77,16 @@ router.get(
   '/:id',
   asyncHandler(async (req, res) => {
     const { rows } = await query(
-      `SELECT i.*, c.name AS client_name, pr.name AS project_name
+      `SELECT i.*, c.name AS client_name, c.gstin AS client_gstin, pr.name AS project_name,
+        ei.id AS einvoice_id, ei.irn AS einvoice_irn, ei.status::text AS einvoice_status, ei.ack_no AS einvoice_ack_no
        FROM invoices i
        LEFT JOIN clients c ON c.id=i.client_id
        LEFT JOIN projects pr ON pr.id=i.project_id
+       LEFT JOIN LATERAL (
+         SELECT e.id, e.irn, e.status, e.ack_no FROM gst_einvoices e
+         WHERE e.source_invoice_id = i.id OR e.doc_no = i.invoice_number
+         ORDER BY (e.irn IS NOT NULL) DESC, e.created_at DESC LIMIT 1
+       ) ei ON TRUE
        WHERE i.id=$1`, [req.params.id]
     );
     if (!rows[0]) throw new ApiError(404, 'Invoice not found');

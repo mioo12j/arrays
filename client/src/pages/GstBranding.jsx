@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Palette, Upload, FileText, Truck, Loader2, Image } from 'lucide-react';
+import { Palette, Upload, FileText, Truck, Loader2, Image, Calculator } from 'lucide-react';
 import { api, apiError } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
 import { useToast } from '../components/ui/Toast.jsx';
@@ -61,10 +61,11 @@ export default function GstBranding() {
 
   return (
     <div>
-      <PageHeader title="Branding Manager" subtitle="Logos, signatures, stamps, headers, footers, terms and disclaimers — flow automatically into PDFs."
+      <PageHeader title="Branding Manager" subtitle="Logos, signatures, stamps, headers, footers, terms and disclaimers — flow automatically into every PDF: e-Invoices, e-Way Bills and Quotations."
         actions={<>
           <button className="btn-ghost" onClick={() => previewPdf('einvoice')}><FileText size={16} /> Preview Invoice</button>
           <button className="btn-ghost" onClick={() => previewPdf('ewb')}><Truck size={16} /> Preview EWB</button>
+          <button className="btn-ghost" onClick={() => previewPdf('quote')}><Calculator size={16} /> Preview Quotation</button>
           <button className="btn-primary" onClick={save} disabled={saving}>{saving ? <Loader2 className="animate-spin" size={16} /> : <Palette size={16} />} Save</button>
         </>} />
 
