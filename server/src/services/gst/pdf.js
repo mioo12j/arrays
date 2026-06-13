@@ -22,17 +22,51 @@ import QRCode from 'qrcode';
 import { company } from '../../config/company.js';
 import { STATE_CODES } from './masterData.js';
 import { UPLOAD_ROOT } from '../../middleware/upload.js';
+import { applyPdfLang } from '../pdf-i18n.js';
 
-const BRAND = '#1d4ed8';
-const INK = '#0f172a';
-const MUTE = '#64748b';
-const FAINT = '#94a3b8';
-const LINE = '#e2e8f0';
+// ── PDF theme — every colour is set per-document from the saved branding ─────
+// (blank/invalid values fall back to the defaults below).
 const SOFT = '#f8fafc';
-const BLUE_SOFT = '#eff6ff';
+let BRAND = '#1d4ed8';       // accent: section titles, totals, charts
+let INK = '#0f172a';         // body text
+let MUTE = '#64748b';        // secondary text
+let FAINT = '#94a3b8';       // labels / hints (derived from MUTE)
+let LINE = '#e2e8f0';        // rules & borders
+let BLUE_SOFT = '#eff6ff';   // soft tint of the accent (info strips)
+let HEADER_BG = '#1d4ed8';   // top band background
+let HEADER_TX = '#ffffff';   // top band text
+let SUBTX = '#dbeafe';       // top band secondary text (derived)
+let THEAD_BG = '#1d4ed8';    // table header background
+let THEAD_TX = '#ffffff';    // table header text
+let WM = '#1d4ed8';          // watermark colour
+
+// Accept #rrggbb or rrggbb; returns a valid #hex or null.
+const validHex = (c) => (/^#?[0-9a-fA-F]{6}$/.test(String(c || '').trim()) ? (String(c).trim()[0] === '#' ? String(c).trim() : '#' + String(c).trim()) : null);
+// Mix colour a toward colour b by t (0..1) — returns hex (pdfkit needs hex, not rgb()).
+const mix2 = (a, b, t) => {
+  const pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16);
+  const ch = (x, s) => (x >> s) & 255;
+  const m = (s) => Math.round(ch(pa, s) + (ch(pb, s) - ch(pa, s)) * t);
+  return '#' + [m(16), m(8), m(0)].map((v) => v.toString(16).padStart(2, '0')).join('');
+};
+// Set the active theme from branding (called at the start of each PDF).
+function setBrand(b = {}) {
+  BRAND = validHex(b.pdfColor) || '#1d4ed8';
+  INK = validHex(b.textColor) || '#0f172a';
+  MUTE = validHex(b.mutedColor) || '#64748b';
+  FAINT = mix2(MUTE, '#ffffff', 0.35);
+  LINE = validHex(b.lineColor) || '#e2e8f0';
+  BLUE_SOFT = mix2(BRAND, '#ffffff', 0.92);
+  HEADER_BG = validHex(b.headerBgColor) || BRAND;
+  HEADER_TX = validHex(b.headerTextColor) || '#ffffff';
+  SUBTX = mix2(HEADER_TX, HEADER_BG, 0.28);
+  THEAD_BG = validHex(b.tableHeadBgColor) || BRAND;
+  THEAD_TX = validHex(b.tableHeadTextColor) || '#ffffff';
+  WM = validHex(b.watermarkColor) || BRAND;
+}
 
 const M = 40;                                  // page margin
-const HEADER_H = 72;                           // first-page header band
+const HEADER_H = 88;                           // first-page header band (fits a 2-line address)
 const CONT_HEADER_H = 28;                      // continuation-page header band
 const FOOTER_H = 46;                           // reserved footer band
 
@@ -73,7 +107,7 @@ function watermark(doc, text) {
   const sx = doc.x, sy = doc.y;
   doc.save();
   doc.rotate(-45, { origin: [doc.page.width / 2, doc.page.height / 2] });
-  doc.fontSize(70).fillColor(BRAND).fillOpacity(0.06)
+  doc.fontSize(70).fillColor(WM).fillOpacity(0.06)
     .text(String(text).toUpperCase(), 0, doc.page.height / 2 - 44, { width: doc.page.width, align: 'center', lineBreak: false });
   doc.fillOpacity(1).restore();
   doc.x = sx; doc.y = sy;
@@ -89,15 +123,17 @@ function fitImage(doc, file, x, y, boxW, boxH) {
 // ── full-width first-page header ─────────────────────────────────────────────
 function header(doc, title, subtitle, branding = {}) {
   const W = doc.page.width;
-  doc.rect(0, 0, W, HEADER_H).fill(BRAND);
+  doc.rect(0, 0, W, HEADER_H).fill(HEADER_BG);
   let tx = M;
   if (fitImage(doc, brandFile(branding, 'logoFile'), M, 14, 44, 44)) tx = M + 54;
-  doc.fillColor('#ffffff').font('Helvetica-Bold').fontSize(15).text(branding.headerText || company.pdfName, tx, 16, { width: W - 260, lineBreak: false });
-  doc.font('Helvetica').fontSize(7.5).fillColor('#dbeafe')
-    .text(company.address, tx, 37, { width: W - 260, lineBreak: false })
-    .text(`GSTIN ${company.gstin}  •  CIN ${company.cin}  •  ${branding.contactInfo || company.email}`, tx, 49, { width: W - 260, lineBreak: false });
-  doc.fillColor('#ffffff').font('Helvetica-Bold').fontSize(15).text(title, W - 260, 18, { width: 220, align: 'right' });
-  if (subtitle) doc.font('Helvetica').fontSize(8).fillColor('#dbeafe').text(subtitle, W - 260, 40, { width: 220, align: 'right' });
+  const titleX = W - 250;                       // right-side title block
+  const leftW = titleX - tx - 10;               // company block must stop before the title
+  doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(14).text(branding.headerText || company.pdfName, tx, 11, { width: leftW, height: 16, ellipsis: true });
+  doc.font('Helvetica').fontSize(7.3).fillColor(SUBTX)
+    .text(company.address, tx, 29, { width: leftW, height: 17, ellipsis: true })             // ≤2 lines, clipped
+    .text(`GSTIN ${company.gstin}  •  CIN ${company.cin}  •  ${branding.contactInfo || company.email}`, tx, 49, { width: leftW, height: 9, ellipsis: true });
+  doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(14).text(title, titleX, 14, { width: 210, align: 'right' });
+  if (subtitle) doc.font('Helvetica').fontSize(8).fillColor(SUBTX).text(subtitle, titleX, 36, { width: 210, align: 'right' });
   doc.fillColor(INK);
   doc.y = HEADER_H + 12;
 }
@@ -105,8 +141,8 @@ function header(doc, title, subtitle, branding = {}) {
 // Compact header for continuation pages.
 function contHeader(doc, branding, title) {
   const W = doc.page.width;
-  doc.rect(0, 0, W, CONT_HEADER_H).fill(BRAND);
-  doc.fillColor('#ffffff').fontSize(9.5).font('Helvetica-Bold').text(branding.headerText || company.pdfName, M, 9, { lineBreak: false });
+  doc.rect(0, 0, W, CONT_HEADER_H).fill(HEADER_BG);
+  doc.fillColor(HEADER_TX).fontSize(9.5).font('Helvetica-Bold').text(branding.headerText || company.pdfName, M, 9, { lineBreak: false });
   doc.font('Helvetica').fontSize(9).text(`${title} (continued)`, M, 9, { width: W - 2 * M, align: 'right' });
   doc.fillColor(INK);
   return CONT_HEADER_H + 12;
@@ -169,7 +205,7 @@ function partyBlock(doc, x, y, w, label, p = {}) {
   const h = 92;
   box(doc, x, y, w, h, SOFT);
   doc.fontSize(8).fillColor(BRAND).font('Helvetica-Bold').text(label, x + 8, y + 6, { width: w - 16, lineBreak: false });
-  doc.fillColor(INK).fontSize(9).font('Helvetica-Bold').text(p.legalName || p.tradeName || '—', x + 8, y + 18, { width: w - 16, lineBreak: false, ellipsis: true });
+  doc.fillColor(INK).fontSize(9).font('Helvetica-Bold').text(p.legalName || p.tradeName || '—', x + 8, y + 18, { width: w - 16, height: 11, ellipsis: true });
   doc.font('Helvetica').fontSize(7.8).fillColor(MUTE);
   const lines = [
     p.gstin ? `GSTIN: ${p.gstin}` : null,
@@ -179,7 +215,7 @@ function partyBlock(doc, x, y, w, label, p = {}) {
     p.phone ? `Ph: ${p.phone}` : null,
   ].filter(Boolean).slice(0, 5);
   let ly = y + 32;
-  lines.forEach((ln) => { doc.text(ln, x + 8, ly, { width: w - 16, lineBreak: false, ellipsis: true }); ly += 11; });
+  lines.forEach((ln) => { doc.text(ln, x + 8, ly, { width: w - 16, height: 9, ellipsis: true }); ly += 11; });
   doc.fillColor(INK);
   return h;
 }
@@ -201,8 +237,10 @@ function signatureStrip(doc, branding) {
 }
 
 // ── e-INVOICE PDF ─────────────────────────────────────────────────────────────
-export async function einvoicePdf(rec, branding = {}) {
+export async function einvoicePdf(rec, branding = {}, lang = 'en') {
+  setBrand(branding);
   const doc = new PDFDocument({ size: 'A4', margin: M, bufferPages: true });
+  applyPdfLang(doc, lang);
   const out = toBuffer(doc);
   const W = doc.page.width;
   const CW = W - 2 * M;                                  // content width
@@ -261,8 +299,8 @@ export async function einvoicePdf(rec, branding = {}) {
     { k: 'totalItemValue', t: 'Total', w: 0.15, a: 'right' },
   ];
   const drawHead = (ty) => {
-    doc.rect(M, ty, CW, 18).fill(BRAND);
-    doc.fillColor('#ffffff').fontSize(7.5).font('Helvetica-Bold');
+    doc.rect(M, ty, CW, 18).fill(THEAD_BG);
+    doc.fillColor(THEAD_TX).fontSize(7.5).font('Helvetica-Bold');
     let cx = M;
     cols.forEach((c) => { doc.text(c.t, cx + 4, ty + 5.5, { width: c.w * CW - 8, align: c.a, lineBreak: false }); cx += c.w * CW; });
     doc.font('Helvetica').fillColor(INK).fontSize(7.5);
@@ -309,8 +347,8 @@ export async function einvoicePdf(rec, branding = {}) {
     doc.fillColor(MUTE).font('Helvetica').text(r[0], sumX + 10, ry, { width: sumW * 0.5, lineBreak: false });
     doc.fillColor(INK).font('Helvetica').text(inr(r[1]), sumX + sumW * 0.4, ry, { width: sumW * 0.6 - 12, align: 'right', lineBreak: false });
   });
-  doc.rect(sumX, blockY + sumH - 24, sumW, 24).fill(BRAND);
-  doc.fillColor('#ffffff').font('Helvetica-Bold').fontSize(9.5)
+  doc.rect(sumX, blockY + sumH - 24, sumW, 24).fill(THEAD_BG);
+  doc.fillColor(THEAD_TX).font('Helvetica-Bold').fontSize(9.5)
     .text('Total Invoice Value', sumX + 10, blockY + sumH - 16, { width: sumW * 0.55, lineBreak: false })
     .text(inr(v.totalInvoiceValue), sumX + sumW * 0.5, blockY + sumH - 16, { width: sumW * 0.5 - 10, align: 'right', lineBreak: false });
 
@@ -359,8 +397,10 @@ export async function einvoicePdf(rec, branding = {}) {
 }
 
 // ── e-WAY BILL PDF (redesigned: structured Part A / Part B panels) ────────────
-export async function ewbPdf(rec, branding = {}) {
+export async function ewbPdf(rec, branding = {}, lang = 'en') {
+  setBrand(branding);
   const doc = new PDFDocument({ size: 'A4', margin: M, bufferPages: true });
+  applyPdfLang(doc, lang);
   const out = toBuffer(doc);
   const W = doc.page.width;
   const CW = W - 2 * M;
@@ -444,8 +484,8 @@ export async function ewbPdf(rec, branding = {}) {
     { t: 'Taxable', w: 0.24, a: 'right' },
   ];
   const drawHead = (yy) => {
-    doc.rect(M, yy, CW, 16).fill(BRAND);
-    doc.fillColor('#ffffff').fontSize(7.5).font('Helvetica-Bold');
+    doc.rect(M, yy, CW, 16).fill(THEAD_BG);
+    doc.fillColor(THEAD_TX).fontSize(7.5).font('Helvetica-Bold');
     let cx = M;
     cols.forEach((c) => { doc.text(c.t, cx + 4, yy + 4.5, { width: c.w * CW - 8, align: c.a, lineBreak: false }); cx += c.w * CW; });
     doc.font('Helvetica').fillColor(INK).fontSize(7.5);

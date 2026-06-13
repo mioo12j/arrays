@@ -9,10 +9,11 @@ router.use(authenticate);
 
 const sum = (rows, key) => rows.reduce((s, r) => s + Number(r[key] || 0), 0);
 const fmt = (req) => (req.query.format === 'pdf' ? 'pdf' : 'xlsx');
+const lng = (req) => (String(req.query.lang || '').toLowerCase().startsWith('hi') ? 'hi' : 'en');
 
-async function send(res, format, payload) {
-  if (format === 'pdf') return streamPdf(res, payload);
-  return streamExcel(res, payload);
+async function send(res, format, lang, payload) {
+  if (format === 'pdf') return streamPdf(res, payload, lang);
+  return streamExcel(res, payload, lang);
 }
 
 // Build a date/subtitle suffix describing the active filter window.
@@ -56,7 +57,7 @@ router.get(
        ORDER BY p.payment_date DESC NULLS LAST, p.created_at DESC`,
       p
     );
-    await send(res, fmt(req), {
+    await send(res, fmt(req), lng(req), {
       title: 'Outgoing Payments Report',
       subtitle: rangeLabel(req.query),
       filename: 'payments-report',
@@ -105,7 +106,7 @@ router.get(
        ORDER BY r.credited_date DESC NULLS LAST, r.created_at DESC`,
       p
     );
-    await send(res, fmt(req), {
+    await send(res, fmt(req), lng(req), {
       title: 'Incoming Receipts Report',
       subtitle: rangeLabel(req.query),
       filename: 'receipts-report',
@@ -131,7 +132,7 @@ router.get(
 
 // ── Ledger statement (running balance) ──────────────────────────────────────
 // party = 'vendor' | 'client'
-async function ledgerStatement(res, format, party, id, q) {
+async function ledgerStatement(res, format, lang, party, id, q) {
   const table = party === 'vendor' ? 'vendors' : party === 'employee' ? 'employees' : 'clients';
   const { rows: pr } = await query(`SELECT name, opening_balance FROM ${table} WHERE id=$1`, [id]);
   if (!pr[0]) throw new ApiError(404, `${party} not found`);
@@ -179,7 +180,7 @@ async function ledgerStatement(res, format, party, id, q) {
   const closing = rows.length ? rows[rows.length - 1].balance : opening;
 
   const partyLabel = party === 'vendor' ? 'Vendor' : party === 'employee' ? 'Employee' : 'Client';
-  await send(res, format, {
+  await send(res, format, lang, {
     title: `${partyLabel} Ledger — ${pr[0].name}`,
     subtitle: `${rangeLabel(q)}   •   Closing Balance: ${new Intl.NumberFormat('en-IN', { minimumFractionDigits: 2 }).format(closing)}`,
     filename: `${party}-ledger-${pr[0].name}`,
@@ -196,9 +197,9 @@ async function ledgerStatement(res, format, party, id, q) {
   });
 }
 
-router.get('/vendor-ledger/:id', asyncHandler((req, res) => ledgerStatement(res, fmt(req), 'vendor', req.params.id, req.query)));
-router.get('/client-ledger/:id', asyncHandler((req, res) => ledgerStatement(res, fmt(req), 'client', req.params.id, req.query)));
-router.get('/employee-ledger/:id', asyncHandler((req, res) => ledgerStatement(res, fmt(req), 'employee', req.params.id, req.query)));
+router.get('/vendor-ledger/:id', asyncHandler((req, res) => ledgerStatement(res, fmt(req), lng(req), 'vendor', req.params.id, req.query)));
+router.get('/client-ledger/:id', asyncHandler((req, res) => ledgerStatement(res, fmt(req), lng(req), 'client', req.params.id, req.query)));
+router.get('/employee-ledger/:id', asyncHandler((req, res) => ledgerStatement(res, fmt(req), lng(req), 'employee', req.params.id, req.query)));
 
 // ── Invoices ────────────────────────────────────────────────────────────────
 router.get(
@@ -224,7 +225,7 @@ router.get(
        ORDER BY i.issue_date DESC NULLS LAST`,
       p
     );
-    await send(res, fmt(req), {
+    await send(res, fmt(req), lng(req), {
       title: 'Invoices Report',
       subtitle: rangeLabel(req.query),
       filename: 'invoices-report',
@@ -266,7 +267,7 @@ router.get(
        WHERE l.statement_id=$1 ORDER BY l.serial_no NULLS LAST, l.txn_date`,
       [req.params.id]
     );
-    await send(res, fmt(req), {
+    await send(res, fmt(req), lng(req), {
       title: `Reconciliation — ${st[0].label || 'Statement'}`,
       filename: `reconciliation-${st[0].label || 'statement'}`,
       columns: [
@@ -297,7 +298,7 @@ router.get(
         pr.contract_value - COALESCE((SELECT SUM(amount) FROM payments WHERE project_id=pr.id),0) AS gross_margin
       FROM projects pr ORDER BY pr.created_at DESC
     `);
-    await send(res, fmt(req), {
+    await send(res, fmt(req), lng(req), {
       title: 'Project Profitability Report',
       filename: 'project-profitability',
       columns: [

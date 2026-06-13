@@ -621,3 +621,185 @@ CREATE TABLE IF NOT EXISTS gst_imports (
   created_by   UUID REFERENCES users(id),
   created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- ============================================================================
+--  DELIVERY CHALLAN MODULE  (Rule 55 CGST — movement of goods WITHOUT a tax
+--  invoice: job work, branch transfer, approval basis, repair, exhibition…).
+--  Reuses gst_branches, gst_number_series (doc_type='DC'), gst_attachments,
+--  gst_audit_events, gst_comments. Safe to re-run (idempotent).
+-- ============================================================================
+DO $$ BEGIN
+  CREATE TYPE dc_status AS ENUM (
+    'draft','pending_approval','approved','rejected','dispatched','in_transit',
+    'delivered','partially_delivered','returned','cancelled','converted','closed'
+  );
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+CREATE TABLE IF NOT EXISTS delivery_challans (
+  id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  challan_no       TEXT,
+  challan_date     DATE NOT NULL DEFAULT CURRENT_DATE,
+  challan_time     TIME,
+  fy               TEXT,
+  branch_id        UUID REFERENCES gst_branches(id),
+  challan_type     TEXT NOT NULL DEFAULT 'job_work',  -- code from gst_master_data(category='dc_type')
+  dispatch_reason  TEXT,                               -- code from gst_master_data(category='dc_reason')
+  status           dc_status NOT NULL DEFAULT 'draft',
+  currency         TEXT NOT NULL DEFAULT 'INR',
+  remarks          TEXT,
+  internal_notes   TEXT,
+
+  -- Parties (full address blocks stored as JSONB → new fields need no migration)
+  consignor        JSONB NOT NULL DEFAULT '{}',
+  consignee        JSONB NOT NULL DEFAULT '{}',
+  consignee_kind   TEXT DEFAULT 'registered',         -- registered|unregistered|branch|warehouse|jobworker
+
+  -- Transport + e-Way Bill
+  transport        JSONB NOT NULL DEFAULT '{}',        -- transporter/vehicle/driver/LR/mode/multi-vehicle
+  is_interstate    BOOLEAN NOT NULL DEFAULT FALSE,
+  ewb_id           UUID REFERENCES gst_eway_bills(id),
+  ewb_no           TEXT,
+  ewb_date         TIMESTAMPTZ,
+  ewb_valid_from   TIMESTAMPTZ,
+  ewb_valid_to     TIMESTAMPTZ,
+  ewb_distance     INT,
+
+  -- Valuation rollups (computed from items)
+  total_qty        NUMERIC(16,3) DEFAULT 0,
+  taxable_value    NUMERIC(16,2) DEFAULT 0,
+  cgst_value       NUMERIC(16,2) DEFAULT 0,
+  sgst_value       NUMERIC(16,2) DEFAULT 0,
+  igst_value       NUMERIC(16,2) DEFAULT 0,
+  cess_value       NUMERIC(16,2) DEFAULT 0,
+  total_value      NUMERIC(16,2) DEFAULT 0,
+
+  -- Delivery confirmation (POD)
+  delivery         JSONB,                              -- {date,time,receiverName,receiverMobile,signatureFile,podFile,gps}
+
+  -- Lifecycle actors + invoice linkage
+  source_invoice_id     UUID REFERENCES invoices(id),
+  converted_invoice_id  UUID REFERENCES gst_einvoices(id),
+  prepared_by      UUID REFERENCES users(id),
+  approved_by      UUID REFERENCES users(id),
+  approved_at      TIMESTAMPTZ,
+  dispatched_by    UUID REFERENCES users(id),
+  dispatched_at    TIMESTAMPTZ,
+
+  is_deleted       BOOLEAN NOT NULL DEFAULT FALSE,
+  deleted_at       TIMESTAMPTZ,
+  deleted_by       UUID REFERENCES users(id),
+  created_by       UUID REFERENCES users(id),
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at       TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_dc_no_branch ON delivery_challans(branch_id, challan_no) WHERE challan_no IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_dc_status ON delivery_challans(status) WHERE is_deleted = FALSE;
+CREATE INDEX IF NOT EXISTS idx_dc_date   ON delivery_challans(challan_date);
+CREATE INDEX IF NOT EXISTS idx_dc_branch ON delivery_challans(branch_id);
+
+CREATE TABLE IF NOT EXISTS delivery_challan_items (
+  id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  challan_id       UUID NOT NULL REFERENCES delivery_challans(id) ON DELETE CASCADE,
+  line_no          INT NOT NULL DEFAULT 1,
+  product_name     TEXT NOT NULL,
+  product_code     TEXT,
+  sku              TEXT,
+  barcode          TEXT,
+  hsn              TEXT,
+  description      TEXT,
+  batch_no         TEXT,
+  serial_no        TEXT,
+  quantity         NUMERIC(16,3) NOT NULL DEFAULT 0,
+  unit             TEXT DEFAULT 'NOS',
+  unit_conversion  NUMERIC(16,4),
+  gross_weight     NUMERIC(16,3),
+  net_weight       NUMERIC(16,3),
+  rate             NUMERIC(16,2) DEFAULT 0,             -- per-unit declared value
+  taxable_value    NUMERIC(16,2) DEFAULT 0,
+  declared_value   NUMERIC(16,2),
+  insurance_value  NUMERIC(16,2),
+  gst_rate         NUMERIC(6,2) DEFAULT 0,
+  cgst_amount      NUMERIC(16,2) DEFAULT 0,
+  sgst_amount      NUMERIC(16,2) DEFAULT 0,
+  igst_amount      NUMERIC(16,2) DEFAULT 0,
+  cess_rate        NUMERIC(6,2) DEFAULT 0,
+  cess_amount      NUMERIC(16,2) DEFAULT 0,
+  warehouse        TEXT,
+  rack             TEXT,
+  bin              TEXT,
+  returned_qty     NUMERIC(16,3) NOT NULL DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS idx_dc_items_challan ON delivery_challan_items(challan_id);
+
+CREATE TABLE IF NOT EXISTS delivery_challan_status_history (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  challan_id    UUID NOT NULL REFERENCES delivery_challans(id) ON DELETE CASCADE,
+  from_status   TEXT,
+  to_status     TEXT NOT NULL,
+  note          TEXT,
+  user_id       UUID REFERENCES users(id),
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_dc_hist_challan ON delivery_challan_status_history(challan_id, created_at);
+
+CREATE TABLE IF NOT EXISTS delivery_challan_returns (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  challan_id      UUID NOT NULL REFERENCES delivery_challans(id) ON DELETE CASCADE,
+  return_date     DATE NOT NULL DEFAULT CURRENT_DATE,
+  return_qty      NUMERIC(16,3) NOT NULL DEFAULT 0,
+  reason          TEXT,
+  damage_notes    TEXT,
+  transport       JSONB,
+  items           JSONB,                                -- [{itemId, qty}]
+  created_by      UUID REFERENCES users(id),
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_dc_returns_challan ON delivery_challan_returns(challan_id);
+
+-- Keep updated_at fresh.
+DROP TRIGGER IF EXISTS trg_dc_touch ON delivery_challans;
+CREATE TRIGGER trg_dc_touch BEFORE UPDATE ON delivery_challans
+  FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+-- ── Seed configurable challan types (Rule 55 movements) & dispatch reasons ──
+INSERT INTO gst_master_data (category, code, name, meta) VALUES
+  ('dc_type','job_work','Job Work','{"ewb":"conditional","returnable":true}'),
+  ('dc_type','job_work_return','Return from Job Work','{"ewb":"conditional","returnable":false}'),
+  ('dc_type','repair_dispatch','Repair Dispatch','{"ewb":"conditional","returnable":true}'),
+  ('dc_type','repair_return','Repair Return','{"ewb":"conditional","returnable":false}'),
+  ('dc_type','testing','Goods for Testing','{"ewb":"conditional","returnable":true}'),
+  ('dc_type','demonstration','Goods for Demonstration','{"ewb":"conditional","returnable":true}'),
+  ('dc_type','exhibition','Goods for Exhibition','{"ewb":"conditional","returnable":true}'),
+  ('dc_type','approval_basis','Goods Sent on Approval Basis','{"ewb":"conditional","returnable":true}'),
+  ('dc_type','sale_or_return','Sale or Return Basis','{"ewb":"conditional","returnable":true}'),
+  ('dc_type','branch_transfer','Branch Transfer','{"ewb":"required","returnable":false}'),
+  ('dc_type','warehouse_transfer','Warehouse Transfer','{"ewb":"required","returnable":false}'),
+  ('dc_type','ckd','CKD Dispatch','{"ewb":"required","returnable":false}'),
+  ('dc_type','skd','SKD Dispatch','{"ewb":"required","returnable":false}'),
+  ('dc_type','multiple_lots','Goods in Multiple Lots','{"ewb":"required","returnable":false}'),
+  ('dc_type','returnable_packaging','Returnable Packaging','{"ewb":"conditional","returnable":true}'),
+  ('dc_type','liquid_gas','Liquid Gas Dispatch','{"ewb":"required","returnable":false}'),
+  ('dc_type','non_supply','Non-Supply Movement','{"ewb":"conditional","returnable":false}'),
+  ('dc_type','internal_transfer','Internal Inventory Transfer','{"ewb":"conditional","returnable":false}'),
+  ('dc_type','consignment','Consignment Transfer','{"ewb":"required","returnable":false}'),
+  ('dc_type','other','Other Permissible Movement','{"ewb":"conditional","returnable":false}')
+ON CONFLICT (category, code) DO NOTHING;
+
+INSERT INTO gst_master_data (category, code, name) VALUES
+  ('dc_reason','job_work','Job Work'),
+  ('dc_reason','repair','Repair / Maintenance'),
+  ('dc_reason','demonstration','Demonstration'),
+  ('dc_reason','testing','Testing'),
+  ('dc_reason','exhibition','Exhibition'),
+  ('dc_reason','transfer','Stock / Branch Transfer'),
+  ('dc_reason','sample','Sample'),
+  ('dc_reason','approval','On Approval')
+ON CONFLICT (category, code) DO NOTHING;
+
+-- Default DC number series (all branches; {BRANCH}/DC/{FY}/00001).
+INSERT INTO gst_number_series (branch_id, doc_type, name, prefix, padding, next_number, fy_reset, current_fy)
+SELECT NULL,'DC','Delivery Challan (all branches)','{BRANCH}/DC/{FY}/',5,1,TRUE,
+       (CASE WHEN EXTRACT(MONTH FROM now())>=4
+             THEN to_char(now(),'YY')||'-'||to_char(now()+interval '1 year','YY')
+             ELSE to_char(now()-interval '1 year','YY')||'-'||to_char(now(),'YY') END)
+WHERE NOT EXISTS (SELECT 1 FROM gst_number_series WHERE doc_type='DC');

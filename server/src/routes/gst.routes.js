@@ -33,10 +33,14 @@ import * as searchSvc from '../services/gst/searchService.js';
 import * as views from '../services/gst/savedViewService.js';
 import * as brandingSvc from '../services/gst/brandingService.js';
 import * as feed from '../services/gst/feedService.js';
+import * as challans from '../services/gst/challanService.js';
+import { challanPdf } from '../services/gst/challan-pdf.js';
+import { streamExcel, streamPdf } from '../services/export.service.js';
 import { upload } from '../middleware/upload.js';
 import { einvoicePdf, ewbPdf } from '../services/gst/pdf.js';
 import { toCsv, toXlsx, exportContentType } from '../services/gst/exporter.js';
 import { recordAccess } from '../services/gst/log.js';
+import { company } from '../config/company.js';
 import { loadMaster } from '../services/gst/masterData.js';
 import { getMode } from '../services/gst/adapter.js';
 
@@ -53,6 +57,7 @@ const branchCtx = (req) => {
   return b && b !== 'all' ? b : null;
 };
 const withBranch = (req) => { const b = branchCtx(req); if (b) req.body = { ...req.body, branchId: b }; return req.body; };
+const rangeText = (q) => (q.from && q.to ? `${q.from} to ${q.to}` : q.from ? `from ${q.from}` : q.to ? `up to ${q.to}` : 'All dates');
 
 // ── Branches (multi-GSTIN) ─────────────────────────────────────────────────
 router.get('/branches', requirePerm(PERMS.VIEW), asyncHandler(async (_req, res) => res.json(await branchSvc.list(pool))));
@@ -214,7 +219,7 @@ router.post('/einvoices/:id/restore-version', requirePerm(PERMS.EDIT), asyncHand
 router.get('/einvoices/:id/pdf', requirePerm(PERMS.DOWNLOAD), asyncHandler(async (req, res) => {
   const rec = await einv.get(pool, req.params.id);
   const branding = await brandingSvc.getForBranch(pool, rec.branchId);
-  const buf = await einvoicePdf(rec, branding);
+  const buf = await einvoicePdf(rec, branding, req.query.lang);
   await tx((db) => einv.markPrinted(db, req.params.id, uid(req)));
   await recordAccess(req, { action: 'download', objectType: 'einvoice', objectId: req.params.id, detail: { kind: 'pdf' } });
   res.setHeader('Content-Type', 'application/pdf');
@@ -282,7 +287,7 @@ router.post('/ewbs/:id/restore-version', requirePerm(PERMS.EDIT), asyncHandler(a
 router.get('/ewbs/:id/pdf', requirePerm(PERMS.DOWNLOAD), asyncHandler(async (req, res) => {
   const rec = await ewb.get(pool, req.params.id);
   const branding = await brandingSvc.getForBranch(pool, rec.branchId);
-  const buf = await ewbPdf(rec, branding);
+  const buf = await ewbPdf(rec, branding, req.query.lang);
   await tx((db) => ewb.markPrinted(db, req.params.id, uid(req)));
   await recordAccess(req, { action: 'download', objectType: 'ewb', objectId: req.params.id, detail: { kind: 'pdf' } });
   res.setHeader('Content-Type', 'application/pdf');
@@ -445,14 +450,35 @@ const SAMPLE_QUOTE = {
   notes: 'Grid-tied rooftop with net metering. Sample preview document.',
 };
 
+const SAMPLE_CHALLAN = {
+  challanNo: 'SAMPLE/DC/26-27/00001', challanDate: new Date().toISOString().slice(0, 10),
+  status: 'dispatched', challanType: 'job_work', challanTypeName: 'Job Work', isInterstate: true,
+  consignor: { legalName: company.name, gstin: company.gstin, addr1: company.address, location: 'Greater Noida', pincode: '201310', stateCode: '09' },
+  consignee: { legalName: 'SAMPLE JOB WORKER PVT LTD', gstin: '10AARCA4610L1ZT', addr1: 'Industrial Area', location: 'Madhubani', pincode: '847229', stateCode: '10' },
+  transport: { mode: 'road', vehicleNo: 'UP16AB1234', transporterName: 'Sample Logistics', lrNo: 'LR-1024' },
+  ewbNo: '391000123456', ewbValidTo: new Date(Date.now() + 2 * 864e5).toISOString(),
+  items: [
+    { lineNo: 1, productName: 'Solar Module 540Wp', hsn: '854143', batchNo: 'B-22', quantity: 20, unit: 'NOS', rate: 12000, gstRate: 18, taxableValue: 240000, igstAmount: 43200 },
+    { lineNo: 2, productName: 'Mounting Structure', hsn: '730890', quantity: 40, unit: 'NOS', rate: 800, gstRate: 18, taxableValue: 32000, igstAmount: 5760 },
+  ],
+  taxableValue: 272000, cgstValue: 0, sgstValue: 0, igstValue: 48960, cessValue: 0, totalValue: 320960,
+};
+
 router.get('/branding/preview', requirePerm(PERMS.VIEW), asyncHandler(async (req, res) => {
   const type = req.query.type || 'einvoice';
   if (type === 'quote') {
     const { streamQuotePdf } = await import('../services/quote-pdf.service.js');
     const brand = await brandingSvc.getForBranch(pool, req.query.branch_id);
-    return streamQuotePdf(res, SAMPLE_QUOTE, brand);
+    return streamQuotePdf(res, SAMPLE_QUOTE, brand, req.query.lang);
   }
-  const buf = await brandingSvc.preview(pool, type, req.query.branch_id);
+  if (type === 'challan') {
+    const brand = await brandingSvc.getForBranch(pool, req.query.branch_id);
+    const buf = await challanPdf(SAMPLE_CHALLAN, brand, req.query.lang);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'inline; filename="branding-preview-challan.pdf"');
+    return res.send(buf);
+  }
+  const buf = await brandingSvc.preview(pool, type, req.query.branch_id, req.query.lang);
   res.setHeader('Content-Type', 'application/pdf');
   res.setHeader('Content-Disposition', `inline; filename="branding-preview.pdf"`);
   res.send(buf);
@@ -477,5 +503,70 @@ router.get('/readiness', requirePerm(PERMS.ADMIN), asyncHandler(async (req, res)
   res.json(data);
 }));
 router.get('/test-suite', requirePerm(PERMS.ADMIN), asyncHandler(async (_req, res) => res.json(await readiness.testSuite(pool))));
+
+// ============================================================================
+//  DELIVERY CHALLAN  (Rule 55 — movement of goods without a tax invoice)
+//  Specific paths declared before /:id so they aren't captured as an id.
+// ============================================================================
+router.get('/challans/stats', requirePerm(PERMS.VIEW), asyncHandler(async (req, res) => res.json(await challans.stats(pool, branchCtx(req)))));
+router.get('/challans/masters', requirePerm(PERMS.VIEW), asyncHandler(async (_req, res) => {
+  const { rows } = await pool.query("SELECT category, code, name, meta FROM gst_master_data WHERE category IN ('dc_type','dc_reason') AND active=TRUE ORDER BY category, name");
+  res.json({
+    types: rows.filter((r) => r.category === 'dc_type').map((r) => ({ code: r.code, name: r.name, meta: r.meta })),
+    reasons: rows.filter((r) => r.category === 'dc_reason').map((r) => ({ code: r.code, name: r.name })),
+  });
+}));
+router.get('/challans/export', requirePerm(PERMS.EXPORT), asyncHandler(async (req, res) => {
+  const rows = await challans.register(pool, { ...req.query, branchId: branchCtx(req) });
+  await recordAccess(req, { action: 'export', objectType: 'delivery_challan', detail: { format: req.query.format, count: rows.length } });
+  const payload = {
+    title: 'Delivery Challan Register', subtitle: rangeText(req.query), filename: 'delivery-challan-register',
+    columns: [
+      { header: 'Challan #', key: 'challan_no', xlsWidth: 20 },
+      { header: 'Date', key: 'date', xlsWidth: 12 },
+      { header: 'Type', key: 'type', xlsWidth: 20 },
+      { header: 'Consignee', key: 'consignee', xlsWidth: 26 },
+      { header: 'GSTIN', key: 'consignee_gstin', xlsWidth: 18 },
+      { header: 'To State', key: 'to_state', xlsWidth: 16 },
+      { header: 'Vehicle', key: 'vehicle', xlsWidth: 14 },
+      { header: 'E-Way Bill', key: 'ewb_no', xlsWidth: 16 },
+      { header: 'Qty', key: 'qty', xlsWidth: 10 },
+      { header: 'Taxable', key: 'taxable', xlsWidth: 14, money: true },
+      { header: 'Total', key: 'total', xlsWidth: 14, money: true },
+      { header: 'Status', key: 'status', xlsWidth: 14 },
+    ],
+    rows,
+    totals: { qty: rows.reduce((s, r) => s + Number(r.qty || 0), 0), taxable: rows.reduce((s, r) => s + Number(r.taxable || 0), 0), total: rows.reduce((s, r) => s + Number(r.total || 0), 0) },
+  };
+  if (req.query.format === 'pdf') return streamPdf(res, payload, req.query.lang);
+  return streamExcel(res, payload, req.query.lang);
+}));
+router.get('/challans', requirePerm(PERMS.VIEW), asyncHandler(async (req, res) => res.json(await challans.list(pool, { ...req.query, branchId: branchCtx(req) }))));
+router.post('/challans', requirePerm(PERMS.CREATE), asyncHandler(async (req, res) => res.status(201).json(await tx((db) => challans.create(db, withBranch(req), uid(req))))));
+router.get('/challans/:id', requirePerm(PERMS.VIEW), asyncHandler(async (req, res) => res.json(await challans.get(pool, req.params.id))));
+router.patch('/challans/:id', requirePerm(PERMS.EDIT), asyncHandler(async (req, res) => res.json(await tx((db) => challans.update(db, req.params.id, req.body, uid(req))))));
+router.delete('/challans/:id', requirePerm(PERMS.EDIT), asyncHandler(async (req, res) => res.json(await tx((db) => challans.softDelete(db, req.params.id, uid(req))))));
+
+router.post('/challans/:id/submit', requirePerm(PERMS.CREATE), asyncHandler(async (req, res) => res.json(await tx((db) => challans.submitForApproval(db, req.params.id, uid(req))))));
+router.post('/challans/:id/approve', requirePerm(PERMS.APPROVE), asyncHandler(async (req, res) => res.json(await tx((db) => challans.approve(db, req.params.id, uid(req))))));
+router.post('/challans/:id/reject', requirePerm(PERMS.APPROVE), asyncHandler(async (req, res) => res.json(await tx((db) => challans.reject(db, req.params.id, req.body?.reason, uid(req))))));
+router.post('/challans/:id/dispatch', requirePerm(PERMS.SUBMIT), asyncHandler(async (req, res) => res.json(await tx((db) => challans.dispatch(db, req.params.id, req.body || {}, uid(req))))));
+router.post('/challans/:id/transit', requirePerm(PERMS.SUBMIT), asyncHandler(async (req, res) => res.json(await tx((db) => challans.markInTransit(db, req.params.id, uid(req))))));
+router.post('/challans/:id/deliver', requirePerm(PERMS.EDIT), asyncHandler(async (req, res) => res.json(await tx((db) => challans.deliver(db, req.params.id, req.body || {}, uid(req))))));
+router.post('/challans/:id/return', requirePerm(PERMS.EDIT), asyncHandler(async (req, res) => res.json(await tx((db) => challans.returnGoods(db, req.params.id, req.body || {}, uid(req))))));
+router.post('/challans/:id/cancel', requirePerm(PERMS.CANCEL), asyncHandler(async (req, res) => res.json(await tx((db) => challans.cancel(db, req.params.id, req.body?.reason, uid(req))))));
+router.post('/challans/:id/close', requirePerm(PERMS.EDIT), asyncHandler(async (req, res) => res.json(await tx((db) => challans.close(db, req.params.id, uid(req))))));
+router.post('/challans/:id/convert', requirePerm(PERMS.CREATE), asyncHandler(async (req, res) => res.status(201).json(await tx((db) => challans.convertToInvoice(db, req.params.id, uid(req))))));
+router.post('/challans/:id/ewb', requirePerm(PERMS.CREATE), asyncHandler(async (req, res) => res.status(201).json(await tx((db) => challans.createEwbDraft(db, req.params.id, uid(req))))));
+
+router.get('/challans/:id/pdf', requirePerm(PERMS.DOWNLOAD), asyncHandler(async (req, res) => {
+  const dc = await challans.get(pool, req.params.id);
+  const branding = await brandingSvc.getForBranch(pool, dc.branchId);
+  const buf = await challanPdf(dc, branding, req.query.lang);
+  await recordAccess(req, { action: 'download', objectType: 'delivery_challan', objectId: req.params.id, detail: { kind: 'pdf' } });
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `attachment; filename="Challan_${fileName(dc.challanNo)}.pdf"`);
+  res.send(buf);
+}));
 
 export default router;

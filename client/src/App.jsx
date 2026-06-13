@@ -24,6 +24,7 @@ import Users from './pages/Users.jsx';
 import System from './pages/System.jsx';
 import Quotes from './pages/Quotes.jsx';
 import QuoteBuilder from './pages/QuoteBuilder.jsx';
+import DeliveryChallans from './pages/DeliveryChallans.jsx';
 import About from './pages/About.jsx';
 import Help from './pages/Help.jsx';
 import GstDashboard from './pages/GstDashboard.jsx';
@@ -83,6 +84,7 @@ export default function App() {
         <Route path="/quotes" element={<Quotes />} />
         <Route path="/quotes/new" element={<QuoteBuilder />} />
         <Route path="/quotes/:id" element={<QuoteBuilder />} />
+        <Route path="/challans" element={<DeliveryChallans />} />
         <Route path="/gst" element={<GstDashboard />} />
         <Route path="/gst/compliance" element={<GstCompliance />} />
         <Route path="/gst/reconciliation" element={<GstRecon />} />

@@ -13,7 +13,14 @@ import * as config from './configService.js';
 import { recordAudit } from './log.js';
 
 // Text fields users can configure (logo/signature/stamp are uploaded files).
-const TEXT_FIELDS = ['headerText', 'footerText', 'terms', 'disclaimer', 'watermark', 'contactInfo', 'emailSignature'];
+const TEXT_FIELDS = [
+  'headerText', 'footerText', 'terms', 'disclaimer', 'watermark', 'contactInfo', 'emailSignature',
+  // PDF theme — every colour is independently customizable (blank = sensible default)
+  'pdfColor', 'headerBgColor', 'headerTextColor', 'tableHeadBgColor', 'tableHeadTextColor',
+  'textColor', 'mutedColor', 'lineColor', 'watermarkColor',
+  // Quotation default content blocks (used when a quote doesn't set its own)
+  'quoteScope', 'quoteTerms', 'quoteExclusions',
+];
 
 export async function get(db) {
   const b = (await config.get(db, 'branding', {})) || {};
@@ -72,8 +79,8 @@ const SAMPLE_EWB = {
   items: [{ description: 'Solar Panel 540W (sample)', hsn: '854143', quantity: 10, unit: 'NOS', taxableAmount: 120000 }],
 };
 
-export async function preview(db, type, branchId) {
+export async function preview(db, type, branchId, lang = 'en') {
   const branding = await getForBranch(db, branchId);
   const { einvoicePdf, ewbPdf } = await import('./pdf.js');
-  return type === 'ewb' ? ewbPdf(SAMPLE_EWB, branding) : einvoicePdf(SAMPLE_EINV, branding);
+  return type === 'ewb' ? ewbPdf(SAMPLE_EWB, branding, lang) : einvoicePdf(SAMPLE_EINV, branding, lang);
 }

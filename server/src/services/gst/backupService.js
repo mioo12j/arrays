@@ -184,23 +184,80 @@ export async function drTest(db, id, userId) {
   return { verification: v, simulation: p, safe: true };
 }
 
+// Column types per table — needed to format values correctly on restore.
+// Postgres ARRAY columns want a JS array (pg driver formats `{…}`); JSON.stringify
+// would produce `[…]` and fail with "malformed array literal". json/jsonb columns
+// want a JSON string. Cached per table for the duration of a restore.
+async function colTypes(db, table) {
+  const { rows } = await db.query(
+    `SELECT column_name, data_type FROM information_schema.columns
+     WHERE table_schema='public' AND table_name=$1`, [table]);
+  const m = {};
+  for (const r of rows) m[r.column_name] = r.data_type;
+  return m;
+}
+function coerceValue(val, dataType) {
+  if (val === null || val === undefined) return val;
+  if (dataType === 'ARRAY') return Array.isArray(val) ? val : val; // pg formats JS array → {…}
+  if (dataType === 'json' || dataType === 'jsonb') return typeof val === 'object' ? JSON.stringify(val) : val;
+  if (typeof val === 'object') return JSON.stringify(val);          // defensive: composite/unknown object
+  return val;
+}
+
 // ── Restore (additive, non-destructive) ────────────────────────────────────
+// Robust against (a) the route's surrounding transaction — each row runs in its
+// own SAVEPOINT so one bad row can't abort the whole restore; (b) array/json
+// column formatting; (c) FK ordering — rows that fail on a foreign-key are
+// retried in later passes once their parent rows exist.
 export async function restore(db, id, { mode = 'full', tables } = {}, userId) {
   const b = (await db.query('SELECT * FROM gst_backups WHERE id=$1', [id])).rows[0];
   if (!b) throw new ApiError(404, 'Backup not found');
   const { zip, data } = readBackup(b);
   const targets = restoreOrder(Object.keys(data.tables).filter((t) => mode === 'full' || !tables || tables.includes(t)));
-  let restored = 0;
+
+  // Build the full work list once (with per-table PK conflict clause + col types).
+  let pending = [];
   for (const t of targets) {
-    const pk = await pkCols(db, t).catch(() => ['id']);
+    const rows = data.tables[t] || [];
+    if (!rows.length) continue;
+    const pk = await pkCols(db, t).catch(() => []);
     const conflict = pk.length ? `ON CONFLICT (${pk.map((c) => `"${c}"`).join(',')}) DO NOTHING` : '';
-    for (const r of data.tables[t] || []) {
-      const cols = Object.keys(r);
-      const vals = cols.map((c) => (r[c] !== null && typeof r[c] === 'object' ? JSON.stringify(r[c]) : r[c]));
-      try { const res = await db.query(`INSERT INTO ${t} (${cols.map((c) => `"${c}"`).join(',')}) VALUES (${cols.map((_, i) => `$${i + 1}`).join(',')}) ${conflict}`, vals); restored += res.rowCount; }
-      catch { /* skip incompatible row */ }
-    }
+    const types = await colTypes(db, t).catch(() => ({}));
+    for (const r of rows) pending.push({ t, r, conflict, types });
   }
+
+  // SAVEPOINTs only work inside a transaction (the route path). Probe once; if the
+  // caller is auto-commit (e.g. a direct pool call), fall back to plain try/catch.
+  let useSavepoint = true;
+  try { await db.query('SAVEPOINT __probe'); await db.query('RELEASE SAVEPOINT __probe'); }
+  catch { useSavepoint = false; }
+
+  let restored = 0, droppedFk = 0, droppedOther = 0;
+  for (let pass = 1; pass <= 8 && pending.length; pass++) {
+    const retry = [];
+    let progressed = 0;
+    for (const item of pending) {
+      const { t, r, conflict, types } = item;
+      const cols = Object.keys(r);
+      const vals = cols.map((c) => coerceValue(r[c], types[c]));
+      const sql = `INSERT INTO ${t} (${cols.map((c) => `"${c}"`).join(',')}) VALUES (${cols.map((_, i) => `$${i + 1}`).join(',')}) ${conflict}`;
+      if (useSavepoint) await db.query('SAVEPOINT __row');
+      try {
+        const res = await db.query(sql, vals);
+        if (useSavepoint) await db.query('RELEASE SAVEPOINT __row');
+        restored += res.rowCount;
+        progressed++;
+      } catch (e) {
+        if (useSavepoint) await db.query('ROLLBACK TO SAVEPOINT __row'); // un-poison the txn
+        if (/foreign key/i.test(e.message)) retry.push(item);           // parent may appear later
+        else droppedOther++;                                            // genuinely incompatible
+      }
+    }
+    pending = retry;
+    if (!progressed) break; // no forward progress → remaining FK rows are unresolvable
+  }
+  droppedFk = pending.length;
+
   // Restore any missing attachment files.
   let filesRestored = 0;
   for (const entry of zip.getEntries()) {
@@ -209,8 +266,9 @@ export async function restore(db, id, { mode = 'full', tables } = {}, userId) {
     const dest = path.join(UPLOAD_ROOT, name);
     if (!fs.existsSync(dest)) { fs.writeFileSync(dest, entry.getData()); filesRestored++; }
   }
-  await recordAudit(db, { objectType: 'system', objectId: id, eventType: 'backup_restored', message: `${mode} restore — ${restored} records + ${filesRestored} files (additive, non-destructive)`, userId });
-  return { restored, filesRestored, mode };
+  const skipped = droppedOther + droppedFk;
+  await recordAudit(db, { objectType: 'system', objectId: id, eventType: 'backup_restored', message: `${mode} restore — ${restored} records + ${filesRestored} files (additive, non-destructive)${skipped ? `; ${skipped} row(s) skipped (already present or incompatible)` : ''}`, userId });
+  return { restored, filesRestored, mode, skipped, droppedFk, droppedOther };
 }
 
 // ── List + dashboard ───────────────────────────────────────────────────────

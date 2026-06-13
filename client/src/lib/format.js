@@ -3,9 +3,11 @@
 export const inr = (value, { compact = false } = {}) => {
   const n = Number(value || 0);
   if (compact) {
+    // Indian numbering: Crore (1,00,00,000) and Lakh (1,00,000); below a lakh
+    // show the full Indian-grouped value (no Western "K").
     if (Math.abs(n) >= 1e7) return `₹${(n / 1e7).toFixed(2)}Cr`;
     if (Math.abs(n) >= 1e5) return `₹${(n / 1e5).toFixed(2)}L`;
-    if (Math.abs(n) >= 1e3) return `₹${(n / 1e3).toFixed(1)}K`;
+    return `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(Math.round(n))}`;
   }
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {
   Rocket, LayoutDashboard, ArrowUpRight, ArrowDownLeft, FileText, Banknote,
   Building2, UserRound, Users, Calculator, FolderKanban, BarChart3, CloudUpload,
-  ShieldCheck, Languages, Search,
+  ShieldCheck, Languages, Search, Truck, DatabaseBackup, Download,
 } from 'lucide-react';
 import { Card, PageHeader } from '../components/ui/index.jsx';
 import { useI18n } from '../context/I18nContext.jsx';
@@ -227,6 +227,33 @@ const SECTIONS = [
     },
   },
   {
+    id: 'challans', icon: Truck,
+    en: {
+      title: 'Delivery Challans (moving goods without a bill)',
+      steps: [
+        'A Delivery Challan is used when you move goods but are NOT raising a tax invoice yet — job work, branch/warehouse transfer, repair, testing, demonstration, exhibition, goods on approval, returnable packaging, and more (GST Rule 55).',
+        'Open “Delivery Challans” in the left menu and click “New Challan”. Pick the challan type (e.g. Job Work, Branch Transfer), then fill the Consignor (from) and Consignee (to) details.',
+        'Add the goods line by line — description, HSN, quantity, rate and GST%. The app auto-decides CGST+SGST (same state) or IGST (different state) and shows the live total.',
+        'Fill the transport details (mode, vehicle number, transporter, LR number, distance). If you already have an e-Way Bill number, enter it here.',
+        'Save as draft → Submit for approval → an Admin Approves → Dispatch. After dispatch the challan is locked. Then mark Delivered (with receiver name) or Record a Return.',
+        'Use “Create E-Way Bill” to start a linked e-Way Bill, or “Convert to Invoice” to turn a delivered challan into a tax invoice (the link between them is kept).',
+        'Download the challan PDF (English or Hindi) to send with the vehicle. Use “Register” to export all challans to Excel/PDF.',
+      ],
+    },
+    hi: {
+      title: 'डिलीवरी चालान (बिना बिल के माल भेजना)',
+      steps: [
+        'डिलीवरी चालान का उपयोग तब होता है जब आप माल भेजते हैं पर अभी टैक्स इनवॉइस नहीं बना रहे — जॉब वर्क, शाखा/गोदाम स्थानांतरण, मरम्मत, परीक्षण, प्रदर्शन, प्रदर्शनी, अनुमोदन पर माल, वापसी योग्य पैकेजिंग आदि (GST नियम 55)।',
+        'बाएँ मेनू में “Delivery Challans” खोलें और “New Challan” पर क्लिक करें। चालान प्रकार चुनें (जैसे Job Work, Branch Transfer), फिर भेजने वाले (Consignor) और पाने वाले (Consignee) का विवरण भरें।',
+        'माल एक-एक करके जोड़ें — विवरण, HSN, मात्रा, दर और GST%। ऐप स्वयं तय करता है CGST+SGST (एक ही राज्य) या IGST (अलग राज्य) और लाइव कुल दिखाता है।',
+        'परिवहन विवरण भरें (माध्यम, वाहन संख्या, ट्रांसपोर्टर, LR संख्या, दूरी)। यदि आपके पास पहले से e-Way Bill संख्या है तो यहाँ दर्ज करें।',
+        'ड्राफ्ट सहेजें → अनुमोदन हेतु भेजें → एडमिन स्वीकृत करे → डिस्पैच करें। डिस्पैच के बाद चालान लॉक हो जाता है। फिर डिलीवर (पाने वाले का नाम) चिह्नित करें या वापसी दर्ज करें।',
+        '“Create E-Way Bill” से जुड़ा e-Way Bill शुरू करें, या “Convert to Invoice” से डिलीवर किए चालान को टैक्स इनवॉइस में बदलें (दोनों का संबंध सुरक्षित रहता है)।',
+        'वाहन के साथ भेजने के लिए चालान PDF (अंग्रेज़ी या हिंदी) डाउनलोड करें। सभी चालान Excel/PDF में निकालने के लिए “Register” का उपयोग करें।',
+      ],
+    },
+  },
+  {
     id: 'projects', icon: FolderKanban,
     en: {
       title: 'Projects & Sites',
@@ -388,6 +415,48 @@ const SECTIONS = [
         'Maker-Checker — जो दस्तावेज़ तैयार करता है (ऑपरेटर) वही उसे जमा/रद्द नहीं करता (एडमिन)। यह ग़लती व धोखाधड़ी रोकता है।',
         'Audit Mode — ऑडिटर हेतु केवल-पठन लॉगिन: सब देख व निर्यात कर सकते हैं, बदल नहीं सकते।',
         'Simulation बनाम Live — Simulation सब कुछ सुरक्षित अभ्यास कराता है, कोई वास्तविक सरकारी प्रस्तुति नहीं; Live वास्तविक डेटा भेजता है। ऊपर की पट्टी हमेशा मोड बताती है।',
+      ],
+    },
+  },
+  {
+    id: 'downloads', icon: Download,
+    en: {
+      title: 'Downloading in English or Hindi',
+      steps: [
+        'Every document and report download — invoices, e-Way Bills, quotations, delivery challans, and all Excel/PDF reports — can be produced in English or Hindi.',
+        'When you click a PDF or Excel/Register button, a small popup asks “Choose download language”. Pick English or हिन्दी and the file is generated in that language.',
+        'The labels, headings and totals translate; data like names, GSTINs, dates and amounts stay as-is — the standard format on Indian bilingual documents.',
+        'Press Esc or click Cancel to dismiss the popup without downloading.',
+      ],
+    },
+    hi: {
+      title: 'अंग्रेज़ी या हिंदी में डाउनलोड करना',
+      steps: [
+        'हर दस्तावेज़ और रिपोर्ट डाउनलोड — इनवॉइस, e-Way Bill, कोटेशन, डिलीवरी चालान, और सभी Excel/PDF रिपोर्ट — अंग्रेज़ी या हिंदी में बनाई जा सकती है।',
+        'जब आप PDF या Excel/Register बटन दबाते हैं, एक छोटा पॉपअप पूछता है “Choose download language”। English या हिन्दी चुनें और फ़ाइल उसी भाषा में बनेगी।',
+        'लेबल, शीर्षक और कुल अनुवादित होते हैं; नाम, GSTIN, दिनांक और राशि जैसे डेटा वैसे ही रहते हैं — भारतीय द्विभाषी दस्तावेज़ों का सामान्य प्रारूप।',
+        'बिना डाउनलोड किए पॉपअप बंद करने के लिए Esc दबाएँ या Cancel क्लिक करें।',
+      ],
+    },
+  },
+  {
+    id: 'backup', icon: DatabaseBackup,
+    en: {
+      title: 'Backup & Restore (Admin)',
+      steps: [
+        'Open “Data & Admin” → Backup. Click “Backup Now” to save the ENTIRE application — every record plus uploaded files — into one timestamped ZIP. A daily backup reminder appears if today’s backup is missing.',
+        'Each backup can be Verified (integrity check), DR-Tested (a safe simulated restore that never touches live data), and Downloaded as a ZIP for off-site safety.',
+        'Restore is additive and non-destructive — it brings back missing records and files without overwriting what you already have, and is protected by 2-step security verification.',
+        'Retention is automatic: set how many days/weeks/months of backups to keep. Always download a copy before any major change.',
+      ],
+    },
+    hi: {
+      title: 'बैकअप और पुनर्स्थापना (एडमिन)',
+      steps: [
+        '“Data & Admin” → Backup खोलें। पूरे एप्लिकेशन को सहेजने के लिए “Backup Now” दबाएँ — हर रिकॉर्ड और अपलोड की गई फ़ाइलें एक समयांकित ZIP में। आज का बैकअप न होने पर दैनिक अनुस्मारक दिखता है।',
+        'हर बैकअप को Verify (अखंडता जाँच), DR-Test (सुरक्षित नकली पुनर्स्थापना जो लाइव डेटा को नहीं छूती), और ऑफ-साइट सुरक्षा हेतु ZIP के रूप में Download किया जा सकता है।',
+        'पुनर्स्थापना योगात्मक और गैर-विनाशकारी है — यह गायब रिकॉर्ड और फ़ाइलें वापस लाती है, मौजूदा डेटा को अधिलेखित नहीं करती, और 2-चरण सुरक्षा सत्यापन से सुरक्षित है।',
+        'अवधारण स्वचालित है: कितने दिन/सप्ताह/माह के बैकअप रखने हैं सेट करें। किसी बड़े बदलाव से पहले हमेशा एक प्रति डाउनलोड करें।',
       ],
     },
   },

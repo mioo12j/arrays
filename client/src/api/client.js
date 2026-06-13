@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { chooseDownloadLanguage, isTranslatableDownload, withLang } from '../lib/langPrompt.js';
 
 const baseURL = import.meta.env.VITE_API_URL || '/api';
 
@@ -34,6 +35,11 @@ export const apiError = (err) =>
  * which a plain <a href> navigation cannot). Triggers a browser save dialog.
  */
 export async function download(path) {
+  if (isTranslatableDownload(path)) {
+    const lang = await chooseDownloadLanguage(); // English / हिन्दी popup
+    if (lang === null) return;                    // user cancelled
+    path = withLang(path, lang);
+  }
   const { data, headers } = await api.get(path, { responseType: 'blob' });
   const disposition = headers['content-disposition'] || '';
   const match = disposition.match(/filename="?([^"]+)"?/);

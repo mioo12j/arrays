@@ -6,6 +6,7 @@ import path from 'node:path';
 import PDFDocument from 'pdfkit';
 import { company } from '../config/company.js';
 import { UPLOAD_ROOT } from '../middleware/upload.js';
+import { applyPdfLang } from './pdf-i18n.js';
 
 function brandFile(branding, key) {
   const name = branding?.[key];
@@ -23,16 +24,43 @@ function quoteWatermark(doc, text) {
   const sx = doc.x, sy = doc.y;
   doc.save();
   doc.rotate(-45, { origin: [doc.page.width / 2, doc.page.height / 2] });
-  doc.fontSize(70).fillColor('#1d4ed8').fillOpacity(0.05)
+  doc.fontSize(70).fillColor(WM).fillOpacity(0.05)
     .text(String(text).toUpperCase(), 0, doc.page.height / 2 - 44, { width: doc.page.width, align: 'center', lineBreak: false });
   doc.fillOpacity(1).restore();
   doc.x = sx; doc.y = sy;
 }
 
-const BRAND = '#' + (company.brandColor || '1d4ed8');
-const INK = '#0f172a';
-const MUTE = '#64748b';
-const LINE = '#e2e8f0';
+// ── PDF theme — fully customizable from the Branding Manager ────────────────
+const DEFAULT_BRAND = '#' + (company.brandColor || '1d4ed8');
+let BRAND = DEFAULT_BRAND;   // accent: section titles, totals, charts
+let INK = '#0f172a';         // body text
+let MUTE = '#64748b';        // secondary text
+let LINE = '#e2e8f0';        // rules & borders
+let HEADER_BG = DEFAULT_BRAND;
+let HEADER_TX = '#ffffff';
+let SUBTX = '#dbeafe';
+let THEAD_BG = DEFAULT_BRAND;
+let THEAD_TX = '#ffffff';
+let WM = DEFAULT_BRAND;
+const validHex = (c) => (/^#?[0-9a-fA-F]{6}$/.test(String(c || '').trim()) ? (String(c).trim()[0] === '#' ? String(c).trim() : '#' + String(c).trim()) : null);
+const mix2 = (a, b, t) => {
+  const pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16);
+  const ch = (x, s) => (x >> s) & 255;
+  const m = (s) => Math.round(ch(pa, s) + (ch(pb, s) - ch(pa, s)) * t);
+  return '#' + [m(16), m(8), m(0)].map((v) => v.toString(16).padStart(2, '0')).join('');
+};
+function setTheme(b = {}) {
+  BRAND = validHex(b.pdfColor) || DEFAULT_BRAND;
+  INK = validHex(b.textColor) || '#0f172a';
+  MUTE = validHex(b.mutedColor) || '#64748b';
+  LINE = validHex(b.lineColor) || '#e2e8f0';
+  HEADER_BG = validHex(b.headerBgColor) || BRAND;
+  HEADER_TX = validHex(b.headerTextColor) || '#ffffff';
+  SUBTX = mix2(HEADER_TX, HEADER_BG, 0.28);
+  THEAD_BG = validHex(b.tableHeadBgColor) || BRAND;
+  THEAD_TX = validHex(b.tableHeadTextColor) || '#ffffff';
+  WM = validHex(b.watermarkColor) || BRAND;
+}
 // pdfkit's standard Helvetica (WinAnsi) has no ₹ glyph (it prints as "¹"); use
 // an ASCII "Rs " prefix that renders correctly on every platform.
 const inr = (n) => 'Rs ' + new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(Number(n || 0));
@@ -42,8 +70,10 @@ const TYPE_LABEL = {
   ground_mount: 'Ground Mount', utility: 'Utility-Scale',
 };
 
-export function streamQuotePdf(res, quote, branding = {}) {
+export function streamQuotePdf(res, quote, branding = {}, lang = 'en') {
+  setTheme(branding);
   const doc = new PDFDocument({ size: 'A4', margin: 40, bufferPages: true });
+  applyPdfLang(doc, lang);
   const safe = String(quote.quote_number || 'quote').replace(/[^\x20-\x7E]/g, '').replace(/["\\]/g, '');
   res.setHeader('Content-Type', 'application/pdf');
   res.setHeader('Content-Disposition', `attachment; filename="${safe}.pdf"`);
@@ -55,17 +85,19 @@ export function streamQuotePdf(res, quote, branding = {}) {
   const ensure = (need) => { if (doc.y + need > bottom()) doc.addPage(); };
 
   // ── Header band (logo + company) ──────────────────────────────────────────
-  doc.rect(0, 0, doc.page.width, 96).fill(BRAND);
+  doc.rect(0, 0, doc.page.width, 96).fill(HEADER_BG);
   let hx = M;
   if (fitImage(doc, brandFile(branding, 'logoFile'), M, 22, 52, 52)) hx = M + 62;
-  doc.fillColor('#fff').font('Helvetica-Bold').fontSize(18).text(branding.headerText || company.pdfName, hx, 20, { width: W - 150 - (hx - M), lineBreak: false });
-  doc.font('Helvetica').fontSize(7.5).fillColor('#dbeafe')
-    .text(company.tagline, hx, 44, { lineBreak: false })
-    .text(`GSTIN ${company.gstin}  |  CIN ${company.cin}`, hx, 56, { lineBreak: false })
-    .text(company.address, hx, 67, { width: W - 150 - (hx - M), lineBreak: false })
-    .text(`${branding.contactInfo || company.email}  |  ${company.certifications.join(' · ')}`, hx, 78, { width: W - 150 - (hx - M), lineBreak: false });
-  doc.font('Helvetica-Bold').fontSize(22).fillColor('#fff').text('QUOTATION', M, 24, { width: W, align: 'right' });
-  doc.font('Helvetica').fontSize(9).fillColor('#dbeafe')
+  const lw = W - 160 - (hx - M);   // name width — must stay clear of the right-side QUOTATION title
+  const fullW = W - (hx - M);      // sub-lines sit BELOW the title → full content width (W is already page-2M)
+  doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(18).text(branding.headerText || company.pdfName, hx, 20, { width: lw, height: 22, ellipsis: true });
+  doc.font('Helvetica').fontSize(7.5).fillColor(SUBTX)
+    .text(company.tagline, hx, 44, { width: fullW, height: 9, ellipsis: true })
+    .text(`GSTIN ${company.gstin}  |  CIN ${company.cin}`, hx, 56, { width: fullW, height: 9, ellipsis: true })
+    .text(company.address, hx, 67, { width: fullW, height: 9, ellipsis: true })
+    .text(`${branding.contactInfo || company.email}  |  ${company.certifications.join(' · ')}`, hx, 78, { width: fullW, height: 9, ellipsis: true });
+  doc.font('Helvetica-Bold').fontSize(22).fillColor(HEADER_TX).text('QUOTATION', M, 24, { width: W, align: 'right' });
+  doc.font('Helvetica').fontSize(9).fillColor(SUBTX)
     .text(quote.quote_number + (quote.version > 1 ? `  (Rev ${quote.version})` : ''), M, 50, { width: W, align: 'right' });
   doc.y = 112;
   quoteWatermark(doc, branding.watermark);
@@ -128,8 +160,8 @@ export function streamQuotePdf(res, quote, branding = {}) {
     doc.fillColor(INK).font('Helvetica').text(inr(t[1]), boxX + boxW * 0.5, ty, { width: boxW * 0.5, align: 'right' });
     ty += 15;
   });
-  doc.rect(boxX, ty + 2, boxW, 22).fill(BRAND);
-  doc.fillColor('#fff').font('Helvetica-Bold').fontSize(11)
+  doc.rect(boxX, ty + 2, boxW, 22).fill(THEAD_BG);
+  doc.fillColor(THEAD_TX).font('Helvetica-Bold').fontSize(11)
     .text('Grand Total (incl. GST)', boxX + 6, ty + 8, { width: boxW * 0.55 })
     .text(inr(quote.total_amount), boxX, ty + 8, { width: boxW - 6, align: 'right' });
   ty += 30;
@@ -213,7 +245,7 @@ export function streamQuotePdf(res, quote, branding = {}) {
   }
 
   // ── Terms / scope / exclusions ────────────────────────────────────────────
-  [['Technical Scope', quote.notes], ['Commercial Terms', quote.terms || defaultTerms()], ['Exclusions', quote.exclusions || defaultExclusions()]]
+  [['Technical Scope', quote.notes || branding.quoteScope], ['Commercial Terms', quote.terms || branding.quoteTerms || defaultTerms()], ['Exclusions', quote.exclusions || branding.quoteExclusions || defaultExclusions()]]
     .forEach(([h, body]) => {
       if (!body) return;
       ensure(60);
@@ -273,10 +305,10 @@ function solarStats(quote) {
 }
 function compactInr(n) {
   n = Number(n || 0);
+  // Indian numbering: Crore / Lakh, then full Indian-grouped (no Western "k").
   if (n >= 1e7) return 'Rs ' + (n / 1e7).toFixed(1) + 'Cr';
   if (n >= 1e5) return 'Rs ' + (n / 1e5).toFixed(1) + 'L';
-  if (n >= 1e3) return 'Rs ' + (n / 1e3).toFixed(0) + 'k';
-  return 'Rs ' + Math.round(n);
+  return 'Rs ' + new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(Math.round(n));
 }
 
 function metaCell(doc, x, y, label, value, w) {
@@ -292,8 +324,8 @@ function section(doc, title) {
 }
 function drawTableHeader(doc, cols, W, M) {
   const y = doc.y;
-  doc.rect(M, y, W, 18).fill(BRAND);
-  doc.fillColor('#fff').font('Helvetica-Bold').fontSize(8.5);
+  doc.rect(M, y, W, 18).fill(THEAD_BG);
+  doc.fillColor(THEAD_TX).font('Helvetica-Bold').fontSize(8.5);
   let cx = M;
   cols.forEach((c) => { doc.text(c.h, cx + 5, y + 5, { width: c.w * W - 10, align: c.a, lineBreak: false }); cx += c.w * W; });
   doc.y = y + 18;

@@ -202,7 +202,7 @@ router.get(
     const quote = { ...rows[0], client_name: rows[0].client_name || rows[0].client_full_name };
     let brand = {};
     try { brand = await branding.get(pool); } catch { /* branding optional */ }
-    streamQuotePdf(res, quote, brand);
+    streamQuotePdf(res, quote, brand, req.query.lang);
   })
 );
 

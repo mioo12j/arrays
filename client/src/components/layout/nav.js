@@ -24,6 +24,7 @@ export const NAV = [
   ]},
   { section: 'Sales & Delivery', items: [
     { to: '/quotes', label: 'Quotes & Estimation', icon: Calculator },
+    { to: '/challans', label: 'Delivery Challans', icon: Truck },
     { to: '/projects', label: 'Projects & Sites', icon: FolderKanban },
   ]},
   { section: 'GST Compliance', items: [

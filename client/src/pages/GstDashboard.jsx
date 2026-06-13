@@ -109,7 +109,7 @@ export default function GstDashboard() {
           <ResponsiveContainer width="100%" height={240}>
             <LineChart data={c.monthly || []}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis dataKey="month" fontSize={11} /><YAxis fontSize={11} tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`} />
+              <XAxis dataKey="month" fontSize={11} /><YAxis fontSize={11} tickFormatter={money} />
               <Tooltip formatter={(v) => inr(v)} /><Line type="monotone" dataKey="gstValue" stroke="#16a34a" strokeWidth={2} />
             </LineChart>
           </ResponsiveContainer>
@@ -130,7 +130,7 @@ export default function GstDashboard() {
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={c.stateWise || []} layout="vertical" margin={{ left: 20 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis type="number" fontSize={11} tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`} />
+              <XAxis type="number" fontSize={11} tickFormatter={money} />
               <YAxis type="category" dataKey="state" fontSize={10} width={90} />
               <Tooltip formatter={(v) => inr(v)} /><Bar dataKey="value" fill="#7c3aed" radius={[0, 4, 4, 0]} />
             </BarChart>

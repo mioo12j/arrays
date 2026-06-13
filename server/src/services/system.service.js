@@ -6,16 +6,37 @@
 import { postLedgerEntry, refreshInvoiceStatus } from './ledger.service.js';
 import { calculateQuote } from './quote-calc.service.js';
 
+// All operational data across core ERP + GST + Delivery Challan modules.
+// KEPT (not listed): users, expense_categories, app_config, gst_master_data,
+// gst_branches, gst_number_series, gst_backups — i.e. logins, branding, branch
+// & numbering setup, reference data and the backup ledger survive a clear.
 const DATA_TABLES = [
+  // core ERP
   'audit_logs', 'ledger_entries', 'payments', 'receipts', 'invoices',
   'bank_statement_lines', 'bank_statements', 'vendor_accounts', 'vendors',
   'employees', 'clients', 'sites', 'projects', 'quotes',
   'vault_document_versions', 'vault_documents', 'materials', 'shipments',
   'geo_verifications', 'documents',
+  // GST compliance documents + logs
+  'gst_einvoices', 'gst_eway_bills', 'gst_api_logs', 'gst_audit_events',
+  'gst_access_logs', 'gst_recon_resolutions', 'gst_notifications',
+  'gst_attachments', 'gst_gstin_validations', 'gst_otp_challenges',
+  'gst_versions', 'gst_comments', 'gst_comment_reads', 'gst_saved_views',
+  'gst_imports', 'gst_report_runs',
+  // delivery challan module
+  'delivery_challan_returns', 'delivery_challan_status_history',
+  'delivery_challan_items', 'delivery_challans',
 ];
 
 export async function clearAllData(db) {
-  await db.query(`TRUNCATE ${DATA_TABLES.join(', ')} RESTART IDENTITY CASCADE`);
+  // Truncate only tables that exist in this schema version.
+  const { rows } = await db.query(
+    `SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_name = ANY($1)`,
+    [DATA_TABLES]);
+  const present = DATA_TABLES.filter((t) => rows.some((r) => r.table_name === t));
+  await db.query(`TRUNCATE ${present.join(', ')} RESTART IDENTITY CASCADE`);
+  // Reset numbering so the first real document is #1 (numbering format is kept).
+  try { await db.query('UPDATE gst_number_series SET next_number = 1'); } catch { /* ignore */ }
 }
 
 export async function seedDemo(db, userId) {

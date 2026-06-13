@@ -1,5 +1,6 @@
 // Shared GST UI helpers: status tones/labels, formatting, blank templates.
 import { api } from '../api/client.js';
+import { chooseDownloadLanguage, isTranslatableDownload, withLang } from './langPrompt.js';
 
 export const EINV_STATUS = {
   draft: ['slate', 'Draft'],
@@ -49,6 +50,11 @@ export const dmyt = (d) => {
 
 // Download a file from an authenticated GST endpoint (PDF / JSON / export).
 export async function gstDownload(path, fallbackName = 'document') {
+  if (isTranslatableDownload(path)) {
+    const lang = await chooseDownloadLanguage(); // English / हिन्दी popup (PDFs only; JSON skips)
+    if (lang === null) return;                    // user cancelled
+    path = withLang(path, lang);
+  }
   const { data, headers } = await api.get(path, { responseType: 'blob' });
   const disp = headers['content-disposition'] || '';
   const m = disp.match(/filename="?([^"]+)"?/);

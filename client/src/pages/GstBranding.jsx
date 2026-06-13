@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Palette, Upload, FileText, Truck, Loader2, Image, Calculator } from 'lucide-react';
+import { Palette, Upload, FileText, Truck, Loader2, Image, Calculator, ClipboardList } from 'lucide-react';
 import { api, apiError } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
 import { useToast } from '../components/ui/Toast.jsx';
@@ -14,7 +14,27 @@ export default function GstBranding() {
   const [saving, setSaving] = useState(false);
   const logoRef = useRef(null); const sigRef = useRef(null); const stampRef = useRef(null);
 
-  useEffect(() => { if (current) setF({ headerText: current.headerText || '', footerText: current.footerText || '', terms: current.terms || '', disclaimer: current.disclaimer || '', watermark: current.watermark || '', contactInfo: current.contactInfo || '', emailSignature: current.emailSignature || '', _assets: { logoFile: current.logoFile, signatureFile: current.signatureFile, stampFile: current.stampFile } }); }, [current]);
+  useEffect(() => {
+    if (!current) return;
+    const keys = ['headerText', 'footerText', 'terms', 'disclaimer', 'watermark', 'contactInfo', 'emailSignature',
+      'pdfColor', 'headerBgColor', 'headerTextColor', 'tableHeadBgColor', 'tableHeadTextColor', 'textColor', 'mutedColor', 'lineColor', 'watermarkColor',
+      'quoteScope', 'quoteTerms', 'quoteExclusions'];
+    setF({ ...Object.fromEntries(keys.map((k) => [k, current[k] || ''])), _assets: { logoFile: current.logoFile, signatureFile: current.signatureFile, stampFile: current.stampFile } });
+  }, [current]);
+
+  // Full PDF theme — every colour is customizable; blank = sensible default.
+  const THEME = [
+    ['pdfColor', 'Accent', 'Section titles, totals, charts', '#1d4ed8'],
+    ['headerBgColor', 'Header background', 'Top band on every PDF', '(accent)'],
+    ['headerTextColor', 'Header text', 'Company name & document title', '#ffffff'],
+    ['tableHeadBgColor', 'Table header background', 'Item-table header rows', '(accent)'],
+    ['tableHeadTextColor', 'Table header text', '', '#ffffff'],
+    ['textColor', 'Body text', 'Main document text', '#0f172a'],
+    ['mutedColor', 'Secondary text', 'Labels, hints, footer', '#64748b'],
+    ['lineColor', 'Lines & borders', 'Rules, table borders, boxes', '#e2e8f0'],
+    ['watermarkColor', 'Watermark', 'The faint diagonal text', '(accent)'],
+  ];
+  const resetTheme = () => setF((x) => ({ ...x, ...Object.fromEntries(THEME.map(([k]) => [k, ''])) }));
 
   const set = (k) => (e) => setF((x) => ({ ...x, [k]: e.target.value }));
   const save = async () => {
@@ -66,6 +86,7 @@ export default function GstBranding() {
           <button className="btn-ghost" onClick={() => previewPdf('einvoice')}><FileText size={16} /> Preview Invoice</button>
           <button className="btn-ghost" onClick={() => previewPdf('ewb')}><Truck size={16} /> Preview EWB</button>
           <button className="btn-ghost" onClick={() => previewPdf('quote')}><Calculator size={16} /> Preview Quotation</button>
+          <button className="btn-ghost" onClick={() => previewPdf('challan')}><ClipboardList size={16} /> Preview Challan</button>
           <button className="btn-primary" onClick={save} disabled={saving}>{saving ? <Loader2 className="animate-spin" size={16} /> : <Palette size={16} />} Save</button>
         </>} />
 
@@ -100,15 +121,54 @@ export default function GstBranding() {
         Off-ratio or low-resolution uploads trigger a warning before saving.
       </p>
 
+      {/* PDF colour theme — every element independently customizable */}
       <Card className="mt-4">
+        <div className="mb-3 flex items-center justify-between">
+          <div>
+            <h3 className="flex items-center gap-2 font-semibold text-slate-800 dark:text-slate-100"><Palette size={18} className="text-brand-600" /> PDF colour theme</h3>
+            <p className="text-xs text-slate-400">Set each colour independently — e.g. a blue header with golden text, white table headers with an accent rule. Leave blank for the default. Applies to invoices, e-Way Bills, quotations &amp; report exports.</p>
+          </div>
+          <button className="btn-ghost !text-sm" onClick={resetTheme}>Reset to defaults</button>
+        </div>
+        <div className="grid grid-cols-1 gap-x-5 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+          {THEME.map(([key, label, hint, dflt]) => (
+            <div key={key}>
+              <label className="mb-1 block text-sm font-medium text-slate-600 dark:text-slate-300">{label}</label>
+              <div className="flex items-center gap-2">
+                <input type="color" className="h-9 w-11 shrink-0 cursor-pointer rounded-lg border border-slate-200 dark:border-slate-700"
+                  value={/^#[0-9a-fA-F]{6}$/.test(f[key] || '') ? f[key] : (dflt.startsWith('#') ? dflt : '#1d4ed8')}
+                  onChange={set(key)} />
+                <input className="input flex-1 font-mono text-xs" value={f[key] || ''} onChange={set(key)} placeholder={dflt} />
+                {f[key] && <button className="text-xs text-slate-400 hover:text-red-500" title="Clear (use default)" onClick={() => setF((x) => ({ ...x, [key]: '' }))}>✕</button>}
+              </div>
+              {hint && <p className="mt-0.5 text-[11px] text-slate-400">{hint}</p>}
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* Header / footer / watermark + legal text */}
+      <Card className="mt-4">
+        <h3 className="mb-3 font-semibold text-slate-800 dark:text-slate-100">Header, footer &amp; legal text</h3>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Field label="PDF Header Text"><input className="input" value={f.headerText || ''} onChange={set('headerText')} /></Field>
+          <Field label="PDF Header Text"><input className="input" value={f.headerText || ''} onChange={set('headerText')} placeholder="Defaults to company name" /></Field>
           <Field label="Contact Info (header)"><input className="input" value={f.contactInfo || ''} onChange={set('contactInfo')} /></Field>
           <Field label="Watermark (faint, diagonal)"><input className="input" value={f.watermark || ''} onChange={set('watermark')} placeholder="e.g. ORIGINAL" /></Field>
-          <Field label="PDF Footer Text"><input className="input" value={f.footerText || ''} onChange={set('footerText')} /></Field>
+          <Field label="PDF Footer Text"><input className="input" value={f.footerText || ''} onChange={set('footerText')} placeholder="Shown at the bottom of every page" /></Field>
           <Field label="Terms & Conditions"><textarea className="input min-h-[70px]" value={f.terms || ''} onChange={set('terms')} /></Field>
           <Field label="Legal Disclaimer"><textarea className="input min-h-[70px]" value={f.disclaimer || ''} onChange={set('disclaimer')} /></Field>
           <Field label="Email Signature"><textarea className="input min-h-[70px]" value={f.emailSignature || ''} onChange={set('emailSignature')} /></Field>
+        </div>
+      </Card>
+
+      {/* Editable quotation default blocks */}
+      <Card className="mt-4">
+        <h3 className="mb-1 flex items-center gap-2 font-semibold text-slate-800 dark:text-slate-100"><Calculator size={18} className="text-brand-600" /> Quotation default text</h3>
+        <p className="mb-3 text-xs text-slate-400">Default Technical Scope, Commercial Terms &amp; Exclusions printed on quotations (a quote can still override these per document). Leave blank to use the built-in defaults.</p>
+        <div className="grid grid-cols-1 gap-4">
+          <Field label="Technical Scope"><textarea className="input min-h-[60px]" value={f.quoteScope || ''} onChange={set('quoteScope')} placeholder="e.g. Supply, installation & commissioning of…" /></Field>
+          <Field label="Commercial Terms"><textarea className="input min-h-[80px]" value={f.quoteTerms || ''} onChange={set('quoteTerms')} placeholder="Payment terms, delivery, warranty, validity…" /></Field>
+          <Field label="Exclusions"><textarea className="input min-h-[60px]" value={f.quoteExclusions || ''} onChange={set('quoteExclusions')} placeholder="What is not included in the price…" /></Field>
         </div>
       </Card>
     </div>
