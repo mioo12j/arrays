@@ -808,3 +808,33 @@ WHERE NOT EXISTS (SELECT 1 FROM gst_number_series WHERE doc_type='DC');
 ALTER TABLE gst_attachments ADD COLUMN IF NOT EXISTS checksum TEXT;
 ALTER TABLE gst_attachments ADD COLUMN IF NOT EXISTS version  INT NOT NULL DEFAULT 1;
 ALTER TABLE gst_attachments ADD COLUMN IF NOT EXISTS folder   TEXT;
+
+-- §2 Standard Invoice — accounting-grade fields + line items + EWB link (§4).
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS customer_name     TEXT;
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS customer_gstin    TEXT;
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS billing_address   TEXT;
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS shipping_address  TEXT;
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS place_of_supply   TEXT;          -- 2-digit state code
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS branch_id         UUID REFERENCES gst_branches(id);
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS cgst_amount       NUMERIC(16,2) NOT NULL DEFAULT 0;
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS sgst_amount       NUMERIC(16,2) NOT NULL DEFAULT 0;
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS igst_amount       NUMERIC(16,2) NOT NULL DEFAULT 0;
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS linked_ewb_id     UUID REFERENCES gst_eway_bills(id);
+
+CREATE TABLE IF NOT EXISTS invoice_items (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  invoice_id    UUID NOT NULL REFERENCES invoices(id) ON DELETE CASCADE,
+  line_no       INT NOT NULL DEFAULT 1,
+  description   TEXT NOT NULL,
+  hsn           TEXT,
+  quantity      NUMERIC(16,3) NOT NULL DEFAULT 1,
+  unit          TEXT DEFAULT 'NOS',
+  rate          NUMERIC(16,2) NOT NULL DEFAULT 0,
+  taxable_value NUMERIC(16,2) NOT NULL DEFAULT 0,
+  gst_rate      NUMERIC(6,2)  NOT NULL DEFAULT 0,
+  cgst_amount   NUMERIC(16,2) NOT NULL DEFAULT 0,
+  sgst_amount   NUMERIC(16,2) NOT NULL DEFAULT 0,
+  igst_amount   NUMERIC(16,2) NOT NULL DEFAULT 0,
+  amount        NUMERIC(16,2) NOT NULL DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS idx_invoice_items_invoice ON invoice_items(invoice_id);

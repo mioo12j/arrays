@@ -26,6 +26,11 @@ async function migrate() {
   } catch {
     /* type not created yet — schema.sql creates it with 'auditor' included */
   }
+  // Standard-invoice statuses (§2): Draft / Issued / Cancelled — added to the
+  // existing richer enum (kept for backward compatibility).
+  for (const v of ['issued', 'cancelled']) {
+    try { await pool.query(`ALTER TYPE invoice_status ADD VALUE IF NOT EXISTS '${v}'`); } catch { /* created fresh below */ }
+  }
 
   const sql = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8');
   // eslint-disable-next-line no-console
