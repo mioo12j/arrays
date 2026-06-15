@@ -3,7 +3,7 @@ import {
   Building2, Users, Banknote, ScrollText, BarChart3, ShieldCheck, UserCog,
   Calculator, Info, UserRound, DatabaseZap, HelpCircle, FileCheck2, Truck, ReceiptText,
   GitCompareArrows, Bell, Activity, HeartPulse, Building2 as BranchIcon, Hash,
-  CalendarClock, DatabaseBackup, UploadCloud, Stethoscope, ClipboardCheck, Settings, Palette, Rss, Plug,
+  CalendarClock, DatabaseBackup, UploadCloud, Stethoscope, ClipboardCheck, Settings, Palette, Rss, Plug, LifeBuoy,
 } from 'lucide-react';
 
 // `adminOnly` hides the item from operators.
@@ -41,6 +41,7 @@ export const NAV = [
   { section: 'Intelligence', items: [
     { to: '/reports', label: 'Reports', icon: BarChart3 },
     { to: '/activity', label: 'Activity & Audit', icon: Activity },
+    { to: '/recovery', label: 'Recovery Center', icon: LifeBuoy, adminOnly: true },
     { to: '/users', label: 'User Management', icon: UserCog, adminOnly: true },
     { to: '/system', label: 'Data & Admin', icon: DatabaseZap },
   ]},

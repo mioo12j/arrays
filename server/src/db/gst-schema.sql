@@ -803,3 +803,8 @@ SELECT NULL,'DC','Delivery Challan (all branches)','{BRANCH}/DC/{FY}/',5,1,TRUE,
              THEN to_char(now(),'YY')||'-'||to_char(now()+interval '1 year','YY')
              ELSE to_char(now()-interval '1 year','YY')||'-'||to_char(now(),'YY') END)
 WHERE NOT EXISTS (SELECT 1 FROM gst_number_series WHERE doc_type='DC');
+
+-- §9 Local file storage — checksum + version metadata on attachments.
+ALTER TABLE gst_attachments ADD COLUMN IF NOT EXISTS checksum TEXT;
+ALTER TABLE gst_attachments ADD COLUMN IF NOT EXISTS version  INT NOT NULL DEFAULT 1;
+ALTER TABLE gst_attachments ADD COLUMN IF NOT EXISTS folder   TEXT;

@@ -7,8 +7,12 @@ import { env } from '../config/env.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const UPLOAD_ROOT = path.resolve(__dirname, '../../', env.uploads.dir);
 
-if (!fs.existsSync(UPLOAD_ROOT)) {
-  fs.mkdirSync(UPLOAD_ROOT, { recursive: true });
+// §9 Local file storage — organized category folders.
+export const UPLOAD_FOLDERS = ['vendor', 'invoices', 'challans', 'payments', 'statements', 'screenshots', 'documents'];
+if (!fs.existsSync(UPLOAD_ROOT)) fs.mkdirSync(UPLOAD_ROOT, { recursive: true });
+for (const f of UPLOAD_FOLDERS) {
+  const dir = path.join(UPLOAD_ROOT, f);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
 const storage = multer.diskStorage({

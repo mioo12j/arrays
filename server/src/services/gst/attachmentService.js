@@ -6,22 +6,37 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { ApiError } from '../../utils/asyncHandler.js';
 import { UPLOAD_ROOT } from '../../middleware/upload.js';
 import { recordAudit } from './log.js';
 
-const OBJECTS = new Set(['einvoice', 'ewb', 'client', 'recon', 'branch']);
+const OBJECTS = new Set(['einvoice', 'ewb', 'client', 'recon', 'branch', 'vendor', 'challan', 'payment', 'document']);
+// Logical storage folder per attachment target (§9 local file storage).
+const FOLDER_FOR = { einvoice: 'invoices', ewb: 'invoices', challan: 'challans', payment: 'payments', recon: 'statements', vendor: 'vendor', client: 'documents', branch: 'documents', document: 'documents' };
+
+// sha256 of the stored file — integrity verification + duplicate detection.
+function checksumOf(storedName) {
+  try { return crypto.createHash('sha256').update(fs.readFileSync(path.join(UPLOAD_ROOT, storedName))).digest('hex'); }
+  catch { return null; }
+}
 
 export async function add(db, { objectType, objectId, category, file, immutable }, userId) {
   if (!OBJECTS.has(objectType)) throw new ApiError(400, 'Invalid attachment target.');
   if (!objectId) throw new ApiError(400, 'A target document id is required.');
   if (!file) throw new ApiError(400, 'A file is required.');
+  const checksum = checksumOf(file.filename);
+  const folder = FOLDER_FOR[objectType] || 'documents';
+  // Version = next number for the same target + original filename (document versioning).
+  const version = (await db.query(
+    'SELECT COALESCE(MAX(version),0)+1 AS v FROM gst_attachments WHERE object_type=$1 AND object_id=$2 AND original_name=$3',
+    [objectType, objectId, file.originalname])).rows[0].v;
   const { rows } = await db.query(
-    `INSERT INTO gst_attachments (object_type, object_id, category, original_name, stored_name, mime, size_bytes, is_immutable, uploaded_by)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`,
-    [objectType, objectId, category || 'other', file.originalname, file.filename, file.mimetype, file.size, !!immutable, userId]
+    `INSERT INTO gst_attachments (object_type, object_id, category, original_name, stored_name, mime, size_bytes, is_immutable, uploaded_by, checksum, version, folder)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *`,
+    [objectType, objectId, category || 'other', file.originalname, file.filename, file.mimetype, file.size, !!immutable, userId, checksum, version, folder]
   );
-  await recordAudit(db, { objectType, objectId, eventType: 'attachment_added', message: `Attached ${file.originalname} (${category || 'other'})`, userId });
+  await recordAudit(db, { objectType, objectId, eventType: 'attachment_added', message: `Attached ${file.originalname} v${version} (${category || 'other'}, sha ${checksum ? checksum.slice(0, 12) : 'n/a'})`, userId });
   return rows[0];
 }
 

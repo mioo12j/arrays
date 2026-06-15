@@ -307,6 +307,15 @@ export async function softDelete(db, id, userId) {
   return { ok: true, deleted: id, status: cur.status };
 }
 
+// Recover a soft-deleted challan (§12 Recovery Center).
+export async function restore(db, id, userId) {
+  const r = (await db.query('SELECT id FROM delivery_challans WHERE id=$1 AND is_deleted=TRUE', [id])).rows[0];
+  if (!r) throw new ApiError(404, 'Deleted challan not found');
+  await db.query('UPDATE delivery_challans SET is_deleted=FALSE, deleted_at=NULL, deleted_by=NULL WHERE id=$1', [id]);
+  await recordAudit(db, { objectType: 'delivery_challan', objectId: id, eventType: 'restored', message: 'Challan recovered from deleted', userId });
+  return get(db, id);
+}
+
 // ── Convert to tax invoice (creates a linked e-invoice draft) ───────────────
 export async function convertToInvoice(db, id, userId) {
   const dc = await get(db, id);

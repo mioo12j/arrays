@@ -569,4 +569,31 @@ router.get('/challans/:id/pdf', requirePerm(PERMS.DOWNLOAD), asyncHandler(async 
   res.send(buf);
 }));
 
+// ============================================================================
+//  §12 Recovery Center — view + recover soft-deleted records (admin).
+//  Backups (list/verify/restore/download) reuse the existing /backups routes.
+// ============================================================================
+router.get('/recovery/deleted', requirePerm(PERMS.ADMIN), asyncHandler(async (_req, res) => {
+  const einvoices = (await pool.query(
+    `SELECT id, doc_no, doc_type, buyer_name, total_inv_val, deleted_at FROM gst_einvoices WHERE is_deleted=TRUE ORDER BY deleted_at DESC NULLS LAST LIMIT 200`)).rows;
+  const ewbs = (await pool.query(
+    `SELECT id, ewb_no, doc_no, to_trade_name, tot_inv_value, deleted_at FROM gst_eway_bills WHERE is_deleted=TRUE ORDER BY deleted_at DESC NULLS LAST LIMIT 200`)).rows;
+  const challans = (await pool.query(
+    `SELECT id, challan_no, challan_type, consignee->>'legalName' AS consignee, total_value, deleted_at FROM delivery_challans WHERE is_deleted=TRUE ORDER BY deleted_at DESC NULLS LAST LIMIT 200`)).rows;
+  res.json({ einvoices, ewbs, challans, total: einvoices.length + ewbs.length + challans.length });
+}));
+
+router.post('/recovery/restore', requirePerm(PERMS.ADMIN), asyncHandler(async (req, res) => {
+  const { type, id } = req.body || {};
+  if (!id) throw new ApiError(400, 'A record id is required.');
+  const out = await tx((db) => {
+    if (type === 'einvoice') return einv.restore(db, id, uid(req));
+    if (type === 'ewb') return ewb.restore(db, id, uid(req));
+    if (type === 'challan') return challans.restore(db, id, uid(req));
+    throw new ApiError(400, 'Unknown record type.');
+  });
+  await recordAccess(req, { action: 'restore', objectType: type, objectId: id });
+  res.json({ ok: true, restored: out });
+}));
+
 export default router;
