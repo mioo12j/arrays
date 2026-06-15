@@ -108,4 +108,10 @@ app.listen(env.port, () => {
   console.log(`\n  ${company.name} — ERP API running on http://localhost:${env.port}`);
   console.log(`  Environment: ${env.nodeEnv}`);
   console.log(`  CORS origin: ${env.clientOrigin}\n`);
+  // §8 Automatic backup engine — silent full-system backups every 2h.
+  if (env.nodeEnv !== 'test') {
+    import('./services/gst/autoBackup.js')
+      .then((m) => m.startAutoBackup())
+      .catch((e) => console.error('[auto-backup] start failed:', e.message));
+  }
 });

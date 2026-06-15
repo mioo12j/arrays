@@ -36,8 +36,10 @@ const ALL = Object.values(PERMS);
 const AUDITOR = [PERMS.VIEW, PERMS.DOWNLOAD, PERMS.EXPORT];
 
 export const ROLE_PERMS = {
-  operator: MAKER,            // maker
-  admin: CHECKER,             // checker
+  // Single-operator model: the operator performs every action directly — create,
+  // edit, delete, generate challans/invoices/e-way bills — with no approval gate.
+  operator: ALL,
+  admin: ALL,
   editor: ALL,                // super-user
   auditor: AUDITOR,           // read-only review
 };
@@ -61,7 +63,8 @@ export function requirePerm(perm) {
   };
 }
 
-// Is maker-checker separation enforced for this instance? (Configurable; on by default.)
+// Maker-checker separation. OFF by default for the single-operator model — set
+// GST_MAKER_CHECKER=on only if a separate checker/approver is reintroduced.
 export function makerCheckerEnabled() {
-  return String(process.env.GST_MAKER_CHECKER || 'on').toLowerCase() !== 'off';
+  return String(process.env.GST_MAKER_CHECKER || 'off').toLowerCase() === 'on';
 }

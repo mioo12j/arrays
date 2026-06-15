@@ -1,11 +1,42 @@
+import fs from 'node:fs';
 import { Router } from 'express';
 import { query } from '../config/db.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { authenticate } from '../middleware/auth.js';
 import { dashboardGst } from '../services/gst/rollupService.js';
+import { BACKUP_DIR } from '../services/gst/backupService.js';
+import { UPLOAD_ROOT } from '../middleware/upload.js';
 
 const router = Router();
 router.use(authenticate);
+
+const dirSize = (dir) => { let s = 0; try { for (const f of fs.readdirSync(dir)) { try { const st = fs.statSync(`${dir}/${f}`); if (st.isFile()) s += st.size; } catch { /* */ } } } catch { /* */ } return s; };
+const count1 = async (sql) => { try { return Number((await query(sql)).rows[0].c); } catch { return 0; } };
+
+// GET /api/dashboard/system-counters — §11 production counters (single source for the tiles)
+router.get(
+  '/system-counters',
+  asyncHandler(async (_req, res) => {
+    const [vendors, offices, invoices, einvoices, challans, ewbs] = await Promise.all([
+      count1('SELECT count(*) c FROM vendors'),
+      count1('SELECT count(*) c FROM gst_branches'),
+      count1('SELECT count(*) c FROM invoices'),
+      count1('SELECT count(*) c FROM gst_einvoices WHERE is_deleted = FALSE'),
+      count1('SELECT count(*) c FROM delivery_challans WHERE is_deleted = FALSE'),
+      count1('SELECT count(*) c FROM gst_eway_bills WHERE is_deleted = FALSE'),
+    ]);
+    let lastBackup = null, backupHealth = null;
+    try { const r = (await query("SELECT started_at, health FROM gst_backups ORDER BY started_at DESC LIMIT 1")).rows[0]; if (r) { lastBackup = r.started_at; backupHealth = r.health; } } catch { /* */ }
+    let lastCloudSync = null;
+    try { const r = (await query("SELECT value FROM app_config WHERE key='last_cloud_sync'")).rows[0]; if (r) lastCloudSync = r.value?.at || r.value; } catch { /* */ }
+    res.json({
+      vendors, offices, invoices, einvoices, challans, ewbs,
+      lastBackup, backupHealth, lastCloudSync,
+      pendingSync: null, // populated once the background sync queue (Phase 7) is live
+      storageBytes: dirSize(BACKUP_DIR) + dirSize(UPLOAD_ROOT),
+    });
+  })
+);
 
 // GET /api/dashboard/gst  — GST compliance summary surfaced on the main dashboard
 router.get(

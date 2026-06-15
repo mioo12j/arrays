@@ -280,11 +280,7 @@ function ChallanDetail({ id, can, onClose, onChanged, onEdit }) {
     <Modal open onClose={onClose} size="lg" title={`${c.challanNo} — ${label(c.challanType)}`}
       footer={
         <div className="flex flex-1 flex-wrap items-center gap-2">
-          {s === 'draft' && <A k="submit" icon={Send} perm="gst.create" on={() => post('submit')}>Submit for Approval</A>}
-          {s === 'rejected' && <A k="submit" icon={Send} perm="gst.create" on={() => post('submit')}>Re-submit</A>}
-          {s === 'pending_approval' && <><A k="approve" icon={CheckCircle2} perm="gst.approve" tone="btn-primary" on={() => post('approve')}>Approve</A>
-            <A k="reject" icon={X} perm="gst.approve" on={() => post('reject', { reason: window.prompt('Reason for rejection?') || '' })}>Reject</A></>}
-          {s === 'approved' && <A k="dispatch" icon={Truck} perm="gst.submit" tone="btn-primary" on={() => post('dispatch')} confirm="Dispatch goods? The challan becomes immutable.">Dispatch</A>}
+          {['draft', 'pending_approval', 'approved', 'rejected'].includes(s) && <A k="dispatch" icon={Truck} perm="gst.submit" tone="btn-primary" on={() => post('dispatch')} confirm="Dispatch goods? The challan becomes immutable after dispatch.">Dispatch</A>}
           {(s === 'dispatched' || s === 'in_transit' || s === 'partially_delivered') && <A k="deliver" icon={PackageCheck} perm="gst.edit" tone="btn-primary" on={() => post('deliver', { receiverName: window.prompt('Receiver name?') || '' })}>Mark Delivered</A>}
           {['dispatched', 'in_transit', 'delivered', 'partially_delivered'].includes(s) && <A k="return" icon={Undo2} perm="gst.edit" on={() => post('return', { reason: window.prompt('Return reason?') || '' })}>Record Return</A>}
           {['delivered', 'partially_delivered', 'returned'].includes(s) && !c.convertedInvoiceId && <A k="convert" icon={FileText} perm="gst.create" on={() => post('convert')}>Convert to Invoice</A>}

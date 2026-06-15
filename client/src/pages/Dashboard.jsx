@@ -1,6 +1,7 @@
 import {
   ArrowUpRight, ArrowDownLeft, Wallet, FileWarning, Banknote, FolderKanban,
   TrendingUp, AlertTriangle, FileCheck2, Truck, Clock, XCircle, ShieldCheck,
+  DatabaseZap, DatabaseBackup, Building2, Building, FileText, ClipboardList, HardDrive, RefreshCw,
 } from 'lucide-react';
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid,
@@ -48,6 +49,7 @@ export default function Dashboard() {
   const { data: aging } = useFetch('/dashboard/receivable-aging');
   const { data: clientRevenue } = useFetch('/dashboard/client-revenue');
   const { data: gst } = useFetch('/dashboard/gst');
+  const { data: sys } = useFetch('/dashboard/system-counters');
 
   if (loading) return <Loading label="Loading dashboard…" />;
   const s = summary || {};
@@ -73,6 +75,25 @@ export default function Dashboard() {
         <StatCard icon={AlertTriangle} label="Invoice-Pending Payments" value={s.invoice_pending_payments ?? 0} tone="amber" to="/payments" />
         <StatCard icon={Banknote} label="Reconciliation Pending" value={s.reconciliation_pending ?? 0} tone="red" to="/reconciliation" />
         <StatCard icon={FolderKanban} label="Active Projects" value={s.active_projects ?? 0} tone="brand" to="/projects" />
+      </div>
+
+      {/* §11 Production & data counters */}
+      <div className="mb-2 mt-8 flex items-center justify-between">
+        <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-400">
+          <DatabaseZap size={15} /> Production & Data
+        </h2>
+        {sys?.lastBackup && <span className="text-xs text-slate-400">Last backup {fmtDate(sys.lastBackup)}{sys.backupHealth != null ? ` · health ${sys.backupHealth}/100` : ''}</span>}
+      </div>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-6">
+        <StatCard icon={Building2} label="Vendors" value={sys?.vendors ?? '—'} tone="brand" to="/vendors" />
+        <StatCard icon={Building} label="Offices (GSTINs)" value={sys?.offices ?? '—'} tone="purple" to="/gst/branches" />
+        <StatCard icon={FileText} label="Invoices" value={sys?.invoices ?? '—'} tone="brand" to="/invoices" />
+        <StatCard icon={FileCheck2} label="E-Invoices" value={sys?.einvoices ?? '—'} tone="green" to="/gst/compliance" />
+        <StatCard icon={ClipboardList} label="Delivery Challans" value={sys?.challans ?? '—'} tone="amber" to="/challans" />
+        <StatCard icon={Truck} label="E-Way Bills" value={sys?.ewbs ?? '—'} tone="purple" to="/gst/compliance" />
+        <StatCard icon={DatabaseBackup} label="Last Backup" value={sys?.lastBackup ? fmtDate(sys.lastBackup) : '—'} tone={sys?.backupHealth >= 80 ? 'green' : sys?.backupHealth >= 50 ? 'amber' : 'red'} sub={sys?.backupHealth != null ? `Health ${sys.backupHealth}/100` : 'No backup yet'} to="/gst/backup" />
+        <StatCard icon={HardDrive} label="Storage Used" value={sys ? `${(sys.storageBytes / 1048576).toFixed(0)} MB` : '—'} tone="brand" />
+        <StatCard icon={RefreshCw} label="Last Cloud Sync" value={sys?.lastCloudSync ? fmtDate(sys.lastCloudSync) : 'Never'} tone="amber" to="/system" />
       </div>
 
       {/* GST compliance summary — surfaced from the (otherwise isolated) GST module */}

@@ -237,7 +237,10 @@ export async function reject(db, id, reason, userId) {
 }
 
 export async function dispatch(db, id, body = {}, userId) {
-  const cur = await requireStatus(db, id, ['approved']);
+  // Single-operator model: no approval gate — dispatch directly from draft.
+  const cur = await requireStatus(db, id, ['draft', 'pending_approval', 'approved', 'rejected']);
+  const hasItems = (await db.query('SELECT 1 FROM delivery_challan_items WHERE challan_id=$1 LIMIT 1', [id])).rows.length;
+  if (!hasItems) throw new ApiError(422, 'Add at least one line item before dispatching.');
   // record transport details captured at dispatch (vehicle/driver/LR/dispatch time)
   const transport = { ...(cur.transport || {}), ...(body.transport || {}) };
   await db.query("UPDATE delivery_challans SET status='dispatched', transport=$2, dispatched_by=$3, dispatched_at=now() WHERE id=$1",
