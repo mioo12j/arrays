@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef } from 'react';
+import { useMemo, useState, useRef, useEffect } from 'react';
 import { Plus, Search, Loader2, FileDown, Upload, ShieldCheck, Trash2, Truck, FileText, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { api, apiError, download } from '../api/client.js';
@@ -8,6 +8,7 @@ import { useToast } from '../components/ui/Toast.jsx';
 import Modal from '../components/ui/Modal.jsx';
 import { Card, PageHeader, Loading, Table, Badge, Field, EmptyState } from '../components/ui/index.jsx';
 import { inr, fmtDate } from '../lib/format.js';
+import { useUnsavedGuard, useDraft, loadDraft, clearDraft } from '../context/UnsavedChangesContext.jsx';
 
 const SELLER_STATE = '09'; // ARRAYS main office (Greater Noida, UP)
 const STD_STATUS = ['draft', 'issued', 'cancelled'];
@@ -135,6 +136,19 @@ function InvoiceEditor({ initial, clients, onClose, onSaved }) {
     items: (initial.items?.length ? initial.items : [blankItem()]).map((it) => ({ ...blankItem(), ...it })),
   }));
   const [busy, setBusy] = useState(false);
+  // §6/§13 — unsaved-changes guard + crash-safe draft auto-save
+  const draftKey = `invoice-${initial.id || 'new'}`;
+  const baselineRef = useRef(JSON.stringify(f));
+  const dirty = JSON.stringify(f) !== baselineRef.current;
+  useUnsavedGuard(dirty);
+  useDraft(draftKey, f, dirty);
+  useEffect(() => {
+    if (initial.id) return;
+    const d = loadDraft(draftKey);
+    if (d && window.confirm('Restore your unsaved invoice draft from earlier?')) setF(d);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const close = () => { if (dirty && !window.confirm('Discard unsaved changes? Your draft is saved and can be restored later.')) return; onClose(); };
   const setItem = (i, k, v) => setF((x) => ({ ...x, items: x.items.map((it, j) => (j === i ? { ...it, [k]: v } : it)) }));
   const addItem = () => setF((x) => ({ ...x, items: [...x.items, blankItem()] }));
   const delItem = (i) => setF((x) => ({ ...x, items: x.items.filter((_, j) => j !== i) }));
@@ -154,13 +168,14 @@ function InvoiceEditor({ initial, clients, onClose, onSaved }) {
     try {
       const body = { ...f, client_id: f.client_id || null, issue_date: f.issue_date || null, due_date: f.due_date || null };
       if (isEdit) await api.patch(`/invoices/${initial.id}`, body); else await api.post('/invoices', body);
+      clearDraft(draftKey);
       onSaved();
     } catch (e) { toast.error(apiError(e)); } finally { setBusy(false); }
   };
 
   return (
-    <Modal open onClose={onClose} size="xl" title={isEdit ? `Edit Invoice ${initial.invoice_number || ''}` : 'New Standard Invoice'}
-      footer={<><button className="btn-ghost" onClick={onClose}>Cancel</button>
+    <Modal open onClose={close} size="xl" title={isEdit ? `Edit Invoice ${initial.invoice_number || ''}` : 'New Standard Invoice'}
+      footer={<><button className="btn-ghost" onClick={close}>Cancel</button>
         <button className="btn-primary" onClick={save} disabled={busy}>{busy ? <Loader2 className="animate-spin" size={16} /> : <FileText size={16} />} {isEdit ? 'Save' : 'Create Invoice'}</button></>}>
       <div className="space-y-4">
         {initial.linked_ewb_no && (

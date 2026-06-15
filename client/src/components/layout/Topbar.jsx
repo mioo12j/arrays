@@ -1,9 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Menu, Moon, Sun, LogOut, ChevronDown, ShieldCheck, UserCircle2, Languages, Building, Search, X } from 'lucide-react';
+import { Menu, Moon, Sun, LogOut, ChevronDown, ShieldCheck, UserCircle2, Languages, Building, Search, X, DatabaseBackup, Loader2, AlertTriangle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useI18n } from '../../context/I18nContext.jsx';
 import { useBranch } from '../../context/BranchContext.jsx';
+import { useUnsaved } from '../../context/UnsavedChangesContext.jsx';
+import { api } from '../../api/client.js';
+import { useToast } from '../ui/Toast.jsx';
 import GlobalSearch from '../gst/GlobalSearch.jsx';
 
 function useDarkMode() {
@@ -24,7 +27,19 @@ export default function Topbar({ onMenu }) {
   const [dark, toggleDark] = useDarkMode();
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileSearch, setMobileSearch] = useState(false);
+  const [logoutAsk, setLogoutAsk] = useState(false);
+  const [backing, setBacking] = useState(false);
+  const { dirty } = useUnsaved();
+  const toast = useToast();
   const ref = useRef(null);
+
+  // §7 Before logout — offer a local backup; never silently lose work.
+  const backupAndLogout = async () => {
+    setBacking(true);
+    try { await api.post('/gst/backups', { kind: 'manual' }); toast.success('Local backup created'); }
+    catch { toast.error('Backup failed — logging out anyway'); }
+    finally { setBacking(false); logout(); }
+  };
 
   useEffect(() => {
     const onClick = (e) => ref.current && !ref.current.contains(e.target) && setMenuOpen(false);
@@ -102,7 +117,7 @@ export default function Topbar({ onMenu }) {
                 <p className="mt-0.5 truncate text-xs text-slate-400">{user?.email}</p>
               </div>
               <button
-                onClick={logout}
+                onClick={() => { setMenuOpen(false); setLogoutAsk(true); }}
                 className="flex w-full items-center gap-2 px-4 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-50 dark:hover:bg-red-900/20"
               >
                 <LogOut size={16} /> Sign out
@@ -111,6 +126,30 @@ export default function Topbar({ onMenu }) {
           )}
         </div>
       </div>
+
+      {/* §7 Logout safety — back up locally before leaving */}
+      {logoutAsk && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4" onClick={() => !backing && setLogoutAsk(false)}>
+          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-5 shadow-xl dark:border-slate-700 dark:bg-slate-900" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-base font-semibold text-slate-900 dark:text-white">Sign out</h3>
+            <p className="mt-1 text-sm text-slate-500">Create a local backup before leaving so nothing is lost. All data stays on this computer.</p>
+            {dirty && (
+              <div className="mt-3 flex items-center gap-2 rounded-lg bg-amber-50 px-3 py-2 text-xs font-medium text-amber-700 dark:bg-amber-900/20 dark:text-amber-300">
+                <AlertTriangle size={14} /> You have unsaved changes in an open form.
+              </div>
+            )}
+            <div className="mt-4 flex flex-col gap-2">
+              <button className="btn-primary justify-center" disabled={backing} onClick={backupAndLogout}>
+                {backing ? <Loader2 className="animate-spin" size={16} /> : <DatabaseBackup size={16} />} Create Backup &amp; Sign Out
+              </button>
+              <div className="flex gap-2">
+                <button className="btn-ghost flex-1 justify-center" disabled={backing} onClick={() => setLogoutAsk(false)}>Cancel</button>
+                <button className="btn-ghost flex-1 justify-center !text-red-600" disabled={backing} onClick={logout}>Sign out without backup</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {mobileSearch && (
         <div className="absolute inset-x-0 top-0 z-30 flex h-16 items-center gap-2 border-b border-slate-200 bg-white px-4 dark:border-slate-800 dark:bg-slate-900 sm:hidden">

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useRef, useEffect } from 'react';
 import {
   Truck, Plus, Search, FileDown, Trash2, Loader2, X, ShieldCheck, Send, CheckCircle2,
   PackageCheck, Undo2, FileText, Building2, ArrowRight,
@@ -10,6 +10,7 @@ import { PageHeader, Card, Loading, Table, Badge, EmptyState } from '../componen
 import Modal from '../components/ui/Modal.jsx';
 import { gstDownload, inr, dmy } from '../lib/gst.js';
 import { company } from '../config/company.js';
+import { useUnsavedGuard, useDraft, loadDraft, clearDraft } from '../context/UnsavedChangesContext.jsx';
 
 const STATUS_TONE = {
   draft: 'slate', pending_approval: 'amber', approved: 'blue', rejected: 'red',
@@ -131,6 +132,19 @@ function ChallanForm({ initial, masters, onClose, onSaved }) {
     items: (initial.items?.length ? initial.items : [blankItem()]).map((it) => ({ ...blankItem(), ...it })),
   }));
   const [busy, setBusy] = useState(false);
+  // §6/§13 — unsaved-changes guard + crash-safe draft auto-save
+  const draftKey = `challan-${initial.id || 'new'}`;
+  const baselineRef = useRef(JSON.stringify(f));
+  const dirty = JSON.stringify(f) !== baselineRef.current;
+  useUnsavedGuard(dirty);
+  useDraft(draftKey, f, dirty);
+  useEffect(() => {
+    if (initial.id) return;
+    const d = loadDraft(draftKey);
+    if (d && window.confirm('Restore your unsaved challan draft from earlier?')) setF(d);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const close = () => { if (dirty && !window.confirm('Discard unsaved changes? Your draft is saved and can be restored later.')) return; onClose(); };
 
   const setParty = (which, key) => (e) => setF((x) => ({ ...x, [which]: { ...x[which], [key]: e.target.value } }));
   const setTransport = (key) => (e) => setF((x) => ({ ...x, transport: { ...x.transport, [key]: e.target.value } }));
@@ -156,14 +170,15 @@ function ChallanForm({ initial, masters, onClose, onSaved }) {
       const body = { ...f, ewbDistance: f.ewbDistance ? Number(f.ewbDistance) : null };
       if (isEdit) await api.patch(`/gst/challans/${initial.id}`, body);
       else await api.post('/gst/challans', body);
+      clearDraft(draftKey);
       toast.success(isEdit ? 'Challan updated' : 'Delivery challan created');
       onSaved();
     } catch (e) { toast.error(apiError(e)); } finally { setBusy(false); }
   };
 
   return (
-    <Modal open onClose={onClose} size="xl" title={isEdit ? 'Edit Delivery Challan' : 'New Delivery Challan'}
-      footer={<><button className="btn-ghost" onClick={onClose}>Cancel</button>
+    <Modal open onClose={close} size="xl" title={isEdit ? 'Edit Delivery Challan' : 'New Delivery Challan'}
+      footer={<><button className="btn-ghost" onClick={close}>Cancel</button>
         <button className="btn-primary" onClick={save} disabled={busy}>{busy ? <Loader2 className="animate-spin" size={16} /> : <Truck size={16} />} {isEdit ? 'Save' : 'Create Challan'}</button></>}>
       <div className="space-y-5">
         {/* header */}
