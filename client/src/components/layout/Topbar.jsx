@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Menu, Moon, Sun, LogOut, ChevronDown, ShieldCheck, UserCircle2, Languages, Building, Search, X, DatabaseBackup, Loader2, AlertTriangle } from 'lucide-react';
+import { useLocation, Link } from 'react-router-dom';
+import { Menu, Moon, Sun, LogOut, ChevronDown, ShieldCheck, UserCircle2, Languages, Building, Search, X, DatabaseBackup, Loader2, AlertTriangle, CloudUpload } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useI18n } from '../../context/I18nContext.jsx';
 import { useBranch } from '../../context/BranchContext.jsx';
@@ -33,12 +33,28 @@ export default function Topbar({ onMenu }) {
   const toast = useToast();
   const ref = useRef(null);
 
+  const [doing, setDoing] = useState('');   // '' | 'backup' | 'publish'
+
   // §7 Before logout — offer a local backup; never silently lose work.
   const backupAndLogout = async () => {
     setBacking(true);
     try { await api.post('/gst/backups', { kind: 'manual' }); toast.success('Local backup created'); }
     catch { toast.error('Backup failed — logging out anyway'); }
     finally { setBacking(false); logout(); }
+  };
+
+  // One-click backup / publish (operator) — always reachable from the account menu.
+  const backupNow = async () => {
+    setDoing('backup');
+    try { const { data } = await api.post('/gst/backups', { kind: 'manual' }); toast.success(`Backup created — ${data.totalRecords} records, ${data.file_count} files`); }
+    catch (e) { toast.error(e?.response?.data?.error || 'Backup failed'); }
+    finally { setDoing(''); setMenuOpen(false); }
+  };
+  const publishNow = async () => {
+    setDoing('publish');
+    try { const { data } = await api.post('/system/sync-to-cloud'); toast.success(`Published ${data.published ?? ''} records to cloud`); }
+    catch (e) { toast.error(e?.response?.data?.error || 'Publish failed — is the cloud configured?'); }
+    finally { setDoing(''); setMenuOpen(false); }
   };
 
   useEffect(() => {
@@ -116,9 +132,21 @@ export default function Topbar({ onMenu }) {
                 </p>
                 <p className="mt-0.5 truncate text-xs text-slate-400">{user?.email}</p>
               </div>
+              <button onClick={backupNow} disabled={doing === 'backup'}
+                className="flex w-full items-center gap-2 px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-60 dark:text-slate-200 dark:hover:bg-slate-800">
+                {doing === 'backup' ? <Loader2 className="animate-spin" size={16} /> : <DatabaseBackup size={16} />} Create Backup
+              </button>
+              <button onClick={publishNow} disabled={doing === 'publish'}
+                className="flex w-full items-center gap-2 px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-60 dark:text-slate-200 dark:hover:bg-slate-800">
+                {doing === 'publish' ? <Loader2 className="animate-spin" size={16} /> : <CloudUpload size={16} />} Publish to Cloud
+              </button>
+              <Link to="/gst/backup" onClick={() => setMenuOpen(false)}
+                className="flex w-full items-center gap-2 border-t border-slate-100 px-4 py-2.5 text-sm font-medium text-slate-500 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800">
+                <ShieldCheck size={16} /> Backup &amp; Restore
+              </Link>
               <button
                 onClick={() => { setMenuOpen(false); setLogoutAsk(true); }}
-                className="flex w-full items-center gap-2 px-4 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-50 dark:hover:bg-red-900/20"
+                className="flex w-full items-center gap-2 border-t border-slate-100 px-4 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-50 dark:border-slate-800 dark:hover:bg-red-900/20"
               >
                 <LogOut size={16} /> Sign out
               </button>

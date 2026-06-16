@@ -86,7 +86,7 @@ export default function App() {
         <Route path="/quotes/new" element={<QuoteBuilder />} />
         <Route path="/quotes/:id" element={<QuoteBuilder />} />
         <Route path="/challans" element={<DeliveryChallans />} />
-        <Route path="/recovery" element={<Protected adminOnly><RecoveryCenter /></Protected>} />
+        <Route path="/recovery" element={<RecoveryCenter />} />
         <Route path="/gst" element={<GstDashboard />} />
         <Route path="/gst/compliance" element={<GstCompliance />} />
         <Route path="/gst/reconciliation" element={<GstRecon />} />
@@ -97,7 +97,7 @@ export default function App() {
         <Route path="/gst/number-series" element={<Protected adminOnly><GstSeries /></Protected>} />
         <Route path="/gst/import" element={<Protected adminOnly><GstImport /></Protected>} />
         <Route path="/gst/schedules" element={<GstSchedules />} />
-        <Route path="/gst/backup" element={<Protected adminOnly><GstBackup /></Protected>} />
+        <Route path="/gst/backup" element={<GstBackup />} />
         <Route path="/gst/diagnostics" element={<Protected adminOnly><GstDiagnostics /></Protected>} />
         <Route path="/gst/readiness" element={<Protected adminOnly><GstReadiness /></Protected>} />
         <Route path="/gst/system" element={<Protected adminOnly><GstSystem /></Protected>} />

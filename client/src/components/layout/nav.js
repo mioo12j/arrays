@@ -41,7 +41,8 @@ export const NAV = [
   { section: 'Intelligence', items: [
     { to: '/reports', label: 'Reports', icon: BarChart3 },
     { to: '/activity', label: 'Activity & Audit', icon: Activity },
-    { to: '/recovery', label: 'Recovery Center', icon: LifeBuoy, adminOnly: true },
+    { to: '/gst/backup', label: 'Backup & Restore', icon: DatabaseBackup },
+    { to: '/recovery', label: 'Recovery Center', icon: LifeBuoy },
     { to: '/users', label: 'User Management', icon: UserCog, adminOnly: true },
     { to: '/system', label: 'Data & Admin', icon: DatabaseZap },
   ]},
