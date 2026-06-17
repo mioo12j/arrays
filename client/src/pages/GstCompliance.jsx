@@ -156,7 +156,7 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
 
   return (
     <Modal open onClose={onClose} title={initial?.id ? 'Edit e-Invoice Draft' : 'New e-Invoice'} size="xl"
-      footer={<><button className="btn-ghost" onClick={onClose}>Cancel</button><button className="btn-primary" onClick={save} disabled={saving}>{saving ? <Loader2 className="animate-spin" size={16} /> : 'Save Draft'}</button></>}>
+      footer={<><button className="btn-ghost" onClick={onClose}>Cancel</button><button className="btn-primary" onClick={() => save()} disabled={saving}>{saving ? <Loader2 className="animate-spin" size={16} /> : 'Save Draft'}</button></>}>
       <Section title="Document (DocDtls / TranDtls)">
         <Field label="Supply Type"><select className="input" value={form.supplyType} onChange={set('supplyType')}>{opts('einv_supply_type').map((o) => <option key={o.code} value={o.code}>{o.code} — {o.name}</option>)}</select></Field>
         <Field label="Document Type"><select className="input" value={form.docType} onChange={set('docType')}>{opts('einv_doc_type').map((o) => <option key={o.code} value={o.code}>{o.name}</option>)}</select></Field>
@@ -406,7 +406,7 @@ function EwbForm({ master, onClose, onSaved }) {
 
   return (
     <Modal open onClose={onClose} title="New E-Way Bill" size="xl"
-      footer={<><button className="btn-ghost" onClick={onClose}>Cancel</button><button className="btn-primary" onClick={save} disabled={saving}>{saving ? <Loader2 className="animate-spin" size={16} /> : 'Save Draft'}</button></>}>
+      footer={<><button className="btn-ghost" onClick={onClose}>Cancel</button><button className="btn-primary" onClick={() => save()} disabled={saving}>{saving ? <Loader2 className="animate-spin" size={16} /> : 'Save Draft'}</button></>}>
       <Section title="Part A — Supply & Document">
         <Field label="Supply Type"><select className="input" value={form.supplyType} onChange={set('supplyType')}>{opts('ewb_supply_type').map((o) => <option key={o.code} value={o.code}>{o.name}</option>)}</select></Field>
         <Field label="Sub-Supply Type"><select className="input" value={form.subSupplyType} onChange={set('subSupplyType')}>{opts('ewb_sub_supply_type').map((o) => <option key={o.code} value={o.code}>{o.name}</option>)}</select></Field>
