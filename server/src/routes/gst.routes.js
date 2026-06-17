@@ -201,6 +201,15 @@ router.get('/access-logs', requirePerm(PERMS.ADMIN), asyncHandler(async (_req, r
 //  e-INVOICE
 // ============================================================================
 router.get('/einvoices', requirePerm(PERMS.VIEW), asyncHandler(async (req, res) => res.json(await einv.list(pool, req.query))));
+// Offline bulk JSON for the GST portal upload (<2MB; eligible = no IRN yet). Declared before /:id.
+router.get('/einvoices/portal-json', requirePerm(PERMS.EXPORT), asyncHandler(async (req, res) => {
+  const ids = req.query.ids ? String(req.query.ids).split(',').filter(Boolean) : null;
+  const arr = await einv.bulkPortalPayload(pool, ids);
+  await recordAccess(req, { action: 'export', objectType: 'einvoice', detail: { kind: 'portal-bulk-json', count: arr.length } });
+  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Content-Disposition', 'attachment; filename="einvoice_bulk_portal.json"');
+  res.send(JSON.stringify(arr, null, 2));
+}));
 router.get('/einvoices/:id', requirePerm(PERMS.VIEW), asyncHandler(async (req, res) => res.json(await einv.get(pool, req.params.id))));
 router.post('/einvoices', requirePerm(PERMS.CREATE), asyncHandler(async (req, res) => res.status(201).json(await tx((db) => einv.createDraft(db, withBranch(req), uid(req))))));
 router.patch('/einvoices/:id', requirePerm(PERMS.EDIT), asyncHandler(async (req, res) => res.json(await tx((db) => einv.updateDraft(db, req.params.id, req.body, uid(req))))));
@@ -213,6 +222,16 @@ router.post('/einvoices/:id/cancel', requirePerm(PERMS.CANCEL), asyncHandler(asy
 router.post('/einvoices/:id/duplicate', requirePerm(PERMS.CREATE), asyncHandler(async (req, res) => res.status(201).json(await tx((db) => einv.duplicate(db, req.params.id, uid(req))))));
 router.post('/einvoices/:id/archive', requirePerm(PERMS.ARCHIVE), asyncHandler(async (req, res) => res.json(await tx((db) => einv.setArchived(db, req.params.id, req.body?.archived !== false, uid(req))))));
 router.delete('/einvoices/:id', requirePerm(PERMS.EDIT), asyncHandler(async (req, res) => res.json(await tx((db) => einv.softDelete(db, req.params.id, uid(req))))));
+
+// Offline e-invoicing: single portal JSON (download) + record the IRN by hand.
+router.get('/einvoices/:id/portal-json', requirePerm(PERMS.DOWNLOAD), asyncHandler(async (req, res) => {
+  const payload = await einv.portalPayload(pool, req.params.id);
+  await recordAccess(req, { action: 'download', objectType: 'einvoice', objectId: req.params.id, detail: { kind: 'portal-json' } });
+  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Content-Disposition', `attachment; filename="einvoice_${fileName(payload?.DocDtls?.No || req.params.id)}_portal.json"`);
+  res.send(JSON.stringify([payload], null, 2)); // array → directly portal-uploadable
+}));
+router.post('/einvoices/:id/record-irn', requirePerm(PERMS.SUBMIT), asyncHandler(async (req, res) => res.json(await tx((db) => einv.recordManualIrn(db, req.params.id, req.body || {}, uid(req))))));
 router.post('/einvoices/:id/restore', requirePerm(PERMS.EDIT), asyncHandler(async (req, res) => res.json(await tx((db) => einv.restore(db, req.params.id, uid(req))))));
 router.post('/einvoices/:id/restore-version', requirePerm(PERMS.EDIT), asyncHandler(async (req, res) => res.json(await tx((db) => einv.restoreVersion(db, req.params.id, req.body?.versionId, uid(req))))));
 

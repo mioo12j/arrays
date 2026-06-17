@@ -63,7 +63,10 @@ function EInvoicePanel({ can, master }) {
     <Card className="!p-0">
       <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3 dark:border-slate-800">
         <h3 className="flex items-center gap-2 font-semibold text-slate-800 dark:text-slate-100"><FileText size={18} className="text-brand-600" /> e-Invoices</h3>
-        {can('gst.create') && <button className="btn-primary !py-1.5 !text-sm" onClick={() => setForm({})}><Plus size={15} /> New e-Invoice</button>}
+        <div className="flex gap-2">
+          {can('gst.export') && <button className="btn-ghost !py-1.5 !text-sm" onClick={() => gstDownload('/gst/einvoices/portal-json', 'einvoice_bulk_portal.json')} title="Download all pending e-invoices as one JSON to upload on the GST portal"><FileJson size={15} /> Bulk JSON</button>}
+          {can('gst.create') && <button className="btn-primary !py-1.5 !text-sm" onClick={() => setForm({})}><Plus size={15} /> New e-Invoice</button>}
+        </div>
       </div>
       <div className="flex flex-wrap gap-2 border-b border-slate-100 px-4 py-2 dark:border-slate-800">
         <div className="relative min-w-[180px] flex-1">
@@ -218,6 +221,14 @@ function EInvoiceDetail({ id, can, master, onClose, onChanged, onEdit }) {
   const [busy, setBusy] = useState('');
   const [cancelReason, setCancelReason] = useState('');
   const [otp, setOtp] = useState(false);
+  const [irnForm, setIrnForm] = useState(null);   // offline IRN entry
+  const recordIrn = async () => {
+    setBusy('IRN');
+    try {
+      await api.post(`/gst/einvoices/${id}/record-irn`, irnForm);
+      toast.success('IRN recorded — e-Invoice finalised'); setIrnForm(null); refetch(); onChanged?.();
+    } catch (e) { toast.error(apiError(e)); } finally { setBusy(''); }
+  };
   const act = async (label, fn) => {
     setBusy(label);
     try { await fn(); toast.success(`${label} done`); refetch(); onChanged?.(); }
@@ -274,9 +285,25 @@ function EInvoiceDetail({ id, can, master, onClose, onChanged, onEdit }) {
       <div className="mt-5 flex flex-wrap gap-2">
         {editable && can('gst.edit') && <button className="btn-ghost !text-sm" onClick={() => onEdit(rec)}>Edit</button>}
         {editable && can('gst.validate') && <button className="btn-ghost !text-sm" disabled={!!busy} onClick={() => act('Validate', () => api.post(`/gst/einvoices/${id}/validate`))}><CheckCircle2 size={14} /> Validate</button>}
-        {!rec.irn && can('gst.submit') && <button className="btn-primary !text-sm" disabled={!!busy} onClick={() => act('Submit', () => api.post(`/gst/einvoices/${id}/submit`))}>{busy === 'Submit' ? <Loader2 className="animate-spin" size={14} /> : <ShieldCheck size={14} />} Submit → IRN</button>}
+        {!rec.irn && can('gst.download') && <button className="btn-ghost !text-sm" disabled={!!busy} onClick={() => gstDownload(`/gst/einvoices/${id}/portal-json`)}><FileJson size={14} /> Portal JSON</button>}
+        {!rec.irn && can('gst.submit') && <button className="btn-primary !text-sm" disabled={!!busy} onClick={() => setIrnForm(irnForm ? null : { irn: '', ackNo: '', ackDate: '', signedQr: '' })}><ShieldCheck size={14} /> Enter IRN</button>}
         {rec.irn && can('gst.download') && <button className="btn-ghost !text-sm" onClick={() => gstDownload(`/gst/einvoices/${id}/pdf`)}><Download size={14} /> PDF</button>}
         {rec.irn && can('gst.download') && <button className="btn-ghost !text-sm" onClick={() => gstDownload(`/gst/einvoices/${id}/json`)}><FileJson size={14} /> Signed JSON</button>}
+        {irnForm && (
+          <div className="w-full rounded-lg border border-brand-200 bg-brand-50/50 p-3 dark:border-brand-900/40 dark:bg-brand-900/10">
+            <p className="mb-2 text-xs font-semibold text-slate-600 dark:text-slate-300">Paste the result from the GST portal after uploading the Portal JSON:</p>
+            <div className="grid grid-cols-2 gap-2">
+              <input className="input !py-1.5 text-sm col-span-2" placeholder="IRN (64 characters)" value={irnForm.irn} onChange={(e) => setIrnForm((f) => ({ ...f, irn: e.target.value.trim() }))} />
+              <input className="input !py-1.5 text-sm" placeholder="Ack No" value={irnForm.ackNo} onChange={(e) => setIrnForm((f) => ({ ...f, ackNo: e.target.value }))} />
+              <input className="input !py-1.5 text-sm" type="date" placeholder="Ack Date" value={irnForm.ackDate} onChange={(e) => setIrnForm((f) => ({ ...f, ackDate: e.target.value }))} />
+              <input className="input !py-1.5 text-sm col-span-2" placeholder="Signed QR code (optional — enables the QR on the PDF)" value={irnForm.signedQr} onChange={(e) => setIrnForm((f) => ({ ...f, signedQr: e.target.value }))} />
+            </div>
+            <div className="mt-2 flex gap-2">
+              <button className="btn-primary !py-1.5 !text-sm" disabled={busy === 'IRN' || !irnForm.irn} onClick={recordIrn}>{busy === 'IRN' ? <Loader2 className="animate-spin" size={14} /> : <CheckCircle2 size={14} />} Save IRN</button>
+              <button className="btn-ghost !py-1.5 !text-sm" onClick={() => setIrnForm(null)}>Cancel</button>
+            </div>
+          </div>
+        )}
         {can('gst.create') && <button className="btn-ghost !text-sm" disabled={!!busy} onClick={() => act('Duplicate', () => api.post(`/gst/einvoices/${id}/duplicate`))}><Copy size={14} /> Duplicate</button>}
         {rec.irn && !rec.isCancelled && can('gst.cancel') && (
           <div className="flex w-full items-center gap-2 rounded-lg bg-red-50 p-2 dark:bg-red-900/10">

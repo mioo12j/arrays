@@ -49,9 +49,11 @@ export default function Dashboard() {
   const { data: aging } = useFetch('/dashboard/receivable-aging');
   const { data: clientRevenue } = useFetch('/dashboard/client-revenue');
   const { data: sys } = useFetch('/dashboard/system-counters');
+  const { data: gst } = useFetch('/dashboard/gst');
 
   if (loading) return <Loading label="Loading dashboard…" />;
   const s = summary || {};
+  const g = gst || {};
 
   return (
     <div>
@@ -92,6 +94,20 @@ export default function Dashboard() {
         <StatCard icon={DatabaseBackup} label="Last Backup" value={sys?.lastBackup ? fmtDate(sys.lastBackup) : '—'} tone={sys?.backupHealth >= 80 ? 'green' : sys?.backupHealth >= 50 ? 'amber' : 'red'} sub={sys?.backupHealth != null ? `Health ${sys.backupHealth}/100` : 'No backup yet'} to="/gst/backup" />
         <StatCard icon={HardDrive} label="Storage Used" value={sys ? `${(sys.storageBytes / 1048576).toFixed(0)} MB` : '—'} tone="brand" />
         <StatCard icon={RefreshCw} label="Last Cloud Sync" value={sys?.lastCloudSync ? fmtDate(sys.lastCloudSync) : 'Never'} tone="amber" to="/system" />
+      </div>
+
+      {/* GST e-Invoicing summary */}
+      <div className="mb-2 mt-8 flex items-center justify-between">
+        <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-400">
+          <ShieldCheck size={15} /> GST e-Invoicing
+        </h2>
+        <Link to="/gst/compliance" className="text-sm font-medium text-brand-600 hover:underline">Open e-Invoice workspace →</Link>
+      </div>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <StatCard icon={FileCheck2} label="IRNs Today" value={g.todayIrns ?? 0} tone="green" to="/gst/compliance" />
+        <StatCard icon={Truck} label="Active e-Way Bills" value={g.activeEwbs ?? 0} tone="brand" to="/gst/compliance" />
+        <StatCard icon={Clock} label="EWB Expiring (24h)" value={g.expiringEwbs ?? 0} tone="amber" to="/gst/compliance" />
+        <StatCard icon={AlertTriangle} label="Needs Review" value={g.complianceAlerts ?? 0} tone="amber" to="/gst/compliance" />
       </div>
 
       {/* Charts */}

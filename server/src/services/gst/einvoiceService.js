@@ -302,6 +302,36 @@ export async function submit(db, id, userId, { idempotencyKey } = {}) {
   return { ok: true, mode: getMode(), ...rowToRecord(rows[0]) };
 }
 
+// ── Offline e-invoicing (no API): export NIC JSON, then record the IRN by hand ─
+// Single canonical NIC payload (the object the portal / offline tool expects).
+export async function portalPayload(db, id) {
+  const r = (await db.query('SELECT * FROM gst_einvoices WHERE id=$1', [id])).rows[0];
+  if (!r) throw new ApiError(404, 'e-Invoice not found');
+  return buildEInvoicePayload(rowToRecord(r));
+}
+// Bulk array for the portal "bulk upload" (eligible = no IRN yet).
+export async function bulkPortalPayload(db, ids) {
+  const rows = ids?.length
+    ? (await db.query('SELECT * FROM gst_einvoices WHERE id = ANY($1) AND is_deleted=FALSE AND irn IS NULL', [ids])).rows
+    : (await db.query("SELECT * FROM gst_einvoices WHERE is_deleted=FALSE AND irn IS NULL AND status IN ('validated','draft','pending_submission') ORDER BY created_at LIMIT 500")).rows;
+  return rows.map((r) => buildEInvoicePayload(rowToRecord(r)));
+}
+// Record the IRN the portal returns (manual, offline) and finalise the document.
+export async function recordManualIrn(db, id, { irn, ackNo, ackDate, signedQr, signedInvoice } = {}, userId) {
+  const cur = (await db.query('SELECT * FROM gst_einvoices WHERE id=$1', [id])).rows[0];
+  if (!cur) throw new ApiError(404, 'e-Invoice not found');
+  if (cur.irn) throw new ApiError(409, 'This e-invoice already has an IRN.');
+  const clean = String(irn || '').trim();
+  if (clean.length < 10) throw new ApiError(400, 'A valid IRN (from the GST portal) is required.');
+  const payload = buildEInvoicePayload(rowToRecord(cur));
+  await db.query(
+    `UPDATE gst_einvoices SET status='irn_generated', irn=$2, ack_no=$3, ack_date=$4, signed_qr=$5, signed_invoice=$6,
+       irp_status='ACT', canonical_payload=$7, submitted_by=$8, submitted_at=now(), approved_by=$8 WHERE id=$1`,
+    [id, clean, ackNo || null, ackDate || null, signedQr || null, signedInvoice || null, JSON.stringify(payload), userId]);
+  await recordAudit(db, { objectType: 'einvoice', objectId: id, eventType: 'irn_generated', field: 'irn', newValue: clean, message: 'IRN recorded manually (offline portal upload)', userId });
+  return get(db, id);
+}
+
 // ── Cancel (lawful) — checker action; cannot reinstate a govt-cancelled IRN ─
 export async function cancel(db, id, { reasonCode, remark }, userId) {
   const cur = (await db.query('SELECT * FROM gst_einvoices WHERE id=$1 AND is_deleted=FALSE FOR UPDATE', [id])).rows[0];

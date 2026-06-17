@@ -27,6 +27,11 @@ export const NAV = [
     { to: '/challans', label: 'Delivery Challans', icon: Truck },
     { to: '/projects', label: 'Projects & Sites', icon: FolderKanban },
   ]},
+  { section: 'GST e-Invoicing', items: [
+    { to: '/gst', label: 'GST Dashboard', icon: FileCheck2, end: true },
+    { to: '/gst/compliance', label: 'e-Invoice & E-Way Bill', icon: ReceiptText },
+    { to: '/gst/reconciliation', label: 'GST Reconciliation', icon: GitCompareArrows },
+  ]},
   { section: 'Setup', items: [
     { to: '/gst/branches', label: 'Offices & GSTINs', icon: BranchIcon },
     { to: '/gst/number-series', label: 'Number Series', icon: Hash },
