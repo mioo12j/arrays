@@ -809,6 +809,9 @@ ALTER TABLE gst_attachments ADD COLUMN IF NOT EXISTS checksum TEXT;
 ALTER TABLE gst_attachments ADD COLUMN IF NOT EXISTS version  INT NOT NULL DEFAULT 1;
 ALTER TABLE gst_attachments ADD COLUMN IF NOT EXISTS folder   TEXT;
 
+-- Challan → standard invoice link (challans now convert to a normal invoice).
+ALTER TABLE delivery_challans ADD COLUMN IF NOT EXISTS invoice_id UUID REFERENCES invoices(id);
+
 -- §2 Standard Invoice — accounting-grade fields + line items + EWB link (§4).
 ALTER TABLE invoices ADD COLUMN IF NOT EXISTS customer_name     TEXT;
 ALTER TABLE invoices ADD COLUMN IF NOT EXISTS customer_gstin    TEXT;

@@ -27,16 +27,12 @@ export const NAV = [
     { to: '/challans', label: 'Delivery Challans', icon: Truck },
     { to: '/projects', label: 'Projects & Sites', icon: FolderKanban },
   ]},
-  { section: 'GST Compliance', items: [
-    { to: '/gst', label: 'GST Dashboard', icon: FileCheck2, end: true },
-    { to: '/gst/compliance', label: 'e-Invoice & E-Way Bill', icon: ReceiptText },
-    { to: '/gst/reconciliation', label: 'Reconciliation', icon: GitCompareArrows },
+  { section: 'Setup', items: [
+    { to: '/gst/branches', label: 'Offices & GSTINs', icon: BranchIcon },
+    { to: '/gst/number-series', label: 'Number Series', icon: Hash },
+    { to: '/gst/branding', label: 'Branding', icon: Palette },
+    { to: '/gst/import', label: 'Import Wizard', icon: UploadCloud },
     { to: '/status', label: 'System Status', icon: HeartPulse },
-    { to: '/gst/branches', label: 'Branches & GSTINs', icon: BranchIcon, adminOnly: true },
-    { to: '/gst/number-series', label: 'Number Series', icon: Hash, adminOnly: true },
-    { to: '/gst/import', label: 'Import Wizard', icon: UploadCloud, adminOnly: true },
-    { to: '/gst/branding', label: 'Branding', icon: Palette, adminOnly: true },
-    { to: '/gst/integrations', label: 'Integrations', icon: Plug, adminOnly: true },
   ]},
   { section: 'Intelligence', items: [
     { to: '/reports', label: 'Reports', icon: BarChart3 },

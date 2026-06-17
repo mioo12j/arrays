@@ -557,7 +557,6 @@ router.post('/challans/:id/return', requirePerm(PERMS.EDIT), asyncHandler(async 
 router.post('/challans/:id/cancel', requirePerm(PERMS.CANCEL), asyncHandler(async (req, res) => res.json(await tx((db) => challans.cancel(db, req.params.id, req.body?.reason, uid(req))))));
 router.post('/challans/:id/close', requirePerm(PERMS.EDIT), asyncHandler(async (req, res) => res.json(await tx((db) => challans.close(db, req.params.id, uid(req))))));
 router.post('/challans/:id/convert', requirePerm(PERMS.CREATE), asyncHandler(async (req, res) => res.status(201).json(await tx((db) => challans.convertToInvoice(db, req.params.id, uid(req))))));
-router.post('/challans/:id/ewb', requirePerm(PERMS.CREATE), asyncHandler(async (req, res) => res.status(201).json(await tx((db) => challans.createEwbDraft(db, req.params.id, uid(req))))));
 
 router.get('/challans/:id/pdf', requirePerm(PERMS.DOWNLOAD), asyncHandler(async (req, res) => {
   const dc = await challans.get(pool, req.params.id);

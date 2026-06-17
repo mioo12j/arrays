@@ -10,6 +10,8 @@ import { postLedgerEntry, removeLedgerForSource, refreshInvoiceStatus } from '..
 import { extractText, parseInvoiceFields } from '../services/ocr.service.js';
 import * as invSvc from '../services/invoiceService.js';
 import { company } from '../config/company.js';
+import { invoicePdf } from '../services/invoice-pdf.js';
+import * as brandingSvc from '../services/gst/brandingService.js';
 
 const router = Router();
 router.use(authenticate);
@@ -213,6 +215,21 @@ router.delete(
     res.json({ ok: true });
   })
 );
+
+// Printable Tax Invoice PDF (English / Hindi via ?lang=hi).
+router.get('/:id/pdf', asyncHandler(async (req, res) => {
+  const { rows } = await query(
+    `SELECT i.*, COALESCE(i.customer_name, c.name) AS customer_name, c.gstin AS client_gstin
+     FROM invoices i LEFT JOIN clients c ON c.id=i.client_id WHERE i.id=$1`, [req.params.id]);
+  if (!rows[0]) throw new ApiError(404, 'Invoice not found');
+  const inv = { ...rows[0], items: await invSvc.items({ query }, req.params.id) };
+  let branding = {};
+  try { branding = await brandingSvc.get({ query }); } catch { /* branding optional */ }
+  const buf = await invoicePdf(inv, branding, req.query.lang);
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `attachment; filename="Invoice_${String(inv.invoice_number || 'invoice').replace(/[^A-Za-z0-9._-]+/g, '_')}.pdf"`);
+  res.send(buf);
+}));
 
 // §4 Link an existing e-Way Bill to this invoice (bidirectional).
 router.post('/:id/link-ewb', asyncHandler(async (req, res) => {

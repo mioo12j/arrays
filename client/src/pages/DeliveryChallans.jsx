@@ -1,7 +1,7 @@
 import { useMemo, useState, useRef, useEffect } from 'react';
 import {
-  Truck, Plus, Search, FileDown, Trash2, Loader2, X, ShieldCheck, Send, CheckCircle2,
-  PackageCheck, Undo2, FileText, Building2, ArrowRight,
+  Truck, Plus, Search, FileDown, Trash2, Loader2, X,
+  PackageCheck, Undo2, FileText, Building2,
 } from 'lucide-react';
 import { api, apiError } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
@@ -50,7 +50,7 @@ export default function DeliveryChallans() {
           <Stat label="Pending Approval" value={stats.pendingApproval} tone={stats.pendingApproval ? 'text-amber-600' : ''} />
           <Stat label="Pending Delivery" value={stats.pendingDelivery} />
           <Stat label="Returns" value={stats.pendingReturns} />
-          <Stat label="EWB Expiring 24h" value={stats.ewbExpiring} tone={stats.ewbExpiring ? 'text-red-600' : ''} />
+          <Stat label="Converted" value={stats.byStatus?.converted || 0} />
         </div>
       )}
 
@@ -79,7 +79,7 @@ export default function DeliveryChallans() {
       <Card className="!p-0">
         {loading ? <Loading /> : !rows?.length ? <EmptyState title="No delivery challans yet" hint='Click "New Challan" to create one.' /> : (
           <Table
-            columns={[{ header: 'Challan #' }, { header: 'Date' }, { header: 'Type' }, { header: 'Consignee' }, { header: 'To State' }, { header: 'Value' }, { header: 'EWB' }, { header: 'Status' }, { header: '' }]}
+            columns={[{ header: 'Challan #' }, { header: 'Date' }, { header: 'Type' }, { header: 'Consignee' }, { header: 'To State' }, { header: 'Value' }, { header: 'Status' }, { header: '' }]}
             rows={rows} empty="No delivery challans"
             renderRow={(c) => (
               <>
@@ -89,7 +89,6 @@ export default function DeliveryChallans() {
                 <td className="td text-sm">{c.consignee?.legalName || c.consignee?.tradeName || '—'}<div className="text-xs text-slate-400">{c.consignee?.gstin || 'Unregistered'}</div></td>
                 <td className="td text-sm">{c.isInterstate ? <Badge tone="violet">Inter-state</Badge> : <Badge tone="slate">Intra</Badge>}</td>
                 <td className="td text-sm font-medium">{inr(c.totalValue)}</td>
-                <td className="td text-xs">{c.ewbNo ? <span className="text-emerald-600">{c.ewbNo}</span> : '—'}</td>
                 <td className="td"><Badge tone={STATUS_TONE[c.status] || 'slate'}>{label(c.status)}</Badge></td>
                 <td className="td text-right"><button className="btn-ghost !py-1 !text-xs" onClick={() => setViewId(c.id)}>Open</button></td>
               </>
@@ -126,8 +125,6 @@ function ChallanForm({ initial, masters, onClose, onSaved }) {
     consignor: initial.consignor || defaultConsignor,
     consignee: initial.consignee || { legalName: '', gstin: '', addr1: '', location: '', pincode: '', stateCode: '' },
     transport: initial.transport || { mode: 'road', vehicleNo: '', transporterName: '', transporterId: '', lrNo: '', lrDate: '', driverName: '', driverMobile: '' },
-    ewbDistance: initial.ewbDistance || '',
-    ewbNo: initial.ewbNo || '',
     remarks: initial.remarks || '',
     items: (initial.items?.length ? initial.items : [blankItem()]).map((it) => ({ ...blankItem(), ...it })),
   }));
@@ -167,7 +164,7 @@ function ChallanForm({ initial, masters, onClose, onSaved }) {
     if (!f.items.some((it) => it.productName && Number(it.quantity) > 0)) return toast.error('Add at least one item with a name and quantity.');
     setBusy(true);
     try {
-      const body = { ...f, ewbDistance: f.ewbDistance ? Number(f.ewbDistance) : null };
+      const body = { ...f };
       if (isEdit) await api.patch(`/gst/challans/${initial.id}`, body);
       else await api.post('/gst/challans', body);
       clearDraft(draftKey);
@@ -228,9 +225,9 @@ function ChallanForm({ initial, masters, onClose, onSaved }) {
           </div>
         </div>
 
-        {/* transport + EWB */}
+        {/* transport */}
         <div>
-          <h4 className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Transport & e-Way Bill</h4>
+          <h4 className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Transport</h4>
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
             <L label="Mode"><select className="input" value={f.transport.mode} onChange={setTransport('mode')}><option value="road">Road</option><option value="rail">Rail</option><option value="air">Air</option><option value="ship">Ship</option></select></L>
             <L label="Vehicle No"><input className="input" value={f.transport.vehicleNo} onChange={setTransport('vehicleNo')} placeholder="UP16AB1234" /></L>
@@ -238,8 +235,8 @@ function ChallanForm({ initial, masters, onClose, onSaved }) {
             <L label="Transporter ID"><input className="input" value={f.transport.transporterId} onChange={setTransport('transporterId')} /></L>
             <L label="LR / Doc No"><input className="input" value={f.transport.lrNo} onChange={setTransport('lrNo')} /></L>
             <L label="LR Date"><input type="date" className="input" value={f.transport.lrDate} onChange={setTransport('lrDate')} /></L>
-            <L label="Distance (km)"><input type="number" className="input" value={f.ewbDistance} onChange={(e) => setF((x) => ({ ...x, ewbDistance: e.target.value }))} /></L>
-            <L label="E-Way Bill No"><input className="input" value={f.ewbNo} onChange={(e) => setF((x) => ({ ...x, ewbNo: e.target.value }))} placeholder="if already generated" /></L>
+            <L label="Driver Name"><input className="input" value={f.transport.driverName} onChange={setTransport('driverName')} /></L>
+            <L label="Driver Mobile"><input className="input" value={f.transport.driverMobile} onChange={setTransport('driverMobile')} /></L>
           </div>
         </div>
 
@@ -298,8 +295,7 @@ function ChallanDetail({ id, can, onClose, onChanged, onEdit }) {
           {['draft', 'pending_approval', 'approved', 'rejected'].includes(s) && <A k="dispatch" icon={Truck} perm="gst.submit" tone="btn-primary" on={() => post('dispatch')} confirm="Dispatch goods? The challan becomes immutable after dispatch.">Dispatch</A>}
           {(s === 'dispatched' || s === 'in_transit' || s === 'partially_delivered') && <A k="deliver" icon={PackageCheck} perm="gst.edit" tone="btn-primary" on={() => post('deliver', { receiverName: window.prompt('Receiver name?') || '' })}>Mark Delivered</A>}
           {['dispatched', 'in_transit', 'delivered', 'partially_delivered'].includes(s) && <A k="return" icon={Undo2} perm="gst.edit" on={() => post('return', { reason: window.prompt('Return reason?') || '' })}>Record Return</A>}
-          {['delivered', 'partially_delivered', 'returned'].includes(s) && !c.convertedInvoiceId && <A k="convert" icon={FileText} perm="gst.create" on={() => post('convert')}>Convert to Invoice</A>}
-          {['approved', 'dispatched', 'in_transit'].includes(s) && !c.ewbId && <A k="ewb" icon={ArrowRight} perm="gst.create" on={() => post('ewb')}>Create E-Way Bill</A>}
+          {['delivered', 'partially_delivered', 'returned'].includes(s) && !c.invoiceId && <A k="convert" icon={FileText} perm="gst.create" on={() => post('convert')}>Convert to Invoice</A>}
           {['draft', 'pending_approval', 'approved', 'rejected'].includes(s) && <A k="cancel" icon={X} perm="gst.cancel" on={() => post('cancel', { reason: window.prompt('Cancel reason?') || '' })} confirm="Cancel this challan?">Cancel</A>}
           {can('gst.edit') && ['draft', 'rejected'].includes(s) && <button className="btn-ghost !text-sm" onClick={() => onEdit(c)}>Edit</button>}
           <span className="flex-1" />
@@ -310,8 +306,7 @@ function ChallanDetail({ id, can, onClose, onChanged, onEdit }) {
         <div className="flex items-center gap-2">
           <Badge tone={STATUS_TONE[s] || 'slate'}>{label(s)}</Badge>
           {c.isInterstate ? <Badge tone="violet">Inter-state</Badge> : <Badge tone="slate">Intra-state</Badge>}
-          {c.convertedInvoiceId && <Badge tone="green">Converted to invoice</Badge>}
-          {c.ewbNo && <Badge tone="blue">EWB {c.ewbNo}</Badge>}
+          {c.invoiceId && <Badge tone="green">Converted to invoice</Badge>}
         </div>
 
         <div className="grid gap-3 md:grid-cols-2">

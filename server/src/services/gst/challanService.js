@@ -61,7 +61,7 @@ export function rowToRecord(r, items = [], history = [], returns = []) {
     totalQty: r.total_qty, taxableValue: r.taxable_value, cgstValue: r.cgst_value, sgstValue: r.sgst_value,
     igstValue: r.igst_value, cessValue: r.cess_value, totalValue: r.total_value,
     delivery: r.delivery || null,
-    sourceInvoiceId: r.source_invoice_id, convertedInvoiceId: r.converted_invoice_id,
+    sourceInvoiceId: r.source_invoice_id, convertedInvoiceId: r.converted_invoice_id, invoiceId: r.invoice_id,
     preparedBy: r.prepared_by, approvedBy: r.approved_by, approvedAt: r.approved_at,
     dispatchedBy: r.dispatched_by, dispatchedAt: r.dispatched_at,
     createdBy: r.created_by, createdByName: r.created_by_name, createdAt: r.created_at, updatedAt: r.updated_at,
@@ -316,29 +316,35 @@ export async function restore(db, id, userId) {
   return get(db, id);
 }
 
-// ── Convert to tax invoice (creates a linked e-invoice draft) ───────────────
+// ── Convert to a standard Tax Invoice (a real local invoice, not an e-invoice) ─
 export async function convertToInvoice(db, id, userId) {
   const dc = await get(db, id);
   if (['cancelled', 'rejected', 'draft'].includes(dc.status)) throw new ApiError(409, `A challan in “${dc.status}” status cannot be converted.`);
-  if (dc.convertedInvoiceId) throw new ApiError(409, 'This challan has already been converted to an invoice.');
-  const einv = await import('./einvoiceService.js');
-  const items = dc.items.map((it) => ({
-    description: it.productName, hsn: it.hsn, quantity: it.quantity, unit: it.unit, unitPrice: it.rate,
-    taxableValue: it.taxableValue, gstRate: it.gstRate, igstAmount: it.igstAmount,
-    cgstAmount: it.cgstAmount, sgstAmount: it.sgstAmount, cessAmount: it.cessAmount,
-    totalItemValue: round2(n(it.taxableValue) + n(it.cgstAmount) + n(it.sgstAmount) + n(it.igstAmount) + n(it.cessAmount)),
-  }));
-  const val = {
-    assessableValue: dc.taxableValue, cgstValue: dc.cgstValue, sgstValue: dc.sgstValue,
-    igstValue: dc.igstValue, cessValue: dc.cessValue, totalInvoiceValue: dc.totalValue,
-  };
-  const draft = await einv.createDraft(db, {
-    branchId: dc.branchId, supplyType: 'B2B', docType: 'INV',
-    seller: dc.consignor, buyer: dc.consignee, items, val,
-  }, userId);
-  await db.query('UPDATE delivery_challans SET converted_invoice_id=$2, status=$3 WHERE id=$1', [id, draft.id, 'converted']);
-  await logStatus(db, id, dc.status, 'converted', `Converted to invoice ${draft.docNo || draft.id}`, userId);
-  return { challan: await get(db, id), invoice: draft };
+  const cur = (await db.query('SELECT invoice_id FROM delivery_challans WHERE id=$1', [id])).rows[0];
+  if (cur?.invoice_id) throw new ApiError(409, 'This challan has already been converted to an invoice.');
+  const branch = dc.branchId ? await branches.get(db, dc.branchId).catch(() => null) : null;
+  const invNo = await series.allocate(db, { branchId: dc.branchId, docType: 'INV', branchCode: branch?.code || '' }, userId)
+    || `INV/${financialYear()}/${Date.now().toString().slice(-6)}`;
+  const cee = dc.consignee || {};
+  const r = await db.query(
+    `INSERT INTO invoices
+      (invoice_number, type, status, branch_id, customer_name, customer_gstin, billing_address, place_of_supply,
+       taxable_amount, gst_amount, cgst_amount, sgst_amount, igst_amount, total_amount, issue_date, created_by)
+     VALUES ($1,'tax','issued',$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,CURRENT_DATE,$13) RETURNING *`,
+    [invNo, dc.branchId || null, cee.legalName || cee.tradeName || '—', cee.gstin || null,
+     [cee.addr1, cee.location, cee.pincode].filter(Boolean).join(', ') || null, cee.stateCode || cee.pos || null,
+     dc.taxableValue, round2(n(dc.cgstValue) + n(dc.sgstValue) + n(dc.igstValue)), dc.cgstValue, dc.sgstValue, dc.igstValue, dc.totalValue, userId]);
+  const inv = r.rows[0];
+  const invSvc = await import('../invoiceService.js');
+  await invSvc.writeItems(db, inv.id, dc.items.map((it) => ({
+    lineNo: it.lineNo, description: it.productName, hsn: it.hsn, quantity: it.quantity, unit: it.unit, rate: it.rate,
+    taxableValue: it.taxableValue, gstRate: it.gstRate, cgstAmount: it.cgstAmount, sgstAmount: it.sgstAmount, igstAmount: it.igstAmount,
+    amount: round2(n(it.taxableValue) + n(it.cgstAmount) + n(it.sgstAmount) + n(it.igstAmount)),
+  })));
+  await db.query('UPDATE delivery_challans SET invoice_id=$2, status=$3 WHERE id=$1', [id, inv.id, 'converted']);
+  await recordAudit(db, { objectType: 'delivery_challan', objectId: id, eventType: 'converted', message: `Converted to invoice ${invNo}`, userId });
+  await logStatus(db, id, dc.status, 'converted', `Converted to invoice ${invNo}`, userId);
+  return { challan: await get(db, id), invoice: inv };
 }
 
 // ── Create an e-Way Bill draft from this challan (links the two) ─────────────

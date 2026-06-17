@@ -142,17 +142,16 @@ export async function challanPdf(dc, branding = {}, lang = 'en') {
     .text('Total Value', sumX + 10, blockY + 80, { width: sumW * 0.5, lineBreak: false })
     .text(inr(dc.totalValue), sumX + sumW * 0.45, blockY + 80, { width: sumW * 0.55 - 10, align: 'right', lineBreak: false });
 
-  // transport + EWB
+  // transport
   box(doc, M, blockY, leftW, 96, '#ffffff');
   const tr = dc.transport || {};
-  doc.font('Helvetica-Bold').fontSize(8).fillColor(BRAND).text('Transport & e-Way Bill', M + 8, blockY + 7);
+  doc.font('Helvetica-Bold').fontSize(8).fillColor(BRAND).text('Transport Details', M + 8, blockY + 7);
   doc.font('Helvetica').fontSize(7.6).fillColor(MUTE);
   const tv = [
     ['Mode', { road: 'Road', rail: 'Rail', air: 'Air', ship: 'Ship' }[tr.mode] || tr.mode || '—'],
     ['Vehicle No', tr.vehicleNo || '—'], ['Transporter', tr.transporterName || '—'],
     ['LR / Doc No', [tr.lrNo, tr.lrDate ? dmy(tr.lrDate) : null].filter(Boolean).join('  ') || '—'],
-    ['e-Way Bill', dc.ewbNo || 'Not generated'],
-    ['EWB Valid', dc.ewbValidTo ? `till ${dmy(dc.ewbValidTo)}` : '—'],
+    ['Driver', [tr.driverName, tr.driverMobile].filter(Boolean).join('  ') || '—'],
   ];
   let lyy = blockY + 22;
   tv.forEach(([l, v]) => { doc.fillColor(FAINT).font('Helvetica').text(l, M + 8, lyy, { width: 70, lineBreak: false }); doc.fillColor(INK).font('Helvetica-Bold').text(String(v), M + 80, lyy, { width: leftW - 88, lineBreak: false, ellipsis: true }); lyy += 11.5; });

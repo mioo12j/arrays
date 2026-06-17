@@ -1,6 +1,5 @@
 import { useMemo, useState, useRef, useEffect } from 'react';
-import { Plus, Search, Loader2, FileDown, Upload, ShieldCheck, Trash2, Truck, FileText, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Plus, Search, Loader2, FileDown, Upload, Trash2, FileText } from 'lucide-react';
 import { api, apiError, download } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -18,8 +17,8 @@ const blankItem = () => ({ description: '', hsn: '', quantity: 1, unit: 'NOS', r
 export default function Invoices() {
   const toast = useToast();
   const { canImport } = useAuth();
-  const [filters, setFilters] = useState({ search: '', status: '', type: '' });
-  const qs = useMemo(() => new URLSearchParams(Object.fromEntries(Object.entries(filters).filter(([, v]) => v))).toString(), [filters]);
+  const [filters, setFilters] = useState({ search: '', status: '' });
+  const qs = useMemo(() => new URLSearchParams({ type: 'standard', ...Object.fromEntries(Object.entries(filters).filter(([, v]) => v)) }).toString(), [filters]);
   const { data: rows, loading, refetch } = useFetch(`/invoices/unified?${qs}`, [qs]);
   const { data: clients } = useFetch('/clients');
   const [editing, setEditing] = useState(null);
@@ -63,39 +62,33 @@ export default function Invoices() {
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input className="input pl-9" placeholder="Search invoice no, customer, GSTIN…" value={filters.search} onChange={(e) => setFilters((f) => ({ ...f, search: e.target.value }))} />
           </div>
-          <select className="input !w-auto" value={filters.type} onChange={(e) => setFilters((f) => ({ ...f, type: e.target.value }))}>
-            <option value="">All types</option>
-            <option value="standard">Standard Invoice</option>
-            <option value="einvoice">GST E-Invoice</option>
+          <select className="input !w-auto" value={filters.status} onChange={(e) => setFilters((f) => ({ ...f, status: e.target.value }))}>
+            <option value="">All statuses</option>
+            <option value="draft">Draft</option>
+            <option value="issued">Issued</option>
+            <option value="cancelled">Cancelled</option>
           </select>
-          <input className="input !w-auto" placeholder="Status" value={filters.status} onChange={(e) => setFilters((f) => ({ ...f, status: e.target.value }))} />
         </div>
       </Card>
 
       <Card className="!p-0">
         {loading ? <Loading /> : !rows?.length ? <EmptyState title="No invoices yet" hint='Click "New Invoice" to create a standard invoice, or generate a GST e-Invoice from the GST workspace.' /> : (
           <Table
-            columns={[{ header: 'Invoice No' }, { header: 'Type' }, { header: 'Customer' }, { header: 'Date' }, { header: 'Amount', align: 'right' }, { header: 'Status' }, { header: 'Linked E-Way Bill' }, { header: 'Created By' }]}
+            columns={[{ header: 'Invoice No' }, { header: 'Customer' }, { header: 'Date' }, { header: 'Amount', align: 'right' }, { header: 'Status' }, { header: 'Created By' }, { header: '' }]}
             rows={rows} empty="No invoices"
             renderRow={(r) => (
               <>
                 <td className="td font-semibold text-slate-800 dark:text-slate-100">
-                  {r.type === 'einvoice'
-                    ? <Link to="/gst/compliance" className="hover:underline">{r.invoice_number || '—'}</Link>
-                    : <button className="hover:underline" onClick={() => openInvoice(r.id, setEditing, toast)}>{r.invoice_number || '—'}</button>}
-                </td>
-                <td className="td">{r.type === 'einvoice'
-                  ? <Badge tone="green"><ShieldCheck size={11} className="mr-0.5 inline" /> GST E-Invoice</Badge>
-                  : <Badge tone="blue"><FileText size={11} className="mr-0.5 inline" /> Standard</Badge>}
+                  <button className="hover:underline" onClick={() => openInvoice(r.id, setEditing, toast)}>{r.invoice_number || '—'}</button>
                 </td>
                 <td className="td text-sm">{r.party || '—'}<div className="text-xs text-slate-400">{r.gstin || ''}</div></td>
                 <td className="td whitespace-nowrap text-sm">{fmtDate(r.date)}</td>
                 <td className="td text-right font-medium">{inr(r.amount)}</td>
-                <td className="td">{r.irn && r.type === 'einvoice' ? <Badge tone="green">IRN</Badge> : <Badge status={r.status} />}</td>
-                <td className="td text-xs">{r.linked_ewb_no
-                  ? <span className="inline-flex items-center gap-1 text-emerald-600"><Truck size={12} /> {r.linked_ewb_no}</span>
-                  : <span className="text-slate-300">—</span>}</td>
+                <td className="td"><Badge status={r.status} /></td>
                 <td className="td text-sm text-slate-500">{r.created_by_name || '—'}</td>
+                <td className="td text-right">
+                  <button className="btn-ghost !py-1 !px-2 !text-xs" onClick={() => download(`/invoices/${r.id}/pdf`)} title="Download invoice PDF"><FileDown size={13} /> PDF</button>
+                </td>
               </>
             )}
           />
@@ -176,14 +169,9 @@ function InvoiceEditor({ initial, clients, onClose, onSaved }) {
   return (
     <Modal open onClose={close} size="xl" title={isEdit ? `Edit Invoice ${initial.invoice_number || ''}` : 'New Standard Invoice'}
       footer={<><button className="btn-ghost" onClick={close}>Cancel</button>
+        {isEdit && <button className="btn-ghost" onClick={() => download(`/invoices/${initial.id}/pdf`)}><FileDown size={16} /> PDF</button>}
         <button className="btn-primary" onClick={save} disabled={busy}>{busy ? <Loader2 className="animate-spin" size={16} /> : <FileText size={16} />} {isEdit ? 'Save' : 'Create Invoice'}</button></>}>
       <div className="space-y-4">
-        {initial.linked_ewb_no && (
-          <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-sm dark:bg-emerald-900/20">
-            <Truck size={14} className="text-emerald-600" /> Linked E-Way Bill <b>{initial.linked_ewb_no}</b> {initial.linked_ewb_status && <Badge tone="green">{initial.linked_ewb_status}</Badge>}
-            <Link to="/gst/compliance" className="ml-auto text-emerald-600 hover:underline">Open <ArrowRight size={12} className="inline" /></Link>
-          </div>
-        )}
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           <Field label="Invoice Number" required><input className="input" value={f.invoice_number} onChange={(e) => setF((x) => ({ ...x, invoice_number: e.target.value }))} placeholder="INV/26-27/001" /></Field>
           <Field label="Status"><select className="input" value={f.status} onChange={(e) => setF((x) => ({ ...x, status: e.target.value }))}>{STD_STATUS.map((s) => <option key={s} value={s}>{label(s)}</option>)}</select></Field>
