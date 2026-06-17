@@ -128,12 +128,13 @@ function header(doc, title, subtitle, branding = {}) {
   if (fitImage(doc, brandFile(branding, 'logoFile'), M, 14, 44, 44)) tx = M + 54;
   const titleX = W - 250;                       // right-side title block
   const leftW = titleX - tx - 10;               // company block must stop before the title
-  doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(14).text(branding.headerText || company.pdfName, tx, 11, { width: leftW, height: 16, ellipsis: true });
-  doc.font('Helvetica').fontSize(7.3).fillColor(SUBTX)
-    .text(company.address, tx, 29, { width: leftW, height: 17, ellipsis: true })             // ≤2 lines, clipped
-    .text(`GSTIN ${company.gstin}  •  CIN ${company.cin}  •  ${branding.contactInfo || company.email}`, tx, 49, { width: leftW, height: 9, ellipsis: true });
-  doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(14).text(title, titleX, 14, { width: 210, align: 'right' });
-  if (subtitle) doc.font('Helvetica').fontSize(8).fillColor(SUBTX).text(subtitle, titleX, 36, { width: 210, align: 'right' });
+  doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(13.5).text(branding.headerText || company.pdfName, tx, 9, { width: leftW, height: 15, ellipsis: true });
+  doc.font('Helvetica').fontSize(7).fillColor(SUBTX)
+    .text(company.address, tx, 25, { width: leftW, height: 18, ellipsis: true })                       // full address, ≤2 lines
+    .text(`GSTIN ${company.gstin}   •   CIN ${company.cin}`, tx, 46, { width: leftW, height: 9, ellipsis: true })   // full GSTIN + CIN
+    .text(`PAN ${company.pan || ''}   •   ${branding.contactInfo || company.email}`, tx, 56, { width: leftW, height: 9, ellipsis: true });
+  doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(14).text(title, titleX, 12, { width: 210, align: 'right' });
+  if (subtitle) doc.font('Helvetica').fontSize(8).fillColor(SUBTX).text(subtitle, titleX, 34, { width: 210, align: 'right' });
   doc.fillColor(INK);
   doc.y = HEADER_H + 12;
 }
@@ -220,19 +221,18 @@ function partyBlock(doc, x, y, w, label, p = {}) {
   return h;
 }
 
-// Signature / stamp strip, drawn at the current y if it fits, else bottom-anchored.
+// Signature strip — a single large signed/stamped signature image (no separate stamp).
 function signatureStrip(doc, branding) {
   const W = doc.page.width;
   const sig = brandFile(branding, 'signatureFile');
-  const stamp = brandFile(branding, 'stampFile');
-  const needed = 66;
+  const sigW = 210, needed = 86;
+  const x = W - M - sigW;
   let y = doc.y + 6;
   if (y + needed > bottomLimit(doc)) y = bottomLimit(doc) - needed;     // keep on page, above footer
-  fitImage(doc, stamp, W - 250, y, 64, 50);
-  fitImage(doc, sig, W - 165, y, 110, 46);
-  doc.moveTo(W - 165, y + 50).lineTo(W - M, y + 50).strokeColor(FAINT).lineWidth(0.6).stroke();
-  doc.fontSize(7.5).fillColor(MUTE).font('Helvetica').text(`For ${branding.headerText || company.pdfName}`, W - 250, y - 2, { width: 210, align: 'right', lineBreak: false });
-  doc.fontSize(8).fillColor(INK).font('Helvetica-Bold').text('Authorised Signatory', W - 165, y + 53, { width: 125, align: 'center', lineBreak: false });
+  doc.fontSize(7.5).fillColor(MUTE).font('Helvetica').text(`For ${branding.headerText || company.pdfName}`, x, y, { width: sigW, align: 'right', lineBreak: false });
+  fitImage(doc, sig, x, y + 12, sigW, 56);                              // large stamped-signature
+  doc.moveTo(x, y + 70).lineTo(W - M, y + 70).strokeColor(FAINT).lineWidth(0.6).stroke();
+  doc.fontSize(8).fillColor(INK).font('Helvetica-Bold').text('Authorised Signatory', x, y + 73, { width: sigW, align: 'right', lineBreak: false });
   doc.y = y + needed;
 }
 
@@ -251,25 +251,26 @@ export async function einvoicePdf(rec, branding = {}, lang = 'en') {
   watermark(doc, wm);
 
   // ── IRN / Ack strip + QR ───────────────────────────────────────────────────
-  const stripY = doc.y, stripH = 64, qrW = 96;
+  const stripY = doc.y, stripH = 104, qrW = 116;        // taller strip + larger QR box
   box(doc, M, stripY, CW - qrW - 10, stripH, BLUE_SOFT);
-  doc.fontSize(7).fillColor(MUTE).font('Helvetica-Bold').text('IRN (Invoice Reference Number)', M + 10, stripY + 8);
-  doc.fontSize(8).fillColor(INK).font('Courier-Bold').text(rec.irn || '— pending registration —', M + 10, stripY + 19, { width: CW - qrW - 30, lineBreak: false });
-  doc.font('Helvetica').fontSize(7.5).fillColor(FAINT).text('Ack No', M + 10, stripY + 38);
-  doc.font('Helvetica-Bold').fillColor(INK).text(rec.ackNo || '—', M + 55, stripY + 38, { width: 120, lineBreak: false });
-  doc.font('Helvetica').fillColor(FAINT).text('Ack Date', M + 190, stripY + 38);
-  doc.font('Helvetica-Bold').fillColor(INK).text(rec.ackDate ? dmy(rec.ackDate) : '—', M + 235, stripY + 38, { width: 120, lineBreak: false });
+  doc.fontSize(7).fillColor(MUTE).font('Helvetica-Bold').text('IRN (Invoice Reference Number)', M + 10, stripY + 10);
+  doc.fontSize(8).fillColor(INK).font('Courier-Bold').text(rec.irn || '— pending registration —', M + 10, stripY + 22, { width: CW - qrW - 30 });
+  doc.font('Helvetica').fontSize(7.5).fillColor(FAINT).text('Ack No', M + 10, stripY + 62);
+  doc.font('Helvetica-Bold').fillColor(INK).text(rec.ackNo || '—', M + 55, stripY + 62, { width: 120, lineBreak: false });
+  doc.font('Helvetica').fillColor(FAINT).text('Ack Date', M + 200, stripY + 62);
+  doc.font('Helvetica-Bold').fillColor(INK).text(rec.ackDate ? dmy(rec.ackDate) : '—', M + 245, stripY + 62, { width: 120, lineBreak: false });
 
   box(doc, W - M - qrW, stripY, qrW, stripH, '#ffffff');
   if (rec.signedQr) {
     try {
-      const png = await QRCode.toBuffer(String(rec.signedQr).slice(0, 1200), { margin: 0, width: 160 });
-      doc.image(png, W - M - qrW + (qrW - 52) / 2, stripY + 6, { width: 52, height: 52 });
+      // Encode the FULL signed QR string (never truncate — slicing corrupts the QR).
+      const png = await QRCode.toBuffer(String(rec.signedQr), { margin: 1, width: 360, errorCorrectionLevel: 'L' });
+      const q = qrW - 12;
+      doc.image(png, W - M - qrW + 6, stripY + 6, { width: q, height: q });
     } catch { /* ignore */ }
   } else {
-    doc.fontSize(7).fillColor(FAINT).font('Helvetica').text('QR after\nregistration', W - M - qrW, stripY + 24, { width: qrW, align: 'center' });
+    doc.fontSize(7).fillColor(FAINT).font('Helvetica').text('QR after\nregistration', W - M - qrW, stripY + stripH / 2 - 8, { width: qrW, align: 'center' });
   }
-  doc.fontSize(6).fillColor(MUTE).text('Signed QR', W - M - qrW, stripY + stripH - 9, { width: qrW, align: 'center' });
   doc.y = stripY + stripH + 10;
 
   // ── document meta bar ──────────────────────────────────────────────────────
@@ -289,13 +290,13 @@ export async function einvoicePdf(rec, branding = {}, lang = 'en') {
   // ── items table ────────────────────────────────────────────────────────────
   const cols = [
     { k: 'slNo', t: '#', w: 0.05, a: 'left' },
-    { k: 'description', t: 'Description', w: 0.22, a: 'left' },
-    { k: 'hsn', t: 'HSN', w: 0.09, a: 'left' },
+    { k: 'description', t: 'Description', w: 0.24, a: 'left' },
+    { k: 'hsn', t: 'HSN/SAC', w: 0.09, a: 'left' },
     { k: 'quantity', t: 'Qty', w: 0.06, a: 'right' },
-    { k: 'unitPrice', t: 'Rate', w: 0.12, a: 'right' },
+    { k: 'unitPrice', t: 'Rate', w: 0.11, a: 'right' },
     { k: 'taxableValue', t: 'Taxable', w: 0.13, a: 'right' },
     { k: 'gstRate', t: 'GST%', w: 0.06, a: 'right' },
-    { k: 'tax', t: 'Tax', w: 0.12, a: 'right' },
+    { k: 'tax', t: 'Tax', w: 0.11, a: 'right' },
     { k: 'totalItemValue', t: 'Total', w: 0.15, a: 'right' },
   ];
   const drawHead = (ty) => {
@@ -307,8 +308,13 @@ export async function einvoicePdf(rec, branding = {}, lang = 'en') {
     return ty + 18;
   };
   let ty = drawHead(doc.y);
-  const rowH = 15;
+  const descCol = cols.find((c) => c.k === 'description');
+  const descW = descCol.w * CW - 8;
   (rec.items || []).forEach((it, i) => {
+    // Row height grows to fit the (possibly long) wrapped description — no cut-off.
+    doc.font('Helvetica').fontSize(7.5);
+    const descH = doc.heightOfString(String(it.description || '—'), { width: descW });
+    const rowH = Math.max(15, descH + 7);
     if (ty + rowH > bottomLimit(doc)) { doc.addPage(); watermark(doc, wm); ty = drawHead(contHeader(doc, branding, 'TAX INVOICE')); }
     if (i % 2) doc.rect(M, ty, CW, rowH).fill(SOFT);
     const tax = Number(it.igstAmount || 0) + Number(it.cgstAmount || 0) + Number(it.sgstAmount || 0);
@@ -320,7 +326,8 @@ export async function einvoicePdf(rec, branding = {}, lang = 'en') {
       else if (c.k === 'tax') val = inr(tax);
       else if (['unitPrice', 'taxableValue', 'totalItemValue'].includes(c.k)) val = inr(val);
       else if (c.k === 'gstRate') val = `${Number(val || 0)}%`;
-      doc.text(String(val ?? ''), cx + 4, ty + 4, { width: c.w * CW - 8, align: c.a, ellipsis: true, lineBreak: false });
+      if (c.k === 'description') doc.text(String(val ?? ''), cx + 4, ty + 4, { width: c.w * CW - 8 });   // wraps to full height
+      else doc.text(String(val ?? ''), cx + 4, ty + 4, { width: c.w * CW - 8, align: c.a, ellipsis: true, lineBreak: false });
       cx += c.w * CW;
     });
     ty += rowH;

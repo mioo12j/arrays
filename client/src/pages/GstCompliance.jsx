@@ -111,7 +111,7 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
   const co = companyData || companyFallback;
   const sellerDefault = {
     gstin: co.gstin || '', legalName: co.name || '', tradeName: co.shortName || '', addr1: co.address || '',
-    location: 'Madhubani', pincode: '847229', stateCode: String(co.gstin || '10').slice(0, 2), phone: '', email: co.email || '',
+    location: 'Greater Noida', pincode: '201310', stateCode: String(co.gstin || '09').slice(0, 2), phone: '', email: co.email || '',
   };
   const [form, setForm] = useState(() => initial ? structuredClone(initial) : {
     supplyType: 'B2B', docType: 'INV', docNo: '', docDate: new Date().toISOString().slice(0, 10),
@@ -139,6 +139,13 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
   const opts = (cat) => (master?.[cat] || []);
 
   const save = async (override) => {
+    // GST schema requires Location/Pincode/State on both parties — block blanks
+    // so the portal JSON never fails with "The Location field is required".
+    const s = form.seller || {}, b = form.buyer || {};
+    const need = [];
+    if (!s.location) need.push('Seller Location'); if (!s.pincode) need.push('Seller Pincode'); if (!s.stateCode) need.push('Seller State Code');
+    if (!b.location) need.push('Buyer Location'); if (!b.pincode) need.push('Buyer Pincode'); if (!(b.stateCode || b.pos)) need.push('Buyer State Code');
+    if (need.length) { toast.error(`Required for GST: ${need.join(', ')}`); return; }
     setSaving(true);
     try {
       const payload = recalcInvoice(form);
@@ -193,12 +200,17 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
       <div className="space-y-2">
         {form.items.map((it, i) => (
           <div key={i} className="grid grid-cols-12 gap-2 rounded-lg border border-slate-200 p-2 dark:border-slate-700">
-            <input className="input col-span-3 !py-1.5 text-sm" placeholder="Description" value={it.description} onChange={(e) => setItem(i, 'description', e.target.value)} />
-            <input className="input col-span-2 !py-1.5 text-sm" placeholder="HSN" value={it.hsn} onChange={(e) => setItem(i, 'hsn', e.target.value)} />
+            <select className="input col-span-2 !py-1.5 text-sm" value={it.isService === 'Y' ? 'Y' : 'N'} title="Goods or Services"
+              onChange={(e) => { const v = e.target.value; setForm((f) => { const n = structuredClone(f); n.items[i].isService = v; if (v === 'Y' && (!n.items[i].unit || n.items[i].unit === 'NOS')) n.items[i].unit = 'OTH'; return n; }); }}>
+              <option value="N">Goods</option>
+              <option value="Y">Services</option>
+            </select>
+            <input className="input col-span-2 !py-1.5 text-sm" placeholder="Description" value={it.description} onChange={(e) => setItem(i, 'description', e.target.value)} />
+            <input className="input col-span-2 !py-1.5 text-sm" placeholder={it.isService === 'Y' ? 'SAC' : 'HSN'} value={it.hsn} onChange={(e) => setItem(i, 'hsn', e.target.value)} />
             <input className="input col-span-1 !py-1.5 text-sm" type="number" placeholder="Qty" value={it.quantity} onChange={(e) => setItem(i, 'quantity', e.target.value)} />
             <input className="input col-span-1 !py-1.5 text-sm" placeholder="Unit" value={it.unit} onChange={(e) => setItem(i, 'unit', e.target.value)} />
             <input className="input col-span-2 !py-1.5 text-sm" type="number" placeholder="Rate" value={it.unitPrice} onChange={(e) => setItem(i, 'unitPrice', e.target.value)} />
-            <select className="input col-span-2 !py-1.5 text-sm" value={it.gstRate} onChange={(e) => setItem(i, 'gstRate', e.target.value)}>{[0, 5, 12, 18, 28].map((r) => <option key={r} value={r}>{r}% GST</option>)}</select>
+            <select className="input col-span-1 !py-1.5 text-sm" value={it.gstRate} onChange={(e) => setItem(i, 'gstRate', e.target.value)}>{[0, 5, 12, 18, 28].map((r) => <option key={r} value={r}>{r}%</option>)}</select>
             <button className="col-span-1 text-red-500 hover:text-red-700" onClick={() => setForm((f) => ({ ...f, items: f.items.filter((_, j) => j !== i) }))} title="Remove"><Trash2 size={15} /></button>
           </div>
         ))}
