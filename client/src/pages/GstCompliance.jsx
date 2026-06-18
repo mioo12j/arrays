@@ -112,7 +112,8 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
   const { data: branches } = useFetch('/gst/branches');
   const co = companyData || companyFallback;
   const sellerDefault = {
-    gstin: co.gstin || '', legalName: co.name || '', tradeName: co.shortName || '', addr1: co.address || '',
+    // Trade name = legal name (no short form) — that's how this company is registered.
+    gstin: co.gstin || '', legalName: co.name || '', tradeName: co.name || '', addr1: co.address || '',
     location: 'Greater Noida', pincode: '201310', stateCode: String(co.gstin || '09').slice(0, 2), phone: '', email: co.email || '',
   };
   const [form, setForm] = useState(() => initial ? structuredClone(initial) : {

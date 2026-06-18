@@ -106,13 +106,15 @@ function valBlock(v = {}) {
   };
 }
 
-// Strip undefined keys so the payload is clean.
+// Strip undefined/null/'' keys so optional empty fields are ABSENT rather than
+// sent as null — the NIC validator rejects explicit nulls on typed optional
+// fields. Numbers (incl. 0) and booleans are always kept.
 function prune(obj) {
   if (Array.isArray(obj)) return obj.map(prune);
   if (obj && typeof obj === 'object') {
     const out = {};
     for (const [k, val] of Object.entries(obj)) {
-      if (val === undefined) continue;
+      if (val === undefined || val === null || val === '') continue;
       out[k] = prune(val);
     }
     return out;

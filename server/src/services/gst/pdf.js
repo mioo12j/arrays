@@ -66,6 +66,7 @@ function setBrand(b = {}) {
 }
 
 const M = 40;                                  // page margin
+const HEADER_TOP = 18;                         // white breathing space above the header band
 const HEADER_H = 88;                           // first-page header band (fits a 2-line address)
 const CONT_HEADER_H = 28;                      // continuation-page header band
 const FOOTER_H = 46;                           // reserved footer band
@@ -123,22 +124,23 @@ function fitImage(doc, file, x, y, boxW, boxH) {
 // ── full-width first-page header ─────────────────────────────────────────────
 function header(doc, title, subtitle, branding = {}) {
   const W = doc.page.width;
-  doc.rect(0, 0, W, HEADER_H).fill(HEADER_BG);
+  const T = HEADER_TOP;                          // breathing room above the header band
+  doc.rect(0, T, W, HEADER_H).fill(HEADER_BG);
   let tx = M;
-  if (fitImage(doc, brandFile(branding, 'logoFile'), M, 14, 44, 44)) tx = M + 54;
+  if (fitImage(doc, brandFile(branding, 'logoFile'), M, T + 14, 44, 44)) tx = M + 54;
   const titleX = W - 250;                       // right-side title block
   const leftW = titleX - tx - 10;               // company block must stop before the title
-  doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(13.5).text(branding.headerText || company.pdfName, tx, 9, { width: leftW, height: 15, ellipsis: true });
+  doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(13.5).text(branding.headerText || company.pdfName, tx, T + 9, { width: leftW, height: 15, ellipsis: true });
   // Selectable / editable letterhead address (falls back to the registered one).
   // GSTIN + PAN intentionally omitted here — GSTIN is already shown in the
   // supplier block below; only CIN + email remain in the header.
   doc.font('Helvetica').fontSize(7).fillColor(SUBTX)
-    .text(branding.headerAddr || company.address, tx, 25, { width: leftW, height: 20, ellipsis: true })   // address, ≤2 lines
-    .text(`CIN ${company.cin}   •   ${branding.contactInfo || company.email}`, tx, 47, { width: leftW, height: 9, ellipsis: true });
-  doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(14).text(title, titleX, 12, { width: 210, align: 'right' });
-  if (subtitle) doc.font('Helvetica').fontSize(8).fillColor(SUBTX).text(subtitle, titleX, 34, { width: 210, align: 'right' });
+    .text(branding.headerAddr || company.address, tx, T + 25, { width: leftW, height: 20, ellipsis: true })   // address, ≤2 lines
+    .text(`CIN ${company.cin}   •   ${branding.contactInfo || company.email}`, tx, T + 47, { width: leftW, height: 9, ellipsis: true });
+  doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(14).text(title, titleX, T + 12, { width: 210, align: 'right' });
+  if (subtitle) doc.font('Helvetica').fontSize(8).fillColor(SUBTX).text(subtitle, titleX, T + 34, { width: 210, align: 'right' });
   doc.fillColor(INK);
-  doc.y = HEADER_H + 12;
+  doc.y = T + HEADER_H + 12;
 }
 
 // Compact header for continuation pages.

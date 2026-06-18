@@ -68,17 +68,18 @@ export async function invoicePdf(inv, branding = {}, lang = 'en') {
   const items = inv.items || [];
 
   // ── Header band ────────────────────────────────────────────────────────────
-  doc.rect(0, 0, W, 88).fill(HEADER_BG);
+  const T = 18;                                  // breathing room above the header band
+  doc.rect(0, T, W, 88).fill(HEADER_BG);
   let tx = M;
-  if (fitImage(doc, brandFile(branding, 'logoFile'), M, 14, 44, 44)) tx = M + 54;
+  if (fitImage(doc, brandFile(branding, 'logoFile'), M, T + 14, 44, 44)) tx = M + 54;
   const titleX = W - 250, hdrW = titleX - tx - 10;
-  doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(14).text(branding.headerText || company.pdfName, tx, 11, { width: hdrW, height: 16, ellipsis: true });
+  doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(14).text(branding.headerText || company.pdfName, tx, T + 11, { width: hdrW, height: 16, ellipsis: true });
   doc.font('Helvetica').fontSize(7.3).fillColor(SUBTX)
-    .text(company.address, tx, 29, { width: hdrW, height: 17, ellipsis: true })
-    .text(`GSTIN ${company.gstin}  •  ${branding.contactInfo || company.email}`, tx, 49, { width: hdrW, height: 9, ellipsis: true });
-  doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(15).text('TAX INVOICE', titleX, 16, { width: 210, align: 'right' });
-  doc.font('Helvetica').fontSize(7).fillColor(SUBTX).text(String(inv.status || '').toUpperCase(), titleX, 40, { width: 210, align: 'right' });
-  doc.fillColor(INK); doc.y = 100;
+    .text(company.address, tx, T + 29, { width: hdrW, height: 17, ellipsis: true })
+    .text(`GSTIN ${company.gstin}  •  ${branding.contactInfo || company.email}`, tx, T + 49, { width: hdrW, height: 9, ellipsis: true });
+  doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(15).text('TAX INVOICE', titleX, T + 16, { width: 210, align: 'right' });
+  doc.font('Helvetica').fontSize(7).fillColor(SUBTX).text(String(inv.status || '').toUpperCase(), titleX, T + 40, { width: 210, align: 'right' });
+  doc.fillColor(INK); doc.y = T + 100;
 
   if (wm) { const sx = doc.x, sy = doc.y; doc.save().rotate(-45, { origin: [W / 2, doc.page.height / 2] }); doc.fontSize(74).fillColor(WM).fillOpacity(0.05).text(wm, 0, doc.page.height / 2 - 44, { width: W, align: 'center', lineBreak: false }); doc.fillOpacity(1).restore(); doc.x = sx; doc.y = sy; }
 

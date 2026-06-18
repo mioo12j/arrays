@@ -65,18 +65,19 @@ export async function challanPdf(dc, branding = {}, lang = 'en') {
   const wm = branding.watermark || (['cancelled', 'rejected'].includes(dc.status) ? dc.status : (dc.status === 'draft' ? 'DRAFT' : ''));
 
   // ── Header band ────────────────────────────────────────────────────────────
-  doc.rect(0, 0, W, 88).fill(HEADER_BG);
+  const T = 18;                                  // breathing room above the header band
+  doc.rect(0, T, W, 88).fill(HEADER_BG);
   let tx = M;
-  if (fitImage(doc, brandFile(branding, 'logoFile'), M, 14, 44, 44)) tx = M + 54;
+  if (fitImage(doc, brandFile(branding, 'logoFile'), M, T + 14, 44, 44)) tx = M + 54;
   const titleX = W - 250;
   const hdrW = titleX - tx - 10;
-  doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(14).text(branding.headerText || company.pdfName, tx, 11, { width: hdrW, height: 16, ellipsis: true });
+  doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(14).text(branding.headerText || company.pdfName, tx, T + 11, { width: hdrW, height: 16, ellipsis: true });
   doc.font('Helvetica').fontSize(7.3).fillColor(SUBTX)
-    .text(company.address, tx, 29, { width: hdrW, height: 17, ellipsis: true })
-    .text(`GSTIN ${company.gstin}  •  ${branding.contactInfo || company.email}`, tx, 49, { width: hdrW, height: 9, ellipsis: true });
-  doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(14).text('DELIVERY CHALLAN', titleX, 14, { width: 210, align: 'right' });
-  doc.font('Helvetica').fontSize(7).fillColor(SUBTX).text('Rule 55, CGST Rules 2017 — not a tax invoice', titleX, 36, { width: 210, align: 'right' });
-  doc.fillColor(INK); doc.y = 100;
+    .text(company.address, tx, T + 29, { width: hdrW, height: 17, ellipsis: true })
+    .text(`GSTIN ${company.gstin}  •  ${branding.contactInfo || company.email}`, tx, T + 49, { width: hdrW, height: 9, ellipsis: true });
+  doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(14).text('DELIVERY CHALLAN', titleX, T + 14, { width: 210, align: 'right' });
+  doc.font('Helvetica').fontSize(7).fillColor(SUBTX).text('Rule 55, CGST Rules 2017 — not a tax invoice', titleX, T + 36, { width: 210, align: 'right' });
+  doc.fillColor(INK); doc.y = T + 100;
   watermark(doc, wm);
 
   // ── Meta bar ───────────────────────────────────────────────────────────────
