@@ -3,6 +3,7 @@ import {
   Rocket, LayoutDashboard, ArrowUpRight, ArrowDownLeft, FileText, Banknote,
   Building2, Users, Calculator, BarChart3, CloudUpload, ShieldCheck, Languages,
   Search, Truck, DatabaseBackup, LifeBuoy, Save, ClipboardList, ReceiptText, UserCog,
+  FolderKanban, UserRound, FileCheck2, GitCompareArrows, Activity, BookOpen,
 } from 'lucide-react';
 import { Card, PageHeader } from '../components/ui/index.jsx';
 import { useI18n } from '../context/I18nContext.jsx';
@@ -51,6 +52,7 @@ const SECTIONS = [
       body: [
         'The Dashboard is your home screen and a quick health-check of the business. The top rows show live money figures — total paid out, total received, pending receivables and your net position — followed by counts of pending invoices, payments still waiting for an invoice, reconciliation pending and active projects.',
         'Below that, a “Production & Data” strip shows how much you have on record (vendors, offices, invoices, e-invoices, challans, e-way bills), when the last backup ran and how healthy it is, how much storage is used, and when you last published to the cloud. Click any tile to jump straight into that area.',
+        'Read the Dashboard top-to-bottom each morning as a one-minute check: the money figures tell you the cash position, the pending counts tell you what needs doing today (invoices to raise, payments awaiting a bill, reconciliations to clear), and the backup tile tells you whether your work is safely protected. If a number looks wrong, click through to the underlying list — every tile is a shortcut, so the Dashboard doubles as the fastest way to navigate the whole software.',
       ],
     },
     hi: {
@@ -58,6 +60,7 @@ const SECTIONS = [
       body: [
         'डैशबोर्ड आपकी होम स्क्रीन और व्यवसाय की त्वरित जाँच है। ऊपर की पंक्तियाँ लाइव धन आँकड़े दिखाती हैं — कुल भुगतान, कुल प्राप्ति, लंबित प्राप्य और शुद्ध स्थिति — फिर लंबित इनवॉइस, इनवॉइस की प्रतीक्षा कर रहे भुगतान, लंबित समाधान और सक्रिय परियोजनाओं की गिनती।',
         'उसके नीचे, “Production & Data” पट्टी दिखाती है कि आपके पास कितना रिकॉर्ड है (विक्रेता, कार्यालय, इनवॉइस, e-invoice, चालान, e-way bill), अंतिम बैकअप कब चला और कितना स्वस्थ है, कितना स्टोरेज उपयोग हुआ, और आपने आख़िरी बार क्लाउड पर कब प्रकाशित किया। किसी भी टाइल पर क्लिक कर सीधे उस क्षेत्र में जाएँ।',
+        'हर सुबह डैशबोर्ड को ऊपर-से-नीचे एक-मिनट की जाँच के रूप में पढ़ें: धन आँकड़े नकद स्थिति बताते हैं, लंबित गिनती बताती है कि आज क्या करना है (इनवॉइस बनाना, बिल की प्रतीक्षा वाले भुगतान, साफ़ करने योग्य समाधान), और बैकअप टाइल बताती है कि आपका काम सुरक्षित है या नहीं। कोई संख्या गलत लगे तो उसकी अंतर्निहित सूची पर क्लिक करें — हर टाइल एक शॉर्टकट है, इसलिए डैशबोर्ड पूरे सॉफ़्टवेयर में जाने का सबसे तेज़ रास्ता भी है।',
       ],
     },
   },
@@ -68,6 +71,7 @@ const SECTIONS = [
       body: [
         'Open “Outgoing Payments” to record money leaving the business. Click New, choose whether you are paying a vendor or an employee, pick the name, and enter the amount and date. You can tag the payment to a project, site, category and material so costs roll up correctly in reports and project profitability.',
         'If the money relates to a purchase, mark whether the vendor’s invoice has been received and attach the bill. When you later import a bank statement, the system matches each transaction to the right vendor automatically using the account number, so your books and the bank stay in step.',
+        'Each payment also carries two free-text fields that are easy to confuse but useful kept apart: the Remark is what actually happened in the bank (for example “RTGS to Steelworks”), while the Comment is your own internal note. Click any payment in the list to open its full detail, see the linked vendor, project and attachment, and edit or delete it — nothing needs anyone’s approval. Use the date presets and the Excel/PDF buttons to export exactly the slice you are looking at.',
       ],
     },
     hi: {
@@ -75,6 +79,7 @@ const SECTIONS = [
       body: [
         '“जावक भुगतान” खोलकर व्यवसाय से जाने वाला पैसा दर्ज करें। New पर क्लिक करें, चुनें कि आप विक्रेता को दे रहे हैं या कर्मचारी को, नाम चुनें, और राशि व दिनांक भरें। भुगतान को परियोजना, साइट, श्रेणी और सामग्री से जोड़ें ताकि लागत रिपोर्ट और परियोजना लाभप्रदता में सही जुड़े।',
         'यदि पैसा किसी खरीद से जुड़ा है, तो चिह्नित करें कि विक्रेता का बिल मिला या नहीं और बिल संलग्न करें। बाद में बैंक स्टेटमेंट आयात करने पर, सिस्टम खाता संख्या से हर लेनदेन को सही विक्रेता से स्वतः मिलाता है, ताकि आपकी बही और बैंक मेल खाते रहें।',
+        'हर भुगतान में दो मुक्त-पाठ फ़ील्ड होते हैं जिन्हें अलग रखना उपयोगी है: Remark वह है जो बैंक में वास्तव में हुआ (उदा. “RTGS to Steelworks”), जबकि Comment आपका अपना आंतरिक नोट है। सूची में किसी भी भुगतान पर क्लिक कर उसका पूरा विवरण खोलें, जुड़ा विक्रेता, परियोजना व संलग्नक देखें, और संपादित या हटाएँ — किसी की मंज़ूरी की ज़रूरत नहीं। दिनांक प्रीसेट और Excel/PDF बटन से ठीक वही हिस्सा निर्यात करें जो आप देख रहे हैं।',
       ],
     },
   },
@@ -85,6 +90,7 @@ const SECTIONS = [
       body: [
         'Open “Incoming Receipts” to record money coming in from clients. Enter the client, the credited amount and date, and link it to the invoice it settles. You can capture deductions such as TDS, retention and other amounts separately so the true outstanding on each invoice stays accurate.',
         'As receipts are linked, each invoice automatically moves from raised to partially paid to paid, and the client’s outstanding balance updates on its own — so you always know who still owes you and how much.',
+        'Recording the deductions correctly matters: a client may pay you the net amount after holding back TDS or a retention, and entering those separately means the invoice is treated as fully settled rather than showing a phantom outstanding for the held-back portion. Click any receipt to open its detail, see the invoice it is against and any attached proof, and the client ledger then shows the whole story — invoice raised on this date, payment received on that date, balance remaining.',
       ],
     },
     hi: {
@@ -92,6 +98,7 @@ const SECTIONS = [
       body: [
         '“आवक प्राप्तियाँ” खोलकर ग्राहकों से आने वाला पैसा दर्ज करें। ग्राहक, जमा राशि व दिनांक भरें और जिस इनवॉइस का निपटान है उससे जोड़ें। TDS, अवधारण (retention) और अन्य कटौतियाँ अलग से दर्ज करें ताकि हर इनवॉइस का वास्तविक बकाया सही रहे।',
         'जैसे-जैसे प्राप्तियाँ जुड़ती हैं, हर इनवॉइस स्वतः raised → आंशिक भुगतान → भुगतान में बदलती है, और ग्राहक का बकाया स्वयं अपडेट होता है — इसलिए आपको हमेशा पता रहता है कि किस पर कितना बकाया है।',
+        'कटौतियाँ सही दर्ज करना महत्वपूर्ण है: ग्राहक TDS या अवधारण रोककर शुद्ध राशि दे सकता है, और उन्हें अलग दर्ज करने का अर्थ है कि इनवॉइस पूरी तरह निपटा माना जाए, न कि रोकी राशि के लिए झूठा बकाया दिखे। किसी भी प्राप्ति पर क्लिक कर उसका विवरण, जुड़ा इनवॉइस और संलग्न प्रूफ़ देखें; ग्राहक बही फिर पूरी कहानी दिखाती है — इनवॉइस इस दिनांक को बना, भुगतान उस दिनांक को मिला, शेष बकाया।',
       ],
     },
   },
@@ -119,6 +126,7 @@ const SECTIONS = [
       body: [
         'The Vendor Master holds every supplier you pay, with their GSTIN, bank account and IFSC. Each vendor can have more than one bank account, and these accounts are what the bank-reconciliation matching uses — so keeping them accurate means statements match themselves.',
         'You can add a vendor at any time, and new vendors are also created automatically when you import a beneficiary list or a bank statement that mentions someone not yet on file. Open any vendor to see its full ledger — everything you have paid them, running balance included.',
+        'A vendor ledger is read as a pure payables account, not a loan: a vendor never “owes you”. What the ledger calls Balance Payable is simply what you still owe them; if you have paid ahead of their bills it shows as an advance to adjust against future bills, and money a vendor sends back is a refund that reduces your net paid — never a debt in your favour. Each vendor page also shows its GST validation status and offers Excel / PDF export of the ledger.',
       ],
     },
     hi: {
@@ -126,6 +134,7 @@ const SECTIONS = [
       body: [
         'विक्रेता मास्टर में हर आपूर्तिकर्ता होता है जिसे आप भुगतान करते हैं — उसके GSTIN, बैंक खाते और IFSC के साथ। हर विक्रेता के एक से अधिक बैंक खाते हो सकते हैं, और यही खाते बैंक-समाधान मिलान में उपयोग होते हैं — इसलिए इन्हें सही रखने से स्टेटमेंट स्वयं मेल खाते हैं।',
         'आप कभी भी विक्रेता जोड़ सकते हैं, और जब आप लाभार्थी सूची या बैंक स्टेटमेंट आयात करते हैं जिसमें कोई नया नाम हो, तो नए विक्रेता स्वतः बन जाते हैं। किसी भी विक्रेता को खोलकर उसकी पूरी बही देखें — आपने उसे जो भुगतान किया, चालू शेष सहित।',
+        'विक्रेता बही को शुद्ध देय (payables) खाते के रूप में पढ़ा जाता है, ऋण के रूप में नहीं: विक्रेता आप पर कभी “बकाया” नहीं रखता। बही जिसे Balance Payable कहती है वह केवल वह है जो आप अब भी उन्हें देना है; यदि आपने उनके बिलों से आगे भुगतान कर दिया तो वह भविष्य के बिलों में समायोजित होने वाला अग्रिम दिखता है, और विक्रेता द्वारा लौटाया पैसा एक रिफ़ंड है जो आपके शुद्ध भुगतान को घटाता है — कभी आपके पक्ष में ऋण नहीं। हर विक्रेता पृष्ठ उसकी GST सत्यापन स्थिति भी दिखाता है और बही का Excel / PDF निर्यात देता है।',
       ],
     },
   },
@@ -134,13 +143,17 @@ const SECTIONS = [
     en: {
       title: 'Clients',
       body: [
-        'Clients are the customers you bill. Keep each client’s name, GSTIN and address on file so they flow straight into invoices and e-invoices without retyping. Opening a client shows its ledger — what you have billed, what has been received and the outstanding balance — so collections are always clear.',
+        'Clients are the customers you bill. Keep each client’s name, GSTIN and address on file so they flow straight into invoices and e-invoices without retyping. Add a client once and it is available everywhere a customer is needed.',
+        'Opening a client shows its full ledger, and it is built around the invoice → payment story so collections are always clear. Each row shows what was billed or received, the invoice the payment is against, the date the invoice was raised and the date the money came in, with a running balance — so for any payment you can see exactly which invoice it settled and how much of that invoice is still open. The three summary cards on top give Total Billed, Total Received and Outstanding at a glance.',
+        'The same page carries a read-only GST compliance panel (e-invoices, IRNs and GST value linked to that client’s GSTIN), and Excel / PDF buttons to export the whole statement in English or Hindi — useful to send a client their account or to attach to a follow-up.',
       ],
     },
     hi: {
       title: 'ग्राहक',
       body: [
-        'ग्राहक वे हैं जिन्हें आप बिल करते हैं। हर ग्राहक का नाम, GSTIN और पता रखें ताकि वे बिना दोबारा टाइप किए सीधे इनवॉइस और e-invoice में आ जाएँ। ग्राहक खोलने पर उसकी बही दिखती है — आपने क्या बिल किया, क्या प्राप्त हुआ और कितना बकाया है — ताकि वसूली हमेशा स्पष्ट रहे।',
+        'ग्राहक वे हैं जिन्हें आप बिल करते हैं। हर ग्राहक का नाम, GSTIN और पता रखें ताकि वे बिना दोबारा टाइप किए सीधे इनवॉइस और e-invoice में आ जाएँ। ग्राहक एक बार जोड़ें — फिर वह हर जगह उपलब्ध रहता है जहाँ ग्राहक चाहिए।',
+        'ग्राहक खोलने पर उसकी पूरी बही दिखती है, और यह इनवॉइस → भुगतान कहानी के इर्द-गिर्द बनी है ताकि वसूली हमेशा स्पष्ट रहे। हर पंक्ति दिखाती है क्या बिल हुआ या प्राप्त हुआ, भुगतान किस इनवॉइस के विरुद्ध है, इनवॉइस किस दिनांक को बना और पैसा किस दिनांक को आया, चालू शेष सहित — इसलिए किसी भी भुगतान के लिए आप ठीक देख सकते हैं कि उसने कौन-सा इनवॉइस निपटाया और उस इनवॉइस का कितना बकाया है। ऊपर तीन सारांश कार्ड कुल बिल, कुल प्राप्त और बकाया एक नज़र में देते हैं।',
+        'वही पृष्ठ एक केवल-पठन GST अनुपालन पैनल रखता है (उस ग्राहक के GSTIN से जुड़े e-invoice, IRN व GST मूल्य), और पूरी स्टेटमेंट अंग्रेज़ी या हिंदी में निर्यात हेतु Excel / PDF बटन — ग्राहक को उसका खाता भेजने या फॉलो-अप के साथ संलग्न करने में उपयोगी।',
       ],
     },
   },
@@ -411,13 +424,17 @@ const SECTIONS = [
     en: {
       title: 'Security verification for sensitive actions',
       body: [
-        'A few sensitive actions — such as cancelling a document or restoring from a backup — ask for an extra step: you confirm your password and a short verification code before they go through. This protects against accidental or unauthorised changes. Complete the two steps when prompted and the action proceeds; everything is recorded in the audit trail with the time and your name.',
+        'A few sensitive actions — such as cancelling a registered document or restoring from a backup — ask for an extra step: you confirm your password and a short verification code before they go through. This protects against accidental or unauthorised changes. Complete the two steps when prompted and the action proceeds.',
+        'Because the software runs locally and is not wired to an email server, the verification code is shown to you right on the screen rather than emailed — you simply read it and type it back. The same idea protects the saved GST-portal password: it is only revealed after you re-enter your own login password, so just opening a window never exposes a secret.',
+        'Whatever the action, it is recorded in the audit trail with the time and your name, so there is always a clear account of who did what — see the Activity & Audit topic for the full picture.',
       ],
     },
     hi: {
       title: 'संवेदनशील कार्यों हेतु सुरक्षा सत्यापन',
       body: [
-        'कुछ संवेदनशील कार्य — जैसे दस्तावेज़ रद्द करना या बैकअप से पुनर्स्थापना — एक अतिरिक्त चरण माँगते हैं: आगे बढ़ने से पहले आप अपना पासवर्ड और एक छोटा सत्यापन कोड पुष्टि करते हैं। यह आकस्मिक या अनधिकृत बदलाव से बचाता है। संकेत मिलने पर दोनों चरण पूरे करें और कार्य आगे बढ़ता है; सब कुछ समय और आपके नाम सहित ऑडिट ट्रेल में दर्ज होता है।',
+        'कुछ संवेदनशील कार्य — जैसे पंजीकृत दस्तावेज़ रद्द करना या बैकअप से पुनर्स्थापना — एक अतिरिक्त चरण माँगते हैं: आगे बढ़ने से पहले आप अपना पासवर्ड और एक छोटा सत्यापन कोड पुष्टि करते हैं। यह आकस्मिक या अनधिकृत बदलाव से बचाता है। संकेत मिलने पर दोनों चरण पूरे करें और कार्य आगे बढ़ता है।',
+        'चूँकि सॉफ़्टवेयर स्थानीय रूप से चलता है और किसी ईमेल सर्वर से जुड़ा नहीं है, सत्यापन कोड आपको स्क्रीन पर ही दिखाया जाता है (ईमेल नहीं किया जाता) — आप उसे पढ़कर वापस टाइप कर देते हैं। यही विचार सहेजे GST-पोर्टल पासवर्ड की रक्षा करता है: वह तभी दिखता है जब आप अपना लॉगिन पासवर्ड फिर डालते हैं, इसलिए केवल विंडो खोलने भर से कोई रहस्य उजागर नहीं होता।',
+        'कार्य चाहे जो हो, वह समय और आपके नाम सहित ऑडिट ट्रेल में दर्ज होता है, ताकि हमेशा स्पष्ट रहे कि किसने क्या किया — पूरी जानकारी हेतु “Activity & Audit” विषय देखें।',
       ],
     },
   },
@@ -426,13 +443,17 @@ const SECTIONS = [
     en: {
       title: 'Changing the language',
       body: [
-        'Click the language button (EN / हिं) at the top-right of any screen and the entire app instantly switches between English and Hindi — menus, buttons, labels and tables. Your choice is remembered the next time you open the software, so language is never a barrier. Separately, each document you download can be in English or Hindi, chosen from the pop-up at download time.',
+        'Click the language button (EN / हिं) at the top-right of any screen and the entire app instantly switches between English and Hindi — menus, buttons, labels and tables. Your choice is remembered the next time you open the software, so language is never a barrier.',
+        'The translation is applied to the interface text only; your actual data — names, GSTINs, document numbers, dates and amounts — always stays exactly as you typed it, because that is the official record. A few technical tags (like a GSTIN field or a branch code) are deliberately left untranslated so they never get garbled.',
+        'Separately from the screen language, each document you download can be produced in English or Hindi, chosen from a small pop-up at download time. The Hindi PDFs use a proper Devanagari font so the text renders cleanly, which is the normal format for Indian bilingual paperwork.',
       ],
     },
     hi: {
       title: 'भाषा बदलना',
       body: [
-        'किसी भी स्क्रीन के ऊपर-दाईं ओर भाषा बटन (EN / हिं) पर क्लिक करें और पूरा ऐप तुरंत अंग्रेज़ी–हिंदी में बदल जाता है — मेनू, बटन, लेबल और तालिकाएँ। अगली बार सॉफ़्टवेयर खोलने पर आपकी पसंद याद रहती है, इसलिए भाषा कभी बाधा नहीं बनती। अलग से, हर डाउनलोड किया दस्तावेज़ अंग्रेज़ी या हिंदी में हो सकता है, जो डाउनलोड के समय पॉपअप से चुना जाता है।',
+        'किसी भी स्क्रीन के ऊपर-दाईं ओर भाषा बटन (EN / हिं) पर क्लिक करें और पूरा ऐप तुरंत अंग्रेज़ी–हिंदी में बदल जाता है — मेनू, बटन, लेबल और तालिकाएँ। अगली बार सॉफ़्टवेयर खोलने पर आपकी पसंद याद रहती है, इसलिए भाषा कभी बाधा नहीं बनती।',
+        'अनुवाद केवल इंटरफ़ेस पाठ पर लागू होता है; आपका वास्तविक डेटा — नाम, GSTIN, दस्तावेज़ संख्या, दिनांक व राशि — हमेशा वैसा ही रहता है जैसा आपने टाइप किया, क्योंकि वही आधिकारिक रिकॉर्ड है। कुछ तकनीकी टैग (जैसे GSTIN फ़ील्ड या शाखा कोड) जानबूझकर अनूदित नहीं किए जाते ताकि वे कभी गड़बड़ न हों।',
+        'स्क्रीन भाषा से अलग, हर डाउनलोड दस्तावेज़ अंग्रेज़ी या हिंदी में बनाया जा सकता है, जो डाउनलोड के समय एक छोटे पॉपअप से चुना जाता है। हिंदी PDF उचित देवनागरी फ़ॉन्ट उपयोग करती हैं ताकि पाठ साफ़ दिखे — भारतीय द्विभाषी कागज़ात का सामान्य प्रारूप।',
       ],
     },
   },
@@ -453,6 +474,148 @@ const SECTIONS = [
       ],
     },
   },
+  {
+    id: 'search', icon: Search,
+    en: {
+      title: 'Finding anything fast — search & saved views',
+      body: [
+        'The search box at the top of every screen is a universal finder: type an invoice number, an IRN, an e-way-bill number, a GSTIN, or a customer or vendor name, and it jumps you straight to the matching record wherever it lives. It is the quickest way to pull up a document when someone calls to ask about it.',
+        'Inside the big lists (e-Invoices, payments, vendors and so on) there is a second search-and-filter bar that narrows the list itself — by text, status, date range or archived state. These are ideal for month-end work where you want, say, all draft e-invoices for one office, or every payment to one vendor in a quarter.',
+        'On the GST screens you can save a filter you use often as a named “Saved View”, then re-apply it in one click next time instead of setting the filters again. Small habit, big time-saver when the same review repeats every month.',
+      ],
+    },
+    hi: {
+      title: 'कुछ भी तेज़ी से ढूँढें — खोज व सहेजे दृश्य',
+      body: [
+        'हर स्क्रीन के ऊपर खोज बॉक्स एक सार्वभौमिक फाइंडर है: इनवॉइस संख्या, IRN, e-way-bill संख्या, GSTIN, या ग्राहक/विक्रेता नाम टाइप करें — यह आपको सीधे मिलते रिकॉर्ड पर ले जाता है, चाहे वह कहीं भी हो। जब कोई फ़ोन कर किसी दस्तावेज़ के बारे में पूछे, तो यह सबसे तेज़ तरीका है।',
+        'बड़ी सूचियों (e-Invoice, भुगतान, विक्रेता आदि) में एक दूसरी खोज-व-फ़िल्टर पट्टी होती है जो सूची को ही सीमित करती है — पाठ, स्थिति, दिनांक-दायरा या संग्रह-स्थिति से। महीने के अंत के काम हेतु आदर्श, जैसे एक कार्यालय के सभी ड्राफ्ट e-invoice, या किसी तिमाही में एक विक्रेता को सभी भुगतान।',
+        'GST स्क्रीन पर अक्सर उपयोग होने वाले फ़िल्टर को नामित “Saved View” के रूप में सहेजें, फिर अगली बार एक क्लिक में पुनः लागू करें। छोटी आदत, पर हर महीने वही समीक्षा दोहराते समय बड़ी समय-बचत।',
+      ],
+    },
+  },
+  {
+    id: 'projects', icon: FolderKanban,
+    en: {
+      title: 'Projects & Sites — job costing',
+      body: [
+        'Projects and Sites let you group all the money and documents for one job in one place. Create a project (for example a rooftop plant for a particular client) and, under it, the individual sites where work happens. Every payment, receipt or invoice can then be tagged to a project and a site.',
+        'Because each transaction carries its project tag, the software shows each project’s spend, billing and profitability without any manual adding-up. Open a project to see its full activity, and use the project filters in Reports to compare one job against another.',
+        'Tagging the project and site on every entry is the single most useful habit for accurate job costing — it takes a moment when you record a payment and saves hours of untangling later.',
+      ],
+    },
+    hi: {
+      title: 'परियोजनाएँ व साइटें — जॉब कॉस्टिंग',
+      body: [
+        'परियोजनाएँ और साइटें एक काम के सारे पैसे व दस्तावेज़ एक जगह समूहित करने देती हैं। एक परियोजना बनाएँ (उदा. किसी ग्राहक हेतु रूफ़टॉप प्लांट) और उसके अंतर्गत वे साइटें जहाँ काम होता है। फिर हर भुगतान, प्राप्ति या इनवॉइस को परियोजना व साइट से टैग किया जा सकता है।',
+        'चूँकि हर लेनदेन अपना परियोजना-टैग रखता है, सॉफ़्टवेयर बिना किसी मैनुअल जोड़ के हर परियोजना का खर्च, बिलिंग और लाभप्रदता दिखाता है। परियोजना खोलकर उसकी पूरी गतिविधि देखें, और एक काम की दूसरे से तुलना हेतु Reports में परियोजना फ़िल्टर उपयोग करें।',
+        'हर प्रविष्टि पर परियोजना व साइट टैग करना सटीक जॉब-कॉस्टिंग की सबसे उपयोगी आदत है — भुगतान दर्ज करते समय एक पल लगता है और बाद में घंटों की उलझन बचाता है।',
+      ],
+    },
+  },
+  {
+    id: 'employees', icon: UserRound,
+    en: {
+      title: 'Employees ledger',
+      body: [
+        'The Employees module is a simple ledger for staff-related money — salaries, advances, reimbursements and the like. Add each employee once, then record payments to them just as you record vendor payments, choosing “employee” as the payee.',
+        'Open any employee to see their running ledger — everything paid, with dates and a balance — exportable to Excel or PDF. Keeping staff payments separate from vendor purchases keeps your books clean and easy to explain to anyone reviewing them.',
+      ],
+    },
+    hi: {
+      title: 'कर्मचारी बही',
+      body: [
+        'कर्मचारी मॉड्यूल स्टाफ़-संबंधी धन — वेतन, अग्रिम, प्रतिपूर्ति आदि — हेतु एक सरल बही है। हर कर्मचारी को एक बार जोड़ें, फिर उन्हें भुगतान वैसे ही दर्ज करें जैसे विक्रेता भुगतान, payee में “employee” चुनकर।',
+        'किसी भी कर्मचारी को खोलकर उसकी चालू बही देखें — सब भुगतान, दिनांक व शेष सहित — Excel या PDF में निर्यात-योग्य। स्टाफ़ भुगतान को विक्रेता खरीद से अलग रखने से आपकी बही साफ़ और समझाने में आसान रहती है।',
+      ],
+    },
+  },
+  {
+    id: 'documents', icon: FileText,
+    en: {
+      title: 'Document vault & attachments',
+      body: [
+        'Almost every record can carry attachments — a vendor bill on a payment, a proof on a receipt, the bank statement on a reconciliation, supporting papers on an invoice or challan. Use the attach control on the record, choose the file (PDF, image or spreadsheet), and it is stored safely on this computer with a checksum and a version number.',
+        'Storing the proof with the transaction means an auditor or a colleague can open one record and see both the entry and its evidence, without hunting through folders. These files stay on this computer (they are not pushed to the cloud), so even large scans never slow the software down.',
+      ],
+    },
+    hi: {
+      title: 'दस्तावेज़ वॉल्ट व संलग्नक',
+      body: [
+        'लगभग हर रिकॉर्ड संलग्नक रख सकता है — भुगतान पर विक्रेता बिल, प्राप्ति पर प्रूफ़, समाधान पर बैंक स्टेटमेंट, इनवॉइस या चालान पर सहायक कागज़। रिकॉर्ड पर attach नियंत्रण उपयोग करें, फ़ाइल चुनें (PDF, छवि या स्प्रेडशीट), और वह इसी कंप्यूटर पर checksum व संस्करण संख्या सहित सुरक्षित रखी जाती है।',
+        'प्रूफ़ को लेनदेन के साथ रखने का अर्थ है कि ऑडिटर या सहकर्मी एक रिकॉर्ड खोलकर प्रविष्टि और उसका प्रमाण दोनों देख सकता है, बिना फ़ोल्डर ढूँढे। ये फ़ाइलें इसी कंप्यूटर पर रहती हैं (क्लाउड पर नहीं भेजी जातीं), इसलिए बड़े स्कैन भी सॉफ़्टवेयर को धीमा नहीं करते।',
+      ],
+    },
+  },
+  {
+    id: 'gst_dashboard', icon: FileCheck2,
+    en: {
+      title: 'The GST Dashboard',
+      body: [
+        'The GST Dashboard is your compliance control-room. The top tiles count e-invoices by stage — total, draft, pending, IRN-generated, cancelled and failed validation — and show the taxable value and GST value across all valid bills (cancelled invoices are deliberately excluded so the totals can be trusted).',
+        'Below that are e-way-bill counts (active, expiring soon, expired, cancelled), charts of monthly value and the state-wise spread of your sales, and strips that surface any open alerts or reconciliation differences. Click any tile to jump straight into the matching list. The green “Live” badge confirms you are working with real data, filed offline through the portal.',
+      ],
+    },
+    hi: {
+      title: 'GST डैशबोर्ड',
+      body: [
+        'GST डैशबोर्ड आपका अनुपालन कंट्रोल-रूम है। ऊपर की टाइलें e-invoice को चरण अनुसार गिनती हैं — कुल, ड्राफ्ट, लंबित, IRN-जनित, रद्द और विफल सत्यापन — और सभी वैध बिलों का कर-योग्य मूल्य व GST मूल्य दिखाती हैं (रद्द इनवॉइस जानबूझकर बाहर ताकि कुल भरोसेमंद रहें)।',
+        'उसके नीचे e-way-bill गिनती (सक्रिय, जल्द समाप्त, समाप्त, रद्द), मासिक मूल्य व राज्य-वार बिक्री-फैलाव के चार्ट, और किसी खुले अलर्ट या समाधान-अंतर को सामने लाने वाली पट्टियाँ होती हैं। किसी भी टाइल पर क्लिक कर सीधे मिलती सूची में जाएँ। हरा “Live” बैज पुष्टि करता है कि आप असली डेटा के साथ काम कर रहे हैं, जो पोर्टल से ऑफ़लाइन फाइल होता है।',
+      ],
+    },
+  },
+  {
+    id: 'gst_recon', icon: GitCompareArrows,
+    en: {
+      title: 'GST Reconciliation',
+      body: [
+        'GST Reconciliation checks your own records for consistency before you rely on them — that every invoice with an IRN has matching values, that nothing is left half-finished, and that totals line up. It lists any differences it finds as items you can open and fix one by one.',
+        'Think of it as a pre-filing health check: clearing the reconciliation list means your e-invoices and e-way bills are internally consistent and ready, so month-end — and any later comparison against the government’s records — goes smoothly with no surprises.',
+      ],
+    },
+    hi: {
+      title: 'GST समाधान',
+      body: [
+        'GST समाधान आपके अपने रिकॉर्ड की संगति जाँचता है — कि IRN वाले हर इनवॉइस के मूल्य मेल खाते हों, कुछ अधूरा न छूटे, और कुल मिलें। जो भी अंतर मिलते हैं उन्हें वस्तुओं के रूप में सूचीबद्ध करता है जिन्हें आप एक-एक खोलकर ठीक कर सकते हैं।',
+        'इसे फाइलिंग-पूर्व स्वास्थ्य जाँच समझें: समाधान सूची साफ़ होने का अर्थ है आपके e-invoice और e-way bill आंतरिक रूप से संगत व तैयार हैं, ताकि महीने का अंत — और बाद में सरकारी रिकॉर्ड से कोई तुलना — बिना किसी आश्चर्य के सहज रहे।',
+      ],
+    },
+  },
+  {
+    id: 'activity', icon: Activity,
+    en: {
+      title: 'Activity & Audit trail',
+      body: [
+        'Every action in the software — create, edit, submit, cancel, archive, delete, restore and sign-in — is written permanently to the audit trail, recording who did it, what changed and the exact time. Open “Activity & Audit” to see this timeline for the whole system, or open any single record to see just its own history.',
+        'Nothing can be quietly altered: even deletions are recorded (and are recoverable). This gives you a complete, tamper-evident account of how every figure came to be — invaluable for trust, for handing over to someone else, and for any internal or statutory audit.',
+      ],
+    },
+    hi: {
+      title: 'गतिविधि व ऑडिट ट्रेल',
+      body: [
+        'सॉफ़्टवेयर की हर क्रिया — बनाना, बदलना, जमा करना, रद्द करना, संग्रह, विलोपन, पुनर्स्थापना और साइन-इन — स्थायी रूप से ऑडिट ट्रेल में दर्ज होती है, जिसमें किसने किया, क्या बदला और सटीक समय रहता है। पूरे सिस्टम की यह समयरेखा देखने हेतु “Activity & Audit” खोलें, या किसी एक रिकॉर्ड को खोलकर केवल उसका इतिहास देखें।',
+        'कुछ भी चुपचाप नहीं बदला जा सकता: विलोपन भी दर्ज होते हैं (और पुनर्प्राप्त किए जा सकते हैं)। यह आपको पूर्ण, छेड़छाड़-स्पष्ट विवरण देता है कि हर आँकड़ा कैसे बना — भरोसे, किसी और को सौंपने, और किसी आंतरिक या वैधानिक ऑडिट हेतु अमूल्य।',
+      ],
+    },
+  },
+  {
+    id: 'glossary', icon: BookOpen,
+    en: {
+      title: 'Glossary of GST & accounting terms',
+      body: [
+        'IRN (Invoice Reference Number) — the unique 64-character number the government issues when an e-invoice is registered; it is what makes the invoice legally valid. Ack No (Acknowledgement Number) — the receipt number the portal returns alongside the IRN, printed on the signed copy. Signed QR — the official QR code on a registered invoice that anyone can scan to verify it.',
+        'HSN / SAC — the GST classification code for goods (HSN) or services (SAC), which sets the tax treatment. CGST + SGST versus IGST — tax on a sale within your own state splits into Central and State GST, while a sale to another state uses a single Integrated GST instead. Place of Supply — the state where a supply is treated as made, which is what decides that split.',
+        'e-Way Bill (EWB) — the transport document required to move goods above a threshold value. Rule 55 Delivery Challan — a document used to move goods when you are not yet raising a tax invoice (job work, branch transfer, repair, testing, exhibition and so on). Reverse Charge — cases where the buyer, not the seller, pays the GST. B2B / B2C — a supply to another registered business (eligible for an IRN) versus to an end consumer.',
+      ],
+    },
+    hi: {
+      title: 'GST व लेखांकन शब्दावली',
+      body: [
+        'IRN (इनवॉइस संदर्भ संख्या) — e-invoice पंजीकृत होने पर सरकार द्वारा जारी अद्वितीय 64-अक्षर संख्या; यही इनवॉइस को कानूनी रूप से वैध बनाती है। Ack No (पावती संख्या) — IRN के साथ पोर्टल द्वारा लौटाई रसीद संख्या, हस्ताक्षरित प्रति पर छपी। Signed QR — पंजीकृत इनवॉइस पर आधिकारिक QR कोड जिसे कोई भी स्कैन कर सत्यापित कर सकता है।',
+        'HSN / SAC — माल (HSN) या सेवा (SAC) हेतु GST वर्गीकरण कोड, जो कर-व्यवहार तय करता है। CGST + SGST बनाम IGST — अपने राज्य के भीतर बिक्री पर कर केंद्रीय व राज्य GST में बँटता है, जबकि दूसरे राज्य की बिक्री पर एकल एकीकृत GST लगता है। सप्लाई का स्थान (Place of Supply) — वह राज्य जहाँ सप्लाई मानी जाती है, जो यही बँटवारा तय करता है।',
+        'e-Way Bill (EWB) — एक सीमा-मूल्य से अधिक माल की आवाजाही हेतु आवश्यक परिवहन दस्तावेज़। नियम 55 डिलीवरी चालान — माल भेजने का दस्तावेज़ जब आप अभी टैक्स इनवॉइस नहीं बना रहे (जॉब वर्क, शाखा स्थानांतरण, मरम्मत, परीक्षण, प्रदर्शनी आदि)। रिवर्स चार्ज — वे स्थितियाँ जहाँ GST विक्रेता नहीं, खरीदार भरता है। B2B / B2C — किसी अन्य पंजीकृत व्यवसाय को सप्लाई (IRN योग्य) बनाम अंतिम उपभोक्ता को।',
+      ],
+    },
+  },
 ];
 
 const CATS = [
@@ -465,13 +628,15 @@ const CATS = [
   { id: 'help', en: 'Troubleshooting', hi: 'समस्या-समाधान' },
 ];
 const CAT_OF = {
-  start: 'start', operate: 'start', dashboard: 'start', language: 'start',
+  start: 'start', operate: 'start', dashboard: 'start', language: 'start', search: 'start',
   payments: 'workflows', receipts: 'workflows', reconciliation: 'workflows', vendors: 'workflows',
   clients: 'workflows', invoices: 'workflows', challans: 'workflows', quotes: 'workflows', reports: 'workflows',
+  projects: 'workflows', employees: 'workflows', documents: 'workflows',
   gst: 'gst', gst_flow: 'gst', gst_manage: 'gst', gst_letterhead: 'gst', portal_login: 'gst',
+  gst_dashboard: 'gst', gst_recon: 'gst',
   roles: 'access', passwords: 'access',
-  backup: 'safety', recovery: 'safety', protection: 'safety', security: 'safety',
-  troubleshooting: 'help',
+  backup: 'safety', recovery: 'safety', protection: 'safety', security: 'safety', activity: 'safety',
+  troubleshooting: 'help', glossary: 'help',
 };
 
 export default function Help() {
