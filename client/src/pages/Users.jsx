@@ -9,7 +9,7 @@ import { PageHeader, Card, Loading, Table, Badge, Field } from '../components/ui
 import { fmtDateTime } from '../lib/format.js';
 
 const roleTone = { editor: 'purple', admin: 'blue', operator: 'slate', auditor: 'amber' };
-const roleLabel = { editor: 'Editor', admin: 'Admin', operator: 'Operator', auditor: 'Auditor' };
+const roleLabel = { editor: 'Editor', admin: 'Admin', operator: 'System Manager', auditor: 'Auditor' };
 
 export default function Users() {
   const toast = useToast();

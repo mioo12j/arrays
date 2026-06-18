@@ -42,7 +42,7 @@ async function main() {
   // Login IDs (stored in the email/identifier column).
   await upsertUser('Editor', 'editor', 'editor@123', 'editor', true); // super-admin, protected
   await upsertUser('System Admin', 'admin', 'admin@123', 'admin');
-  await upsertUser('Operations Clerk', 'operator', 'operator@123', 'operator');
+  await upsertUser('System Manager', 'operator', 'operator@123', 'operator');
   // Remove any older demo accounts so only the configured IDs remain.
   await pool.query(
     `DELETE FROM users WHERE email IN ('admin@ingenieria.com','operator@ingenieria.com','admin@solarepc.com','operator@solarepc.com')`

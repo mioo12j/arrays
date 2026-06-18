@@ -33,11 +33,11 @@ export const NAV = [
     { to: '/gst/reconciliation', label: 'GST Reconciliation', icon: GitCompareArrows },
   ]},
   { section: 'Setup', items: [
-    { to: '/gst/branches', label: 'Offices & GSTINs', icon: BranchIcon },
-    { to: '/gst/number-series', label: 'Number Series', icon: Hash },
-    { to: '/gst/branding', label: 'Branding', icon: Palette },
-    { to: '/gst/import', label: 'Import Wizard', icon: UploadCloud },
-    { to: '/status', label: 'System Status', icon: HeartPulse },
+    { to: '/gst/branches', label: 'Offices & GSTINs', icon: BranchIcon, adminOnly: true },
+    { to: '/gst/number-series', label: 'Number Series', icon: Hash, adminOnly: true },
+    { to: '/gst/branding', label: 'Branding', icon: Palette, adminOnly: true },
+    { to: '/gst/import', label: 'Import Wizard', icon: UploadCloud, adminOnly: true },
+    { to: '/status', label: 'System Status', icon: HeartPulse, adminOnly: true },
   ]},
   { section: 'Intelligence', items: [
     { to: '/reports', label: 'Reports', icon: BarChart3 },
@@ -45,7 +45,7 @@ export const NAV = [
     { to: '/gst/backup', label: 'Backup & Restore', icon: DatabaseBackup },
     { to: '/recovery', label: 'Recovery Center', icon: LifeBuoy },
     { to: '/users', label: 'User Management', icon: UserCog, adminOnly: true },
-    { to: '/system', label: 'Data & Admin', icon: DatabaseZap },
+    { to: '/system', label: 'Data & Admin', icon: DatabaseZap, adminOnly: true },
   ]},
   { section: 'Company', items: [
     { to: '/help', label: 'Help & Guide', icon: HelpCircle },

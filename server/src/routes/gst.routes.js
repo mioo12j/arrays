@@ -5,9 +5,11 @@
 // ============================================================================
 
 import { Router } from 'express';
+import bcrypt from 'bcryptjs';
 import { withTransaction, pool } from '../config/db.js';
 import { asyncHandler, ApiError } from '../utils/asyncHandler.js';
 import { authenticate } from '../middleware/auth.js';
+import { editorOnly } from '../middleware/rbac.js';
 import { requirePerm, PERMS, permsForRole } from '../services/gst/permissions.js';
 import * as einv from '../services/gst/einvoiceService.js';
 import * as ewb from '../services/gst/ewbService.js';
@@ -616,6 +618,41 @@ router.post('/recovery/restore', requirePerm(PERMS.ADMIN), asyncHandler(async (r
   });
   await recordAccess(req, { action: 'restore', objectType: type, objectId: id });
   res.json({ ok: true, restored: out });
+}));
+
+// ── GST portal login (offline-filing convenience) ───────────────────────────
+// Stored server-side in app_config so it's shared across devices. Only the
+// editor may set it. Anyone signed in can read the URL + user id; the password
+// is revealed only after the requester re-enters their OWN login password.
+const PORTAL_KINDS = ['einvoice', 'ewb'];
+router.get('/portal-config', requirePerm(PERMS.VIEW), asyncHandler(async (_req, res) => {
+  const out = {};
+  for (const k of PORTAL_KINDS) {
+    const c = (await config.get(pool, `portal_${k}`, {})) || {};
+    out[k] = { url: c.url || '', userId: c.userId || '', hasPassword: !!c.password };
+  }
+  res.json(out);
+}));
+router.put('/portal-config', editorOnly, asyncHandler(async (req, res) => {
+  const { kind, url, userId, password } = req.body || {};
+  if (!PORTAL_KINDS.includes(kind)) throw new ApiError(400, 'Unknown portal');
+  const cur = (await config.get(pool, `portal_${kind}`, {})) || {};
+  const next = {
+    url: (url ?? cur.url) || '',
+    userId: (userId ?? cur.userId) || '',
+    password: password === undefined ? (cur.password || '') : password,   // blank clears it
+  };
+  await tx((db) => config.set(db, `portal_${kind}`, next, uid(req)));
+  res.json({ ok: true, url: next.url, userId: next.userId, hasPassword: !!next.password });
+}));
+router.post('/portal-config/reveal', asyncHandler(async (req, res) => {
+  const { kind, password } = req.body || {};
+  if (!PORTAL_KINDS.includes(kind)) throw new ApiError(400, 'Unknown portal');
+  const { rows } = await pool.query('SELECT password_hash FROM users WHERE id=$1', [uid(req)]);
+  const ok = rows[0] && (await bcrypt.compare(password || '', rows[0].password_hash));
+  if (!ok) throw new ApiError(401, 'Password is incorrect');
+  const c = (await config.get(pool, `portal_${kind}`, {})) || {};
+  res.json({ password: c.password || '' });
 }));
 
 export default router;

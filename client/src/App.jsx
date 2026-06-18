@@ -110,8 +110,8 @@ export default function App() {
         {/* Consolidated hubs (merge several screens into one tabbed page) */}
         <Route path="/reports" element={<ReportsHub />} />
         <Route path="/activity" element={<ActivityHub />} />
-        <Route path="/status" element={<SystemStatusHub />} />
-        <Route path="/system" element={<DataAdminHub />} />
+        <Route path="/status" element={<Protected adminOnly><SystemStatusHub /></Protected>} />
+        <Route path="/system" element={<Protected adminOnly><DataAdminHub /></Protected>} />
         {/* Standalone routes kept so existing deep links still work */}
         <Route path="/reports/financial" element={<Reports />} />
         <Route path="/audit" element={<Protected adminOnly><Audit /></Protected>} />

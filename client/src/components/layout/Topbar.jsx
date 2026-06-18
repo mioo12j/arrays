@@ -9,6 +9,8 @@ import { api } from '../../api/client.js';
 import { useToast } from '../ui/Toast.jsx';
 import GlobalSearch from '../gst/GlobalSearch.jsx';
 
+const ROLE_LABEL = { editor: 'Editor', admin: 'Admin', operator: 'System Manager', auditor: 'Auditor' };
+
 function useDarkMode() {
   const [dark, setDark] = useState(() => localStorage.getItem('epc_theme') === 'dark');
   useEffect(() => {
@@ -118,8 +120,8 @@ export default function Topbar({ onMenu }) {
             </div>
             <div className="hidden text-left leading-tight sm:block">
               <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{user?.name}</p>
-              <p className="flex items-center gap-1 text-[11px] capitalize text-slate-400">
-                {user?.role === 'admin' && <ShieldCheck size={11} />} {user?.role}
+              <p className="flex items-center gap-1 text-[11px] text-slate-400">
+                {user?.role === 'admin' && <ShieldCheck size={11} />} {ROLE_LABEL[user?.role] || user?.role}
               </p>
             </div>
             <ChevronDown size={16} className="text-slate-400" />

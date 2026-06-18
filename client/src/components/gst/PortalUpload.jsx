@@ -1,21 +1,20 @@
 // ============================================================================
 //  "Upload on the GST portal" helper.
 //
-//  The offline filing flow is: download the Portal JSON here → open the govt
-//  IRP/e-Way-Bill portal → log in → bulk-upload the JSON → copy the IRN back.
-//  This button opens a popup with a one-click link to the portal, the saved
-//  login id (and, if the operator chooses, password) and step-by-step upload
-//  instructions.
+//  Offline filing flow: download the Portal JSON here → open the govt IRP /
+//  e-Way-Bill portal → log in → bulk-upload the JSON → bring the IRN/Ack/QR
+//  back. This popup gives a one-click portal link, the saved login, and the
+//  upload steps.
 //
-//  SECURITY: the login details are stored ONLY in this browser's localStorage
-//  on this device — never sent to any server and never hardcoded. Storing the
-//  password here is optional; the safer option is to let the browser's own
-//  password manager fill it on the portal.
+//  The login is stored SERVER-SIDE (shared across devices) and only the EDITOR
+//  may set it. Anyone signed in can read the URL + user id; the password is
+//  revealed only after the requester re-enters their OWN login password.
 // ============================================================================
 import { useState } from 'react';
 import { ExternalLink, Upload, Copy, Eye, EyeOff, Save, Check, Lock, Loader2 } from 'lucide-react';
 import Modal from '../ui/Modal.jsx';
 import { useToast } from '../ui/Toast.jsx';
+import { useAuth } from '../../context/AuthContext.jsx';
 import { api, apiError } from '../../api/client.js';
 
 const DEFAULTS = {
@@ -29,7 +28,7 @@ const STEPS = {
     'Open the portal below and log in.',
     'Go to E-Invoice → Bulk Upload (or Bulk IRN Generation).',
     'Choose the downloaded .json file and submit — the portal returns the IRN, Ack No and a signed PDF per invoice.',
-    'Back here, open the invoice → Enter IRN → “Scan signed PDF / QR image” and upload the signed PDF to auto-fill the IRN & Ack No.',
+    'Back here, open the invoice → Enter IRN → “Scan signed PDF / QR image” and upload the signed PDF to auto-fill the IRN, Ack No and QR.',
   ],
   ewb: [
     'Download the e-Way Bill JSON for the document.',
@@ -40,42 +39,60 @@ const STEPS = {
   ],
 };
 
-const load = (kind) => {
-  try { return JSON.parse(localStorage.getItem(`epc_portal_${kind}`)) || {}; } catch { return {}; }
-};
-
 export default function PortalUploadButton({ kind = 'einvoice', compact = false }) {
   const toast = useToast();
+  const { isEditor } = useAuth();
   const [open, setOpen] = useState(false);
-  const cfg = { ...DEFAULTS[kind], ...load(kind) };
-  const [url, setUrl] = useState(cfg.url || DEFAULTS[kind].url);
-  const [userId, setUserId] = useState(cfg.userId || '');
-  const [pwd, setPwd] = useState(cfg.password || '');
-  const [showPwd, setShowPwd] = useState(false);
+
+  const [url, setUrl] = useState(DEFAULTS[kind].url);
+  const [userId, setUserId] = useState('');
+  const [hasPassword, setHasPassword] = useState(false);
+
   const [edit, setEdit] = useState(false);
+  const [editPwd, setEditPwd] = useState('');     // new password while editing (blank = keep current)
+  const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState('');
-  // Revealing the saved password requires re-entering the app login password.
-  const [unlocked, setUnlocked] = useState(false);
+
+  // Reveal flow — re-enter the app login password to see the stored portal password.
+  const [revealed, setRevealed] = useState('');
+  const [showPwd, setShowPwd] = useState(false);
   const [asking, setAsking] = useState(false);
   const [loginPwd, setLoginPwd] = useState('');
   const [verifying, setVerifying] = useState(false);
+
+  const loadCfg = async () => {
+    try {
+      const { data } = await api.get('/gst/portal-config');
+      const c = data?.[kind] || {};
+      setUrl(c.url || DEFAULTS[kind].url);
+      setUserId(c.userId || '');
+      setHasPassword(!!c.hasPassword);
+    } catch { /* not permitted / offline — keep defaults */ }
+  };
+  const openModal = () => { setOpen(true); loadCfg(); };
+  const close = () => { setOpen(false); setEdit(false); setEditPwd(''); setRevealed(''); setShowPwd(false); setAsking(false); setLoginPwd(''); };
+
+  const save = async () => {
+    setSaving(true);
+    try {
+      const body = { kind, url: url.trim(), userId: userId.trim() };
+      if (editPwd) body.password = editPwd;        // only changes the password when typed
+      const { data } = await api.put('/gst/portal-config', body);
+      setHasPassword(!!data.hasPassword); setEdit(false); setEditPwd(''); setRevealed('');
+      toast.success('Portal login saved');
+    } catch (e) { toast.error(apiError(e)); } finally { setSaving(false); }
+  };
 
   const unlock = async () => {
     if (!loginPwd) return;
     setVerifying(true);
     try {
-      await api.post('/auth/verify-password', { password: loginPwd });
-      setUnlocked(true); setShowPwd(true); setAsking(false); setLoginPwd('');
+      const { data } = await api.post('/gst/portal-config/reveal', { kind, password: loginPwd });
+      setRevealed(data.password || ''); setShowPwd(true); setAsking(false); setLoginPwd('');
     } catch (e) { toast.error(apiError(e) || 'Password incorrect'); }
     finally { setVerifying(false); }
   };
-  const close = () => { setOpen(false); setEdit(false); setUnlocked(false); setAsking(false); setShowPwd(false); setLoginPwd(''); };
 
-  const save = () => {
-    localStorage.setItem(`epc_portal_${kind}`, JSON.stringify({ url: url.trim(), userId: userId.trim(), password: pwd }));
-    setEdit(false);
-    toast.success('Saved on this device');
-  };
   const copy = async (text, what) => {
     if (!text) return;
     try { await navigator.clipboard.writeText(text); setCopied(what); setTimeout(() => setCopied(''), 1500); } catch { /* clipboard blocked */ }
@@ -84,7 +101,7 @@ export default function PortalUploadButton({ kind = 'einvoice', compact = false 
 
   return (
     <>
-      <button className={`btn-ghost ${compact ? '!py-1.5 !text-sm' : ''}`} onClick={() => setOpen(true)} title="Open the GST portal to upload the JSON">
+      <button className={`btn-ghost ${compact ? '!py-1.5 !text-sm' : ''}`} onClick={openModal} title="Open the GST portal to upload the JSON">
         <Upload size={compact ? 15 : 16} /> Upload on GST Portal
       </button>
 
@@ -95,9 +112,9 @@ export default function PortalUploadButton({ kind = 'einvoice', compact = false 
           <div className="rounded-xl border border-slate-200 p-3 dark:border-slate-700">
             <div className="mb-2 flex items-center justify-between">
               <p className="font-semibold text-slate-700 dark:text-slate-200">Portal login</p>
-              <button className="btn-ghost !py-1 !text-xs" onClick={() => (edit ? save() : setEdit(true))}>
-                {edit ? <><Save size={13} /> Save</> : 'Edit'}
-              </button>
+              {isEditor && <button className="btn-ghost !py-1 !text-xs" disabled={saving} onClick={() => (edit ? save() : setEdit(true))}>
+                {saving ? <Loader2 className="animate-spin" size={13} /> : edit ? <><Save size={13} /> Save</> : 'Edit'}
+              </button>}
             </div>
 
             {edit ? (
@@ -108,10 +125,10 @@ export default function PortalUploadButton({ kind = 'einvoice', compact = false 
                 <label className="text-xs text-slate-500">User ID
                   <input className="input mt-1 !py-1.5 text-sm" value={userId} onChange={(e) => setUserId(e.target.value)} placeholder="GST portal user id" />
                 </label>
-                <label className="text-xs text-slate-500">Password (optional)
-                  <input className="input mt-1 !py-1.5 text-sm" type="password" value={pwd} onChange={(e) => setPwd(e.target.value)} placeholder="Leave blank to use your browser's password manager" />
+                <label className="text-xs text-slate-500">{hasPassword ? 'New password (leave blank to keep current)' : 'Password'}
+                  <input className="input mt-1 !py-1.5 text-sm" type="password" value={editPwd} onChange={(e) => setEditPwd(e.target.value)} placeholder={hasPassword ? '•••••••• (unchanged)' : 'GST portal password'} />
                 </label>
-                <p className="text-[11px] leading-snug text-amber-600 dark:text-amber-400">Stored only in this browser, on this device. For better security, leave the password blank and let your browser fill it on the portal.</p>
+                <p className="text-[11px] leading-snug text-slate-400">Stored on the server and shared across devices. Only the editor can change it.</p>
               </div>
             ) : (
               <div className="space-y-1.5">
@@ -119,8 +136,8 @@ export default function PortalUploadButton({ kind = 'einvoice', compact = false 
                 <div className="flex items-start justify-between gap-2">
                   <span className="pt-1 text-slate-500">Password</span>
                   <div className="text-right">
-                    {!pwd ? <span className="font-mono text-slate-400">Not saved</span>
-                      : !unlocked ? (asking ? (
+                    {!hasPassword ? <span className="font-mono text-slate-400">{isEditor ? 'Not saved — click Edit' : 'Not set'}</span>
+                      : !revealed ? (asking ? (
                         <div className="flex items-center gap-1.5">
                           <input className="input !w-40 !py-1 text-xs" type="password" autoFocus placeholder="Your login password"
                             value={loginPwd} onChange={(e) => setLoginPwd(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && unlock()} />
@@ -130,14 +147,14 @@ export default function PortalUploadButton({ kind = 'einvoice', compact = false 
                         <button className="flex items-center gap-1 text-xs text-slate-400 hover:text-brand-600" onClick={() => setAsking(true)}><Lock size={13} /> Reveal (enter login password)</button>
                       )) : (
                         <span className="flex items-center justify-end gap-2">
-                          <span className="font-mono text-slate-800 dark:text-slate-100">{showPwd ? pwd : '•'.repeat(Math.min(pwd.length, 12))}</span>
+                          <span className="font-mono text-slate-800 dark:text-slate-100">{showPwd ? revealed : '•'.repeat(Math.min(revealed.length, 12))}</span>
                           <button className="text-slate-400 hover:text-slate-600" onClick={() => setShowPwd((s) => !s)}>{showPwd ? <EyeOff size={14} /> : <Eye size={14} />}</button>
-                          <button className="text-slate-400 hover:text-brand-600" onClick={() => copy(pwd, 'pwd')}>{copied === 'pwd' ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}</button>
+                          <button className="text-slate-400 hover:text-brand-600" onClick={() => copy(revealed, 'pwd')}>{copied === 'pwd' ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}</button>
                         </span>
                       )}
                   </div>
                 </div>
-                {!userId && !pwd && <p className="text-xs text-slate-400">Click “Edit” to save your portal login for quick reference.</p>}
+                {!isEditor && !userId && !hasPassword && <p className="text-xs text-slate-400">The portal login hasn’t been set up yet — ask the editor to add it.</p>}
               </div>
             )}
           </div>
