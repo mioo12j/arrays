@@ -16,6 +16,7 @@ export default function Users() {
   const { isEditor } = useAuth();
   const { data: users, loading, refetch } = useFetch('/users');
   const [open, setOpen] = useState(false);
+  const [resetUser, setResetUser] = useState(null);
 
   const toggleActive = async (u) => {
     try {
@@ -46,8 +47,9 @@ export default function Users() {
                 <td className="td"><Badge tone={roleTone[u.role] || 'slate'}>{roleLabel[u.role] || u.role}</Badge></td>
                 <td className="td"><Badge tone={u.is_active ? 'green' : 'red'}>{u.is_active ? 'Active' : 'Disabled'}</Badge></td>
                 <td className="td text-slate-500">{u.last_login_at ? fmtDateTime(u.last_login_at) : 'Never'}</td>
-                <td className="td text-right">
-                  <button className="btn-ghost !py-1 !px-2.5 !text-xs" onClick={() => toggleActive(u)}>
+                <td className="td text-right whitespace-nowrap">
+                  <button className="btn-ghost !py-1 !px-2.5 !text-xs" onClick={() => setResetUser(u)}>Reset password</button>
+                  <button className="btn-ghost !ml-1 !py-1 !px-2.5 !text-xs" onClick={() => toggleActive(u)}>
                     {u.is_active ? 'Disable' : 'Enable'}
                   </button>
                 </td>
@@ -58,7 +60,36 @@ export default function Users() {
       </Card>
 
       {open && <UserModal isEditor={isEditor} onClose={() => setOpen(false)} onSaved={() => { setOpen(false); refetch(); toast.success('User created'); }} />}
+      {resetUser && <ResetPwModal user={resetUser} onClose={() => setResetUser(null)} />}
     </div>
+  );
+}
+
+// Admin/editor sets a new password for any user.
+function ResetPwModal({ user, onClose }) {
+  const toast = useToast();
+  const [pw, setPw] = useState('');
+  const [cf, setCf] = useState('');
+  const [saving, setSaving] = useState(false);
+  const submit = async () => {
+    if (pw.length < 6) return toast.error('Password must be at least 6 characters');
+    if (pw !== cf) return toast.error('Passwords do not match');
+    setSaving(true);
+    try { await api.post(`/users/${user.id}/reset-password`, { newPassword: pw }); toast.success(`Password reset for ${user.name}`); onClose(); }
+    catch (e) { toast.error(apiError(e)); } finally { setSaving(false); }
+  };
+  return (
+    <Modal open onClose={onClose} title={`Reset password — ${user.name}`}
+      footer={<>
+        <button className="btn-ghost" onClick={onClose}>Cancel</button>
+        <button className="btn-primary" disabled={saving} onClick={submit}>{saving ? <Loader2 className="animate-spin" size={16} /> : 'Set Password'}</button>
+      </>}>
+      <div className="space-y-3">
+        <p className="text-sm text-slate-500">Set a new login password for <b>{user.name}</b> ({user.email}). They can change it themselves later from their account menu.</p>
+        <Field label="New password" required hint="Minimum 6 characters"><input className="input" type="password" value={pw} onChange={(e) => setPw(e.target.value)} /></Field>
+        <Field label="Confirm password" required><input className="input" type="password" value={cf} onChange={(e) => setCf(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && submit()} /></Field>
+      </div>
+    </Modal>
   );
 }
 

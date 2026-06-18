@@ -76,4 +76,21 @@ router.patch(
   })
 );
 
+// POST /api/users/:id/reset-password — an admin/editor sets a new password for
+// any user. The protected super-admin can only be reset by an editor.
+router.post(
+  '/:id/reset-password',
+  asyncHandler(async (req, res) => {
+    const { newPassword } = req.body || {};
+    if (!newPassword || newPassword.length < 6) throw new ApiError(400, 'New password must be at least 6 characters');
+    const { rows: target } = await query('SELECT id, is_protected FROM users WHERE id=$1', [req.params.id]);
+    if (!target[0]) throw new ApiError(404, 'User not found');
+    if (target[0].is_protected && !isEditor(req)) throw new ApiError(403, 'This account is protected — only an editor can reset its password');
+    const hash = await bcrypt.hash(newPassword, 10);
+    await query('UPDATE users SET password_hash=$1 WHERE id=$2', [hash, req.params.id]);
+    await audit(req, { action: 'update', entity: 'users', entityId: req.params.id, changes: { password: 'reset' } });
+    res.json({ ok: true });
+  })
+);
+
 export default router;

@@ -52,7 +52,7 @@ export default function GstDashboard() {
       <PageHeader
         title="GST Compliance Dashboard"
         subtitle={`e-Invoice (IRP) and e-Way Bill compliance${activeBranch ? ` — ${activeBranch.code} ${activeBranch.name}` : ' — all branches'}.`}
-        actions={<div className="flex items-center gap-2"><PortalUploadButton kind="einvoice" compact /><span className={`rounded-full px-3 py-1 text-xs font-semibold ${data.mode === 'live' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>{data.mode === 'live' ? '● LIVE' : '● Simulation Mode'}</span></div>}
+        actions={<div className="flex items-center gap-2"><PortalUploadButton kind="einvoice" compact /><span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700" title="Offline filing — JSON is uploaded on the government portal">● Live</span></div>}
       />
 
       {/* Control-room strip: alerts + reconciliation */}

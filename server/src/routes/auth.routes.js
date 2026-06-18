@@ -67,4 +67,18 @@ router.post(
   })
 );
 
+// POST /api/auth/verify-password — confirm the signed-in user's own login
+// password (used to gate revealing stored secrets, e.g. the portal password).
+router.post(
+  '/verify-password',
+  authenticate,
+  asyncHandler(async (req, res) => {
+    const { password } = req.body || {};
+    const { rows } = await query('SELECT password_hash FROM users WHERE id=$1', [req.user.id]);
+    const ok = rows[0] && (await bcrypt.compare(password || '', rows[0].password_hash));
+    if (!ok) throw new ApiError(401, 'Password is incorrect');
+    res.json({ ok: true });
+  })
+);
+
 export default router;

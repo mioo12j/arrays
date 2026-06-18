@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { Menu, Moon, Sun, LogOut, ChevronDown, ShieldCheck, UserCircle2, Languages, Building, Search, X, DatabaseBackup, Loader2, AlertTriangle, CloudUpload } from 'lucide-react';
+import { Menu, Moon, Sun, LogOut, ChevronDown, ShieldCheck, UserCircle2, Languages, Building, Search, X, DatabaseBackup, Loader2, AlertTriangle, CloudUpload, KeyRound } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useI18n } from '../../context/I18nContext.jsx';
 import { useBranch } from '../../context/BranchContext.jsx';
@@ -28,6 +28,7 @@ export default function Topbar({ onMenu }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileSearch, setMobileSearch] = useState(false);
   const [logoutAsk, setLogoutAsk] = useState(false);
+  const [pwOpen, setPwOpen] = useState(false);
   const [backing, setBacking] = useState(false);
   const { dirty } = useUnsaved();
   const toast = useToast();
@@ -144,6 +145,10 @@ export default function Topbar({ onMenu }) {
                 className="flex w-full items-center gap-2 border-t border-slate-100 px-4 py-2.5 text-sm font-medium text-slate-500 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800">
                 <ShieldCheck size={16} /> Backup &amp; Restore
               </Link>
+              <button onClick={() => { setMenuOpen(false); setPwOpen(true); }}
+                className="flex w-full items-center gap-2 border-t border-slate-100 px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-800">
+                <KeyRound size={16} /> Change Password
+              </button>
               <button
                 onClick={() => { setMenuOpen(false); setLogoutAsk(true); }}
                 className="flex w-full items-center gap-2 border-t border-slate-100 px-4 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-50 dark:border-slate-800 dark:hover:bg-red-900/20"
@@ -179,6 +184,8 @@ export default function Topbar({ onMenu }) {
         </div>
       )}
 
+      {pwOpen && <ChangePasswordModal onClose={() => setPwOpen(false)} />}
+
       {mobileSearch && (
         <div className="absolute inset-x-0 top-0 z-30 flex h-16 items-center gap-2 border-b border-slate-200 bg-white px-4 dark:border-slate-800 dark:bg-slate-900 sm:hidden">
           <div className="flex-1"><GlobalSearch /></div>
@@ -188,5 +195,39 @@ export default function Topbar({ onMenu }) {
         </div>
       )}
     </header>
+  );
+}
+
+// Self-service password change — current password + new password.
+function ChangePasswordModal({ onClose }) {
+  const toast = useToast();
+  const [cur, setCur] = useState('');
+  const [nw, setNw] = useState('');
+  const [cf, setCf] = useState('');
+  const [saving, setSaving] = useState(false);
+  const submit = async () => {
+    if (nw.length < 6) return toast.error('New password must be at least 6 characters');
+    if (nw !== cf) return toast.error('New passwords do not match');
+    setSaving(true);
+    try { await api.post('/auth/change-password', { currentPassword: cur, newPassword: nw }); toast.success('Password changed'); onClose(); }
+    catch (e) { toast.error(e?.response?.data?.error || 'Could not change password'); }
+    finally { setSaving(false); }
+  };
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4" onClick={onClose}>
+      <div className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-5 shadow-xl dark:border-slate-700 dark:bg-slate-900" onClick={(e) => e.stopPropagation()}>
+        <h3 className="flex items-center gap-2 text-base font-semibold text-slate-900 dark:text-white"><KeyRound size={18} /> Change Password</h3>
+        <p className="mt-1 text-sm text-slate-500">Enter your current password, then choose a new one.</p>
+        <div className="mt-4 space-y-2">
+          <input className="input" type="password" placeholder="Current password" value={cur} onChange={(e) => setCur(e.target.value)} />
+          <input className="input" type="password" placeholder="New password (min 6 characters)" value={nw} onChange={(e) => setNw(e.target.value)} />
+          <input className="input" type="password" placeholder="Confirm new password" value={cf} onChange={(e) => setCf(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && submit()} />
+        </div>
+        <div className="mt-4 flex gap-2">
+          <button className="btn-ghost flex-1 justify-center" onClick={onClose}>Cancel</button>
+          <button className="btn-primary flex-1 justify-center" disabled={saving} onClick={submit}>{saving ? <Loader2 className="animate-spin" size={16} /> : 'Update'}</button>
+        </div>
+      </div>
+    </div>
   );
 }

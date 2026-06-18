@@ -41,7 +41,7 @@ export default function GstCompliance() {
       <PageHeader
         title="GST Compliance Workspace"
         subtitle="e-Invoices and E-Way Bills are managed as separate compliance objects, side by side."
-        actions={<span className={`rounded-full px-3 py-1 text-xs font-semibold ${mode === 'live' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>{mode === 'live' ? '● LIVE' : '● Simulation'}</span>}
+        actions={<span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700" title="Offline filing — JSON is uploaded on the government portal">● Live</span>}
       />
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <EInvoicePanel can={can} master={master} />

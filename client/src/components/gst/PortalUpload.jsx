@@ -13,9 +13,10 @@
 //  password manager fill it on the portal.
 // ============================================================================
 import { useState } from 'react';
-import { ExternalLink, Upload, Copy, Eye, EyeOff, Save, Check } from 'lucide-react';
+import { ExternalLink, Upload, Copy, Eye, EyeOff, Save, Check, Lock, Loader2 } from 'lucide-react';
 import Modal from '../ui/Modal.jsx';
 import { useToast } from '../ui/Toast.jsx';
+import { api, apiError } from '../../api/client.js';
 
 const DEFAULTS = {
   einvoice: { url: 'https://einvoice1.gst.gov.in/', label: 'e-Invoice (IRP) portal' },
@@ -53,6 +54,22 @@ export default function PortalUploadButton({ kind = 'einvoice', compact = false 
   const [showPwd, setShowPwd] = useState(false);
   const [edit, setEdit] = useState(false);
   const [copied, setCopied] = useState('');
+  // Revealing the saved password requires re-entering the app login password.
+  const [unlocked, setUnlocked] = useState(false);
+  const [asking, setAsking] = useState(false);
+  const [loginPwd, setLoginPwd] = useState('');
+  const [verifying, setVerifying] = useState(false);
+
+  const unlock = async () => {
+    if (!loginPwd) return;
+    setVerifying(true);
+    try {
+      await api.post('/auth/verify-password', { password: loginPwd });
+      setUnlocked(true); setShowPwd(true); setAsking(false); setLoginPwd('');
+    } catch (e) { toast.error(apiError(e) || 'Password incorrect'); }
+    finally { setVerifying(false); }
+  };
+  const close = () => { setOpen(false); setEdit(false); setUnlocked(false); setAsking(false); setShowPwd(false); setLoginPwd(''); };
 
   const save = () => {
     localStorage.setItem(`epc_portal_${kind}`, JSON.stringify({ url: url.trim(), userId: userId.trim(), password: pwd }));
@@ -71,7 +88,7 @@ export default function PortalUploadButton({ kind = 'einvoice', compact = false 
         <Upload size={compact ? 15 : 16} /> Upload on GST Portal
       </button>
 
-      <Modal open={open} onClose={() => setOpen(false)} title={`Upload on the ${DEFAULTS[kind].label}`} size="md"
+      <Modal open={open} onClose={close} title={`Upload on the ${DEFAULTS[kind].label}`} size="md"
         footer={<button className="btn-primary" onClick={openPortal}><ExternalLink size={16} /> Open portal</button>}>
         <div className="space-y-4 text-sm">
           {/* Login details */}
@@ -99,9 +116,27 @@ export default function PortalUploadButton({ kind = 'einvoice', compact = false 
             ) : (
               <div className="space-y-1.5">
                 <Row label="User ID" value={userId || '—'} onCopy={userId ? () => copy(userId, 'id') : null} copied={copied === 'id'} />
-                <Row label="Password" copied={copied === 'pwd'} onCopy={pwd ? () => copy(pwd, 'pwd') : null}
-                  value={pwd ? (showPwd ? pwd : '•'.repeat(Math.min(pwd.length, 12))) : 'Not saved'}
-                  extra={pwd ? <button className="text-slate-400 hover:text-slate-600" onClick={() => setShowPwd((s) => !s)}>{showPwd ? <EyeOff size={14} /> : <Eye size={14} />}</button> : null} />
+                <div className="flex items-start justify-between gap-2">
+                  <span className="pt-1 text-slate-500">Password</span>
+                  <div className="text-right">
+                    {!pwd ? <span className="font-mono text-slate-400">Not saved</span>
+                      : !unlocked ? (asking ? (
+                        <div className="flex items-center gap-1.5">
+                          <input className="input !w-40 !py-1 text-xs" type="password" autoFocus placeholder="Your login password"
+                            value={loginPwd} onChange={(e) => setLoginPwd(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && unlock()} />
+                          <button className="btn-ghost !py-1 !text-xs" disabled={verifying} onClick={unlock}>{verifying ? <Loader2 className="animate-spin" size={13} /> : 'Unlock'}</button>
+                        </div>
+                      ) : (
+                        <button className="flex items-center gap-1 text-xs text-slate-400 hover:text-brand-600" onClick={() => setAsking(true)}><Lock size={13} /> Reveal (enter login password)</button>
+                      )) : (
+                        <span className="flex items-center justify-end gap-2">
+                          <span className="font-mono text-slate-800 dark:text-slate-100">{showPwd ? pwd : '•'.repeat(Math.min(pwd.length, 12))}</span>
+                          <button className="text-slate-400 hover:text-slate-600" onClick={() => setShowPwd((s) => !s)}>{showPwd ? <EyeOff size={14} /> : <Eye size={14} />}</button>
+                          <button className="text-slate-400 hover:text-brand-600" onClick={() => copy(pwd, 'pwd')}>{copied === 'pwd' ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}</button>
+                        </span>
+                      )}
+                  </div>
+                </div>
                 {!userId && !pwd && <p className="text-xs text-slate-400">Click “Edit” to save your portal login for quick reference.</p>}
               </div>
             )}

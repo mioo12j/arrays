@@ -203,7 +203,7 @@ const SECTIONS = [
       title: 'GST Compliance — e-Invoice & e-Way Bill',
       body: [
         'Open “GST Compliance” to prepare e-Invoices and e-Way Bills — they are separate legal documents and sit side by side. Build an e-Invoice with the buyer, items and values; the software validates every field locally and flags problems before anything is submitted. An e-Way Bill carries the transport details (vehicle, transporter, distance) for moving goods.',
-        'When you have your three GSTINs (Greater Noida, Bihar and Delhi) you switch between them from the branch selector at the top, and each office numbers its own documents. The connection to the government portal is ready and modular: today it runs in a safe simulation so you can practise the full flow, and when your live GST credentials arrive it switches to real IRN generation without any rebuild.',
+        'When you have your three GSTINs (Greater Noida, Bihar and Delhi) you switch between them from the branch selector at the top, and each office numbers its own documents. Because a live GST API is not provided to you, filing is done offline: the software builds the e-Invoice (or e-Way Bill) JSON, you click “Upload on GST Portal”, log in and bulk-upload the file, and the portal returns the IRN, Ack number and signed PDF. Open the document here, choose “Enter IRN” and upload that signed PDF — the IRN, Ack number and QR are read automatically and the finished, branded document is produced.',
       ],
     },
     hi: {

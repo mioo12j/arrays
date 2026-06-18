@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Eye, AlertTriangle, ShieldCheck, Wrench } from 'lucide-react';
+import { Eye, ShieldCheck, Wrench } from 'lucide-react';
 import Sidebar from './Sidebar.jsx';
 import Topbar from './Topbar.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
@@ -25,8 +25,8 @@ export default function Layout() {
     <div className="flex h-full flex-col">
       {/* #6 Environment safety banner — always visible, app-wide */}
       {perms?.mode && (
-        <div className={`flex items-center justify-center gap-2 px-4 py-1.5 text-xs font-bold tracking-wide text-white ${live ? 'bg-red-600' : 'bg-amber-500'}`} data-no-i18n>
-          {live ? <><ShieldCheck size={14} /> LIVE GST ENVIRONMENT — REAL COMPLIANCE DATA</> : <><AlertTriangle size={14} /> SIMULATION MODE — NO REAL GOVERNMENT SUBMISSION</>}
+        <div className={`flex items-center justify-center gap-2 px-4 py-1.5 text-xs font-bold tracking-wide text-white ${live ? 'bg-red-600' : 'bg-emerald-600'}`} data-no-i18n>
+          {live ? <><ShieldCheck size={14} /> LIVE GST ENVIRONMENT — REAL COMPLIANCE DATA</> : <><ShieldCheck size={14} /> LIVE — OFFLINE FILING · UPLOAD THE JSON ON THE GOVERNMENT PORTAL</>}
         </div>
       )}
       <div className="flex min-h-0 flex-1">
