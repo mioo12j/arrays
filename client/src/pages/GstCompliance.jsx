@@ -160,6 +160,27 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
     });
   };
   const buyerPin = pincodeToState(form.buyer.pincode);
+  const sellerPin = pincodeToState(form.seller.pincode);
+  // Pick a configured office → fill the whole supplier block (trade name = legal name).
+  const setSellerFromOffice = (e) => {
+    const b = (branches || []).find((x) => String(x.id) === e.target.value);
+    if (!b) return;
+    setForm((f) => ({
+      ...f,
+      seller: {
+        ...f.seller,
+        gstin: b.gstin || '',
+        legalName: b.legal_name || b.name || '',
+        tradeName: b.legal_name || b.name || '',
+        addr1: b.addr1 || '',
+        location: b.place || '',
+        pincode: b.pincode || '',
+        stateCode: b.state_code || (b.gstin ? String(b.gstin).slice(0, 2) : ''),
+        email: b.email || f.seller.email,
+        phone: b.phone || f.seller.phone,
+      },
+    }));
+  };
 
   const save = async (override) => {
     // GST schema requires Location/Pincode/State on both parties — block blanks
@@ -207,11 +228,19 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
       </Section>
 
       <Section title="Seller / Supplier (SellerDtls — where the supply is from)">
+        <Field label="Pick supplier office" hint="Auto-fills the supplier block — or type the fields manually below.">
+          <select className="input" value="" onChange={setSellerFromOffice}>
+            <option value="">Choose an office… (or fill manually)</option>
+            {(branches || []).filter((b) => b.gstin).map((b) => <option key={b.id} value={b.id}>{b.code} — {b.name} ({b.gstin})</option>)}
+          </select>
+        </Field>
         <Field label="GSTIN"><input className="input" value={form.seller.gstin} onChange={set('seller.gstin')} /></Field>
         <Field label="Legal Name"><input className="input" value={form.seller.legalName} onChange={set('seller.legalName')} /></Field>
         <Field label="Address"><input className="input" value={form.seller.addr1} onChange={set('seller.addr1')} /></Field>
         <Field label="Location"><input className="input" value={form.seller.location} onChange={set('seller.location')} /></Field>
-        <Field label="Pincode"><input className="input" value={form.seller.pincode} onChange={setPin('seller')} /></Field>
+        <Field label="Pincode" hint={sellerPin ? `${sellerPin.stateCode} — ${sellerPin.state} (auto)` : 'Type 6 digits → state auto-fills'}>
+          <input className="input" value={form.seller.pincode} onChange={setPin('seller')} inputMode="numeric" maxLength={6} />
+        </Field>
         <Field label="State Code"><input className="input" value={form.seller.stateCode} onChange={set('seller.stateCode')} /></Field>
       </Section>
 
