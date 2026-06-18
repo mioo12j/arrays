@@ -19,8 +19,8 @@ import { useToast } from '../ui/Toast.jsx';
 import { api, apiError } from '../../api/client.js';
 
 const DEFAULTS = {
-  einvoice: { url: 'https://einvoice1.gst.gov.in/', label: 'e-Invoice (IRP) portal' },
-  ewb: { url: 'https://ewaybillgst.gov.in/', label: 'e-Way Bill portal' },
+  einvoice: { url: 'https://einvoice2.gst.gov.in/', label: 'e-Invoice (IRP) portal' },
+  ewb: { url: 'https://einvoice2.gst.gov.in/', label: 'e-Way Bill portal' },
 };
 
 const STEPS = {
@@ -103,7 +103,7 @@ export default function PortalUploadButton({ kind = 'einvoice', compact = false 
             {edit ? (
               <div className="grid gap-2">
                 <label className="text-xs text-slate-500">Portal URL
-                  <input className="input mt-1 !py-1.5 text-sm" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://einvoice1.gst.gov.in/" />
+                  <input className="input mt-1 !py-1.5 text-sm" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://einvoice2.gst.gov.in/" />
                 </label>
                 <label className="text-xs text-slate-500">User ID
                   <input className="input mt-1 !py-1.5 text-sm" value={userId} onChange={(e) => setUserId(e.target.value)} placeholder="GST portal user id" />
