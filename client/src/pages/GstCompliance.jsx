@@ -4,6 +4,7 @@ import {
   CheckCircle2, XCircle, Ban, Copy, Archive, Trash2, RefreshCw, Link2, AlertTriangle, ScanLine,
 } from 'lucide-react';
 import { pincodeToState } from '../lib/pincode.js';
+import PortalUploadButton from '../components/gst/PortalUpload.jsx';
 import { api, apiError } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
 import { useBranch } from '../context/BranchContext.jsx';
@@ -66,6 +67,7 @@ function EInvoicePanel({ can, master }) {
         <h3 className="flex items-center gap-2 font-semibold text-slate-800 dark:text-slate-100"><FileText size={18} className="text-brand-600" /> e-Invoices</h3>
         <div className="flex gap-2">
           {can('gst.export') && <button className="btn-ghost !py-1.5 !text-sm" onClick={() => gstDownload('/gst/einvoices/portal-json', 'einvoice_bulk_portal.json')} title="Download all pending e-invoices as one JSON to upload on the GST portal"><FileJson size={15} /> Bulk JSON</button>}
+          <PortalUploadButton kind="einvoice" compact />
           {can('gst.create') && <button className="btn-primary !py-1.5 !text-sm" onClick={() => setForm({})}><Plus size={15} /> New e-Invoice</button>}
         </div>
       </div>
@@ -329,12 +331,17 @@ function EInvoiceDetail({ id, can, master, onClose, onChanged, onEdit }) {
     setScanning(true);
     try {
       // Lazy-load the (heavy) pdfjs-based scanner only when actually scanning.
-      const { scanQrFromFile, parseSignedQr } = await import('../lib/qrScan.js');
-      const qr = await scanQrFromFile(file);
-      if (!qr) { toast.error('No QR found — upload the signed PDF, or a clear screenshot of the QR.'); return; }
-      const p = parseSignedQr(qr);
-      setIrnForm((f) => ({ irn: p.irn || f?.irn || '', ackNo: p.ackNo || f?.ackNo || '', ackDate: p.ackDate || f?.ackDate || '', signedQr: qr }));
-      toast.success(p.irn ? `QR read — IRN ${p.irn.slice(0, 8)}… auto-filled` : 'QR read — review & save');
+      const { scanEInvoiceFromFile } = await import('../lib/qrScan.js');
+      const p = await scanEInvoiceFromFile(file);
+      if (!p.qr && !p.irn) { toast.error('No QR/IRN found — upload the signed PDF, or a clear screenshot of the QR.'); return; }
+      setIrnForm((f) => ({
+        irn: p.irn || f?.irn || '',
+        ackNo: p.ackNo || f?.ackNo || '',
+        ackDate: p.ackDate || f?.ackDate || '',
+        signedQr: p.signedQr || f?.signedQr || '',
+      }));
+      const got = [p.irn && 'IRN', p.ackNo && 'Ack No', p.ackDate && 'Ack date'].filter(Boolean).join(', ');
+      toast.success(got ? `Read ${got} — review & save` : 'QR read — review & save');
     } catch (e) { toast.error(`Could not read the QR: ${e.message || 'unknown error'}`); }
     finally { setScanning(false); }
   };
@@ -496,7 +503,10 @@ function EwbPanel({ can, master }) {
     <Card className="!p-0">
       <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3 dark:border-slate-800">
         <h3 className="flex items-center gap-2 font-semibold text-slate-800 dark:text-slate-100"><Truck size={18} className="text-purple-600" /> E-Way Bills</h3>
-        {can('gst.create') && <button className="btn-primary !py-1.5 !text-sm" onClick={() => setForm({})}><Plus size={15} /> New E-Way Bill</button>}
+        <div className="flex gap-2">
+          <PortalUploadButton kind="ewb" compact />
+          {can('gst.create') && <button className="btn-primary !py-1.5 !text-sm" onClick={() => setForm({})}><Plus size={15} /> New E-Way Bill</button>}
+        </div>
       </div>
       <div className="flex flex-wrap gap-2 border-b border-slate-100 px-4 py-2 dark:border-slate-800">
         <div className="relative min-w-[180px] flex-1">

@@ -10,6 +10,7 @@ import {
 import { useFetch } from '../lib/useFetch.js';
 import { useBranch } from '../context/BranchContext.jsx';
 import { Card, PageHeader, Loading } from '../components/ui/index.jsx';
+import PortalUploadButton from '../components/gst/PortalUpload.jsx';
 import { inr } from '../lib/gst.js';
 
 const COLORS = ['#1d4ed8', '#16a34a', '#f59e0b', '#dc2626', '#7c3aed', '#0891b2', '#db2777', '#65a30d'];
@@ -51,7 +52,7 @@ export default function GstDashboard() {
       <PageHeader
         title="GST Compliance Dashboard"
         subtitle={`e-Invoice (IRP) and e-Way Bill compliance${activeBranch ? ` — ${activeBranch.code} ${activeBranch.name}` : ' — all branches'}.`}
-        actions={<span className={`rounded-full px-3 py-1 text-xs font-semibold ${data.mode === 'live' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>{data.mode === 'live' ? '● LIVE' : '● Simulation Mode'}</span>}
+        actions={<div className="flex items-center gap-2"><PortalUploadButton kind="einvoice" compact /><span className={`rounded-full px-3 py-1 text-xs font-semibold ${data.mode === 'live' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>{data.mode === 'live' ? '● LIVE' : '● Simulation Mode'}</span></div>}
       />
 
       {/* Control-room strip: alerts + reconciliation */}
