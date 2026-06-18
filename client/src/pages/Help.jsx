@@ -215,6 +215,130 @@ const SECTIONS = [
     },
   },
   {
+    id: 'gst_flow', icon: ReceiptText,
+    en: {
+      title: 'e-Invoicing step by step (the offline filing loop)',
+      body: [
+        'Because the government does not give you a live software (API) connection, the whole e-invoicing cycle runs as an offline loop: you build the document here, hand a JSON file to the government portal, and bring the result back. Nothing is faked — the IRN you end up with is a real, government-issued number. There are five clear stages.',
+        'Stage 1 — Build. Open “GST Compliance”, click New e-Invoice and fill the supply type (B2B for businesses, B2C for consumers, SEZ/Export where relevant), the document type, number and date, the seller (supplier) office, the buyer, and the line items with HSN/SAC, quantity, rate and GST percent. As you type, the software checks every field against the official GST schema and totals CGST+SGST (same state) or IGST (different state) live. Save it as a draft — you can reopen and edit a draft at any time.',
+        'Stage 2 — Export the JSON. When the draft is ready, either open it and click “Portal JSON” to download just that one, or click “Bulk JSON” on the e-Invoice list to download every pending invoice as a single file (kept under 2 MB, which the portal accepts). This file is in the exact NIC format the portal expects.',
+        'Stage 3 — Upload on the portal. Click “Upload on GST Portal”. A window opens with a one-click link to the portal, your saved login and the exact steps. Log in, go to E-Invoice → Bulk Upload (or Bulk IRN Generation), choose the JSON file and submit. The portal processes it and returns, for each invoice, an IRN (the 64-character Invoice Reference Number), an Acknowledgement number and date, and a digitally-signed PDF that carries the official QR code.',
+        'Stage 4 — Bring the result back. Open the same invoice here, click “Enter IRN”, then “Scan signed PDF / QR image” and choose the signed PDF the portal gave you. The software reads the QR and the page text and fills in the IRN, the Acknowledgement number and date, and the signed QR — automatically, without you typing anything. (The QR alone does not contain the Ack number, which is why it also reads the PDF text.) Review and Save.',
+        'Stage 5 — Print & use. The invoice is now finalised: it shows the green “Live” status with the real IRN and QR, and you can download its fully-branded PDF in English or Hindi. An e-Way Bill follows the same loop on the same portal — build it with the transport details, export the JSON, upload it, and record the EWB number that comes back.',
+      ],
+    },
+    hi: {
+      title: 'e-Invoicing चरण-दर-चरण (ऑफ़लाइन फाइलिंग चक्र)',
+      body: [
+        'चूँकि सरकार आपको लाइव सॉफ़्टवेयर (API) कनेक्शन नहीं देती, पूरा e-invoicing चक्र ऑफ़लाइन लूप में चलता है: आप दस्तावेज़ यहाँ बनाते हैं, एक JSON फ़ाइल सरकारी पोर्टल को देते हैं, और परिणाम वापस लाते हैं। कुछ भी नकली नहीं — जो IRN मिलता है वह असली, सरकार-जारी संख्या है। इसके पाँच स्पष्ट चरण हैं।',
+        'चरण 1 — बनाएँ। “GST Compliance” खोलें, New e-Invoice पर क्लिक करें और भरें: सप्लाई प्रकार (व्यवसायों हेतु B2B, उपभोक्ताओं हेतु B2C, जहाँ लागू हो SEZ/Export), दस्तावेज़ का प्रकार, संख्या व दिनांक, विक्रेता (सप्लायर) कार्यालय, खरीदार, और मदें HSN/SAC, मात्रा, दर व GST% सहित। टाइप करते समय सॉफ़्टवेयर हर फ़ील्ड को आधिकारिक GST स्कीमा से जाँचता है और CGST+SGST (एक ही राज्य) या IGST (दूसरे राज्य) का कुल लाइव दिखाता है। इसे ड्राफ्ट के रूप में सहेजें — ड्राफ्ट को कभी भी दोबारा खोलकर बदला जा सकता है।',
+        'चरण 2 — JSON निर्यात करें। ड्राफ्ट तैयार होने पर, या तो उसे खोलकर “Portal JSON” से केवल वही डाउनलोड करें, या e-Invoice सूची पर “Bulk JSON” से सभी लंबित इनवॉइस एक ही फ़ाइल में डाउनलोड करें (2 MB से कम, जिसे पोर्टल स्वीकार करता है)। यह फ़ाइल ठीक उसी NIC प्रारूप में होती है जो पोर्टल अपेक्षा करता है।',
+        'चरण 3 — पोर्टल पर अपलोड करें। “Upload on GST Portal” पर क्लिक करें। एक विंडो खुलती है जिसमें पोर्टल का एक-क्लिक लिंक, आपका सहेजा लॉगिन और सटीक चरण होते हैं। लॉगिन करें, E-Invoice → Bulk Upload (या Bulk IRN Generation) पर जाएँ, JSON फ़ाइल चुनें और सबमिट करें। पोर्टल हर इनवॉइस के लिए लौटाता है — IRN (64-अक्षर का इनवॉइस संदर्भ संख्या), Acknowledgement संख्या व दिनांक, और एक डिजिटल-हस्ताक्षरित PDF जिसमें आधिकारिक QR कोड होता है।',
+        'चरण 4 — परिणाम वापस लाएँ। वही इनवॉइस यहाँ खोलें, “Enter IRN” पर क्लिक करें, फिर “Scan signed PDF / QR image” चुनें और पोर्टल द्वारा दी गई हस्ताक्षरित PDF चुनें। सॉफ़्टवेयर QR और पृष्ठ-पाठ पढ़कर IRN, Acknowledgement संख्या व दिनांक, और हस्ताक्षरित QR — अपने आप भर देता है, बिना आपके कुछ टाइप किए। (केवल QR में Ack संख्या नहीं होती, इसीलिए यह PDF का पाठ भी पढ़ता है।) समीक्षा करें और सहेजें।',
+        'चरण 5 — प्रिंट व उपयोग। अब इनवॉइस अंतिम है: यह असली IRN व QR के साथ हरा “Live” दिखाता है, और आप इसकी पूरी तरह ब्रांडेड PDF अंग्रेज़ी या हिंदी में डाउनलोड कर सकते हैं। e-Way Bill उसी पोर्टल पर इसी लूप का अनुसरण करता है — परिवहन विवरण के साथ बनाएँ, JSON निर्यात करें, अपलोड करें, और लौटी EWB संख्या दर्ज करें।',
+      ],
+    },
+  },
+  {
+    id: 'gst_manage', icon: FileText,
+    en: {
+      title: 'Editing, cancelling, archiving & deleting e-Invoices',
+      body: [
+        'A draft (anything before an IRN) is fully editable — open it and click Edit to change anything, or click Delete to remove it. Deleted drafts are not gone forever: they move to the Recovery Center and can be restored. You can also filter the e-Invoice list by Active, Archived or All using the dropdown at the top of the list.',
+        'Once an IRN is generated the document is locked: the crunch data — the parties, items, values and the IRN itself — can no longer be changed, because it is now a registered government record. The one thing you can still edit is the cosmetic letterhead/office address printed at the top of the PDF; change it and click “Update & download PDF” to reprint, without ever touching the registered data.',
+        'To cancel a registered e-Invoice you cancel it on the government portal within the time the law allows, then record the cancellation here with “Cancel” and a reason; the document is marked Cancelled and a watermark appears on its PDF. Cancelled invoices are automatically excluded from the taxable-value and GST-value totals on the GST Dashboard, so your figures always reflect only valid bills.',
+        'Archiving simply tidies the list — an archived document is hidden from the default “Active” view but is never deleted. Switch the filter to “Archived” to see them, open one and click “Unarchive” to bring it back. Use Archive for old or superseded documents you want out of the way but kept on record.',
+      ],
+    },
+    hi: {
+      title: 'e-Invoice का संपादन, रद्दीकरण, संग्रह व विलोपन',
+      body: [
+        'ड्राफ्ट (IRN से पहले कुछ भी) पूरी तरह संपादन-योग्य है — उसे खोलकर Edit से कुछ भी बदलें, या Delete से हटाएँ। हटाए गए ड्राफ्ट हमेशा के लिए नहीं जाते: वे Recovery Center में चले जाते हैं और पुनर्स्थापित किए जा सकते हैं। सूची के ऊपर ड्रॉपडाउन से e-Invoice सूची को Active, Archived या All से फ़िल्टर भी कर सकते हैं।',
+        'IRN बनने के बाद दस्तावेज़ लॉक हो जाता है: मुख्य डेटा — पक्ष, मदें, मूल्य और स्वयं IRN — अब नहीं बदला जा सकता, क्योंकि यह अब पंजीकृत सरकारी रिकॉर्ड है। केवल एक चीज़ अब भी बदली जा सकती है — PDF के ऊपर छपने वाला कॉस्मेटिक लेटरहेड/कार्यालय पता; उसे बदलें और पंजीकृत डेटा को छुए बिना पुनः प्रिंट हेतु “Update & download PDF” पर क्लिक करें।',
+        'पंजीकृत e-Invoice रद्द करने के लिए, कानून द्वारा अनुमत समय में उसे सरकारी पोर्टल पर रद्द करें, फिर यहाँ “Cancel” और एक कारण के साथ रद्दीकरण दर्ज करें; दस्तावेज़ Cancelled चिह्नित होता है और उसकी PDF पर वॉटरमार्क आता है। रद्द इनवॉइस GST डैशबोर्ड के कर-योग्य मूल्य और GST मूल्य कुल से स्वतः बाहर रहते हैं, इसलिए आपके आँकड़े हमेशा केवल वैध बिल दर्शाते हैं।',
+        'संग्रह (Archive) केवल सूची साफ़ रखता है — संग्रहित दस्तावेज़ डिफ़ॉल्ट “Active” दृश्य से छिपा रहता है पर कभी हटता नहीं। उन्हें देखने हेतु फ़िल्टर को “Archived” करें, किसी को खोलकर “Unarchive” से वापस लाएँ। पुराने या प्रतिस्थापित दस्तावेज़ जिन्हें हटाना नहीं पर रास्ते से हटाना है, उनके लिए Archive उपयोग करें।',
+      ],
+    },
+  },
+  {
+    id: 'gst_letterhead', icon: Building2,
+    en: {
+      title: 'Supplier, buyer & the letterhead address explained',
+      body: [
+        'An e-Invoice has three different addresses, and it helps to keep them straight. The “Seller / Supplier” block is where the supply is actually made from — its GSTIN decides whether the tax is CGST+SGST (same state) or IGST (different state). Use the “Pick supplier office” dropdown and it fills the GSTIN, legal name, address, location, pincode and state code from the office you choose.',
+        'The “Letterhead / Office Address” at the very top is cosmetic only — it is what prints across the top of the PDF and is NOT part of the legal data sent to the portal. You can pick any of your offices for it, or type a different address, independently of the supplier. This is the one part you can change even after the IRN is locked.',
+        'For the buyer, type the GSTIN and legal name; when you enter the 6-digit pincode the software fills the state code and place-of-supply automatically (for example 110070 fills 07 — Delhi), and you type the street address yourself. The same pincode helper works on the supplier side too.',
+        'The PDF header shows your trade name, the chosen letterhead address, your CIN and email — the GSTIN and PAN are intentionally left out of the header because the GSTIN already appears in the supplier block just below. Your trade name is set to your full legal name (no short form), which is how the company is registered.',
+      ],
+    },
+    hi: {
+      title: 'सप्लायर, खरीदार और लेटरहेड पता — समझाया गया',
+      body: [
+        'एक e-Invoice में तीन अलग पते होते हैं, और इन्हें स्पष्ट रखना उपयोगी है। “Seller / Supplier” ब्लॉक वह है जहाँ से सप्लाई वास्तव में होती है — इसका GSTIN तय करता है कि कर CGST+SGST (एक ही राज्य) होगा या IGST (दूसरे राज्य)। “Pick supplier office” ड्रॉपडाउन उपयोग करें — यह चुने गए कार्यालय से GSTIN, कानूनी नाम, पता, स्थान, पिनकोड व राज्य कोड भर देता है।',
+        'सबसे ऊपर “Letterhead / Office Address” केवल कॉस्मेटिक है — यह PDF के ऊपर छपता है और पोर्टल को भेजे जाने वाले कानूनी डेटा का हिस्सा नहीं है। आप इसके लिए अपना कोई भी कार्यालय चुन सकते हैं, या सप्लायर से अलग कोई पता टाइप कर सकते हैं। IRN लॉक होने के बाद भी यही एक भाग आप बदल सकते हैं।',
+        'खरीदार के लिए GSTIN और कानूनी नाम टाइप करें; 6-अंकीय पिनकोड डालते ही सॉफ़्टवेयर राज्य कोड और सप्लाई-स्थान स्वतः भर देता है (उदा. 110070 → 07 — दिल्ली), और गली का पता आप स्वयं टाइप करते हैं। यही पिनकोड सहायक सप्लायर पक्ष पर भी काम करता है।',
+        'PDF हेडर आपका ट्रेड नाम, चुना लेटरहेड पता, आपका CIN और ईमेल दिखाता है — GSTIN और PAN को हेडर से जानबूझकर हटाया गया है क्योंकि GSTIN पहले से ठीक नीचे सप्लायर ब्लॉक में है। आपका ट्रेड नाम आपके पूरे कानूनी नाम पर सेट है (कोई संक्षिप्त रूप नहीं), जैसा कंपनी पंजीकृत है।',
+      ],
+    },
+  },
+  {
+    id: 'portal_login', icon: CloudUpload,
+    en: {
+      title: 'The GST portal login (set by the Editor)',
+      body: [
+        'The “Upload on GST Portal” window keeps your portal web address and login in one place for convenience, so you do not hunt for them every time. The link button opens the portal in a new browser tab. The address is einvoice2.gst.gov.in by default and can be changed.',
+        'For security, the login is stored centrally and only the Editor can set or change it. Open the window and click Edit (you will only see Edit if you are the Editor), type the portal URL, the user ID and the password, and Save. It is shared across the computers that run this software, so it is set once and everyone benefits.',
+        'Anyone signed in can see the user ID and open the portal, but the password stays hidden. To reveal it, click “Reveal (enter login password)” and type your own ARRAYS login password; once confirmed, the portal password is shown and can be copied. This means a saved password is never exposed just by opening the window — someone has to prove who they are first.',
+      ],
+    },
+    hi: {
+      title: 'GST पोर्टल लॉगिन (Editor द्वारा सेट)',
+      body: [
+        '“Upload on GST Portal” विंडो आपके पोर्टल वेब पते और लॉगिन को सुविधा हेतु एक जगह रखती है, ताकि हर बार ढूँढना न पड़े। लिंक बटन पोर्टल को नए ब्राउज़र टैब में खोलता है। पता डिफ़ॉल्ट रूप से einvoice2.gst.gov.in है और बदला जा सकता है।',
+        'सुरक्षा हेतु, लॉगिन केंद्रीय रूप से संग्रहीत है और केवल Editor इसे सेट/बदल सकता है। विंडो खोलें और Edit पर क्लिक करें (Edit केवल तभी दिखेगा जब आप Editor हों), पोर्टल URL, यूज़र ID और पासवर्ड टाइप करें, और Save करें। यह उन सभी कंप्यूटरों में साझा होता है जो यह सॉफ़्टवेयर चलाते हैं, इसलिए एक बार सेट होता है और सबको लाभ मिलता है।',
+        'कोई भी साइन-इन व्यक्ति यूज़र ID देख सकता है और पोर्टल खोल सकता है, पर पासवर्ड छिपा रहता है। उसे देखने हेतु “Reveal (enter login password)” पर क्लिक करें और अपना ARRAYS लॉगिन पासवर्ड टाइप करें; पुष्टि होते ही पोर्टल पासवर्ड दिखता है और कॉपी किया जा सकता है। यानी केवल विंडो खोलने भर से सहेजा पासवर्ड कभी उजागर नहीं होता — पहले पहचान सिद्ध करनी होती है।',
+      ],
+    },
+  },
+  {
+    id: 'roles', icon: UserCog,
+    en: {
+      title: 'Roles & access — who can do what',
+      body: [
+        'The software has four roles. The System Manager (the day-to-day operator) does all the real work: payments, receipts, invoices, e-Invoices, e-Way Bills, delivery challans, quotations, vendors, clients, reports, backups and the Recovery Center. This is the account used for everyday operations.',
+        'The configuration screens — Offices & GSTINs, Number Series, Branding, the Import Wizard, System Status and Data & Admin — are reserved for the Admin and the Editor and are hidden from the System Manager, so daily use can never accidentally change the company’s setup. The Editor is the super-admin: everything an Admin can do, plus managing protected accounts and setting the shared GST portal login.',
+        'The Admin is mainly a view-and-export role (it is the cloud-facing account and does not run the heavy local imports/OCR). The Auditor is a read-only reviewer for internal or statutory audit — it can see everything but change nothing. Whatever the role, every single action is recorded permanently in the audit trail with the time and the person’s name.',
+      ],
+    },
+    hi: {
+      title: 'भूमिकाएँ व पहुँच — कौन क्या कर सकता है',
+      body: [
+        'सॉफ़्टवेयर में चार भूमिकाएँ हैं। System Manager (रोज़ का संचालक) सारा वास्तविक काम करता है: भुगतान, प्राप्तियाँ, इनवॉइस, e-Invoice, e-Way Bill, डिलीवरी चालान, कोटेशन, विक्रेता, ग्राहक, रिपोर्ट, बैकअप और Recovery Center। यही खाता रोज़मर्रा के संचालन हेतु उपयोग होता है।',
+        'कॉन्फ़िगरेशन स्क्रीन — Offices & GSTINs, Number Series, Branding, Import Wizard, System Status और Data & Admin — Admin और Editor के लिए सुरक्षित हैं और System Manager से छिपी हैं, ताकि रोज़ के उपयोग में कंपनी की सेटअप गलती से न बदले। Editor सुपर-एडमिन है: जो Admin कर सकता है वह सब, साथ ही संरक्षित खातों का प्रबंधन और साझा GST पोर्टल लॉगिन सेट करना।',
+        'Admin मुख्यतः देखने-व-निर्यात की भूमिका है (यह क्लाउड-मुखी खाता है और भारी स्थानीय आयात/OCR नहीं चलाता)। Auditor आंतरिक या वैधानिक ऑडिट हेतु केवल-पठन समीक्षक है — सब देख सकता है, कुछ बदल नहीं सकता। भूमिका चाहे जो हो, हर एक क्रिया समय और व्यक्ति के नाम सहित स्थायी रूप से ऑडिट ट्रेल में दर्ज होती है।',
+      ],
+    },
+  },
+  {
+    id: 'passwords', icon: ShieldCheck,
+    en: {
+      title: 'Passwords — change your own, reset others',
+      body: [
+        'To change your own password, click your name at the top-right and choose “Change Password”. Enter your current password, then the new one twice. This works for every role.',
+        'The Editor and Admin can reset anybody’s password from User Management: open the page, find the person and click “Reset password”, then type a new password for them. They can sign in with it and change it themselves afterwards. The protected Editor (super-admin) account can only be reset by an Editor.',
+        'Keep your passwords private and change them from time to time. Because a few sensitive actions — such as cancelling a document, restoring a backup, or revealing the saved GST-portal password — ask you to confirm your password, having a current, memorable password keeps those steps smooth.',
+      ],
+    },
+    hi: {
+      title: 'पासवर्ड — अपना बदलें, दूसरों का रीसेट करें',
+      body: [
+        'अपना पासवर्ड बदलने हेतु ऊपर-दाईं ओर अपने नाम पर क्लिक करें और “Change Password” चुनें। अपना वर्तमान पासवर्ड डालें, फिर नया पासवर्ड दो बार। यह हर भूमिका के लिए काम करता है।',
+        'Editor और Admin किसी का भी पासवर्ड User Management से रीसेट कर सकते हैं: पृष्ठ खोलें, व्यक्ति ढूँढें और “Reset password” पर क्लिक करें, फिर उनके लिए नया पासवर्ड टाइप करें। वे उससे साइन-इन कर बाद में स्वयं बदल सकते हैं। संरक्षित Editor (सुपर-एडमिन) खाता केवल Editor द्वारा रीसेट हो सकता है।',
+        'अपने पासवर्ड निजी रखें और समय-समय पर बदलें। चूँकि कुछ संवेदनशील कार्य — जैसे दस्तावेज़ रद्द करना, बैकअप पुनर्स्थापित करना, या सहेजा GST-पोर्टल पासवर्ड देखना — आपका पासवर्ड पुष्टि माँगते हैं, एक वर्तमान, याद रहने वाला पासवर्ड इन चरणों को सहज रखता है।',
+      ],
+    },
+  },
+  {
     id: 'reports', icon: BarChart3,
     en: {
       title: 'Reports, exports & download language',
@@ -336,6 +460,7 @@ const CATS = [
   { id: 'start', en: 'Getting Started', hi: 'शुरुआत' },
   { id: 'workflows', en: 'Daily Workflows', hi: 'रोज़ के कार्य' },
   { id: 'gst', en: 'GST Compliance', hi: 'GST अनुपालन' },
+  { id: 'access', en: 'Roles & Access', hi: 'भूमिकाएँ व पहुँच' },
   { id: 'safety', en: 'Backup & Safety', hi: 'बैकअप व सुरक्षा' },
   { id: 'help', en: 'Troubleshooting', hi: 'समस्या-समाधान' },
 ];
@@ -343,7 +468,8 @@ const CAT_OF = {
   start: 'start', operate: 'start', dashboard: 'start', language: 'start',
   payments: 'workflows', receipts: 'workflows', reconciliation: 'workflows', vendors: 'workflows',
   clients: 'workflows', invoices: 'workflows', challans: 'workflows', quotes: 'workflows', reports: 'workflows',
-  gst: 'gst',
+  gst: 'gst', gst_flow: 'gst', gst_manage: 'gst', gst_letterhead: 'gst', portal_login: 'gst',
+  roles: 'access', passwords: 'access',
   backup: 'safety', recovery: 'safety', protection: 'safety', security: 'safety',
   troubleshooting: 'help',
 };
