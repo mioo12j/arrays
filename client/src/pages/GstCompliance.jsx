@@ -54,7 +54,7 @@ export default function GstCompliance() {
 function EInvoicePanel({ can, master }) {
   const toast = useToast();
   const { branchQS } = useBranch();
-  const [filters, setFilters] = useState({ search: '', status: '' });
+  const [filters, setFilters] = useState({ search: '', status: '', archived: '' });
   const qs = new URLSearchParams(Object.fromEntries(Object.entries(filters).filter(([, v]) => v))).toString() + (branchQS ? `&${branchQS}` : '');
   const { data: rows, loading, refetch } = useFetch(`/gst/einvoices?${qs}`, [qs]);
   const [form, setForm] = useState(null);   // create/edit
@@ -77,6 +77,11 @@ function EInvoicePanel({ can, master }) {
         <select className="input !py-1.5 max-w-[150px] text-sm" value={filters.status} onChange={(e) => setFilters((f) => ({ ...f, status: e.target.value }))}>
           <option value="">Any status</option>
           {EINV_STATUSES.map((s) => <option key={s} value={s}>{einvStatus(s)[1]}</option>)}
+        </select>
+        <select className="input !py-1.5 max-w-[130px] text-sm" value={filters.archived} onChange={(e) => setFilters((f) => ({ ...f, archived: e.target.value }))} title="Show archived e-invoices">
+          <option value="">Active</option>
+          <option value="true">Archived</option>
+          <option value="all">All</option>
         </select>
       </div>
       <SavedViews objectType="einvoice" filters={filters} onApply={(vf) => setFilters({ search: '', status: '', ...vf })} />
@@ -356,6 +361,13 @@ function EInvoiceDetail({ id, can, master, onClose, onChanged, onEdit }) {
       else toast.error(apiError(e));
     } finally { setBusy(''); }
   };
+  // Soft-delete a draft (no IRN) → moves to the Recovery Center; closes the drawer.
+  const doDelete = async () => {
+    if (!window.confirm(`Delete draft “${rec.docNo || 'this e-invoice'}”? It moves to the Recovery Center and can be restored later.`)) return;
+    setBusy('Delete');
+    try { await api.delete(`/gst/einvoices/${id}`); toast.success('e-Invoice deleted'); onChanged?.(); onClose(); }
+    catch (e) { toast.error(apiError(e)); } finally { setBusy(''); }
+  };
   if (loading || !rec) return <Modal open onClose={onClose} title="e-Invoice"><Loading /></Modal>;
   const [tone, label] = einvStatus(rec.status);
   const editable = ['draft', 'validated', 'needs_review', 'error'].includes(rec.status);
@@ -457,7 +469,9 @@ function EInvoiceDetail({ id, can, master, onClose, onChanged, onEdit }) {
             <button className="btn-danger !py-1.5 !text-sm" disabled={!cancelReason || !!busy} onClick={() => doCancel()}><Ban size={14} /> Cancel IRN</button>
           </div>
         )}
-        {editable && can('gst.archive') && <button className="btn-ghost !text-sm" disabled={!!busy} onClick={() => act('Archive', () => api.post(`/gst/einvoices/${id}/archive`, { archived: true }))}><Archive size={14} /> Archive</button>}
+        {!rec.isArchived && can('gst.archive') && <button className="btn-ghost !text-sm" disabled={!!busy} onClick={() => act('Archive', () => api.post(`/gst/einvoices/${id}/archive`, { archived: true }))}><Archive size={14} /> Archive</button>}
+        {rec.isArchived && can('gst.archive') && <button className="btn-ghost !text-sm" disabled={!!busy} onClick={() => act('Unarchive', () => api.post(`/gst/einvoices/${id}/archive`, { archived: false }))}><Archive size={14} /> Unarchive</button>}
+        {editable && can('gst.edit') && <button className="btn-ghost !text-sm !text-red-600 hover:!bg-red-50 dark:hover:!bg-red-900/20" disabled={!!busy} onClick={doDelete}><Trash2 size={14} /> Delete</button>}
       </div>
 
       <Attachments objectType="einvoice" objectId={id} canUpload={can('gst.create')} canDelete={can('gst.edit')} />
