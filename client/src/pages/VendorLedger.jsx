@@ -74,11 +74,11 @@ export default function VendorLedger() {
         <Card><p className="text-xs font-semibold uppercase text-slate-400">Total Paid</p><p className="mt-1 text-2xl font-bold text-slate-900 dark:text-white">{inr(summary.total_paid)}</p></Card>
         <Card><p className="text-xs font-semibold uppercase text-slate-400">Opening Balance</p><p className="mt-1 text-2xl font-bold text-slate-900 dark:text-white">{inr(vendor.opening_balance)}</p></Card>
         <Card>
-          <p className="text-xs font-semibold uppercase text-slate-400">Outstanding</p>
+          <p className="text-xs font-semibold uppercase text-slate-400">Balance Payable</p>
           {Number(summary.balance) > 0
             ? <p className="mt-1 text-2xl font-bold text-amber-600">{inr(summary.balance)}</p>
             : <><p className="mt-1 text-2xl font-bold text-slate-500">{inr(0)}</p>
-                {Number(summary.balance) < 0 && <p className="text-xs font-medium text-emerald-600">Advance paid: {inr(-summary.balance)}</p>}</>}
+                {Number(summary.balance) < 0 && <p className="text-xs font-medium text-emerald-600">Advance paid — adjust vs future bills: {inr(-summary.balance)}</p>}</>}
         </Card>
       </div>
 

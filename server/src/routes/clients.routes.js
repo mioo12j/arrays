@@ -30,10 +30,18 @@ router.get(
     const { rows: client } = await query('SELECT * FROM clients WHERE id=$1', [req.params.id]);
     if (!client[0]) throw new ApiError(404, 'Client not found');
 
+    // Resolve the invoice each entry is against: invoice entries link directly;
+    // receipt entries link via receipts.invoice_id. Surfaces the invoice number
+    // and the date it was raised, so a payment row shows both raised + paid dates.
     const { rows: entries } = await query(
-      `SELECT le.*, p.name AS project_name
+      `SELECT le.*, p.name AS project_name,
+              inv.invoice_number AS linked_invoice_no,
+              inv.issue_date     AS linked_invoice_date
        FROM ledger_entries le
-       LEFT JOIN projects p ON p.id=le.project_id
+       LEFT JOIN projects p ON p.id = le.project_id
+       LEFT JOIN receipts r ON le.source_type='receipt' AND r.id = le.source_id
+       LEFT JOIN invoices inv ON inv.id = COALESCE(
+           CASE WHEN le.source_type='invoice' THEN le.source_id END, r.invoice_id)
        WHERE le.party_type='client' AND le.party_id=$1
        ORDER BY le.entry_date, le.created_at`,
       [req.params.id]

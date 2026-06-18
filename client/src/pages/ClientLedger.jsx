@@ -77,18 +77,28 @@ export default function ClientLedger() {
         <Card className="!p-0">
           <div className="border-b border-slate-100 px-5 py-4 dark:border-slate-800"><h3 className="font-semibold text-slate-800 dark:text-slate-100">Ledger Entries</h3></div>
           <Table
-            columns={[{ header: 'Date' }, { header: 'Description' }, { header: 'Type' }, { header: 'Amount', align: 'right' }, { header: 'Balance', align: 'right' }]}
+            columns={[{ header: 'Date' }, { header: 'Type' }, { header: 'Against invoice' }, { header: 'Amount', align: 'right' }, { header: 'Balance', align: 'right' }]}
             rows={entries}
             empty="No ledger activity."
-            renderRow={(e) => (
-              <>
-                <td className="td whitespace-nowrap">{fmtDate(e.entry_date)}</td>
-                <td className="td max-w-[180px] truncate" title={e.description}>{e.description || '—'}</td>
-                <td className="td"><Badge tone={e.direction === 'debit' ? 'blue' : 'green'}>{e.direction === 'debit' ? 'Billed' : 'Received'}</Badge></td>
-                <td className="td text-right">{inr(e.amount)}</td>
-                <td className="td text-right font-semibold">{inr(e.running_balance)}</td>
-              </>
-            )}
+            renderRow={(e) => {
+              const received = e.direction === 'credit';
+              return (
+                <>
+                  <td className="td whitespace-nowrap">
+                    {fmtDate(e.entry_date)}
+                    <div className="text-[11px] text-slate-400">{received ? 'Payment received' : 'Invoice raised'}</div>
+                  </td>
+                  <td className="td"><Badge tone={received ? 'green' : 'blue'}>{received ? 'Received' : 'Billed'}</Badge></td>
+                  <td className="td">
+                    {e.linked_invoice_no
+                      ? <>{e.linked_invoice_no}{received && e.linked_invoice_date && <div className="text-[11px] text-slate-400">raised {fmtDate(e.linked_invoice_date)}</div>}</>
+                      : <span className="text-slate-400" title={e.description}>{e.description || '—'}</span>}
+                  </td>
+                  <td className="td text-right">{inr(e.amount)}</td>
+                  <td className="td text-right font-semibold">{inr(e.running_balance)}</td>
+                </>
+              );
+            }}
           />
         </Card>
 
