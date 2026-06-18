@@ -227,7 +227,7 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
         <Field label="Address"><input className="input" value={form.buyer.addr1} onChange={set('buyer.addr1')} /></Field>
         <Field label="Location"><input className="input" value={form.buyer.location} onChange={set('buyer.location')} /></Field>
         <Field label="Pincode" hint={buyerPin ? `${buyerPin.stateCode} — ${buyerPin.state} (auto)` : 'Type 6 digits → state auto-fills'}>
-          <input className="input" value={form.buyer.pincode} onChange={setPin('buyer')} placeholder="110070" inputMode="numeric" maxLength={6} />
+          <input className="input" value={form.buyer.pincode} onChange={setPin('buyer')} inputMode="numeric" maxLength={6} />
         </Field>
         <Field label="State Code"><input className="input" value={form.buyer.stateCode} onChange={set('buyer.stateCode')} /></Field>
       </Section>
@@ -266,6 +266,9 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
 function EInvoiceDetail({ id, can, master, onClose, onChanged, onEdit }) {
   const toast = useToast();
   const { data: rec, loading, refetch } = useFetch(`/gst/einvoices/${id}`, [id]);
+  const { data: branches } = useFetch('/gst/branches');
+  const officeAddr = (b) => [b.addr1, b.place].filter(Boolean).join(', ') + (b.pincode ? ` - ${b.pincode}` : '');
+  const officeOptions = (branches || []).map((b) => ({ label: `${b.code} — ${b.name}`, addr: officeAddr(b) })).filter((o) => o.addr);
   const [busy, setBusy] = useState('');
   const [cancelReason, setCancelReason] = useState('');
   const [otp, setOtp] = useState(false);
@@ -365,6 +368,13 @@ function EInvoiceDetail({ id, can, master, onClose, onChanged, onEdit }) {
           <p className="mb-2 text-xs font-semibold text-slate-600 dark:text-slate-300">
             Letterhead / office address <span className="font-normal text-slate-400">— printed on the PDF header. Editable anytime; the IRN &amp; tax data stay locked.</span>
           </p>
+          {officeOptions.length > 0 && (
+            <select className="input mb-2 w-full !py-1.5 text-sm" value=""
+              onChange={(e) => { if (e.target.value) { setHeaderAddr(e.target.value); setHeaderDirty(true); } }}>
+              <option value="">Pick an office address…</option>
+              {officeOptions.map((o) => <option key={o.label} value={o.addr}>{o.label} — {o.addr}</option>)}
+            </select>
+          )}
           <textarea className="input w-full !py-1.5 text-sm" rows={2} value={headerAddr}
             placeholder="Leave blank to use the registered company address"
             onChange={(e) => { setHeaderAddr(e.target.value); setHeaderDirty(true); }} />

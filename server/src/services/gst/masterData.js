@@ -39,6 +39,7 @@ export const PIN_PREFIX_STATE = {
 // ── e-Invoice transaction-level: SupTyp ────────────────────────────────────
 export const EINV_SUPPLY_TYPES = [
   ['B2B', 'Business to Business'],
+  ['B2C', 'Business to Consumer'],
   ['SEZWP', 'SEZ with payment'],
   ['SEZWOP', 'SEZ without payment'],
   ['EXPWP', 'Export with payment'],
