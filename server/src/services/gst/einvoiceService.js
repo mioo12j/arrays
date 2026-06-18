@@ -36,6 +36,7 @@ export function rowToRecord(r) {
     buyer: r.buyer_dtls || {},
     dispatch: r.disp_dtls || null,
     shipTo: r.ship_dtls || null,
+    headerAddress: r.header_address || '',
     items: r.item_list || [],
     val: r.val_dtls || {},
     irn: r.irn,
@@ -170,9 +171,9 @@ export async function createDraft(db, body, userId) {
       (env, schema_version, status, supply_type, doc_type, doc_no, doc_date,
        reverse_charge, igst_on_intra, ecom_gstin,
        seller_dtls, buyer_dtls, disp_dtls, ship_dtls, item_list, val_dtls,
-       buyer_gstin, buyer_name, total_inv_val, total_tax_val,
+       buyer_gstin, buyer_name, total_inv_val, total_tax_val, header_address,
        source_invoice_id, prepared_by, created_by)
-     VALUES ($1,'1.1','draft',$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$20)
+     VALUES ($1,'1.1','draft',$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$21)
      RETURNING *`,
     [
       body.env || 'sandbox', body.supplyType || 'B2B', body.docType || 'INV', body.docNo || null, body.docDate || null,
@@ -180,7 +181,7 @@ export async function createDraft(db, body, userId) {
       JSON.stringify(body.seller || {}), JSON.stringify(body.buyer || {}),
       body.dispatch ? JSON.stringify(body.dispatch) : null, body.shipTo ? JSON.stringify(body.shipTo) : null,
       JSON.stringify(body.items || []), JSON.stringify(body.val || {}),
-      s.buyerGstin, s.buyerName, s.totalInvVal, s.totalTaxVal,
+      s.buyerGstin, s.buyerName, s.totalInvVal, s.totalTaxVal, body.headerAddress || null,
       body.sourceInvoiceId || null, userId,
     ]
   );
@@ -201,7 +202,7 @@ export async function updateDraft(db, id, body, userId) {
     `UPDATE gst_einvoices SET
        supply_type=$2, doc_type=$3, doc_no=$4, doc_date=$5, reverse_charge=$6, igst_on_intra=$7, ecom_gstin=$8,
        seller_dtls=$9, buyer_dtls=$10, disp_dtls=$11, ship_dtls=$12, item_list=$13, val_dtls=$14,
-       buyer_gstin=$15, buyer_name=$16, total_inv_val=$17, total_tax_val=$18,
+       buyer_gstin=$15, buyer_name=$16, total_inv_val=$17, total_tax_val=$18, header_address=$19,
        status = CASE WHEN status='error' THEN 'draft'::gst_einv_status ELSE status END
      WHERE id=$1 RETURNING *`,
     [
@@ -210,11 +211,26 @@ export async function updateDraft(db, id, body, userId) {
       JSON.stringify(body.seller || {}), JSON.stringify(body.buyer || {}),
       body.dispatch ? JSON.stringify(body.dispatch) : null, body.shipTo ? JSON.stringify(body.shipTo) : null,
       JSON.stringify(body.items || []), JSON.stringify(body.val || {}),
-      s.buyerGstin, s.buyerName, s.totalInvVal, s.totalTaxVal,
+      s.buyerGstin, s.buyerName, s.totalInvVal, s.totalTaxVal, body.headerAddress || null,
     ]
   );
   await recordAudit(db, { objectType: 'einvoice', objectId: id, eventType: 'edited', message: 'Draft edited', userId });
   await versions.record(db, { objectType: 'einvoice', objectId: id, row: rows[0], reason: body.changeReason }, userId);
+  return rowToRecord(rows[0]);
+}
+
+// Update ONLY the cosmetic letterhead/office address. Allowed at any time —
+// even after the IRN is locked — because it never touches the registered
+// payload, IRN, QR or tax values. Lets the operator reprint with a corrected
+// office address.
+export async function updateHeaderAddress(db, id, headerAddress, userId) {
+  const cur = (await db.query('SELECT id FROM gst_einvoices WHERE id=$1 AND is_deleted=FALSE', [id])).rows[0];
+  if (!cur) throw new ApiError(404, 'e-Invoice not found');
+  const { rows } = await db.query(
+    'UPDATE gst_einvoices SET header_address=$2 WHERE id=$1 RETURNING *',
+    [id, headerAddress || null]
+  );
+  await recordAudit(db, { objectType: 'einvoice', objectId: id, eventType: 'edited', field: 'header_address', message: 'Letterhead address updated (cosmetic)', userId });
   return rowToRecord(rows[0]);
 }
 

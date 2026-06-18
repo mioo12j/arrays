@@ -242,9 +242,13 @@ router.get('/einvoices/:id/pdf', requirePerm(PERMS.DOWNLOAD), asyncHandler(async
   await tx((db) => einv.markPrinted(db, req.params.id, uid(req)));
   await recordAccess(req, { action: 'download', objectType: 'einvoice', objectId: req.params.id, detail: { kind: 'pdf' } });
   res.setHeader('Content-Type', 'application/pdf');
-  res.setHeader('Content-Disposition', `attachment; filename="eInvoice_${fileName(rec.docNo)}_${fileName(rec.buyerGstin || '')}.pdf"`);
+  res.setHeader('Content-Disposition', `attachment; filename="e-Invoice ${fileName(rec.docNo)}.pdf"`);
   res.send(buf);
 }));
+
+// Update the cosmetic letterhead/office address only (editable even post-IRN).
+router.patch('/einvoices/:id/header-address', requirePerm(PERMS.EDIT), asyncHandler(async (req, res) =>
+  res.json(await tx((db) => einv.updateHeaderAddress(db, req.params.id, req.body?.headerAddress, uid(req))))));
 
 router.get('/einvoices/:id/json', requirePerm(PERMS.DOWNLOAD), asyncHandler(async (req, res) => {
   const { rows } = await pool.query('SELECT doc_no, canonical_payload, signed_invoice, signed_qr, irn FROM gst_einvoices WHERE id=$1', [req.params.id]);

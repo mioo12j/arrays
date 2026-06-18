@@ -1,8 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Plus, Search, FileText, Truck, Loader2, Download, FileJson, ShieldCheck,
-  CheckCircle2, XCircle, Ban, Copy, Archive, Trash2, RefreshCw, Link2, AlertTriangle,
+  CheckCircle2, XCircle, Ban, Copy, Archive, Trash2, RefreshCw, Link2, AlertTriangle, ScanLine,
 } from 'lucide-react';
+import { pincodeToState } from '../lib/pincode.js';
 import { api, apiError } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
 import { useBranch } from '../context/BranchContext.jsx';
@@ -108,6 +109,7 @@ function EInvoicePanel({ can, master }) {
 function EInvoiceForm({ initial, master, onClose, onSaved }) {
   const toast = useToast();
   const { data: companyData } = useFetch('/company');
+  const { data: branches } = useFetch('/gst/branches');
   const co = companyData || companyFallback;
   const sellerDefault = {
     gstin: co.gstin || '', legalName: co.name || '', tradeName: co.shortName || '', addr1: co.address || '',
@@ -116,8 +118,11 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
   const [form, setForm] = useState(() => initial ? structuredClone(initial) : {
     supplyType: 'B2B', docType: 'INV', docNo: '', docDate: new Date().toISOString().slice(0, 10),
     seller: sellerDefault, buyer: { gstin: '', legalName: '', pos: '', addr1: '', location: '', pincode: '', stateCode: '' },
-    items: [blankItem()], val: {},
+    headerAddress: '', items: [blankItem()], val: {},
   });
+  // Letterhead (cosmetic) address options drawn from the configured offices.
+  const officeAddr = (b) => [b.addr1, b.place].filter(Boolean).join(', ') + (b.pincode ? ` - ${b.pincode}` : '');
+  const officeOptions = (branches || []).map((b) => ({ label: `${b.code} — ${b.name}`, addr: officeAddr(b) })).filter((o) => o.addr);
   const [saving, setSaving] = useState(false);
   const [gv, setGv] = useState(null);
   const computed = useMemo(() => recalcInvoice(form), [form]);
@@ -137,6 +142,23 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
   };
   const setItem = (i, k, v) => setForm((f) => { const n = structuredClone(f); n.items[i][k] = v; return n; });
   const opts = (cat) => (master?.[cat] || []);
+  // Typing a pincode auto-derives the GST state code (+ state into the blank
+  // Location). The user fills the street address manually.
+  const setPin = (party) => (e) => {
+    const v = e.target.value;
+    setForm((f) => {
+      const n = structuredClone(f);
+      n[party].pincode = v;
+      const hit = pincodeToState(v);
+      if (hit) {
+        n[party].stateCode = hit.stateCode;
+        if (party === 'buyer') n.buyer.pos = hit.stateCode;
+        if (!n[party].location) n[party].location = hit.state;
+      }
+      return n;
+    });
+  };
+  const buyerPin = pincodeToState(form.buyer.pincode);
 
   const save = async (override) => {
     // GST schema requires Location/Pincode/State on both parties — block blanks
@@ -171,12 +193,24 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
         <Field label="Document Date"><input className="input" type="date" value={form.docDate} onChange={set('docDate')} /></Field>
       </Section>
 
-      <Section title="Seller (SellerDtls)">
+      <Section title="Letterhead / Office Address (printed on top of the PDF)">
+        <Field label="Pick an office" hint="Cosmetic only — not sent to the IRP. Editable later too.">
+          <select className="input" value="" onChange={(e) => { if (e.target.value) set('headerAddress')({ target: { value: e.target.value } }); }}>
+            <option value="">Choose an office address…</option>
+            {officeOptions.map((o) => <option key={o.label} value={o.addr}>{o.label} — {o.addr}</option>)}
+          </select>
+        </Field>
+        <Field label="Header address" hint={`Leave blank to use ${co.address || 'the registered address'}`}>
+          <input className="input" value={form.headerAddress} onChange={set('headerAddress')} placeholder={co.address} />
+        </Field>
+      </Section>
+
+      <Section title="Seller / Supplier (SellerDtls — where the supply is from)">
         <Field label="GSTIN"><input className="input" value={form.seller.gstin} onChange={set('seller.gstin')} /></Field>
         <Field label="Legal Name"><input className="input" value={form.seller.legalName} onChange={set('seller.legalName')} /></Field>
         <Field label="Address"><input className="input" value={form.seller.addr1} onChange={set('seller.addr1')} /></Field>
         <Field label="Location"><input className="input" value={form.seller.location} onChange={set('seller.location')} /></Field>
-        <Field label="Pincode"><input className="input" value={form.seller.pincode} onChange={set('seller.pincode')} /></Field>
+        <Field label="Pincode"><input className="input" value={form.seller.pincode} onChange={setPin('seller')} /></Field>
         <Field label="State Code"><input className="input" value={form.seller.stateCode} onChange={set('seller.stateCode')} /></Field>
       </Section>
 
@@ -192,7 +226,9 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
         <Field label="Place of Supply (state code)"><input className="input" value={form.buyer.pos} onChange={set('buyer.pos')} placeholder="29" /></Field>
         <Field label="Address"><input className="input" value={form.buyer.addr1} onChange={set('buyer.addr1')} /></Field>
         <Field label="Location"><input className="input" value={form.buyer.location} onChange={set('buyer.location')} /></Field>
-        <Field label="Pincode"><input className="input" value={form.buyer.pincode} onChange={set('buyer.pincode')} /></Field>
+        <Field label="Pincode" hint={buyerPin ? `${buyerPin.stateCode} — ${buyerPin.state} (auto)` : 'Type 6 digits → state auto-fills'}>
+          <input className="input" value={form.buyer.pincode} onChange={setPin('buyer')} placeholder="110070" inputMode="numeric" maxLength={6} />
+        </Field>
         <Field label="State Code"><input className="input" value={form.buyer.stateCode} onChange={set('buyer.stateCode')} /></Field>
       </Section>
 
@@ -234,6 +270,36 @@ function EInvoiceDetail({ id, can, master, onClose, onChanged, onEdit }) {
   const [cancelReason, setCancelReason] = useState('');
   const [otp, setOtp] = useState(false);
   const [irnForm, setIrnForm] = useState(null);   // offline IRN entry
+  const [scanning, setScanning] = useState(false);
+  // Cosmetic letterhead/office address — editable at any time (even post-IRN).
+  const [headerAddr, setHeaderAddr] = useState('');
+  const [headerDirty, setHeaderDirty] = useState(false);
+  useEffect(() => { if (rec) { setHeaderAddr(rec.headerAddress || ''); setHeaderDirty(false); } }, [rec?.id, rec?.headerAddress]);
+  const saveHeader = async (download) => {
+    setBusy('header');
+    try {
+      await api.patch(`/gst/einvoices/${id}/header-address`, { headerAddress: headerAddr });
+      setHeaderDirty(false);
+      toast.success('Letterhead address updated');
+      if (download) gstDownload(`/gst/einvoices/${id}/pdf`);
+      refetch();
+    } catch (e) { toast.error(apiError(e)); } finally { setBusy(''); }
+  };
+  // Read the QR straight from the govt signed PDF / a QR image → auto-fill IRN.
+  const scanQr = async (file) => {
+    if (!file) return;
+    setScanning(true);
+    try {
+      // Lazy-load the (heavy) pdfjs-based scanner only when actually scanning.
+      const { scanQrFromFile, parseSignedQr } = await import('../lib/qrScan.js');
+      const qr = await scanQrFromFile(file);
+      if (!qr) { toast.error('No QR found — upload the signed PDF, or a clear screenshot of the QR.'); return; }
+      const p = parseSignedQr(qr);
+      setIrnForm((f) => ({ irn: p.irn || f?.irn || '', ackNo: p.ackNo || f?.ackNo || '', ackDate: p.ackDate || f?.ackDate || '', signedQr: qr }));
+      toast.success(p.irn ? `QR read — IRN ${p.irn.slice(0, 8)}… auto-filled` : 'QR read — review & save');
+    } catch (e) { toast.error(`Could not read the QR: ${e.message || 'unknown error'}`); }
+    finally { setScanning(false); }
+  };
   const recordIrn = async () => {
     setBusy('IRN');
     try {
@@ -293,6 +359,22 @@ function EInvoiceDetail({ id, can, master, onClose, onChanged, onEdit }) {
         <DescRow label="Created by">{rec.createdByName}</DescRow>
       </DescList>
 
+      {/* Letterhead / office address — cosmetic, editable even after the IRN is locked */}
+      {can('gst.edit') && (
+        <div className="mt-5 rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/40">
+          <p className="mb-2 text-xs font-semibold text-slate-600 dark:text-slate-300">
+            Letterhead / office address <span className="font-normal text-slate-400">— printed on the PDF header. Editable anytime; the IRN &amp; tax data stay locked.</span>
+          </p>
+          <textarea className="input w-full !py-1.5 text-sm" rows={2} value={headerAddr}
+            placeholder="Leave blank to use the registered company address"
+            onChange={(e) => { setHeaderAddr(e.target.value); setHeaderDirty(true); }} />
+          <div className="mt-2 flex gap-2">
+            <button className="btn-ghost !py-1.5 !text-sm" disabled={busy === 'header' || !headerDirty} onClick={() => saveHeader(false)}>{busy === 'header' ? <Loader2 className="animate-spin" size={14} /> : <CheckCircle2 size={14} />} Update</button>
+            <button className="btn-primary !py-1.5 !text-sm" disabled={busy === 'header'} onClick={() => saveHeader(true)}><Download size={14} /> Update &amp; download PDF</button>
+          </div>
+        </div>
+      )}
+
       {/* Actions */}
       <div className="mt-5 flex flex-wrap gap-2">
         {editable && can('gst.edit') && <button className="btn-ghost !text-sm" onClick={() => onEdit(rec)}>Edit</button>}
@@ -303,7 +385,16 @@ function EInvoiceDetail({ id, can, master, onClose, onChanged, onEdit }) {
         {rec.irn && can('gst.download') && <button className="btn-ghost !text-sm" onClick={() => gstDownload(`/gst/einvoices/${id}/json`)}><FileJson size={14} /> Signed JSON</button>}
         {irnForm && (
           <div className="w-full rounded-lg border border-brand-200 bg-brand-50/50 p-3 dark:border-brand-900/40 dark:bg-brand-900/10">
-            <p className="mb-2 text-xs font-semibold text-slate-600 dark:text-slate-300">Paste the result from the GST portal after uploading the Portal JSON:</p>
+            <div className="mb-2 flex flex-wrap items-center gap-2">
+              <label className={`btn-ghost !text-sm cursor-pointer ${scanning ? 'pointer-events-none opacity-60' : ''}`}>
+                {scanning ? <Loader2 size={14} className="animate-spin" /> : <ScanLine size={14} />}
+                {scanning ? 'Reading QR…' : 'Scan signed PDF / QR image'}
+                <input type="file" accept="application/pdf,image/*" className="hidden" disabled={scanning}
+                  onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; scanQr(f); }} />
+              </label>
+              <span className="text-xs text-slate-500 dark:text-slate-400">Upload the government's signed PDF — the IRN &amp; QR fill in automatically.</span>
+            </div>
+            <p className="mb-2 text-xs font-semibold text-slate-600 dark:text-slate-300">…or paste the result from the GST portal after uploading the Portal JSON:</p>
             <div className="grid grid-cols-2 gap-2">
               <input className="input !py-1.5 text-sm col-span-2" placeholder="IRN (64 characters)" value={irnForm.irn} onChange={(e) => setIrnForm((f) => ({ ...f, irn: e.target.value.trim() }))} />
               <input className="input !py-1.5 text-sm" placeholder="Ack No" value={irnForm.ackNo} onChange={(e) => setIrnForm((f) => ({ ...f, ackNo: e.target.value }))} />

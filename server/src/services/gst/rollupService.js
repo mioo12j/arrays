@@ -27,8 +27,8 @@ export async function customerGst(gstin) {
       `SELECT COUNT(*)::int AS einvoices,
               COUNT(*) FILTER (WHERE irn IS NOT NULL)::int AS irns,
               COUNT(*) FILTER (WHERE status IN ('needs_review','error'))::int AS attention,
-              COALESCE(SUM(total_tax_val),0) AS gst_value,
-              COALESCE(SUM(total_inv_val),0) AS invoice_value,
+              COALESCE(SUM(total_tax_val) FILTER (WHERE NOT is_cancelled),0) AS gst_value,
+              COALESCE(SUM(total_inv_val) FILTER (WHERE NOT is_cancelled),0) AS invoice_value,
               MAX(COALESCE(doc_date, created_at::date)) AS last_txn
          FROM gst_einvoices WHERE buyer_gstin = $1`,
       [gstin]

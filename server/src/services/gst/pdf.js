@@ -129,10 +129,12 @@ function header(doc, title, subtitle, branding = {}) {
   const titleX = W - 250;                       // right-side title block
   const leftW = titleX - tx - 10;               // company block must stop before the title
   doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(13.5).text(branding.headerText || company.pdfName, tx, 9, { width: leftW, height: 15, ellipsis: true });
+  // Selectable / editable letterhead address (falls back to the registered one).
+  // GSTIN + PAN intentionally omitted here — GSTIN is already shown in the
+  // supplier block below; only CIN + email remain in the header.
   doc.font('Helvetica').fontSize(7).fillColor(SUBTX)
-    .text(company.address, tx, 25, { width: leftW, height: 18, ellipsis: true })                       // full address, ≤2 lines
-    .text(`GSTIN ${company.gstin}   •   CIN ${company.cin}`, tx, 46, { width: leftW, height: 9, ellipsis: true })   // full GSTIN + CIN
-    .text(`PAN ${company.pan || ''}   •   ${branding.contactInfo || company.email}`, tx, 56, { width: leftW, height: 9, ellipsis: true });
+    .text(branding.headerAddr || company.address, tx, 25, { width: leftW, height: 20, ellipsis: true })   // address, ≤2 lines
+    .text(`CIN ${company.cin}   •   ${branding.contactInfo || company.email}`, tx, 47, { width: leftW, height: 9, ellipsis: true });
   doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(14).text(title, titleX, 12, { width: 210, align: 'right' });
   if (subtitle) doc.font('Helvetica').fontSize(8).fillColor(SUBTX).text(subtitle, titleX, 34, { width: 210, align: 'right' });
   doc.fillColor(INK);
@@ -247,7 +249,8 @@ export async function einvoicePdf(rec, branding = {}, lang = 'en') {
   const wm = branding.watermark || (rec.isCancelled ? 'CANCELLED' : (rec.irn ? '' : 'DRAFT'));
 
   header(doc, rec.docType === 'CRN' ? 'CREDIT NOTE' : rec.docType === 'DBN' ? 'DEBIT NOTE' : 'TAX INVOICE',
-    rec.irn ? 'e-Invoice • IRN Registered' : 'e-Invoice • Not yet registered', branding);
+    rec.irn ? 'e-Invoice • IRN Registered' : 'e-Invoice • Not yet registered',
+    { ...branding, headerAddr: rec.headerAddress || branding.headerAddr });
   watermark(doc, wm);
 
   // ── IRN / Ack strip + QR ───────────────────────────────────────────────────

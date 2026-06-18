@@ -812,6 +812,13 @@ ALTER TABLE gst_attachments ADD COLUMN IF NOT EXISTS folder   TEXT;
 -- Challan → standard invoice link (challans now convert to a normal invoice).
 ALTER TABLE delivery_challans ADD COLUMN IF NOT EXISTS invoice_id UUID REFERENCES invoices(id);
 
+-- Editable letterhead / office address printed on the e-Invoice PDF. This is a
+-- cosmetic field only (NOT part of the IRP payload, and separate from the
+-- supplier/seller block). It is selectable while generating and stays editable
+-- even after the IRN is locked, so the operator can reprint with a corrected
+-- office address without touching the registered crunch data.
+ALTER TABLE gst_einvoices ADD COLUMN IF NOT EXISTS header_address TEXT;
+
 -- §2 Standard Invoice — accounting-grade fields + line items + EWB link (§4).
 ALTER TABLE invoices ADD COLUMN IF NOT EXISTS customer_name     TEXT;
 ALTER TABLE invoices ADD COLUMN IF NOT EXISTS customer_gstin    TEXT;
