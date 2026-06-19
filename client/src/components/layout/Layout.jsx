@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { Eye, ShieldCheck, Wrench } from 'lucide-react';
 import Sidebar from './Sidebar.jsx';
 import Topbar from './Topbar.jsx';
+import UpdateNotice from '../UpdateNotice.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useFetch } from '../../lib/useFetch.js';
 
@@ -55,6 +56,7 @@ export default function Layout() {
           </main>
         </div>
       </div>
+      <UpdateNotice />
     </div>
   );
 }
