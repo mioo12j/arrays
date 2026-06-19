@@ -16,15 +16,17 @@ const SECTIONS = [
     en: {
       title: 'Getting started & signing in',
       body: [
-        'The software runs on this computer. To start it, open the project folder and launch the app (your IT person usually sets up a one-click shortcut), then open it in your web browser — you will see the sign-in screen. Log in with the ID and password you were given.',
-        'You are the operator, which means you can do everything: create, edit and delete records, raise invoices and e-invoices, make delivery challans and e-way bills, and manage vendors and offices. Nothing waits for anyone else’s approval. The top-right of every screen has a language button (EN / हिं) to switch the whole app between English and Hindi at any moment, and your name where you sign out.',
+        'The software runs on this computer. To start it, open the project folder and launch the app (your IT person usually sets up a one-click shortcut), then open it in your web browser — you will see the sign-in screen. Log in with the ID and password for your account (the ID is a short word like “operator”, not an email).',
+        'There are four sign-in roles, each with a clear job. The Editor is the super-admin and can do everything, including all setup and user management. The System Manager is the everyday account that does the real work — payments, receipts, invoices, e-Invoices, e-Way Bills, challans, quotations, vendors and clients, plus uploads and downloads. The Admin is a strict view-only oversight account: it can read every screen but cannot change, import or export anything. The Auditor is a read-only reviewer. You can change your own password any time from the account menu at the top-right.',
+        'Finding your way around: the left sidebar groups everything — Operations (payments, receipts, invoices, reconciliation), Ledgers (vendors, employees, clients), Sales & Delivery (quotes, challans, projects), GST e-Invoicing, Setup, and Intelligence (reports, activity, backup, recovery). The bar across the top has a universal search box, the language switch (EN / हिं), the active office/branch selector on GST screens, and your account menu (one-click backup, Change Password, sign out). A thin coloured strip at the very top shows the current status (e.g. “Live — offline filing”).',
       ],
     },
     hi: {
       title: 'शुरुआत करें और साइन इन करें',
       body: [
-        'यह सॉफ़्टवेयर इसी कंप्यूटर पर चलता है। इसे शुरू करने के लिए प्रोजेक्ट फ़ोल्डर खोलें और ऐप चालू करें (आपका आईटी व्यक्ति आमतौर पर एक-क्लिक शॉर्टकट बना देता है), फिर इसे वेब ब्राउज़र में खोलें — आपको साइन-इन स्क्रीन दिखेगी। आपको दी गई ID और पासवर्ड से लॉगिन करें।',
-        'आप ऑपरेटर हैं, यानी आप सब कुछ कर सकते हैं: रिकॉर्ड बनाना, बदलना और हटाना, इनवॉइस व e-invoice बनाना, डिलीवरी चालान व e-way bill बनाना, और विक्रेता व कार्यालय प्रबंधित करना। किसी और की मंज़ूरी की प्रतीक्षा नहीं होती। हर स्क्रीन के ऊपर-दाईं ओर भाषा बटन (EN / हिं) है जिससे पूरा ऐप कभी भी अंग्रेज़ी–हिंदी में बदलें, और आपका नाम जहाँ से आप साइन आउट करते हैं।',
+        'यह सॉफ़्टवेयर इसी कंप्यूटर पर चलता है। इसे शुरू करने के लिए प्रोजेक्ट फ़ोल्डर खोलें और ऐप चालू करें (आपका आईटी व्यक्ति आमतौर पर एक-क्लिक शॉर्टकट बना देता है), फिर इसे वेब ब्राउज़र में खोलें — आपको साइन-इन स्क्रीन दिखेगी। अपने खाते की ID और पासवर्ड से लॉगिन करें (ID एक छोटा शब्द है जैसे “operator”, ईमेल नहीं)।',
+        'चार साइन-इन भूमिकाएँ हैं, हर एक का स्पष्ट काम। Editor सुपर-एडमिन है और सब कुछ कर सकता है, सभी सेटअप व उपयोगकर्ता-प्रबंधन सहित। System Manager रोज़मर्रा का खाता है जो असली काम करता है — भुगतान, प्राप्तियाँ, इनवॉइस, e-Invoice, e-Way Bill, चालान, कोटेशन, विक्रेता व ग्राहक, साथ ही अपलोड व डाउनलोड। Admin एक सख़्त केवल-दृश्य निगरानी खाता है: हर स्क्रीन पढ़ सकता है पर कुछ बदल/आयात/निर्यात नहीं कर सकता। Auditor केवल-पठन समीक्षक है। आप अपना पासवर्ड कभी भी ऊपर-दाईं ओर खाता मेनू से बदल सकते हैं।',
+        'रास्ता ढूँढना: बायाँ साइडबार सब कुछ समूहित करता है — Operations (भुगतान, प्राप्तियाँ, इनवॉइस, समाधान), Ledgers (विक्रेता, कर्मचारी, ग्राहक), Sales & Delivery (कोटेशन, चालान, परियोजनाएँ), GST e-Invoicing, Setup, और Intelligence (रिपोर्ट, गतिविधि, बैकअप, रिकवरी)। ऊपर की पट्टी में सार्वभौमिक खोज बॉक्स, भाषा स्विच (EN / हिं), GST स्क्रीन पर सक्रिय कार्यालय/शाखा चयनकर्ता, और आपका खाता मेनू (एक-क्लिक बैकअप, Change Password, साइन आउट) है। सबसे ऊपर एक पतली रंगीन पट्टी वर्तमान स्थिति दिखाती है (जैसे “Live — offline filing”)।',
       ],
     },
   },
@@ -33,15 +35,17 @@ const SECTIONS = [
     en: {
       title: 'How you work — direct, no approvals',
       body: [
-        'This software is built for a single operator, so there are no approval queues, no “pending manager sign-off”, and no waiting. Whenever you create or change something — a delivery challan, an invoice, an e-invoice, a vendor, an office or a payment — it saves immediately and is yours to use right away.',
-        'Even though there are no approvals, every action is still recorded permanently in the audit trail (who did what and when), and the system protects your work in the background: it warns you before you leave a half-finished form, quietly saves a draft so a crash never loses your typing, and takes an automatic backup of everything every two hours.',
+        'For the System Manager (and the Editor) there are no approval queues, no “pending manager sign-off” and no waiting. Whenever you create or change something — a delivery challan, an invoice, an e-Invoice, a vendor, a client or a payment — it saves immediately and is yours to use right away. The flow is meant to be fast: open the screen, fill the form, save, move on.',
+        'Even with no approvals, every action is recorded permanently in the audit trail (who did what and when), and the system protects your work in the background: it warns you before you leave a half-finished form, quietly auto-saves a draft so a crash or power-cut never loses your typing, and takes an automatic backup of everything every two hours.',
+        'A normal day looks like this: sign in, glance at the Dashboard, enter the day’s payments and receipts, raise any invoices or e-Invoices, reconcile the bank when a statement arrives, download whatever you need to send out, and take a backup before signing out (the app offers one automatically at sign-out). Everything lives on this computer and works fully offline — the only steps that need the internet are uploading the GST JSON on the government portal and, optionally, “Publish to Cloud” so the read-only admin view stays current.',
       ],
     },
     hi: {
       title: 'आप कैसे काम करते हैं — सीधे, बिना मंज़ूरी',
       body: [
-        'यह सॉफ़्टवेयर एकल ऑपरेटर के लिए बना है, इसलिए कोई मंज़ूरी कतार नहीं, कोई “मैनेजर की स्वीकृति बाकी” नहीं, और कोई प्रतीक्षा नहीं। जब भी आप कुछ बनाते या बदलते हैं — चालान, इनवॉइस, e-invoice, विक्रेता, कार्यालय या भुगतान — वह तुरंत सहेजा जाता है और तुरंत उपयोग के लिए तैयार होता है।',
-        'मंज़ूरी न होने पर भी, हर क्रिया स्थायी रूप से ऑडिट ट्रेल में दर्ज होती है (किसने, क्या, कब किया), और सिस्टम पृष्ठभूमि में आपके काम की रक्षा करता है: अधूरा फ़ॉर्म छोड़ने से पहले चेतावनी देता है, ड्राफ्ट चुपचाप सहेजता है ताकि क्रैश में टाइपिंग न खोए, और हर दो घंटे में सब कुछ का स्वतः बैकअप लेता है।',
+        'System Manager (और Editor) के लिए कोई मंज़ूरी कतार नहीं, कोई “मैनेजर की स्वीकृति बाकी” नहीं, और कोई प्रतीक्षा नहीं। जब भी आप कुछ बनाते या बदलते हैं — चालान, इनवॉइस, e-Invoice, विक्रेता, ग्राहक या भुगतान — वह तुरंत सहेजा जाता है और तुरंत उपयोग के लिए तैयार होता है। प्रवाह तेज़ रखा गया है: स्क्रीन खोलें, फ़ॉर्म भरें, सहेजें, आगे बढ़ें।',
+        'मंज़ूरी न होने पर भी, हर क्रिया स्थायी रूप से ऑडिट ट्रेल में दर्ज होती है (किसने, क्या, कब किया), और सिस्टम पृष्ठभूमि में आपके काम की रक्षा करता है: अधूरा फ़ॉर्म छोड़ने से पहले चेतावनी देता है, ड्राफ्ट चुपचाप स्वतः सहेजता है ताकि क्रैश या बिजली-कटौती में टाइपिंग न खोए, और हर दो घंटे में सब कुछ का स्वतः बैकअप लेता है।',
+        'सामान्य दिन ऐसा दिखता है: साइन-इन करें, डैशबोर्ड पर नज़र डालें, दिन के भुगतान व प्राप्तियाँ दर्ज करें, कोई इनवॉइस या e-Invoice बनाएँ, स्टेटमेंट आने पर बैंक समाधान करें, भेजने हेतु जो चाहिए डाउनलोड करें, और साइन आउट से पहले बैकअप लें (ऐप साइन-आउट पर स्वतः सुझाव देता है)। सब कुछ इसी कंप्यूटर पर रहता है और पूरी तरह ऑफ़लाइन काम करता है — केवल GST JSON को सरकारी पोर्टल पर अपलोड करना और वैकल्पिक रूप से “Publish to Cloud” करना ही इंटरनेट माँगते हैं।',
       ],
     },
   },
@@ -109,6 +113,7 @@ const SECTIONS = [
       body: [
         'Open “Bank Reconciliation” and import your bank statement (the IDBI format is understood automatically, even multi-line entries). The system reads every transaction, then matches it to the right vendor or client using the account number and beneficiary name, marking each line as matched or needing a quick review.',
         'Where it cannot decide, you map the account to a vendor once and it will remember that mapping for every future statement. This keeps the software’s records and the actual bank perfectly aligned, and surfaces any payment or receipt you may have forgotten to enter.',
+        'Work the list top to bottom: confirm the auto-matched lines, and for the rest either map the account to the right party or — for a genuinely new transaction — create the payment or receipt straight from that line so nothing slips through. Each line shows debit or credit, the amount, the beneficiary and a status (matched / needs review), and the whole reconciliation can be exported to Excel or PDF for your records. Because mappings are remembered, the first statement takes the most effort and every month after is largely automatic.',
       ],
     },
     hi: {
@@ -116,6 +121,7 @@ const SECTIONS = [
       body: [
         '“बैंक समाधान” खोलकर अपना बैंक स्टेटमेंट आयात करें (IDBI प्रारूप, यहाँ तक कि बहु-पंक्ति प्रविष्टियाँ भी, स्वतः समझा जाता है)। सिस्टम हर लेनदेन पढ़ता है, फिर खाता संख्या और लाभार्थी नाम से उसे सही विक्रेता/ग्राहक से मिलाता है, और हर पंक्ति को मिलान हुआ या त्वरित समीक्षा चाहिए के रूप में चिह्नित करता है।',
         'जहाँ निर्णय न हो पाए, वहाँ खाते को एक बार विक्रेता से मैप करें और वह हर भविष्य के स्टेटमेंट के लिए याद रखेगा। इससे सॉफ़्टवेयर के रिकॉर्ड और वास्तविक बैंक पूरी तरह मेल खाते हैं, और कोई भूला हुआ भुगतान/प्राप्ति सामने आ जाती है।',
+        'सूची को ऊपर-से-नीचे निपटाएँ: स्वतः-मिलान पंक्तियों की पुष्टि करें, और बाकी के लिए या तो खाते को सही पक्ष से मैप करें या — किसी सचमुच नए लेनदेन हेतु — उसी पंक्ति से भुगतान/प्राप्ति सीधे बनाएँ ताकि कुछ छूटे नहीं। हर पंक्ति डेबिट/क्रेडिट, राशि, लाभार्थी और स्थिति (मिलान/समीक्षा चाहिए) दिखाती है, और पूरा समाधान रिकॉर्ड हेतु Excel/PDF में निर्यात किया जा सकता है। चूँकि मैपिंग याद रहती है, पहला स्टेटमेंट सबसे अधिक मेहनत लेता है और उसके बाद हर महीना काफ़ी हद तक स्वतः होता है।',
       ],
     },
   },
@@ -165,6 +171,7 @@ const SECTIONS = [
         'The Invoices screen shows two kinds of bill side by side, clearly colour-coded: a blue “Standard Invoice” badge for normal commercial bills, and a green “GST E-Invoice” badge for those registered on the government portal (with an IRN). The columns tell you the number, type, customer, date, amount, status, any linked e-way bill and who created it.',
         'To raise a standard invoice click New Invoice, pick the customer (or type a name and GSTIN), set the place of supply, and add items line by line with HSN, quantity, rate and GST percent. The software works out CGST and SGST for a sale within your state, or IGST for another state, and shows the running total live. Mark it Draft, Issued or Cancelled, add notes, and you are done — no approval needed.',
         'Invoices and e-way bills stay connected both ways. From an invoice you can link an existing e-way bill or create one from it; opening either record shows the other, so the goods movement and the bill are never out of sync.',
+        'Every invoice downloads as a clean, branded PDF in English or Hindi, with the amount in words and your bank details printed for payment. A standard invoice can be edited or cancelled at any time; a GST e-Invoice, once it has an IRN, is locked except for the cosmetic letterhead — to create one you use the GST e-Invoicing workspace and follow the offline filing steps (see “e-Invoicing step by step”). The list’s search and status filters make it easy to pull up a single bill, or every unpaid invoice for one client, in seconds.',
       ],
     },
     hi: {
@@ -173,6 +180,7 @@ const SECTIONS = [
         'इनवॉइस स्क्रीन दो तरह के बिल साथ-साथ दिखाती है, स्पष्ट रंग-कोडित: सामान्य व्यापारिक बिलों के लिए नीला “Standard Invoice” बैज, और सरकारी पोर्टल पर पंजीकृत (IRN वाले) के लिए हरा “GST E-Invoice” बैज। कॉलम बताते हैं — संख्या, प्रकार, ग्राहक, दिनांक, राशि, स्थिति, जुड़ा e-way bill और किसने बनाया।',
         'स्टैंडर्ड इनवॉइस बनाने के लिए New Invoice पर क्लिक करें, ग्राहक चुनें (या नाम व GSTIN टाइप करें), आपूर्ति का स्थान चुनें, और मदें एक-एक कर HSN, मात्रा, दर व GST% सहित जोड़ें। अपने राज्य के भीतर बिक्री पर सॉफ़्टवेयर CGST+SGST और दूसरे राज्य पर IGST निकालता है, और कुल लाइव दिखाता है। इसे Draft, Issued या Cancelled चिह्नित करें, टिप्पणी जोड़ें — बस हो गया, किसी मंज़ूरी की ज़रूरत नहीं।',
         'इनवॉइस और e-way bill दोनों तरफ़ से जुड़े रहते हैं। इनवॉइस से आप मौजूदा e-way bill जोड़ सकते हैं या नया बना सकते हैं; कोई भी रिकॉर्ड खोलने पर दूसरा दिखता है, ताकि माल की आवाजाही और बिल कभी अलग न हों।',
+        'हर इनवॉइस अंग्रेज़ी या हिंदी में एक साफ़, ब्रांडेड PDF के रूप में डाउनलोड होता है — राशि शब्दों में और भुगतान हेतु आपके बैंक विवरण सहित। स्टैंडर्ड इनवॉइस कभी भी संपादित/रद्द किया जा सकता है; GST e-Invoice में IRN आने के बाद वह केवल कॉस्मेटिक लेटरहेड को छोड़कर लॉक हो जाता है — उसे बनाने हेतु GST e-Invoicing कार्यक्षेत्र का उपयोग करें और ऑफ़लाइन फाइलिंग चरण अपनाएँ (“e-Invoicing चरण-दर-चरण” देखें)। सूची की खोज व स्थिति-फ़िल्टर से एक बिल, या किसी एक ग्राहक के सभी बकाया इनवॉइस, सेकंडों में निकालें।',
       ],
     },
   },
@@ -182,14 +190,16 @@ const SECTIONS = [
       title: 'Delivery Challans',
       body: [
         'A delivery challan moves goods when you are not raising a tax invoice yet — job work, branch or warehouse transfer, repair, testing, demonstration, exhibition, goods on approval, returnable packaging and similar movements allowed under GST Rule 55. Open “Delivery Challans”, click New Challan, choose the type, and fill the consignor (from) and consignee (to) details.',
-        'Add the goods with HSN, quantity, rate and GST, and the software decides CGST+SGST or IGST and shows the live total. Enter the transport details and any e-way bill number. Because you are the operator there are no approvals: save and dispatch directly. Afterwards mark the challan delivered with the receiver’s name, record a return if goods come back, generate a linked e-way bill, or convert the challan into a tax invoice — the link between them is kept. Download the challan PDF (English or Hindi) to send with the vehicle.',
+        'Add the goods with HSN, quantity, rate and GST, and the software decides CGST+SGST or IGST and shows the live total. Enter the transport details and any e-way bill number. There are no approvals: save and dispatch directly. Afterwards mark the challan delivered with the receiver’s name, record a return if goods come back, generate a linked e-way bill, or convert the challan into a tax invoice — the link between them is kept. Download the challan PDF (English or Hindi) to send with the vehicle.',
+        'A challan is not a tax invoice and does not register an IRN — it simply documents a movement of goods, which is exactly why it is the right tool for transfers and job work. Its lifecycle is easy to follow on the detail screen: draft → dispatched → delivered (or returned), each step time-stamped in the history. If the consignment crosses the e-way-bill value threshold, generate the linked e-way bill before the vehicle leaves; and when you finally bill those goods, convert the challan into a tax invoice so the items are never re-keyed.',
       ],
     },
     hi: {
       title: 'डिलीवरी चालान',
       body: [
         'डिलीवरी चालान तब माल भेजता है जब आप अभी टैक्स इनवॉइस नहीं बना रहे — जॉब वर्क, शाखा/गोदाम स्थानांतरण, मरम्मत, परीक्षण, प्रदर्शन, प्रदर्शनी, अनुमोदन पर माल, वापसी योग्य पैकेजिंग आदि (GST नियम 55)। “Delivery Challans” खोलें, New Challan पर क्लिक करें, प्रकार चुनें, और भेजने वाले (from) व पाने वाले (to) का विवरण भरें।',
-        'माल को HSN, मात्रा, दर व GST सहित जोड़ें; सॉफ़्टवेयर CGST+SGST या IGST तय करता है और कुल लाइव दिखाता है। परिवहन विवरण और कोई e-way bill संख्या भरें। आप ऑपरेटर हैं इसलिए कोई मंज़ूरी नहीं: सीधे सहेजें और डिस्पैच करें। बाद में पाने वाले का नाम लेकर डिलीवर चिह्नित करें, माल लौटने पर वापसी दर्ज करें, जुड़ा e-way bill बनाएँ, या चालान को टैक्स इनवॉइस में बदलें — दोनों का संबंध सुरक्षित रहता है। वाहन के साथ भेजने हेतु चालान PDF (अंग्रेज़ी या हिंदी) डाउनलोड करें।',
+        'माल को HSN, मात्रा, दर व GST सहित जोड़ें; सॉफ़्टवेयर CGST+SGST या IGST तय करता है और कुल लाइव दिखाता है। परिवहन विवरण और कोई e-way bill संख्या भरें। कोई मंज़ूरी नहीं: सीधे सहेजें और डिस्पैच करें। बाद में पाने वाले का नाम लेकर डिलीवर चिह्नित करें, माल लौटने पर वापसी दर्ज करें, जुड़ा e-way bill बनाएँ, या चालान को टैक्स इनवॉइस में बदलें — दोनों का संबंध सुरक्षित रहता है। वाहन के साथ भेजने हेतु चालान PDF (अंग्रेज़ी या हिंदी) डाउनलोड करें।',
+        'चालान टैक्स इनवॉइस नहीं है और IRN पंजीकृत नहीं करता — यह केवल माल की आवाजाही दर्ज करता है, इसीलिए स्थानांतरण व जॉब वर्क हेतु यही सही उपकरण है। इसका जीवनचक्र विवरण स्क्रीन पर आसानी से दिखता है: draft → dispatched → delivered (या returned), हर चरण इतिहास में समयांकित। यदि खेप e-way-bill मूल्य-सीमा पार करती है, तो वाहन निकलने से पहले जुड़ा e-way bill बनाएँ; और जब आप अंततः उस माल का बिल बनाएँ, तो चालान को टैक्स इनवॉइस में बदलें ताकि मदें दोबारा टाइप न हों।',
       ],
     },
   },
@@ -200,6 +210,7 @@ const SECTIONS = [
       body: [
         'Open “Quotes & Estimation” and click New Quote. Enter the client, system size in kW, the per-watt rate and the bill of quantities (modules, inverter, structure, balance of system). The tool computes subtotal, contingency, margin, taxable value, GST and the grand total automatically, and you can add a government subsidy to show the net effective cost.',
         'The downloadable PDF is fully branded with your logo, signature, stamp and terms, and includes a “Why Go Solar” section — annual savings, payback period, 25-year return, clean units generated, CO₂ avoided, trees-equivalent and a savings chart — so the customer can see how worthwhile switching to solar is. These figures are indicative estimates based on typical Indian generation and tariff rise.',
+        'A quote is a working document: save it, send the PDF, and revise it as the customer negotiates — each version recalculates instantly. When the deal is won, the same figures carry into an invoice so you do not re-enter them, and the quote stays on file as the agreed scope. Adjust the contingency and margin percentages to protect your costs, and use the subsidy line whenever the customer is eligible, so they see both the gross price and the realistic net.',
       ],
     },
     hi: {
@@ -207,6 +218,7 @@ const SECTIONS = [
       body: [
         '“कोटेशन और अनुमान” खोलकर New Quote पर क्लिक करें। ग्राहक, सिस्टम आकार (kW), प्रति-वाट दर और सामग्री सूची (मॉड्यूल, इन्वर्टर, स्ट्रक्चर, BOS) भरें। उपकरण उप-योग, आकस्मिकता, मार्जिन, कर-योग्य मूल्य, GST और कुल राशि स्वतः निकालता है, और शुद्ध प्रभावी लागत दिखाने हेतु सरकारी सब्सिडी जोड़ सकते हैं।',
         'डाउनलोड होने वाला PDF आपके लोगो, हस्ताक्षर, मुहर और शर्तों के साथ पूरी तरह ब्रांडेड है, और इसमें “Why Go Solar” अनुभाग है — वार्षिक बचत, पेबैक अवधि, 25-वर्षीय लाभ, स्वच्छ यूनिट, टाला गया CO₂, वृक्ष-समतुल्य और बचत चार्ट — ताकि ग्राहक देख सके कि सौर पर जाना कितना लाभदायक है। ये आँकड़े सामान्य भारतीय उत्पादन व टैरिफ वृद्धि पर आधारित सांकेतिक अनुमान हैं।',
+        'कोटेशन एक कार्यशील दस्तावेज़ है: इसे सहेजें, PDF भेजें, और ग्राहक की बातचीत के अनुसार बदलें — हर संस्करण तुरंत पुनर्गणना करता है। सौदा जीतने पर वही आँकड़े इनवॉइस में चले जाते हैं ताकि दोबारा न भरने पड़ें, और कोटेशन सहमत दायरे के रूप में फ़ाइल में रहता है। अपनी लागत सुरक्षित रखने हेतु आकस्मिकता व मार्जिन प्रतिशत समायोजित करें, और जब ग्राहक पात्र हो तब सब्सिडी पंक्ति उपयोग करें, ताकि वे सकल मूल्य और वास्तविक शुद्ध दोनों देखें।',
       ],
     },
   },
@@ -223,7 +235,7 @@ const SECTIONS = [
       title: 'GST अनुपालन — e-Invoice और e-Way Bill',
       body: [
         '“GST Compliance” खोलकर e-Invoice और e-Way Bill तैयार करें — ये अलग कानूनी दस्तावेज़ हैं और साथ-साथ रहते हैं। खरीदार, मदों व मूल्यों के साथ e-Invoice बनाएँ; सॉफ़्टवेयर हर फ़ील्ड को स्थानीय रूप से जाँचता है और जमा करने से पहले समस्याएँ बताता है। e-Way Bill माल की आवाजाही के परिवहन विवरण (वाहन, ट्रांसपोर्टर, दूरी) रखता है।',
-        'जब आपके तीन GSTIN (ग्रेटर नोएडा, बिहार और दिल्ली) होते हैं, तो आप ऊपर शाखा चयनकर्ता से उनके बीच बदलते हैं, और हर कार्यालय अपने दस्तावेज़ अलग से नंबर करता है। सरकारी पोर्टल से जुड़ाव तैयार और मॉड्यूलर है: अभी यह सुरक्षित सिमुलेशन में चलता है ताकि आप पूरी प्रक्रिया अभ्यास कर सकें, और जब आपके लाइव GST प्रमाण-पत्र आएँगे तो यह बिना किसी पुनर्निर्माण के असली IRN पर बदल जाएगा।',
+        'जब आपके तीन GSTIN (ग्रेटर नोएडा, बिहार और दिल्ली) हों, तो आप ऊपर शाखा चयनकर्ता से उनके बीच बदलते हैं, और हर कार्यालय अपने दस्तावेज़ अलग से नंबर करता है। चूँकि आपको लाइव GST API नहीं दी गई है, फाइलिंग ऑफ़लाइन होती है: सॉफ़्टवेयर e-Invoice (या e-Way Bill) का JSON बनाता है, आप “Upload on GST Portal” पर क्लिक करते हैं, लॉगिन कर फ़ाइल बल्क-अपलोड करते हैं, और पोर्टल IRN, Ack संख्या व हस्ताक्षरित PDF लौटाता है। यहाँ दस्तावेज़ खोलें, “Enter IRN” चुनें और वह हस्ताक्षरित PDF अपलोड करें — IRN, Ack संख्या व QR अपने आप पढ़ लिए जाते हैं और तैयार, ब्रांडेड दस्तावेज़ बन जाता है।',
       ],
     },
   },
@@ -358,6 +370,7 @@ const SECTIONS = [
       body: [
         'Open “Reports” for management-ready summaries, and use the Excel or PDF buttons on the Payments, Receipts, ledger and challan screens to export exactly what is on the screen, filtered by the date range you chose. Vendor, client and employee ledgers each export from their own page.',
         'Every document and report download — invoices, e-way bills, quotations, delivery challans and reports — can be produced in English or Hindi. When you click a PDF or Excel button a small pop-up asks which language you want; the headings, labels and totals translate while names, GSTINs, dates and amounts stay as they are, which is the normal format for Indian bilingual documents.',
+        'The Reports area gathers the management views — outgoing payments, incoming receipts, invoices, project profitability and the vendor / client / employee ledgers — each filterable by date, project, client or vendor before you export. Pick the window you need (this month, this quarter or a custom range), check the totals on screen, then download. One role note: the view-only Admin account can read these figures but cannot export them; the System Manager and Editor can.',
       ],
     },
     hi: {
@@ -375,6 +388,7 @@ const SECTIONS = [
       body: [
         'Both are always one click away. Click your name at the top-right and you will see “Create Backup” and “Publish to Cloud” right there. Create Backup saves the entire software — every record and every uploaded file — into one timestamped file on this computer; the software also does this automatically every two hours, so you are protected even if you forget. Publish to Cloud uploads a copy of your data so the admin can view and export it on the web; your heavy files (proofs, statements) stay on this computer.',
         'For the full picture, open “Backup & Restore” (also in the menu and the left sidebar). There you can run a backup, verify it, run a safe disaster-recovery test that never touches live data, download a backup to keep off-site, and set how many backups to keep. When you sign out, the software offers to take a fresh backup first so a day’s work is never left unprotected.',
+        'Restoring is just as simple and is safe by design: you can preview exactly what a backup contains before applying it, and a restore only adds back missing records — it never wipes what is already there. As a habit, copy a recent backup file onto a pen-drive or a second computer too, so even a hard-disk failure cannot lose your books. The retention setting controls how many timestamped backups are kept on this machine before the oldest is rotated out.',
       ],
     },
     hi: {
@@ -382,6 +396,7 @@ const SECTIONS = [
       body: [
         'दोनों हमेशा एक क्लिक दूर हैं। ऊपर-दाईं ओर अपने नाम पर क्लिक करें — वहीं “Create Backup” और “Publish to Cloud” दिखेंगे। Create Backup पूरे सॉफ़्टवेयर को — हर रिकॉर्ड और हर अपलोड फ़ाइल — इसी कंप्यूटर पर एक समयांकित फ़ाइल में सहेजता है; सॉफ़्टवेयर यह हर दो घंटे में स्वतः भी करता है, इसलिए भूलने पर भी आप सुरक्षित हैं। Publish to Cloud आपके डेटा की एक प्रति अपलोड करता है ताकि एडमिन वेब पर देख व निर्यात कर सके; आपकी भारी फ़ाइलें (प्रूफ़, स्टेटमेंट) इसी कंप्यूटर पर रहती हैं।',
         'पूरी जानकारी के लिए “Backup & Restore” खोलें (मेनू और बाएँ साइडबार में भी)। वहाँ आप बैकअप ले सकते हैं, सत्यापित कर सकते हैं, एक सुरक्षित आपदा-पुनर्प्राप्ति परीक्षण चला सकते हैं जो लाइव डेटा को नहीं छूता, बैकअप डाउनलोड कर ऑफ-साइट रख सकते हैं, और कितने बैकअप रखने हैं तय कर सकते हैं। साइन आउट करते समय, सॉफ़्टवेयर पहले एक ताज़ा बैकअप लेने का सुझाव देता है ताकि दिन का काम कभी असुरक्षित न रहे।',
+        'पुनर्स्थापना भी उतनी ही सरल और सुरक्षित है: लागू करने से पहले आप ठीक देख सकते हैं कि बैकअप में क्या है, और पुनर्स्थापना केवल गायब रिकॉर्ड वापस जोड़ती है — मौजूदा कुछ मिटाती नहीं। आदत के रूप में, हाल का बैकअप पेन-ड्राइव या दूसरे कंप्यूटर पर भी कॉपी रखें, ताकि हार्ड-डिस्क खराब होने पर भी बही न खोए। रिटेंशन सेटिंग तय करती है कि सबसे पुराना हटने से पहले इस मशीन पर कितने समयांकित बैकअप रखे जाएँ।',
       ],
     },
   },
@@ -392,6 +407,7 @@ const SECTIONS = [
       body: [
         'Open the “Recovery Center” whenever something goes wrong. Anything you deleted — an invoice, an e-way bill or a delivery challan — is listed here and can be brought back with a single Recover click; nothing is ever truly lost. The same screen shows your recovery points (backups), where you can verify a backup’s integrity or download it, and links to the full audit trail of every change.',
         'Restoring from a backup is additive and safe: it brings back missing records without overwriting what you already have, so you can recover from a problem without fear of wiping today’s work.',
+        'The two layers work together: use Recover for the everyday “I deleted the wrong thing” mistake — instant and for a single record — and a backup restore for the bigger “I need last week’s state back” situation. Either way the audit trail records what was removed and what was brought back, so there is always a clear account; nothing disappears silently and nothing is overwritten by accident.',
       ],
     },
     hi: {
@@ -399,6 +415,7 @@ const SECTIONS = [
       body: [
         'कुछ गलत होने पर “Recovery Center” खोलें। आपने जो हटाया — इनवॉइस, e-way bill या डिलीवरी चालान — वह यहाँ सूचीबद्ध होता है और एक Recover क्लिक से वापस आ जाता है; कुछ भी सचमुच नहीं खोता। वही स्क्रीन आपके रिकवरी पॉइंट (बैकअप) दिखाती है, जहाँ आप बैकअप की अखंडता जाँच या डाउनलोड कर सकते हैं, और हर बदलाव के पूरे ऑडिट ट्रेल के लिंक देती है।',
         'बैकअप से पुनर्स्थापना योगात्मक और सुरक्षित है: यह गायब रिकॉर्ड वापस लाती है पर मौजूदा डेटा को अधिलेखित नहीं करती, इसलिए आप आज का काम मिटने के डर के बिना किसी समस्या से उबर सकते हैं।',
+        'दोनों परतें साथ काम करती हैं: रोज़ की “गलत चीज़ हट गई” भूल हेतु Recover उपयोग करें — तुरंत और एकल रिकॉर्ड के लिए — और बड़ी “पिछले सप्ताह की स्थिति चाहिए” स्थिति हेतु बैकअप पुनर्स्थापना। किसी भी तरह, ऑडिट ट्रेल दर्ज करता है कि क्या हटा और क्या वापस आया, इसलिए हमेशा स्पष्ट विवरण रहता है; कुछ चुपचाप गायब नहीं होता और गलती से अधिलेखित नहीं होता।',
       ],
     },
   },
@@ -409,6 +426,7 @@ const SECTIONS = [
       body: [
         'The software quietly protects whatever you are typing. While you fill an invoice or a challan, your work is auto-saved as a draft on this computer, so if the browser closes, the power goes off or the screen is shut by accident, you will be offered to restore that draft the next time you open the form. If you try to leave a form with unsaved changes, the software warns you first rather than letting the work vanish.',
         'Together with the automatic two-hourly backups and the offer to back up before you sign out, this means a normal mishap — a crash, a power cut, a closed tab — does not cost you your data.',
+        'None of this needs any action from you; it runs on its own. If you ever see a “restore your draft?” prompt when reopening a form, it simply means the app kept what you were typing through an interruption — accept it to carry on where you left off, or dismiss it to start fresh.',
       ],
     },
     hi: {
@@ -416,6 +434,7 @@ const SECTIONS = [
       body: [
         'सॉफ़्टवेयर चुपचाप आपकी टाइपिंग की रक्षा करता है। इनवॉइस या चालान भरते समय आपका काम इसी कंप्यूटर पर ड्राफ्ट के रूप में स्वतः सहेजा जाता है, इसलिए यदि ब्राउज़र बंद हो जाए, बिजली चली जाए या स्क्रीन गलती से बंद हो जाए, तो अगली बार फ़ॉर्म खोलने पर आपको वह ड्राफ्ट पुनर्स्थापित करने का विकल्प मिलेगा। बिना सहेजे फ़ॉर्म छोड़ने पर सॉफ़्टवेयर पहले चेतावनी देता है, ताकि काम गायब न हो।',
         'हर दो घंटे के स्वतः बैकअप और साइन आउट से पहले बैकअप के सुझाव के साथ, इसका अर्थ है कि सामान्य दुर्घटना — क्रैश, बिजली कटौती, बंद टैब — आपका डेटा नहीं छीनती।',
+        'इसके लिए आपको कुछ नहीं करना पड़ता; यह अपने-आप चलता है। यदि फ़ॉर्म दोबारा खोलते समय कभी “restore your draft?” संकेत दिखे, तो इसका अर्थ है कि ऐप ने किसी रुकावट के दौरान आपकी टाइपिंग सहेज रखी थी — जहाँ छोड़ा था वहीं जारी रखने हेतु स्वीकारें, या नए सिरे से शुरू करने हेतु खारिज करें।',
       ],
     },
   },
@@ -464,6 +483,7 @@ const SECTIONS = [
       body: [
         'If the app will not open or shows a blank page, make sure the engine is running — use the “Start ARRAYS ERP” shortcut or open the local web address; if it is still stuck, restart the computer, as the database starts automatically. If a file upload fails, the file type or size may be unsupported, so use a PDF, image or Excel/CSV within the size limit and try again — the error text names the cause.',
         'If an invoice will not submit, run Validate first and fix each red error (common ones are an invalid GSTIN, a missing item or value, or an HSN that needs more digits). A “duplicate document number” message means that number already exists for that office — use a different number, or confirm the override with a reason. If something looks wrong, the Recovery Center lets you bring back deleted records, and the audit trail shows exactly what changed and when.',
+        'A few role-related messages are normal, not faults: if a screen says you cannot do something or an export/import is blocked, you are likely on the view-only Admin account — sign in as the System Manager or Editor for that action. If the government portal rejects the uploaded JSON, read its on-screen reason (often a wrong state code, a blank Location, or a B2C invoice which the IRP does not accept), fix that field here, download the JSON again and re-upload. When in doubt, check the System Status / diagnostics screen (Editor) for a quick health read, and remember every action is in the audit trail if you need to retrace a step.',
       ],
     },
     hi: {
@@ -471,6 +491,7 @@ const SECTIONS = [
       body: [
         'यदि ऐप न खुले या खाली पृष्ठ दिखे, तो सुनिश्चित करें कि इंजन चल रहा है — “Start ARRAYS ERP” शॉर्टकट उपयोग करें या स्थानीय वेब पता खोलें; फिर भी अटके तो कंप्यूटर पुनः चालू करें, क्योंकि डेटाबेस स्वतः शुरू होता है। यदि फ़ाइल अपलोड विफल हो, तो फ़ाइल प्रकार/आकार असमर्थित हो सकता है, इसलिए सीमा के भीतर PDF, छवि या Excel/CSV उपयोग करें — त्रुटि पाठ कारण बताता है।',
         'यदि इनवॉइस जमा न हो, पहले Validate करें और हर लाल त्रुटि ठीक करें (आम: अमान्य GSTIN, गायब मद/मूल्य, या HSN जिसमें अधिक अंक चाहिए)। “duplicate document number” संदेश का अर्थ है वह संख्या इस कार्यालय में पहले से है — अलग संख्या उपयोग करें या कारण सहित ओवरराइड पुष्टि करें। कुछ गलत लगे तो Recovery Center से हटाए रिकॉर्ड वापस लाएँ, और ऑडिट ट्रेल दिखाता है कि क्या और कब बदला।',
+        'कुछ भूमिका-संबंधी संदेश सामान्य हैं, खराबी नहीं: यदि कोई स्क्रीन कहे कि आप यह नहीं कर सकते या निर्यात/आयात अवरुद्ध है, तो संभवतः आप केवल-दृश्य Admin खाते पर हैं — उस क्रिया हेतु System Manager या Editor से साइन-इन करें। यदि सरकारी पोर्टल अपलोड किया JSON अस्वीकार करे, तो उसका स्क्रीन-कारण पढ़ें (अक्सर गलत राज्य कोड, खाली Location, या B2C इनवॉइस जिसे IRP स्वीकार नहीं करता), यहाँ वह फ़ील्ड ठीक करें, JSON फिर डाउनलोड कर पुनः अपलोड करें। संदेह हो तो System Status / diagnostics स्क्रीन (Editor) पर त्वरित स्वास्थ्य जाँच देखें, और याद रखें हर क्रिया ऑडिट ट्रेल में है यदि कदम दोबारा देखना हो।',
       ],
     },
   },
