@@ -2,11 +2,12 @@ import { Router } from 'express';
 import { query } from '../config/db.js';
 import { asyncHandler, ApiError } from '../utils/asyncHandler.js';
 import { authenticate } from '../middleware/auth.js';
+import { denyWriteForAdmin } from '../middleware/rbac.js';
 import { audit } from '../middleware/audit.js';
 import { customerGst } from '../services/gst/rollupService.js';
 
 const router = Router();
-router.use(authenticate);
+router.use(authenticate, denyWriteForAdmin);   // admin is view-only
 
 // GET /api/clients (with receivable summary)
 router.get(

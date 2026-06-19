@@ -93,16 +93,16 @@ export default function App() {
         <Route path="/gst/notifications" element={<GstNotifications />} />
         <Route path="/gst/activity" element={<GstActivity />} />
         <Route path="/gst/health" element={<Protected adminOnly><GstHealth /></Protected>} />
-        <Route path="/gst/branches" element={<Protected adminOnly><GstBranches /></Protected>} />
-        <Route path="/gst/number-series" element={<Protected adminOnly><GstSeries /></Protected>} />
-        <Route path="/gst/import" element={<Protected adminOnly><GstImport /></Protected>} />
+        <Route path="/gst/branches" element={<Protected editorOnly><GstBranches /></Protected>} />
+        <Route path="/gst/number-series" element={<Protected editorOnly><GstSeries /></Protected>} />
+        <Route path="/gst/import" element={<Protected editorOnly><GstImport /></Protected>} />
         <Route path="/gst/schedules" element={<GstSchedules />} />
         <Route path="/gst/backup" element={<GstBackup />} />
         <Route path="/gst/diagnostics" element={<Protected adminOnly><GstDiagnostics /></Protected>} />
         <Route path="/gst/readiness" element={<Protected adminOnly><GstReadiness /></Protected>} />
-        <Route path="/gst/system" element={<Protected adminOnly><GstSystem /></Protected>} />
-        <Route path="/gst/branding" element={<Protected adminOnly><GstBranding /></Protected>} />
-        <Route path="/gst/integrations" element={<Protected adminOnly><GstIntegrations /></Protected>} />
+        <Route path="/gst/system" element={<Protected editorOnly><GstSystem /></Protected>} />
+        <Route path="/gst/branding" element={<Protected editorOnly><GstBranding /></Protected>} />
+        <Route path="/gst/integrations" element={<Protected editorOnly><GstIntegrations /></Protected>} />
         <Route path="/gst/feed" element={<GstFeed />} />
         <Route path="/gst/reports" element={<GstReports />} />
         <Route path="/about" element={<About />} />
@@ -111,11 +111,11 @@ export default function App() {
         <Route path="/reports" element={<ReportsHub />} />
         <Route path="/activity" element={<ActivityHub />} />
         <Route path="/status" element={<Protected adminOnly><SystemStatusHub /></Protected>} />
-        <Route path="/system" element={<Protected adminOnly><DataAdminHub /></Protected>} />
+        <Route path="/system" element={<Protected editorOnly><DataAdminHub /></Protected>} />
         {/* Standalone routes kept so existing deep links still work */}
         <Route path="/reports/financial" element={<Reports />} />
         <Route path="/audit" element={<Protected adminOnly><Audit /></Protected>} />
-        <Route path="/users" element={<Protected adminOnly><Users /></Protected>} />
+        <Route path="/users" element={<Protected editorOnly><Users /></Protected>} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

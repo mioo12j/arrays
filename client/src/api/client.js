@@ -30,11 +30,29 @@ api.interceptors.response.use(
 export const apiError = (err) =>
   err?.response?.data?.error || err?.message || 'Something went wrong';
 
+// The current signed-in user (read from localStorage; no React needed).
+export function currentUser() {
+  try { return JSON.parse(localStorage.getItem('epc_user') || 'null'); } catch { return null; }
+}
+
+// Admin is a strict view-only account — it cannot export or download anything.
+// Returns true (and shows a toast) when the action must be blocked.
+export function blockExportForAdmin() {
+  if (currentUser()?.role === 'admin') {
+    window.dispatchEvent(new CustomEvent('app:toast', {
+      detail: { message: 'The Admin account is view-only — exporting and downloading are disabled.', type: 'error' },
+    }));
+    return true;
+  }
+  return false;
+}
+
 /**
  * Downloads a file from an authenticated API endpoint (sends the JWT header,
  * which a plain <a href> navigation cannot). Triggers a browser save dialog.
  */
 export async function download(path) {
+  if (blockExportForAdmin()) return;
   if (isTranslatableDownload(path)) {
     const lang = await chooseDownloadLanguage(); // English / हिन्दी popup
     if (lang === null) return;                    // user cancelled

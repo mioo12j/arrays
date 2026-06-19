@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { query, withTransaction } from '../config/db.js';
 import { asyncHandler, ApiError } from '../utils/asyncHandler.js';
 import { authenticate } from '../middleware/auth.js';
-import { noImportForAdmin } from '../middleware/rbac.js';
+import { noImportForAdmin, denyWriteForAdmin } from '../middleware/rbac.js';
 import { audit } from '../middleware/audit.js';
 import { upload } from '../middleware/upload.js';
 import { saveDocument } from '../services/document.service.js';
@@ -11,7 +11,7 @@ import { postLedgerEntry } from '../services/ledger.service.js';
 import { autoMapVendor, autoMapClient, findOrCreateVendor, findOrCreateClient } from '../services/vendor-match.service.js';
 
 const router = Router();
-router.use(authenticate);
+router.use(authenticate, denyWriteForAdmin);   // admin is view-only
 
 // ── Upload a monthly statement -> parse -> auto-match ────────────────────────
 router.post(

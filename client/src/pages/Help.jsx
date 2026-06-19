@@ -319,16 +319,16 @@ const SECTIONS = [
       title: 'Roles & access — who can do what',
       body: [
         'The software has four roles. The System Manager (the day-to-day operator) does all the real work: payments, receipts, invoices, e-Invoices, e-Way Bills, delivery challans, quotations, vendors, clients, reports, backups and the Recovery Center. This is the account used for everyday operations.',
-        'The configuration screens — Offices & GSTINs, Number Series, Branding, the Import Wizard, System Status and Data & Admin — are reserved for the Admin and the Editor and are hidden from the System Manager, so daily use can never accidentally change the company’s setup. The Editor is the super-admin: everything an Admin can do, plus managing protected accounts and setting the shared GST portal login.',
-        'The Admin is mainly a view-and-export role (it is the cloud-facing account and does not run the heavy local imports/OCR). The Auditor is a read-only reviewer for internal or statutory audit — it can see everything but change nothing. Whatever the role, every single action is recorded permanently in the audit trail with the time and the person’s name.',
+        'The configuration screens — Offices & GSTINs, Number Series, Branding, the Import Wizard, User Management and Data & Admin — are reserved for the Editor alone and are hidden from everyone else, so day-to-day use can never accidentally change the company’s setup, accounts or master data. The Editor is the super-admin and does everything, including setting the shared GST portal login and resetting other people’s passwords.',
+        'The Admin is a strict VIEW-ONLY oversight account: it can open every data screen and read the books, but it cannot create, edit, delete, import, or export/download anything — useful for someone who should see the numbers without being able to change or take them out. The Auditor is a read-only reviewer for internal or statutory audit (it may still export for audit purposes). Whatever the role, every single action is recorded permanently in the audit trail with the time and the person’s name.',
       ],
     },
     hi: {
       title: 'भूमिकाएँ व पहुँच — कौन क्या कर सकता है',
       body: [
         'सॉफ़्टवेयर में चार भूमिकाएँ हैं। System Manager (रोज़ का संचालक) सारा वास्तविक काम करता है: भुगतान, प्राप्तियाँ, इनवॉइस, e-Invoice, e-Way Bill, डिलीवरी चालान, कोटेशन, विक्रेता, ग्राहक, रिपोर्ट, बैकअप और Recovery Center। यही खाता रोज़मर्रा के संचालन हेतु उपयोग होता है।',
-        'कॉन्फ़िगरेशन स्क्रीन — Offices & GSTINs, Number Series, Branding, Import Wizard, System Status और Data & Admin — Admin और Editor के लिए सुरक्षित हैं और System Manager से छिपी हैं, ताकि रोज़ के उपयोग में कंपनी की सेटअप गलती से न बदले। Editor सुपर-एडमिन है: जो Admin कर सकता है वह सब, साथ ही संरक्षित खातों का प्रबंधन और साझा GST पोर्टल लॉगिन सेट करना।',
-        'Admin मुख्यतः देखने-व-निर्यात की भूमिका है (यह क्लाउड-मुखी खाता है और भारी स्थानीय आयात/OCR नहीं चलाता)। Auditor आंतरिक या वैधानिक ऑडिट हेतु केवल-पठन समीक्षक है — सब देख सकता है, कुछ बदल नहीं सकता। भूमिका चाहे जो हो, हर एक क्रिया समय और व्यक्ति के नाम सहित स्थायी रूप से ऑडिट ट्रेल में दर्ज होती है।',
+        'कॉन्फ़िगरेशन स्क्रीन — Offices & GSTINs, Number Series, Branding, Import Wizard, User Management और Data & Admin — केवल Editor के लिए सुरक्षित हैं और बाकी सबसे छिपी हैं, ताकि रोज़ के उपयोग में कंपनी की सेटअप, खाते या मास्टर डेटा गलती से न बदले। Editor सुपर-एडमिन है और सब कुछ करता है — साझा GST पोर्टल लॉगिन सेट करना और दूसरों के पासवर्ड रीसेट करना भी।',
+        'Admin एक सख़्त केवल-दृश्य (VIEW-ONLY) निगरानी खाता है: यह हर डेटा स्क्रीन खोलकर बही पढ़ सकता है, पर कुछ भी बना/बदल/हटा/आयात/निर्यात-डाउनलोड नहीं कर सकता — उस व्यक्ति के लिए उपयोगी जिसे आँकड़े देखने हों पर बदल या बाहर न ले जा सके। Auditor आंतरिक/वैधानिक ऑडिट हेतु केवल-पठन समीक्षक है (ऑडिट हेतु निर्यात कर सकता है)। भूमिका चाहे जो हो, हर क्रिया समय व व्यक्ति के नाम सहित स्थायी रूप से ऑडिट ट्रेल में दर्ज होती है।',
       ],
     },
   },
@@ -338,7 +338,7 @@ const SECTIONS = [
       title: 'Passwords — change your own, reset others',
       body: [
         'To change your own password, click your name at the top-right and choose “Change Password”. Enter your current password, then the new one twice. This works for every role.',
-        'The Editor and Admin can reset anybody’s password from User Management: open the page, find the person and click “Reset password”, then type a new password for them. They can sign in with it and change it themselves afterwards. The protected Editor (super-admin) account can only be reset by an Editor.',
+        'The Editor can reset anybody’s password from User Management: open the page, find the person and click “Reset password”, then type a new password for them. They can sign in with it and change it themselves afterwards. (User Management is editor-only — the view-only Admin cannot reach it.)',
         'Keep your passwords private and change them from time to time. Because a few sensitive actions — such as cancelling a document, restoring a backup, or revealing the saved GST-portal password — ask you to confirm your password, having a current, memorable password keeps those steps smooth.',
       ],
     },
@@ -346,7 +346,7 @@ const SECTIONS = [
       title: 'पासवर्ड — अपना बदलें, दूसरों का रीसेट करें',
       body: [
         'अपना पासवर्ड बदलने हेतु ऊपर-दाईं ओर अपने नाम पर क्लिक करें और “Change Password” चुनें। अपना वर्तमान पासवर्ड डालें, फिर नया पासवर्ड दो बार। यह हर भूमिका के लिए काम करता है।',
-        'Editor और Admin किसी का भी पासवर्ड User Management से रीसेट कर सकते हैं: पृष्ठ खोलें, व्यक्ति ढूँढें और “Reset password” पर क्लिक करें, फिर उनके लिए नया पासवर्ड टाइप करें। वे उससे साइन-इन कर बाद में स्वयं बदल सकते हैं। संरक्षित Editor (सुपर-एडमिन) खाता केवल Editor द्वारा रीसेट हो सकता है।',
+        'Editor किसी का भी पासवर्ड User Management से रीसेट कर सकता है: पृष्ठ खोलें, व्यक्ति ढूँढें और “Reset password” पर क्लिक करें, फिर उनके लिए नया पासवर्ड टाइप करें। वे उससे साइन-इन कर बाद में स्वयं बदल सकते हैं। (User Management केवल-Editor है — केवल-दृश्य Admin इस तक नहीं पहुँच सकता।)',
         'अपने पासवर्ड निजी रखें और समय-समय पर बदलें। चूँकि कुछ संवेदनशील कार्य — जैसे दस्तावेज़ रद्द करना, बैकअप पुनर्स्थापित करना, या सहेजा GST-पोर्टल पासवर्ड देखना — आपका पासवर्ड पुष्टि माँगते हैं, एक वर्तमान, याद रहने वाला पासवर्ड इन चरणों को सहज रखता है।',
       ],
     },

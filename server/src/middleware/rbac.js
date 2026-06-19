@@ -16,19 +16,32 @@ export function requireRole(...roles) {
 export const adminOnly = requireRole('admin', 'editor');
 export const editorOnly = requireRole('editor');
 
-// Blocks the (cloud-facing) admin role from CPU-heavy import / OCR / parse
-// endpoints. The admin is a read-and-export role; the operator does all data
-// entry locally. This protects the free-tier cloud server from being pegged by
-// OCR (tesseract / pdfjs) and spreadsheet parsing. Operators and the editor
-// super-admin are still allowed to import.
+// The admin is a VIEW-ONLY oversight account: it can see everything but cannot
+// import, export/download, or write (create/edit/delete). The editor is the
+// super-admin and the operator (System Manager) does the day-to-day data entry,
+// uploads and downloads. These three guards enforce that.
+
+// Block admin from import / upload / OCR endpoints.
 export function noImportForAdmin(req, _res, next) {
   if (req.user?.role === 'admin') {
-    return next(
-      new ApiError(
-        403,
-        'Importing & uploading is disabled for the admin account. The admin can view and export everything; data entry and imports are done from the operator’s computer.'
-      )
-    );
+    return next(new ApiError(403, 'Importing & uploading is disabled for the admin (view-only) account. Data entry and imports are done by the System Manager.'));
+  }
+  next();
+}
+
+// Block admin from any export / download endpoint (reports, ledgers, files).
+export function denyExportForAdmin(req, _res, next) {
+  if (req.user?.role === 'admin') {
+    return next(new ApiError(403, 'Exporting & downloading are disabled for the admin (view-only) account.'));
+  }
+  next();
+}
+
+// Make a whole router read-only for admin: any non-GET method is blocked.
+// (Self-service password change lives on /auth, which this is not applied to.)
+export function denyWriteForAdmin(req, _res, next) {
+  if (req.user?.role === 'admin' && req.method !== 'GET') {
+    return next(new ApiError(403, 'The admin account is view-only — creating, editing and deleting are disabled.'));
   }
   next();
 }

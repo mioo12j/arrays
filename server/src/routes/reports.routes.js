@@ -2,10 +2,12 @@ import { Router } from 'express';
 import { query } from '../config/db.js';
 import { asyncHandler, ApiError } from '../utils/asyncHandler.js';
 import { authenticate } from '../middleware/auth.js';
+import { denyExportForAdmin } from '../middleware/rbac.js';
 import { streamExcel, streamPdf } from '../services/export.service.js';
 
 const router = Router();
-router.use(authenticate);
+// Every endpoint here streams an Excel/PDF export — the admin (view-only) cannot.
+router.use(authenticate, denyExportForAdmin);
 
 const sum = (rows, key) => rows.reduce((s, r) => s + Number(r[key] || 0), 0);
 const fmt = (req) => (req.query.format === 'pdf' ? 'pdf' : 'xlsx');

@@ -2,10 +2,11 @@ import { Router } from 'express';
 import { query } from '../config/db.js';
 import { asyncHandler, ApiError } from '../utils/asyncHandler.js';
 import { authenticate } from '../middleware/auth.js';
+import { denyWriteForAdmin } from '../middleware/rbac.js';
 import { audit } from '../middleware/audit.js';
 
 const router = Router();
-router.use(authenticate);
+router.use(authenticate, denyWriteForAdmin);   // admin is view-only
 
 // ── Projects ────────────────────────────────────────────────────────────────
 

@@ -2,14 +2,14 @@ import { Router } from 'express';
 import { query, withTransaction } from '../config/db.js';
 import { asyncHandler, ApiError } from '../utils/asyncHandler.js';
 import { authenticate } from '../middleware/auth.js';
-import { noImportForAdmin } from '../middleware/rbac.js';
+import { noImportForAdmin, denyWriteForAdmin } from '../middleware/rbac.js';
 import { audit } from '../middleware/audit.js';
 import { upload } from '../middleware/upload.js';
 import { parseVendorFile } from '../services/vendor-import.service.js';
 import { vendorGst } from '../services/gst/rollupService.js';
 
 const router = Router();
-router.use(authenticate);
+router.use(authenticate, denyWriteForAdmin);   // admin is view-only
 
 // Upsert a vendor + optional accounts within a transaction (used by import).
 // Import brings in core identity (beneficiary_id / nickname / account) and

@@ -3,11 +3,11 @@ import bcrypt from 'bcryptjs';
 import { query } from '../config/db.js';
 import { asyncHandler, ApiError } from '../utils/asyncHandler.js';
 import { authenticate } from '../middleware/auth.js';
-import { adminOnly } from '../middleware/rbac.js';
+import { editorOnly } from '../middleware/rbac.js';
 import { audit } from '../middleware/audit.js';
 
 const router = Router();
-router.use(authenticate, adminOnly); // user management is admin (or editor)
+router.use(authenticate, editorOnly); // user management is editor-only (admin is view-only)
 
 const isEditor = (req) => req.user.role === 'editor';
 

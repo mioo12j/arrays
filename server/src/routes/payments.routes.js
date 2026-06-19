@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { query, withTransaction, pool } from '../config/db.js';
 import { asyncHandler, ApiError } from '../utils/asyncHandler.js';
 import { authenticate } from '../middleware/auth.js';
-import { noImportForAdmin } from '../middleware/rbac.js';
+import { noImportForAdmin, denyWriteForAdmin } from '../middleware/rbac.js';
 import { audit } from '../middleware/audit.js';
 import { upload } from '../middleware/upload.js';
 import { saveDocument } from '../services/document.service.js';
@@ -11,7 +11,7 @@ import { postLedgerEntry, removeLedgerForSource } from '../services/ledger.servi
 import { autoMapVendor } from '../services/vendor-match.service.js';
 
 const router = Router();
-router.use(authenticate);
+router.use(authenticate, denyWriteForAdmin);   // admin is view-only
 
 // Post the payment as a debit to its payee ledger — an employee if set,
 // otherwise the vendor. (A payment is to one payee, never both ledgers.)

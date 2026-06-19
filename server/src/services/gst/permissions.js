@@ -36,12 +36,15 @@ const ALL = Object.values(PERMS);
 const AUDITOR = [PERMS.VIEW, PERMS.DOWNLOAD, PERMS.EXPORT];
 
 export const ROLE_PERMS = {
-  // Single-operator model: the operator performs every action directly — create,
-  // edit, delete, generate challans/invoices/e-way bills — with no approval gate.
+  // System Manager (operator) performs every action directly — create, edit,
+  // delete, generate challans/invoices/e-way bills, import and export — with no
+  // approval gate.
   operator: ALL,
-  admin: ALL,
-  editor: ALL,                // super-user
-  auditor: AUDITOR,           // read-only review
+  // Admin is a strict VIEW-ONLY oversight account: it can see everything but
+  // cannot create, edit, submit, cancel, download, export, archive or import.
+  admin: [PERMS.VIEW],
+  editor: ALL,                // super-user — everything
+  auditor: AUDITOR,           // read-only review (may still export for audit)
 };
 
 export function permsForRole(role) {

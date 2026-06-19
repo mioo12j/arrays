@@ -49,9 +49,12 @@ export function AuthProvider({ children }) {
   // are CPU-heavy on the free cloud tier) are reserved for the operator and the
   // editor super-admin, who run the app locally. Auditors never write.
   const canImport = !!user && user.role !== 'admin' && user.role !== 'auditor';
+  // Admin is strictly view-only: no export/download, no create/edit/delete.
+  const canExport = !!user && user.role !== 'admin';
+  const canWrite = !!user && user.role !== 'admin' && user.role !== 'auditor';
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, isAdmin, isEditor, isAuditor, canImport }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, isAdmin, isEditor, isAuditor, canImport, canExport, canWrite }}>
       {children}
     </AuthContext.Provider>
   );

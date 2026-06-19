@@ -2,13 +2,14 @@ import { Router } from 'express';
 import { query, withTransaction, pool } from '../config/db.js';
 import { asyncHandler, ApiError } from '../utils/asyncHandler.js';
 import { authenticate } from '../middleware/auth.js';
+import { denyWriteForAdmin } from '../middleware/rbac.js';
 import { audit } from '../middleware/audit.js';
 import { calculateQuote } from '../services/quote-calc.service.js';
 import { streamQuotePdf } from '../services/quote-pdf.service.js';
 import * as branding from '../services/gst/brandingService.js';
 
 const router = Router();
-router.use(authenticate);
+router.use(authenticate, denyWriteForAdmin);   // admin is view-only
 
 async function nextQuoteNumber() {
   const yr = new Date().getFullYear();

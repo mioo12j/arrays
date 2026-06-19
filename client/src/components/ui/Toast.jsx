@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -36,6 +36,13 @@ export function ToastProvider({ children }) {
     error: (m) => push(m, 'error'),
     info: (m) => push(m, 'info'),
   };
+
+  // Bridge so non-React helpers (e.g. the download functions) can raise a toast.
+  useEffect(() => {
+    const handler = (e) => push(e.detail?.message, e.detail?.type || 'info');
+    window.addEventListener('app:toast', handler);
+    return () => window.removeEventListener('app:toast', handler);
+  }, [push]);
 
   return (
     <ToastContext.Provider value={toast}>

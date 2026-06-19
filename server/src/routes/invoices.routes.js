@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { query, withTransaction } from '../config/db.js';
 import { asyncHandler, ApiError } from '../utils/asyncHandler.js';
 import { authenticate } from '../middleware/auth.js';
-import { noImportForAdmin } from '../middleware/rbac.js';
+import { noImportForAdmin, denyWriteForAdmin } from '../middleware/rbac.js';
 import { audit } from '../middleware/audit.js';
 import { upload } from '../middleware/upload.js';
 import { saveDocument } from '../services/document.service.js';
@@ -14,7 +14,7 @@ import { invoicePdf } from '../services/invoice-pdf.js';
 import * as brandingSvc from '../services/gst/brandingService.js';
 
 const router = Router();
-router.use(authenticate);
+router.use(authenticate, denyWriteForAdmin);   // admin is view-only
 
 // §3 Unified dashboard — standard invoices + GST e-invoices in one list.
 router.get('/unified', asyncHandler(async (req, res) => res.json(await invSvc.listUnified({ query }, req.query))));
