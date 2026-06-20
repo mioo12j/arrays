@@ -11,6 +11,19 @@ $url    = 'http://localhost:4000'
 $env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' +
             [Environment]::GetEnvironmentVariable('Path','User')
 
+# First-time safety: if dependencies or the built web app are missing (a fresh
+# clone, or right after a code update), install + build before starting so the
+# operator never sees a blank page.
+if (-not (Test-Path (Join-Path $server 'node_modules'))) {
+  Start-Process -FilePath 'npm' -ArgumentList 'install','--no-audit','--no-fund' -WorkingDirectory $server -Wait -WindowStyle Hidden
+}
+if (-not (Test-Path (Join-Path $root 'client\node_modules'))) {
+  Start-Process -FilePath 'npm' -ArgumentList 'install','--no-audit','--no-fund' -WorkingDirectory (Join-Path $root 'client') -Wait -WindowStyle Hidden
+}
+if (-not (Test-Path (Join-Path $root 'client\dist\index.html'))) {
+  Start-Process -FilePath 'npm' -ArgumentList 'run','build' -WorkingDirectory (Join-Path $root 'client') -Wait -WindowStyle Hidden
+}
+
 # Start the server only if nothing is already listening on port 4000.
 $listening = Get-NetTCPConnection -LocalPort 4000 -State Listen -ErrorAction SilentlyContinue
 if (-not $listening) {

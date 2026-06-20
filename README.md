@@ -7,7 +7,9 @@ It combines a financial ERP (payments, receipts, vendor/client/employee ledgers,
 invoices, bank reconciliation, quotations, projects) with a complete
 **enterprise GST compliance suite** (e-Invoice / IRP, e-Way Bill, reconciliation,
 alerts, multi-branch/multi-GSTIN, governance, security, backup & disaster
-recovery) — **simulation-first and live-ready**.
+recovery) — with **offline GST filing**: the software builds the NIC-schema JSON
+locally, you bulk-upload it on the government portal, and the IRN / Ack / signed
+QR are read straight back from the signed PDF. (No live IRP API is required.)
 
 > Author: **Siddhant Kumar**
 
@@ -22,7 +24,7 @@ recovery) — **simulation-first and live-ready**.
 6. [The financial ERP](#the-financial-erp)
 7. [The GST compliance suite](#the-gst-compliance-suite)
 8. [Security & governance](#security--governance)
-9. [Going live (simulation → real GST)](#going-live)
+9. [GST filing — the offline workflow](#going-live)
 10. [Environment variables](#environment-variables)
 11. [Local-first + Publish to Cloud](#local-first--publish-to-cloud)
 12. [Verification & test suites](#verification--test-suites)
@@ -50,9 +52,11 @@ recovery) — **simulation-first and live-ready**.
 - **Scheduled reports**, **data import wizard**, **backup & disaster recovery**
 - **Diagnostics** and a **production-readiness review**
 
-Everything runs in **Simulation mode** (no real government submission) until you
-connect a GSP/credentials — the UI shows a permanent environment banner so no one
-is ever confused about the mode.
+GST documents are filed **offline** (there is no live IRP API): build the
+e-Invoice / e-Way-Bill JSON here, click **Upload on GST Portal**, bulk-upload it,
+then bring the IRN / Ack number / signed QR back by uploading the portal's signed
+PDF (read automatically). The app presents this as the green **“Live — offline
+filing”** status.
 
 ---
 
@@ -219,31 +223,33 @@ exportable to Excel/CSV/JSON.
   restore backup): **password re-authentication → email code**. Includes code
   expiry, resend cooldown, max retries, temporary lockout, and IP/device capture.
   Every attempt (success or failure) is written to the **immutable** audit log.
-  (In Simulation the code is shown on screen; in production it is emailed.)
+  (The app runs locally with no mail server, so the code is shown on screen.)
 - **Immutable audit + API logs** — append-only at the database level.
 - **Document attachments** with a compliance-critical "lock" (cannot be deleted).
 - **Customer GST validation** and **duplicate-prevention** (exact document-number
   clash is blocked unless overridden with a reason).
-- **Read-only Auditor mode** for clean, evidence-only review.
-- **Environment banner** always visible: amber *SIMULATION* or red *LIVE*.
-- **Diagnostics** + **Production-readiness review** assess every subsystem before
-  go-live.
+- **Read-only Auditor mode** and a strict **view-only Admin** for evidence-only review.
+- **Status banner** always visible (green *Live — offline filing*).
+- **Diagnostics** + **Production-readiness review** assess every subsystem.
 
 ---
 
-## Going live
+## GST filing — the offline workflow
 
-The app is **simulation-first**. To make e-Invoice/e-Way Bill submission *real*:
+There is **no live IRP API**; filing is done **offline** through the government
+portal, in five steps (see the in-app **Help & Guide → “e-Invoicing step by
+step”** for the full walkthrough):
 
-1. Obtain a **GSP/ASP** channel (or direct NIC access) and **client credentials**.
-2. Implement `LiveAdapter` in `server/src/services/gst/adapter.js` (auth token +
-   refresh, payload encryption, digital signature) — the interface is already
-   defined and used everywhere.
-3. Set `GST_MODE=live` and provide the credentials via env.
+1. **Build** the e-Invoice (or e-Way Bill) here — validated against the NIC schema.
+2. **Download** the Portal JSON (single) or **Bulk JSON** (all pending).
+3. Click **Upload on GST Portal**, log in, and bulk-upload the file.
+4. The portal returns the **IRN, Ack number and a signed PDF**.
+5. Back here, **Enter IRN → Scan signed PDF** — the IRN, Ack number and QR are
+   read automatically and the finished, branded document is produced.
 
-No database redesign and no workflow changes are required — only the adapter and
-configuration. The same applies to **email** (set SMTP) for verification codes and
-scheduled-report delivery.
+A pluggable IRP/EWB adapter (`server/src/services/gst/adapter.js`) and `GST_MODE`
+remain in the codebase, so a real GSP/ASP channel can be wired in later without a
+database redesign or workflow change — but it is **not required** to operate.
 
 ---
 
