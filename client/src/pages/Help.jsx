@@ -637,6 +637,80 @@ const SECTIONS = [
       ],
     },
   },
+  {
+    id: 'invoice_format', icon: FileText,
+    en: {
+      title: 'Tax invoice format, Measurement Sheet & letterhead',
+      body: [
+        'The Invoices screen produces a proper, branded tax-invoice PDF in the ARRAYS format: a coloured header band, a “Debited To” box for the buyer and a “Site Address” box for the works, an HSN/SAC items table, the totals (Total Amount → IGST, or CGST + SGST → Grand Total) and the amount in words. Long descriptions and long addresses wrap automatically and the boxes grow to fit — the text is never cut off or hidden.',
+        'When you tick “Generate Measurement Sheet” while creating the invoice, the PDF gets a second page — a running-account sheet that shows, for each line, the Order quantity, the Previous / Present / Total quantity and the Previous / Present / Total amount. This is how progressive (running) EPC bills work: put what was billed in earlier bills into “Prev Qty”, what you are billing now into “Present Qty”, and the sheet adds them into the cumulative total. From an invoice you can download the full document (bill + measurement sheet) or just the bill on its own.',
+        'The letterhead is editable per invoice. In the editor’s “Letterhead” box you can set the header name, the header address, the CIN and the email, and the footer slogan — leave any field blank to fall back to the company defaults. Click an invoice in the list to open a preview of everything (parties, items, totals) with one-click downloads, an Edit button and a Delete button.',
+      ],
+    },
+    hi: {
+      title: 'टैक्स इनवॉइस प्रारूप, मेज़रमेंट शीट व लेटरहेड',
+      body: [
+        'इनवॉइस स्क्रीन ARRAYS प्रारूप में एक उचित, ब्रांडेड टैक्स-इनवॉइस PDF बनाती है: एक रंगीन हेडर पट्टी, खरीदार के लिए “Debited To” बॉक्स और कार्य-स्थल के लिए “Site Address” बॉक्स, HSN/SAC आइटम तालिका, कुल योग (Total Amount → IGST, या CGST + SGST → Grand Total) और शब्दों में राशि। लंबे विवरण व लंबे पते स्वतः लपेटते (wrap) हैं और बॉक्स पाठ के अनुसार बढ़ते हैं — पाठ कभी कटता या छिपता नहीं।',
+        'इनवॉइस बनाते समय “Generate Measurement Sheet” चुनने पर PDF में दूसरा पृष्ठ जुड़ता है — एक रनिंग-अकाउंट शीट जो हर पंक्ति के लिए Order मात्रा, Previous / Present / Total मात्रा और Previous / Present / Total राशि दिखाती है। प्रगतिशील (रनिंग) EPC बिल ऐसे ही चलते हैं: पिछले बिलों में बिल की गई मात्रा “Prev Qty” में डालें, अभी बिल कर रहे को “Present Qty” में, और शीट उन्हें संचयी कुल में जोड़ देती है। इनवॉइस से आप पूरा दस्तावेज़ (बिल + मेज़रमेंट शीट) या केवल बिल अलग से डाउनलोड कर सकते हैं।',
+        'लेटरहेड हर इनवॉइस के लिए संपादन-योग्य है। संपादक के “Letterhead” बॉक्स में आप हेडर नाम, हेडर पता, CIN व ईमेल, और फ़ुटर स्लोगन सेट कर सकते हैं — कोई फ़ील्ड खाली छोड़ें तो कंपनी का डिफ़ॉल्ट लगेगा। सूची में किसी इनवॉइस पर क्लिक कर सब कुछ (पक्ष, आइटम, कुल) का पूर्वावलोकन खोलें, साथ में एक-क्लिक डाउनलोड, Edit और Delete।',
+      ],
+    },
+  },
+  {
+    id: 'payment_terms', icon: Banknote,
+    en: {
+      title: 'Project payment terms & progress',
+      body: [
+        'Open any project to set its Payment Terms & Progress. Add the stages your contract pays in — for example “30% on material delivery”, “50% on installation”, “20% on commissioning” — each as a percentage of the contract value or as a fixed amount. The screen shows the due amount for every stage as you type.',
+        'As the work is done, tick the circle next to a stage to mark it complete — it flips to “should be released”. Enter how much you have actually released against each stage. A summary strip rolls it all up: Scheduled (all terms), Work done → due, Released so far, and Pending to release. So you can see at a glance how much money the milestones say should have gone out, and whether it actually has.',
+        'Projects (and each site) also carry a PO number and date, and a site can record its capacity in kW. A project can be edited any time, marked Complete when it is finished, or deleted — a deleted project moves to the Recovery Center and can be restored within 30 days.',
+      ],
+    },
+    hi: {
+      title: 'परियोजना भुगतान शर्तें व प्रगति',
+      body: [
+        'किसी परियोजना को खोलकर उसकी Payment Terms & Progress सेट करें। वे चरण जोड़ें जिनमें अनुबंध भुगतान करता है — जैसे “30% on material delivery”, “50% on installation”, “20% on commissioning” — हर एक अनुबंध-मूल्य के प्रतिशत के रूप में या निश्चित राशि के रूप में। टाइप करते ही स्क्रीन हर चरण की देय राशि दिखाती है।',
+        'काम पूरा होने पर चरण के आगे गोले पर टिक कर उसे पूर्ण चिह्नित करें — वह “should be released” में बदल जाता है। हर चरण के सापेक्ष आपने वास्तव में कितना जारी किया, वह दर्ज करें। एक सारांश पट्टी सब जोड़ देती है: Scheduled (सभी शर्तें), Work done → due, Released so far, और Pending to release। इससे एक नज़र में दिखता है कि मील-पत्थरों के अनुसार कितना पैसा निकलना चाहिए था, और क्या वह निकला।',
+        'परियोजनाएँ (और हर साइट) PO नंबर व दिनांक भी रखती हैं, और साइट अपनी क्षमता kW में दर्ज कर सकती है। परियोजना कभी भी संपादित की जा सकती है, समाप्त होने पर Complete चिह्नित की जा सकती है, या हटाई जा सकती है — हटाई गई परियोजना Recovery Center में जाती है और 30 दिनों के भीतर बहाल की जा सकती है।',
+      ],
+    },
+  },
+  {
+    id: 'delete_recover', icon: LifeBuoy,
+    en: {
+      title: 'Deleting records & the 30-day Recovery Center',
+      body: [
+        'Deleting is safe. When you delete an invoice, an outgoing payment or a project, it is not erased — it moves to the System Recovery Center, and any accounting effect is reversed immediately (a payment’s debit is removed from the vendor/employee ledger, an invoice’s receivable is removed) so balances, the dashboard and the GST reconciliation update at once. e-Invoices, e-Way Bills and Delivery Challans behave the same way.',
+        'To bring something back, open the Recovery Center, find the record under its group — Invoices, Outgoing Payments, Projects, e-Invoices, e-Way Bills or Delivery Challans — and click Recover. The record returns to its normal lists and its ledger entry is re-posted.',
+        'Everything in the Recovery Center is kept for 30 days and then permanently removed by an automatic daily clean-up, so the recycle bin never grows forever. If you might still need a deleted record, recover it before the 30 days are up. For long-term safety keep regular full backups as well — those are separate from the Recovery Center, are stored in their own folder on this computer, and the ones you create by hand are not auto-deleted.',
+      ],
+    },
+    hi: {
+      title: 'रिकॉर्ड हटाना व 30-दिन रिकवरी सेंटर',
+      body: [
+        'हटाना सुरक्षित है। जब आप इनवॉइस, जावक भुगतान या परियोजना हटाते हैं, वह मिटती नहीं — System Recovery Center में जाती है, और उसका लेखांकन प्रभाव तुरंत उलट जाता है (भुगतान का डेबिट विक्रेता/कर्मचारी बही से हटता है, इनवॉइस का प्राप्य हटता है) ताकि बैलेंस, डैशबोर्ड और GST समाधान तुरंत अपडेट हों। e-Invoice, e-Way Bill व डिलीवरी चालान भी ऐसे ही व्यवहार करते हैं।',
+        'किसी चीज़ को वापस लाने के लिए Recovery Center खोलें, रिकॉर्ड को उसके समूह में ढूँढें — Invoices, Outgoing Payments, Projects, e-Invoices, e-Way Bills या Delivery Challans — और Recover पर क्लिक करें। रिकॉर्ड अपनी सामान्य सूचियों में लौट आता है और उसकी बही प्रविष्टि फिर से दर्ज हो जाती है।',
+        'Recovery Center में सब कुछ 30 दिनों तक रखा जाता है, फिर एक स्वतः दैनिक सफ़ाई द्वारा स्थायी रूप से हटा दिया जाता है, ताकि रीसायकल बिन कभी अनंत न बढ़े। यदि कोई हटाया रिकॉर्ड अब भी चाहिए हो, तो 30 दिन बीतने से पहले उसे वापस लाएँ। दीर्घकालिक सुरक्षा हेतु नियमित पूर्ण बैकअप भी रखें — वे Recovery Center से अलग हैं, इसी कंप्यूटर पर अपने फ़ोल्डर में रखे जाते हैं, और जो आप स्वयं बनाते हैं वे स्वतः नहीं हटते।',
+      ],
+    },
+  },
+  {
+    id: 'auto_match', icon: UserRound,
+    en: {
+      title: 'Auto-linking payments to vendors & employees',
+      body: [
+        'When you upload a payment screenshot, the app reads the beneficiary name and amount and automatically selects the matching vendor from your master — even when the bank text is messy, with extra words, honorifics like “MR”, “S/O …” tails or NEFT/RTGS/UPI noise. If the auto-pick is wrong you can always change the vendor before saving; the more consistent your vendor names, the better the match.',
+        'If you choose Employee as the payee but that person is not in the Employee Master yet, simply saving the payment creates the employee automatically from the beneficiary name (or links to a close existing match), and posts the amount to their ledger. So you never have to pre-create a payee just to record a payment — clean up the details (bank, PAN, designation) later from the Employees screen.',
+      ],
+    },
+    hi: {
+      title: 'भुगतान को विक्रेता व कर्मचारी से स्वतः जोड़ना',
+      body: [
+        'जब आप भुगतान का स्क्रीनशॉट अपलोड करते हैं, ऐप लाभार्थी नाम व राशि पढ़कर आपके मास्टर से मिलते-जुलते विक्रेता को स्वतः चुन लेता है — भले बैंक का पाठ गड़बड़ हो, अतिरिक्त शब्द, “MR” जैसे आदरसूचक, “S/O …” पूँछ या NEFT/RTGS/UPI शोर हो। यदि स्वतः-चयन गलत हो तो सहेजने से पहले विक्रेता बदल सकते हैं; विक्रेता नाम जितने एक-समान होंगे, मिलान उतना बेहतर।',
+        'यदि आप भुगतान-पात्र के रूप में Employee चुनते हैं पर वह व्यक्ति अभी Employee Master में नहीं है, तो भुगतान सहेजते ही लाभार्थी नाम से कर्मचारी स्वतः बन जाता है (या किसी निकट मौजूदा से जुड़ जाता है) और राशि उसकी बही में दर्ज हो जाती है। इसलिए सिर्फ़ भुगतान दर्ज करने के लिए पहले से पात्र बनाने की ज़रूरत नहीं — विवरण (बैंक, PAN, पदनाम) बाद में Employees स्क्रीन से ठीक कर लें।',
+      ],
+    },
+  },
 ];
 
 const CATS = [
