@@ -26,7 +26,7 @@ export async function search(db, q, { limit = 30, branchId } = {}) {
     (r) => ({ type: 'Customer', id: r.id, label: r.name, sublabel: r.gstin || '', link: `/clients/${r.id}` }));
   await run(`SELECT id, name, gstin FROM vendors WHERE name ILIKE $1 OR gstin ILIKE $1 LIMIT 5`, [like],
     (r) => ({ type: 'Vendor', id: r.id, label: r.name, sublabel: r.gstin || '', link: `/vendors/${r.id}` }));
-  await run(`SELECT id, invoice_number, status FROM invoices WHERE invoice_number ILIKE $1 LIMIT 5`, [like],
+  await run(`SELECT id, invoice_number, status FROM invoices WHERE invoice_number ILIKE $1 AND is_deleted=FALSE LIMIT 5`, [like],
     (r) => ({ type: 'Invoice', id: r.id, label: r.invoice_number, status: r.status, link: '/invoices' }));
   await run(`SELECT id, code, name, gstin FROM gst_branches WHERE code ILIKE $1 OR name ILIKE $1 OR gstin ILIKE $1 LIMIT 5`, [like],
     (r) => ({ type: 'Branch', id: r.id, label: `${r.code} — ${r.name}`, sublabel: r.gstin || '', link: '/gst/branches' }));

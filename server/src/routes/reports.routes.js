@@ -223,7 +223,7 @@ router.get(
        FROM invoices i
        LEFT JOIN clients c ON c.id=i.client_id
        LEFT JOIN projects pr ON pr.id=i.project_id
-       ${w}
+       ${w ? `${w} AND i.is_deleted=FALSE` : 'WHERE i.is_deleted=FALSE'}
        ORDER BY i.issue_date DESC NULLS LAST`,
       p
     );

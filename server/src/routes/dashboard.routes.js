@@ -20,7 +20,7 @@ router.get(
     const [vendors, offices, invoices, einvoices, challans, ewbs] = await Promise.all([
       count1('SELECT count(*) c FROM vendors'),
       count1('SELECT count(*) c FROM gst_branches'),
-      count1('SELECT count(*) c FROM invoices'),
+      count1('SELECT count(*) c FROM invoices WHERE is_deleted = FALSE'),
       count1('SELECT count(*) c FROM gst_einvoices WHERE is_deleted = FALSE'),
       count1('SELECT count(*) c FROM delivery_challans WHERE is_deleted = FALSE'),
       count1('SELECT count(*) c FROM gst_eway_bills WHERE is_deleted = FALSE'),
@@ -157,7 +157,7 @@ router.get(
         SELECT (total_amount - amount_received) AS due,
                COALESCE(due_date, issue_date, created_at::date) AS ref_date
         FROM invoices
-        WHERE status IN ('raised','sent','partially_paid','overdue')
+        WHERE is_deleted=FALSE AND status IN ('raised','sent','partially_paid','overdue')
           AND (total_amount - amount_received) > 0
       )
       SELECT

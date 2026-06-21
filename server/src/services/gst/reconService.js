@@ -42,7 +42,7 @@ const CHECKS = [
     hint: 'These receivable invoices have no linked e-Invoice. Create & submit one if e-invoicing applies.',
     sql: `SELECT i.id, i.invoice_number AS ref, ('₹'||to_char(coalesce(i.total_amount,0),'FM999,999,999')||' • '||coalesce(c.name,'—')) AS detail
           FROM invoices i LEFT JOIN clients c ON c.id=i.client_id
-          WHERE i.type='tax' AND i.status NOT IN ('draft','cancelled')
+          WHERE i.is_deleted=FALSE AND i.type='tax' AND i.status NOT IN ('draft','cancelled')
             AND NOT EXISTS (SELECT 1 FROM gst_einvoices e WHERE e.source_invoice_id=i.id AND e.is_deleted=FALSE)`,
     objectType: 'invoice',
   },

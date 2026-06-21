@@ -15,7 +15,7 @@ router.get(
   asyncHandler(async (_req, res) => {
     const { rows } = await query(`
       SELECT c.*, b.total_billed, b.total_received, b.outstanding,
-        (SELECT COUNT(*) FROM invoices i WHERE i.client_id=c.id AND i.status='overdue') AS overdue_invoices
+        (SELECT COUNT(*) FROM invoices i WHERE i.client_id=c.id AND i.status='overdue' AND i.is_deleted=FALSE) AS overdue_invoices
       FROM clients c
       LEFT JOIN v_client_balances b ON b.client_id=c.id
       ORDER BY c.name
@@ -54,7 +54,7 @@ router.get(
     });
 
     const { rows: invoices } = await query(
-      'SELECT * FROM invoices WHERE client_id=$1 ORDER BY issue_date DESC NULLS LAST, created_at DESC',
+      'SELECT * FROM invoices WHERE client_id=$1 AND is_deleted=FALSE ORDER BY issue_date DESC NULLS LAST, created_at DESC',
       [req.params.id]
     );
     const { rows: bView } = await query('SELECT * FROM v_client_balances WHERE client_id=$1', [req.params.id]);
