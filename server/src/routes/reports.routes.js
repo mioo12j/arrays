@@ -88,7 +88,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const { search, client_id, project_id, from, to } = req.query;
     const p = [];
-    const where = [];
+    const where = ['r.is_deleted=FALSE'];
     if (search) { p.push(`%${search}%`); where.push(`(r.reference_id ILIKE $${p.length} OR r.comment ILIKE $${p.length} OR c.name ILIKE $${p.length})`); }
     if (client_id) { p.push(client_id); where.push(`r.client_id=$${p.length}`); }
     if (project_id) { p.push(project_id); where.push(`r.project_id=$${p.length}`); }
@@ -296,7 +296,7 @@ router.get(
     const { rows } = await query(`
       SELECT pr.name AS project, pr.status, pr.budget, pr.contract_value,
         COALESCE((SELECT SUM(amount) FROM payments WHERE project_id=pr.id AND is_deleted=FALSE),0) AS spent,
-        COALESCE((SELECT SUM(credited_amount) FROM receipts WHERE project_id=pr.id),0) AS received,
+        COALESCE((SELECT SUM(credited_amount) FROM receipts WHERE project_id=pr.id AND is_deleted=FALSE),0) AS received,
         pr.contract_value - COALESCE((SELECT SUM(amount) FROM payments WHERE project_id=pr.id AND is_deleted=FALSE),0) AS gross_margin
       FROM projects pr WHERE pr.is_deleted=FALSE ORDER BY pr.created_at DESC
     `);

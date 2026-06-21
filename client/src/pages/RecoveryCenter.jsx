@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LifeBuoy, Undo2, ShieldCheck, Download, DatabaseBackup, Activity, Loader2, FileText, Truck, ClipboardList, ArrowRight, ReceiptText, Banknote, FolderKanban } from 'lucide-react';
+import { LifeBuoy, Undo2, ShieldCheck, Download, DatabaseBackup, Activity, Loader2, FileText, Truck, ClipboardList, ArrowRight, ReceiptText, Banknote, FolderKanban, ArrowDownLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { api, apiError } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
@@ -33,6 +33,7 @@ export default function RecoveryCenter() {
     { key: 'challans', label: 'Delivery Challans', icon: ClipboardList, type: 'challan', cols: ['challan_no', 'consignee', 'total_value'] },
     { key: 'invoices', label: 'Invoices', icon: ReceiptText, type: 'invoice', cols: ['invoice_number', 'customer_name', 'total_amount'] },
     { key: 'payments', label: 'Outgoing Payments', icon: Banknote, type: 'payment', cols: ['reference_id', 'payee', 'amount'] },
+    { key: 'receipts', label: 'Incoming Receipts', icon: ArrowDownLeft, type: 'receipt', cols: ['reference_id', 'client', 'credited_amount'] },
     { key: 'projects', label: 'Projects', icon: FolderKanban, type: 'project', cols: ['name', 'client', 'contract_value'] },
   ];
 

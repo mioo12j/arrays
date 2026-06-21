@@ -55,7 +55,7 @@ export async function refreshInvoiceStatus(db, invoiceId) {
 
   const { rows: agg } = await db.query(
     `SELECT COALESCE(SUM(credited_amount + deduction_amount + tds_amount + retention_amount),0) AS received
-       FROM receipts WHERE invoice_id=$1`,
+       FROM receipts WHERE invoice_id=$1 AND is_deleted=FALSE`,
     [invoiceId]
   );
   const received = agg[0].received;

@@ -102,7 +102,7 @@ router.get(
     );
     if (!rows[0]) throw new ApiError(404, 'Invoice not found');
     const { rows: receipts } = await query(
-      'SELECT * FROM receipts WHERE invoice_id=$1 ORDER BY credited_date', [req.params.id]
+      'SELECT * FROM receipts WHERE invoice_id=$1 AND is_deleted=FALSE ORDER BY credited_date', [req.params.id]
     );
     const lineItems = await invSvc.items({ query }, req.params.id);
     res.json({ ...rows[0], receipts, items: lineItems });

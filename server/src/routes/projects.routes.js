@@ -18,7 +18,7 @@ router.get(
       SELECT p.*,
         c.name AS client_full_name,
         (SELECT COALESCE(SUM(amount),0) FROM payments  WHERE project_id=p.id AND is_deleted=FALSE) AS total_spent,
-        (SELECT COALESCE(SUM(credited_amount),0) FROM receipts WHERE project_id=p.id) AS total_received,
+        (SELECT COALESCE(SUM(credited_amount),0) FROM receipts WHERE project_id=p.id AND is_deleted=FALSE) AS total_received,
         (SELECT COUNT(*) FROM sites WHERE project_id=p.id) AS site_count
       FROM projects p
       LEFT JOIN clients c ON c.id = p.client_id
@@ -45,7 +45,7 @@ router.get(
       'SELECT COALESCE(SUM(amount),0) AS v FROM payments WHERE project_id=$1 AND is_deleted=FALSE', [project.id]
     );
     const { rows: recv } = await query(
-      'SELECT COALESCE(SUM(credited_amount),0) AS v FROM receipts WHERE project_id=$1', [project.id]
+      'SELECT COALESCE(SUM(credited_amount),0) AS v FROM receipts WHERE project_id=$1 AND is_deleted=FALSE', [project.id]
     );
     const { rows: sites } = await query(
       `SELECT s.*,

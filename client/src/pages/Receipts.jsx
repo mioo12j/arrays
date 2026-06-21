@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Search, Upload, Loader2, Sparkles, Paperclip, FileDown } from 'lucide-react';
+import { Plus, Search, Upload, Loader2, Sparkles, Paperclip, FileDown, Trash2 } from 'lucide-react';
 import { api, apiError, download } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -107,18 +107,30 @@ export default function Receipts() {
         />
       )}
 
-      {detail && <ReceiptDetail receipt={detail} onClose={() => setDetail(null)} />}
+      {detail && <ReceiptDetail receipt={detail} onClose={() => setDetail(null)} onDeleted={() => { setDetail(null); refetch(); toast.success('Receipt moved to Recovery Center'); }} />}
     </div>
   );
 }
 
 // Read-only detail view for a single receipt.
-function ReceiptDetail({ receipt: r, onClose }) {
+function ReceiptDetail({ receipt: r, onClose, onDeleted }) {
+  const toast = useToast();
+  const { canWrite } = useAuth();
+  const [busy, setBusy] = useState(false);
   const deductions =
     Number(r.tds_amount || 0) + Number(r.retention_amount || 0) + Number(r.deduction_amount || 0);
+  const del = async () => {
+    if (!window.confirm('Delete this receipt? It will move to the Recovery Center (recoverable for 30 days) and its ledger credit is reversed.')) return;
+    setBusy(true);
+    try { await api.delete(`/receipts/${r.id}`); onDeleted(); }
+    catch (e) { toast.error(apiError(e)); } finally { setBusy(false); }
+  };
   return (
     <Modal open onClose={onClose} title="Receipt Details" size="lg"
-      footer={<button className="btn-ghost" onClick={onClose}>Close</button>}>
+      footer={<>
+        {canWrite && <button className="btn-ghost !text-red-600" onClick={del} disabled={busy}>{busy ? <Loader2 className="animate-spin" size={16} /> : <Trash2 size={16} />} Delete</button>}
+        <button className="btn-ghost" onClick={onClose}>Close</button>
+      </>}>
       <div className="mb-5 flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-800">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Amount Credited</p>

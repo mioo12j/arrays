@@ -8,7 +8,7 @@ import { pool } from '../../config/db.js';
 
 const DAYS = Math.max(1, Number(process.env.RECOVERY_RETENTION_DAYS || 30));
 // Parent tables only — child rows (items) cascade via their FK ON DELETE.
-const TABLES = ['gst_einvoices', 'gst_eway_bills', 'delivery_challans', 'invoices', 'payments', 'projects'];
+const TABLES = ['gst_einvoices', 'gst_eway_bills', 'delivery_challans', 'invoices', 'payments', 'receipts', 'projects'];
 let timer = null;
 
 export async function runRecoveryPurge() {

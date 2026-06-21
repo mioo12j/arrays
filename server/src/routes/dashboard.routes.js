@@ -55,7 +55,7 @@ router.get(
     const [outgoing, incoming, receivables, pendingInvoices, pendingProofInvoices, recon, projects, vendorLiab] =
       await Promise.all([
         query('SELECT COALESCE(SUM(amount),0) AS v FROM payments WHERE is_deleted=FALSE'),
-        query('SELECT COALESCE(SUM(credited_amount),0) AS v FROM receipts'),
+        query('SELECT COALESCE(SUM(credited_amount),0) AS v FROM receipts WHERE is_deleted=FALSE'),
         query(`SELECT COALESCE(SUM(outstanding),0) AS v FROM v_client_balances`),
         query(`SELECT COUNT(*) AS v FROM invoices WHERE status IN ('raised','sent','partially_paid','overdue') AND is_deleted=FALSE`),
         query(`SELECT COUNT(*) AS v FROM payments WHERE invoice_status='pending' AND is_deleted=FALSE`),
@@ -91,7 +91,7 @@ router.get(
       )
       SELECT s.ym AS month,
         COALESCE((SELECT SUM(amount) FROM payments p WHERE to_char(p.payment_date,'YYYY-MM')=s.ym AND p.is_deleted=FALSE),0) AS outgoing,
-        COALESCE((SELECT SUM(credited_amount) FROM receipts r WHERE to_char(r.credited_date,'YYYY-MM')=s.ym),0) AS incoming
+        COALESCE((SELECT SUM(credited_amount) FROM receipts r WHERE to_char(r.credited_date,'YYYY-MM')=s.ym AND r.is_deleted=FALSE),0) AS incoming
       FROM series s
       ORDER BY s.ym
       `,
@@ -124,7 +124,7 @@ router.get(
     const { rows } = await query(`
       SELECT pr.name AS project, pr.budget,
         COALESCE(SUM(p.amount),0) AS spent,
-        COALESCE((SELECT SUM(credited_amount) FROM receipts r WHERE r.project_id=pr.id),0) AS received
+        COALESCE((SELECT SUM(credited_amount) FROM receipts r WHERE r.project_id=pr.id AND r.is_deleted=FALSE),0) AS received
       FROM projects pr
       LEFT JOIN payments p ON p.project_id=pr.id AND p.is_deleted=FALSE
       WHERE pr.is_deleted=FALSE
@@ -184,6 +184,7 @@ router.get(
     const { rows } = await query(`
       SELECT COALESCE(c.name,'Unassigned') AS client, COALESCE(SUM(r.credited_amount),0) AS received
       FROM receipts r LEFT JOIN clients c ON c.id=r.client_id
+      WHERE r.is_deleted=FALSE
       GROUP BY c.name ORDER BY received DESC LIMIT 8
     `);
     res.json(rows);
@@ -201,7 +202,7 @@ router.get(
       UNION ALL
       (SELECT 'receipt' AS kind, r.id, r.credited_amount AS amount, r.credited_date AS date, r.comment AS note,
               c.name AS party, r.created_at
-       FROM receipts r LEFT JOIN clients c ON c.id=r.client_id)
+       FROM receipts r LEFT JOIN clients c ON c.id=r.client_id WHERE r.is_deleted=FALSE)
       ORDER BY created_at DESC
       LIMIT 12
     `);

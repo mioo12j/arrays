@@ -38,6 +38,7 @@ import * as feed from '../services/gst/feedService.js';
 import * as challans from '../services/gst/challanService.js';
 import * as invSvc from '../services/invoiceService.js';
 import * as paymentSvc from '../services/paymentService.js';
+import * as receiptSvc from '../services/receiptService.js';
 import { challanPdf } from '../services/gst/challan-pdf.js';
 import { streamExcel, streamPdf } from '../services/export.service.js';
 import { upload } from '../middleware/upload.js';
@@ -617,8 +618,12 @@ router.get('/recovery/deleted', requirePerm(PERMS.ADMIN), asyncHandler(async (_r
   const projects = (await pool.query(
     `SELECT id, name, COALESCE(client_name,'') AS client, contract_value, deleted_at
        FROM projects WHERE is_deleted=TRUE ORDER BY deleted_at DESC NULLS LAST LIMIT 200`)).rows;
-  res.json({ einvoices, ewbs, challans, invoices, payments, projects,
-    total: einvoices.length + ewbs.length + challans.length + invoices.length + payments.length + projects.length });
+  const receipts = (await pool.query(
+    `SELECT r.id, r.reference_id, COALESCE(c.name, r.account_details, '') AS client, r.credited_amount, r.deleted_at
+       FROM receipts r LEFT JOIN clients c ON c.id=r.client_id
+      WHERE r.is_deleted=TRUE ORDER BY r.deleted_at DESC NULLS LAST LIMIT 200`)).rows;
+  res.json({ einvoices, ewbs, challans, invoices, payments, projects, receipts,
+    total: einvoices.length + ewbs.length + challans.length + invoices.length + payments.length + projects.length + receipts.length });
 }));
 
 router.post('/recovery/restore', requirePerm(PERMS.ADMIN), asyncHandler(async (req, res) => {
@@ -631,6 +636,7 @@ router.post('/recovery/restore', requirePerm(PERMS.ADMIN), asyncHandler(async (r
     if (type === 'invoice') return invSvc.restore(db, id, uid(req));
     if (type === 'payment') return paymentSvc.restore(db, id, uid(req));
     if (type === 'project') return db.query('UPDATE projects SET is_deleted=FALSE, deleted_at=NULL, deleted_by=NULL WHERE id=$1 RETURNING id', [id]).then((r) => r.rows[0] || null);
+    if (type === 'receipt') return receiptSvc.restore(db, id, uid(req));
     throw new ApiError(400, 'Unknown record type.');
   });
   await recordAccess(req, { action: 'restore', objectType: type, objectId: id });

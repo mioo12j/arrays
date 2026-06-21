@@ -855,6 +855,11 @@ ALTER TABLE payments ADD COLUMN IF NOT EXISTS is_deleted BOOLEAN NOT NULL DEFAUL
 ALTER TABLE payments ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
 ALTER TABLE payments ADD COLUMN IF NOT EXISTS deleted_by UUID REFERENCES users(id);
 
+-- Soft delete on incoming receipts (recoverable from the Recovery Center).
+ALTER TABLE receipts ADD COLUMN IF NOT EXISTS is_deleted BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE receipts ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
+ALTER TABLE receipts ADD COLUMN IF NOT EXISTS deleted_by UUID REFERENCES users(id);
+
 -- Redefine the top-vendor-spend view to ignore soft-deleted payments so the
 -- dashboard "Top Vendor Spend" updates live when a payment is deleted. (Defined
 -- here, after the is_deleted column exists.)

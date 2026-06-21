@@ -8,6 +8,7 @@ import { upload } from '../middleware/upload.js';
 import { saveDocument } from '../services/document.service.js';
 import { parseReceiptFields, extractText } from '../services/ocr.service.js';
 import { postLedgerEntry, removeLedgerForSource, refreshInvoiceStatus } from '../services/ledger.service.js';
+import * as receiptSvc from '../services/receiptService.js';
 
 const router = Router();
 router.use(authenticate, denyWriteForAdmin);   // admin is view-only
@@ -87,7 +88,7 @@ router.get(
   '/',
   asyncHandler(async (req, res) => {
     const { search, client_id, project_id, from, to } = req.query;
-    const clauses = [];
+    const clauses = ['r.is_deleted=FALSE'];
     const p = [];
     if (search) { p.push(`%${search}%`); clauses.push(`(r.reference_id ILIKE $${p.length} OR r.comment ILIKE $${p.length})`); }
     if (client_id) { p.push(client_id); clauses.push(`r.client_id=$${p.length}`); }
@@ -149,17 +150,25 @@ router.patch(
   })
 );
 
+// Soft delete — recoverable from the System Recovery Center.
 router.delete(
   '/:id',
   asyncHandler(async (req, res) => {
-    await withTransaction(async (db) => {
-      const { rows } = await db.query('SELECT invoice_id FROM receipts WHERE id=$1', [req.params.id]);
-      await removeLedgerForSource(db, 'receipt', req.params.id);
-      await db.query('DELETE FROM receipts WHERE id=$1', [req.params.id]);
-      if (rows[0]?.invoice_id) await refreshInvoiceStatus(db, rows[0].invoice_id);
-    });
+    const out = await withTransaction(async (db) => receiptSvc.softDelete(db, req.params.id, req.user.id));
+    if (!out) throw new ApiError(404, 'Receipt not found');
     await audit(req, { action: 'delete', entity: 'receipts', entityId: req.params.id });
     res.json({ ok: true });
+  })
+);
+
+// Restore a soft-deleted receipt.
+router.post(
+  '/:id/restore',
+  asyncHandler(async (req, res) => {
+    const out = await withTransaction(async (db) => receiptSvc.restore(db, req.params.id, req.user.id));
+    if (!out) throw new ApiError(404, 'Receipt not found');
+    await audit(req, { action: 'restore', entity: 'receipts', entityId: req.params.id });
+    res.json({ ok: true, restored: out });
   })
 );
 
