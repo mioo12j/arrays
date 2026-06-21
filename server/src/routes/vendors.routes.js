@@ -51,7 +51,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const { rows } = await query(`
       SELECT v.*, b.balance, b.total_paid,
-        (SELECT COUNT(*) FROM payments p WHERE p.vendor_id=v.id AND p.invoice_status='pending') AS pending_invoices
+        (SELECT COUNT(*) FROM payments p WHERE p.vendor_id=v.id AND p.invoice_status='pending' AND p.is_deleted=FALSE) AS pending_invoices
       FROM vendors v
       LEFT JOIN v_vendor_balances b ON b.vendor_id = v.id
       ORDER BY v.name

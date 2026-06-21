@@ -52,7 +52,7 @@ router.get(
   '/',
   asyncHandler(async (req, res) => {
     const { search, client_id, project_id, status, type } = req.query;
-    const clauses = [];
+    const clauses = ['i.is_deleted=FALSE'];
     const p = [];
     if (search) { p.push(`%${search}%`); clauses.push(`i.invoice_number ILIKE $${p.length}`); }
     if (client_id) { p.push(client_id); clauses.push(`i.client_id=$${p.length}`); }
@@ -129,12 +129,16 @@ router.post(
           (invoice_number, type, status, client_id, project_id, site_id, branch_id,
            customer_name, customer_gstin, billing_address, shipping_address, place_of_supply,
            issue_date, due_date, taxable_amount, gst_amount, cgst_amount, sgst_amount, igst_amount,
-           total_amount, notes, document_id, created_by)
-         VALUES ($1,COALESCE($2,'tax')::invoice_type,COALESCE($3,'draft')::invoice_status,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23)
+           total_amount, notes, document_id, supply_type, po_no, po_date, site_address, with_measurement,
+           header_text, footer_text, header_address, header_cin, header_email, created_by)
+         VALUES ($1,COALESCE($2,'tax')::invoice_type,COALESCE($3,'draft')::invoice_status,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,COALESCE($27,TRUE),$28,$29,$30,$31,$32,$33)
          RETURNING *`,
         [b.invoice_number, b.type, b.status, b.client_id || null, b.project_id || null, b.site_id || null, b.branch_id || null,
          b.customer_name || null, b.customer_gstin || null, b.billing_address || null, b.shipping_address || null, b.place_of_supply || null,
-         b.issue_date || null, b.due_date || null, taxable, gst, cgst, sgst, igst, total, b.notes, b.document_id || null, req.user.id]
+         b.issue_date || null, b.due_date || null, taxable, gst, cgst, sgst, igst, total, b.notes, b.document_id || null,
+         b.supply_type || null, b.po_no || null, b.po_date || null, b.site_address || null,
+         b.with_measurement != null ? !!b.with_measurement : null, b.header_text || null, b.footer_text || null,
+         b.header_address || null, b.header_cin || null, b.header_email || null, req.user.id]
       );
       const inv = rows[0];
       if (lineItems) await invSvc.writeItems(db, inv.id, lineItems);
@@ -170,12 +174,18 @@ router.patch(
           customer_name=COALESCE($14,customer_name), customer_gstin=COALESCE($15,customer_gstin),
           billing_address=COALESCE($16,billing_address), shipping_address=COALESCE($17,shipping_address),
           place_of_supply=COALESCE($18,place_of_supply), branch_id=COALESCE($19,branch_id),
-          cgst_amount=COALESCE($20,cgst_amount), sgst_amount=COALESCE($21,sgst_amount), igst_amount=COALESCE($22,igst_amount)
+          cgst_amount=COALESCE($20,cgst_amount), sgst_amount=COALESCE($21,sgst_amount), igst_amount=COALESCE($22,igst_amount),
+          supply_type=COALESCE($23,supply_type), po_no=COALESCE($24,po_no), po_date=COALESCE($25,po_date),
+          site_address=COALESCE($26,site_address), with_measurement=COALESCE($27,with_measurement),
+          header_text=COALESCE($28,header_text), footer_text=COALESCE($29,footer_text),
+          header_address=COALESCE($30,header_address), header_cin=COALESCE($31,header_cin), header_email=COALESCE($32,header_email)
          WHERE id=$13 RETURNING *`,
         [b.invoice_number, b.type, b.status, b.client_id, b.project_id, b.site_id,
          b.issue_date, b.due_date, taxable, gst, total, b.notes, req.params.id,
          b.customer_name, b.customer_gstin, b.billing_address, b.shipping_address, b.place_of_supply, b.branch_id,
-         cgst, sgst, igst]
+         cgst, sgst, igst,
+         b.supply_type, b.po_no, b.po_date, b.site_address, b.with_measurement != null ? !!b.with_measurement : null,
+         b.header_text, b.footer_text, b.header_address, b.header_cin, b.header_email]
       );
       if (!rows[0]) throw new ApiError(404, 'Invoice not found');
       if (lineItems) await invSvc.writeItems(db, req.params.id, lineItems);
@@ -204,15 +214,25 @@ router.post(
   })
 );
 
+// Soft delete — recoverable from the System Recovery Center.
 router.delete(
   '/:id',
   asyncHandler(async (req, res) => {
-    await withTransaction(async (db) => {
-      await removeLedgerForSource(db, 'invoice', req.params.id);
-      await db.query('DELETE FROM invoices WHERE id=$1', [req.params.id]);
-    });
+    const out = await withTransaction(async (db) => invSvc.softDelete(db, req.params.id, req.user.id));
+    if (!out) throw new ApiError(404, 'Invoice not found');
     await audit(req, { action: 'delete', entity: 'invoices', entityId: req.params.id });
     res.json({ ok: true });
+  })
+);
+
+// Restore a soft-deleted invoice.
+router.post(
+  '/:id/restore',
+  asyncHandler(async (req, res) => {
+    const out = await withTransaction(async (db) => invSvc.restore(db, req.params.id, req.user.id));
+    if (!out) throw new ApiError(404, 'Invoice not found');
+    await audit(req, { action: 'restore', entity: 'invoices', entityId: req.params.id });
+    res.json({ ok: true, restored: out });
   })
 );
 
@@ -223,6 +243,8 @@ router.get('/:id/pdf', asyncHandler(async (req, res) => {
      FROM invoices i LEFT JOIN clients c ON c.id=i.client_id WHERE i.id=$1`, [req.params.id]);
   if (!rows[0]) throw new ApiError(404, 'Invoice not found');
   const inv = { ...rows[0], items: await invSvc.items({ query }, req.params.id) };
+  // ?measurement=0 → download the bill only (skip the Measurement Sheet page).
+  if (['0', 'false', 'no'].includes(String(req.query.measurement || '').toLowerCase())) inv.with_measurement = false;
   let branding = {};
   try { branding = await brandingSvc.get({ query }); } catch { /* branding optional */ }
   const buf = await invoicePdf(inv, branding, req.query.lang);

@@ -14,9 +14,9 @@ router.get(
     const { project_id } = req.query;
     const { rows } = await query(
       `SELECT s.*, p.name AS project_name,
-        (SELECT COALESCE(SUM(amount),0) FROM payments WHERE site_id=s.id) AS site_spent
+        (SELECT COALESCE(SUM(amount),0) FROM payments WHERE site_id=s.id AND is_deleted=FALSE) AS site_spent
        FROM sites s JOIN projects p ON p.id=s.project_id
-       WHERE ($1::uuid IS NULL OR s.project_id=$1)
+       WHERE p.is_deleted=FALSE AND ($1::uuid IS NULL OR s.project_id=$1)
        ORDER BY p.name, s.name`,
       [project_id || null]
     );
@@ -32,9 +32,11 @@ router.patch(
       `UPDATE sites SET
         code=COALESCE($1,code), name=COALESCE($2,name), location=COALESCE($3,location),
         latitude=COALESCE($4,latitude), longitude=COALESCE($5,longitude),
-        budget=COALESCE($6,budget), status=COALESCE($7,status)
+        budget=COALESCE($6,budget), status=COALESCE($7,status),
+        po_number=COALESCE($9,po_number), po_date=COALESCE($10,po_date), capacity_kw=COALESCE($11,capacity_kw)
        WHERE id=$8 RETURNING *`,
-      [b.code, b.name, b.location, b.latitude, b.longitude, b.budget, b.status, req.params.id]
+      [b.code, b.name, b.location, b.latitude, b.longitude, b.budget, b.status, req.params.id,
+       b.po_number, b.po_date, b.capacity_kw]
     );
     if (!rows[0]) throw new ApiError(404, 'Site not found');
     await audit(req, { action: 'update', entity: 'sites', entityId: req.params.id, changes: b });

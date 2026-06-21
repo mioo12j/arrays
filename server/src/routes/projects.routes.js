@@ -17,11 +17,12 @@ router.get(
     const { rows } = await query(`
       SELECT p.*,
         c.name AS client_full_name,
-        (SELECT COALESCE(SUM(amount),0) FROM payments  WHERE project_id=p.id) AS total_spent,
+        (SELECT COALESCE(SUM(amount),0) FROM payments  WHERE project_id=p.id AND is_deleted=FALSE) AS total_spent,
         (SELECT COALESCE(SUM(credited_amount),0) FROM receipts WHERE project_id=p.id) AS total_received,
         (SELECT COUNT(*) FROM sites WHERE project_id=p.id) AS site_count
       FROM projects p
       LEFT JOIN clients c ON c.id = p.client_id
+      WHERE p.is_deleted = FALSE
       ORDER BY p.created_at DESC
     `);
     res.json(rows);
@@ -41,19 +42,33 @@ router.get(
     const project = rows[0];
 
     const { rows: spend } = await query(
-      'SELECT COALESCE(SUM(amount),0) AS v FROM payments WHERE project_id=$1', [project.id]
+      'SELECT COALESCE(SUM(amount),0) AS v FROM payments WHERE project_id=$1 AND is_deleted=FALSE', [project.id]
     );
     const { rows: recv } = await query(
       'SELECT COALESCE(SUM(credited_amount),0) AS v FROM receipts WHERE project_id=$1', [project.id]
     );
     const { rows: sites } = await query(
       `SELECT s.*,
-        (SELECT COALESCE(SUM(amount),0) FROM payments WHERE site_id=s.id) AS site_spent
+        (SELECT COALESCE(SUM(amount),0) FROM payments WHERE site_id=s.id AND is_deleted=FALSE) AS site_spent
        FROM sites s WHERE s.project_id=$1 ORDER BY s.created_at`, [project.id]
     );
 
     const totalSpent = spend[0].v;
     const totalReceived = recv[0].v;
+
+    // Payment terms / milestone schedule + rollup.
+    const { rows: termRows } = await query(
+      'SELECT * FROM project_payment_terms WHERE project_id=$1 ORDER BY seq, created_at', [project.id]);
+    const cv = Number(project.contract_value || 0);
+    const r2 = (v) => Math.round((Number(v) + Number.EPSILON) * 100) / 100;
+    const paymentTerms = termRows.map((t) => ({
+      ...t,
+      due_amount: t.amount != null ? Number(t.amount) : r2((Number(t.percent || 0) / 100) * cv),
+    }));
+    const termsTotal = r2(paymentTerms.reduce((s, t) => s + t.due_amount, 0));
+    const dueReleased = r2(paymentTerms.filter((t) => t.is_done).reduce((s, t) => s + t.due_amount, 0));
+    const released = r2(paymentTerms.reduce((s, t) => s + Number(t.released_amount || 0), 0));
+
     res.json({
       ...project,
       total_spent: totalSpent,
@@ -61,6 +76,8 @@ router.get(
       budget_remaining: (project.budget || 0) - totalSpent,
       gross_margin: (project.contract_value || 0) - totalSpent,
       sites,
+      payment_terms: paymentTerms,
+      terms_summary: { total: termsTotal, due_released: dueReleased, released, pending_release: r2(dueReleased - released) },
     });
   })
 );
@@ -73,12 +90,12 @@ router.post(
     const { rows } = await query(
       `INSERT INTO projects
         (code, name, client_id, client_name, capacity_kw, budget, contract_value,
-         location, status, start_date, end_date, notes, created_by)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,COALESCE($9,'active'),$10,$11,$12,$13)
+         location, status, start_date, end_date, notes, po_number, po_date, created_by)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,COALESCE($9,'active'),$10,$11,$12,$13,$14,$15)
        RETURNING *`,
       [b.code, b.name, b.client_id || null, b.client_name, b.capacity_kw, b.budget || 0,
        b.contract_value || 0, b.location, b.status, b.start_date || null, b.end_date || null,
-       b.notes, req.user.id]
+       b.notes, b.po_number || null, b.po_date || null, req.user.id]
     );
     await audit(req, { action: 'create', entity: 'projects', entityId: rows[0].id, changes: b });
     res.status(201).json(rows[0]);
@@ -96,10 +113,11 @@ router.patch(
         budget=COALESCE($6,budget), contract_value=COALESCE($7,contract_value),
         location=COALESCE($8,location), status=COALESCE($9,status),
         start_date=COALESCE($10,start_date), end_date=COALESCE($11,end_date),
-        notes=COALESCE($12,notes)
+        notes=COALESCE($12,notes), po_number=COALESCE($14,po_number), po_date=COALESCE($15,po_date)
        WHERE id=$13 RETURNING *`,
       [b.code, b.name, b.client_id, b.client_name, b.capacity_kw, b.budget,
-       b.contract_value, b.location, b.status, b.start_date, b.end_date, b.notes, req.params.id]
+       b.contract_value, b.location, b.status, b.start_date, b.end_date, b.notes, req.params.id,
+       b.po_number, b.po_date]
     );
     if (!rows[0]) throw new ApiError(404, 'Project not found');
     await audit(req, { action: 'update', entity: 'projects', entityId: req.params.id, changes: b });
@@ -107,12 +125,28 @@ router.patch(
   })
 );
 
+// Soft delete — recoverable from the System Recovery Center.
 router.delete(
   '/:id',
   asyncHandler(async (req, res) => {
-    await query('DELETE FROM projects WHERE id=$1', [req.params.id]);
+    const { rows } = await query(
+      'UPDATE projects SET is_deleted=TRUE, deleted_at=now(), deleted_by=$2 WHERE id=$1 AND is_deleted=FALSE RETURNING id',
+      [req.params.id, req.user.id]);
+    if (!rows[0]) throw new ApiError(404, 'Project not found');
     await audit(req, { action: 'delete', entity: 'projects', entityId: req.params.id });
     res.json({ ok: true });
+  })
+);
+
+// Restore a soft-deleted project.
+router.post(
+  '/:id/restore',
+  asyncHandler(async (req, res) => {
+    const { rows } = await query(
+      'UPDATE projects SET is_deleted=FALSE, deleted_at=NULL, deleted_by=NULL WHERE id=$1 RETURNING *', [req.params.id]);
+    if (!rows[0]) throw new ApiError(404, 'Project not found');
+    await audit(req, { action: 'restore', entity: 'projects', entityId: req.params.id });
+    res.json({ ok: true, restored: rows[0] });
   })
 );
 
@@ -123,7 +157,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const { rows } = await query(
       `SELECT s.*,
-        (SELECT COALESCE(SUM(amount),0) FROM payments WHERE site_id=s.id) AS site_spent
+        (SELECT COALESCE(SUM(amount),0) FROM payments WHERE site_id=s.id AND is_deleted=FALSE) AS site_spent
        FROM sites s WHERE s.project_id=$1 ORDER BY s.created_at`,
       [req.params.id]
     );
@@ -137,12 +171,69 @@ router.post(
     const b = req.body || {};
     if (!b.name) throw new ApiError(400, 'Site name is required');
     const { rows } = await query(
-      `INSERT INTO sites (project_id, code, name, location, latitude, longitude, budget, status)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,COALESCE($8,'active')) RETURNING *`,
-      [req.params.id, b.code, b.name, b.location, b.latitude || null, b.longitude || null, b.budget || 0, b.status]
+      `INSERT INTO sites (project_id, code, name, location, latitude, longitude, budget, status, po_number, po_date, capacity_kw)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,COALESCE($8,'active'),$9,$10,$11) RETURNING *`,
+      [req.params.id, b.code, b.name, b.location, b.latitude || null, b.longitude || null, b.budget || 0, b.status,
+       b.po_number || null, b.po_date || null, b.capacity_kw || null]
     );
     await audit(req, { action: 'create', entity: 'sites', entityId: rows[0].id, changes: b });
     res.status(201).json(rows[0]);
+  })
+);
+
+// ── Project payment terms (milestone schedule) ──────────────────────────────
+
+router.get(
+  '/:id/payment-terms',
+  asyncHandler(async (req, res) => {
+    const { rows } = await query('SELECT * FROM project_payment_terms WHERE project_id=$1 ORDER BY seq, created_at', [req.params.id]);
+    res.json(rows);
+  })
+);
+
+router.post(
+  '/:id/payment-terms',
+  asyncHandler(async (req, res) => {
+    const b = req.body || {};
+    if (!b.title || !String(b.title).trim()) throw new ApiError(400, 'A milestone description is required');
+    const seq = b.seq ?? (await query('SELECT COALESCE(MAX(seq),0)+1 AS n FROM project_payment_terms WHERE project_id=$1', [req.params.id])).rows[0].n;
+    const { rows } = await query(
+      `INSERT INTO project_payment_terms (project_id, seq, title, percent, amount, notes)
+       VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`,
+      [req.params.id, seq, b.title.trim(), b.percent ?? null, b.amount ?? null, b.notes || null]
+    );
+    await audit(req, { action: 'create', entity: 'project_payment_terms', entityId: rows[0].id, changes: b });
+    res.status(201).json(rows[0]);
+  })
+);
+
+router.patch(
+  '/payment-terms/:termId',
+  asyncHandler(async (req, res) => {
+    const b = req.body || {};
+    const { rows } = await query(
+      `UPDATE project_payment_terms SET
+         title=COALESCE($2,title), percent=COALESCE($3,percent), amount=COALESCE($4,amount),
+         is_done=COALESCE($5,is_done),
+         done_at=CASE WHEN $5 IS NULL THEN done_at WHEN $5=TRUE THEN COALESCE(done_at,now()) ELSE NULL END,
+         released_amount=COALESCE($6,released_amount),
+         released_at=CASE WHEN $6 IS NULL THEN released_at WHEN $6>0 THEN COALESCE(released_at,now()) ELSE NULL END,
+         notes=COALESCE($7,notes), seq=COALESCE($8,seq), updated_at=now()
+       WHERE id=$1 RETURNING *`,
+      [req.params.termId, b.title, b.percent, b.amount, b.is_done, b.released_amount, b.notes, b.seq]
+    );
+    if (!rows[0]) throw new ApiError(404, 'Payment term not found');
+    await audit(req, { action: 'update', entity: 'project_payment_terms', entityId: req.params.termId, changes: b });
+    res.json(rows[0]);
+  })
+);
+
+router.delete(
+  '/payment-terms/:termId',
+  asyncHandler(async (req, res) => {
+    await query('DELETE FROM project_payment_terms WHERE id=$1', [req.params.termId]);
+    await audit(req, { action: 'delete', entity: 'project_payment_terms', entityId: req.params.termId });
+    res.json({ ok: true });
   })
 );
 

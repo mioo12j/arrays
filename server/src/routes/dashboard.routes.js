@@ -54,13 +54,13 @@ router.get(
   asyncHandler(async (_req, res) => {
     const [outgoing, incoming, receivables, pendingInvoices, pendingProofInvoices, recon, projects, vendorLiab] =
       await Promise.all([
-        query('SELECT COALESCE(SUM(amount),0) AS v FROM payments'),
+        query('SELECT COALESCE(SUM(amount),0) AS v FROM payments WHERE is_deleted=FALSE'),
         query('SELECT COALESCE(SUM(credited_amount),0) AS v FROM receipts'),
         query(`SELECT COALESCE(SUM(outstanding),0) AS v FROM v_client_balances`),
-        query(`SELECT COUNT(*) AS v FROM invoices WHERE status IN ('raised','sent','partially_paid','overdue')`),
-        query(`SELECT COUNT(*) AS v FROM payments WHERE invoice_status='pending'`),
+        query(`SELECT COUNT(*) AS v FROM invoices WHERE status IN ('raised','sent','partially_paid','overdue') AND is_deleted=FALSE`),
+        query(`SELECT COUNT(*) AS v FROM payments WHERE invoice_status='pending' AND is_deleted=FALSE`),
         query(`SELECT COUNT(*) AS v FROM bank_statement_lines WHERE status='unmatched' AND (comment IS NULL OR classified=false)`),
-        query(`SELECT COUNT(*) AS v FROM projects WHERE status='active'`),
+        query(`SELECT COUNT(*) AS v FROM projects WHERE status='active' AND is_deleted=FALSE`),
         query(`SELECT COALESCE(SUM(GREATEST(balance,0)),0) AS v FROM v_vendor_balances`),
       ]);
 
@@ -90,7 +90,7 @@ router.get(
         FROM generate_series(0, $1 - 1) n
       )
       SELECT s.ym AS month,
-        COALESCE((SELECT SUM(amount) FROM payments p WHERE to_char(p.payment_date,'YYYY-MM')=s.ym),0) AS outgoing,
+        COALESCE((SELECT SUM(amount) FROM payments p WHERE to_char(p.payment_date,'YYYY-MM')=s.ym AND p.is_deleted=FALSE),0) AS outgoing,
         COALESCE((SELECT SUM(credited_amount) FROM receipts r WHERE to_char(r.credited_date,'YYYY-MM')=s.ym),0) AS incoming
       FROM series s
       ORDER BY s.ym
@@ -109,6 +109,7 @@ router.get(
       SELECT COALESCE(ec.name,'Unclassified') AS category, COALESCE(SUM(p.amount),0) AS amount
       FROM payments p
       LEFT JOIN expense_categories ec ON ec.id=p.category_id
+      WHERE p.is_deleted=FALSE
       GROUP BY ec.name
       ORDER BY amount DESC
     `);
@@ -195,7 +196,7 @@ router.get(
     const { rows } = await query(`
       (SELECT 'payment' AS kind, p.id, p.amount, p.payment_date AS date, p.comment AS note,
               v.name AS party, p.created_at
-       FROM payments p LEFT JOIN vendors v ON v.id=p.vendor_id)
+       FROM payments p LEFT JOIN vendors v ON v.id=p.vendor_id WHERE p.is_deleted=FALSE)
       UNION ALL
       (SELECT 'receipt' AS kind, r.id, r.credited_amount AS amount, r.credited_date AS date, r.comment AS note,
               c.name AS party, r.created_at

@@ -7,29 +7,15 @@ import { audit } from '../middleware/audit.js';
 import { upload } from '../middleware/upload.js';
 import { saveDocument } from '../services/document.service.js';
 import { parsePaymentFields, extractText } from '../services/ocr.service.js';
-import { postLedgerEntry, removeLedgerForSource } from '../services/ledger.service.js';
+import { removeLedgerForSource } from '../services/ledger.service.js';
 import { autoMapVendor } from '../services/vendor-match.service.js';
+import * as paymentSvc from '../services/paymentService.js';
 
 const router = Router();
 router.use(authenticate, denyWriteForAdmin);   // admin is view-only
 
-// Post the payment as a debit to its payee ledger — an employee if set,
-// otherwise the vendor. (A payment is to one payee, never both ledgers.)
-async function postPaymentLedger(db, pay, userId) {
-  if (pay.employee_id) {
-    await postLedgerEntry(db, {
-      partyType: 'employee', partyId: pay.employee_id, direction: 'debit',
-      amount: pay.amount, entryDate: pay.payment_date, description: pay.comment,
-      projectId: pay.project_id, siteId: pay.site_id, sourceType: 'payment', sourceId: pay.id, userId,
-    });
-  } else if (pay.vendor_id) {
-    await postLedgerEntry(db, {
-      partyType: 'vendor', partyId: pay.vendor_id, direction: 'debit',
-      amount: pay.amount, entryDate: pay.payment_date, description: pay.comment,
-      projectId: pay.project_id, siteId: pay.site_id, sourceType: 'payment', sourceId: pay.id, userId,
-    });
-  }
-}
+// Post the payment as a debit to its payee ledger (employee if set, else vendor).
+const postPaymentLedger = paymentSvc.postPaymentLedger;
 
 // ── Step 1: Upload proof & auto-extract (OCR) ───────────────────────────────
 // POST /api/payments/extract   (multipart: file)
@@ -79,8 +65,12 @@ router.post(
     }
 
     const payment = await withTransaction(async (db) => {
-      // Auto-map a vendor if neither vendor nor employee was picked.
-      if (!b.vendor_id && !b.employee_id) {
+      if (b.payee_type === 'employee' && !b.employee_id) {
+        // Paying an employee not yet in the master → create them automatically.
+        const emp = await paymentSvc.findOrCreateEmployee(db, b.beneficiary_name);
+        if (emp) b.employee_id = emp.id;
+      } else if (!b.vendor_id && !b.employee_id) {
+        // Auto-map a vendor if neither vendor nor employee was picked.
         const m = await autoMapVendor(db, {
           accountNumber: b.account_details, beneficiary: b.beneficiary_name,
         });
@@ -131,7 +121,7 @@ router.get(
   '/',
   asyncHandler(async (req, res) => {
     const { search, project_id, vendor_id, site_id, category_id, invoice_status, from, to } = req.query;
-    const clauses = [];
+    const clauses = ['p.is_deleted=FALSE'];
     const p = [];
     if (search) { p.push(`%${search}%`); clauses.push(`(p.reference_id ILIKE $${p.length} OR p.beneficiary_name ILIKE $${p.length} OR p.comment ILIKE $${p.length} OR p.bank_remarks ILIKE $${p.length} OR v.name ILIKE $${p.length})`); }
     if (project_id) { p.push(project_id); clauses.push(`p.project_id=$${p.length}`); }
@@ -240,16 +230,25 @@ router.post(
   })
 );
 
-// DELETE /api/payments/:id
+// DELETE /api/payments/:id  — soft delete (recoverable from the Recovery Center)
 router.delete(
   '/:id',
   asyncHandler(async (req, res) => {
-    await withTransaction(async (db) => {
-      await removeLedgerForSource(db, 'payment', req.params.id);
-      await db.query('DELETE FROM payments WHERE id=$1', [req.params.id]);
-    });
+    const out = await withTransaction(async (db) => paymentSvc.softDelete(db, req.params.id, req.user.id));
+    if (!out) throw new ApiError(404, 'Payment not found');
     await audit(req, { action: 'delete', entity: 'payments', entityId: req.params.id });
     res.json({ ok: true });
+  })
+);
+
+// POST /api/payments/:id/restore  — restore a soft-deleted payment
+router.post(
+  '/:id/restore',
+  asyncHandler(async (req, res) => {
+    const out = await withTransaction(async (db) => paymentSvc.restore(db, req.params.id, req.user.id));
+    if (!out) throw new ApiError(404, 'Payment not found');
+    await audit(req, { action: 'restore', entity: 'payments', entityId: req.params.id });
+    res.json({ ok: true, restored: out });
   })
 );
 

@@ -205,22 +205,34 @@ function infoPanel(doc, x, y, w, title, rows, accent = BRAND, tint = SOFT) {
   return h;
 }
 
-// Party (address) block with a fixed visual height; long fields are clipped.
-function partyBlock(doc, x, y, w, label, p = {}) {
-  const h = 92;
-  box(doc, x, y, w, h, SOFT);
-  doc.fontSize(8).fillColor(BRAND).font('Helvetica-Bold').text(label, x + 8, y + 6, { width: w - 16, lineBreak: false });
-  doc.fillColor(INK).fontSize(9).font('Helvetica-Bold').text(p.legalName || p.tradeName || '—', x + 8, y + 18, { width: w - 16, height: 11, ellipsis: true });
-  doc.font('Helvetica').fontSize(7.8).fillColor(MUTE);
+// Party (address) block — height grows to show the full name + address (never
+// clipped). partyHeight measures; partyBlock draws. Pass a shared height to two
+// blocks to align them as an even row.
+function partyLines(p = {}) {
+  const name = p.legalName || p.tradeName || '—';
   const lines = [
-    p.gstin ? `GSTIN: ${p.gstin}` : null,
+    p.gstin ? `GSTIN: ${p.gstin}` : 'Unregistered',
     [p.addr1, p.addr2].filter(Boolean).join(', '),
     [p.location, p.pincode].filter(Boolean).join(' - '),
     p.stateCode ? `State: ${st(p.stateCode)} (${String(p.stateCode).padStart(2, '0')})` : null,
     p.phone ? `Ph: ${p.phone}` : null,
-  ].filter(Boolean).slice(0, 5);
-  let ly = y + 32;
-  lines.forEach((ln) => { doc.text(ln, x + 8, ly, { width: w - 16, height: 9, ellipsis: true }); ly += 11; });
+  ].filter(Boolean);
+  return { name, lines };
+}
+function partyHeight(doc, w, p) {
+  const innerW = w - 16, { name, lines } = partyLines(p);
+  doc.font('Helvetica-Bold').fontSize(9); const nameH = doc.heightOfString(name, { width: innerW });
+  doc.font('Helvetica').fontSize(7.8); const bodyH = doc.heightOfString(lines.join('\n'), { width: innerW });
+  return Math.max(92, 6 + 12 + nameH + 2 + bodyH + 8);
+}
+function partyBlock(doc, x, y, w, label, p = {}, h) {
+  const innerW = w - 16, { name, lines } = partyLines(p);
+  if (!h) h = partyHeight(doc, w, p);
+  box(doc, x, y, w, h, SOFT);
+  doc.fontSize(8).fillColor(BRAND).font('Helvetica-Bold').text(label, x + 8, y + 6, { width: innerW, lineBreak: false });
+  doc.fillColor(INK).fontSize(9).font('Helvetica-Bold').text(name, x + 8, y + 18, { width: innerW });
+  const cy = y + 18 + doc.heightOfString(name, { width: innerW }) + 2;
+  doc.font('Helvetica').fontSize(7.8).fillColor(MUTE).text(lines.join('\n'), x + 8, cy, { width: innerW });
   doc.fillColor(INK);
   return h;
 }
@@ -286,11 +298,13 @@ export async function einvoicePdf(rec, branding = {}, lang = 'en') {
     M + CW / 2 - 40, my + 7, { width: CW / 2 + 30, align: 'right', lineBreak: false });
   doc.y = my + 32;
 
-  // ── parties ────────────────────────────────────────────────────────────────
+  // ── parties (cards grow to fit, aligned to the taller of the two) ───────────
   const py = doc.y, halfW = (CW - 10) / 2;
-  partyBlock(doc, M, py, halfW, 'SUPPLIER', rec.seller);
-  partyBlock(doc, M + halfW + 10, py, halfW, 'RECIPIENT', { ...rec.buyer, stateCode: rec.buyer?.stateCode || rec.buyer?.pos });
-  doc.y = py + 102;
+  const buyer = { ...rec.buyer, stateCode: rec.buyer?.stateCode || rec.buyer?.pos };
+  const ph = Math.max(partyHeight(doc, halfW, rec.seller), partyHeight(doc, halfW, buyer));
+  partyBlock(doc, M, py, halfW, 'SUPPLIER', rec.seller, ph);
+  partyBlock(doc, M + halfW + 10, py, halfW, 'RECIPIENT', buyer, ph);
+  doc.y = py + ph + 10;
 
   // ── items table ────────────────────────────────────────────────────────────
   const cols = [
@@ -465,11 +479,14 @@ export async function ewbPdf(rec, branding = {}, lang = 'en') {
   ]);
   doc.y = aY + hA + 12;
 
-  // ── From / To ──────────────────────────────────────────────────────────────
+  // ── From / To (cards grow to fit, aligned) ──────────────────────────────────
   const py = doc.y;
-  partyBlock(doc, M, py, half, 'FROM (Dispatch)', { legalName: rec.fromTradeName, gstin: rec.fromGstin, addr1: rec.fromAddr1, location: rec.fromPlace, pincode: rec.fromPincode, stateCode: rec.fromStateCode });
-  partyBlock(doc, M + half + 10, py, half, 'TO (Ship To)', { legalName: rec.toTradeName, gstin: rec.toGstin, addr1: rec.toAddr1, location: rec.toPlace, pincode: rec.toPincode, stateCode: rec.toStateCode });
-  doc.y = py + 102;
+  const fromP = { legalName: rec.fromTradeName, gstin: rec.fromGstin, addr1: rec.fromAddr1, location: rec.fromPlace, pincode: rec.fromPincode, stateCode: rec.fromStateCode };
+  const toP = { legalName: rec.toTradeName, gstin: rec.toGstin, addr1: rec.toAddr1, location: rec.toPlace, pincode: rec.toPincode, stateCode: rec.toStateCode };
+  const ph = Math.max(partyHeight(doc, half, fromP), partyHeight(doc, half, toP));
+  partyBlock(doc, M, py, half, 'FROM (Dispatch)', fromP, ph);
+  partyBlock(doc, M + half + 10, py, half, 'TO (Ship To)', toP, ph);
+  doc.y = py + ph + 10;
 
   // ── Part B — transport (aligned panel, color-coded by completeness) ────────
   const partB = rec.partBReady || rec.vehicleNo || rec.transDocNo;
@@ -504,19 +521,26 @@ export async function ewbPdf(rec, branding = {}, lang = 'en') {
     return yy + 16;
   };
   let ty = drawHead(doc.y);
-  const rowH = 14;
+  const prodW = cols[0].w * CW - 8;
   (rec.items || []).forEach((it, i) => {
-    if (ty + rowH > bottomLimit(doc)) { doc.addPage(); watermark(doc, wm); ty = drawHead(contHeader(doc, branding, 'e-WAY BILL')); }
-    if (i % 2) doc.rect(M, ty, CW, rowH).fill(SOFT);
-    doc.fillColor(INK).font('Helvetica').fontSize(7.5);
     const cells = [
       it.description || it.productName || '—',
       String(it.hsn || '—'),
       `${it.quantity || ''} ${it.unit || ''}`.trim() || '—',
       inr(it.taxableAmount),
     ];
+    // Row height grows to fit the wrapped product description — no cut-off.
+    doc.font('Helvetica').fontSize(7.5);
+    const rowH = Math.max(14, doc.heightOfString(cells[0], { width: prodW }) + 6);
+    if (ty + rowH > bottomLimit(doc)) { doc.addPage(); watermark(doc, wm); ty = drawHead(contHeader(doc, branding, 'e-WAY BILL')); }
+    if (i % 2) doc.rect(M, ty, CW, rowH).fill(SOFT);
+    doc.fillColor(INK).font('Helvetica').fontSize(7.5);
     let cx = M;
-    cols.forEach((c, ci) => { doc.text(cells[ci], cx + 4, ty + 3.5, { width: c.w * CW - 8, align: c.a, ellipsis: true, lineBreak: false }); cx += c.w * CW; });
+    cols.forEach((c, ci) => {
+      if (ci === 0) doc.text(cells[ci], cx + 4, ty + 3.5, { width: c.w * CW - 8 });
+      else doc.text(cells[ci], cx + 4, ty + 3.5, { width: c.w * CW - 8, align: c.a, ellipsis: true, lineBreak: false });
+      cx += c.w * CW;
+    });
     ty += rowH;
   });
   doc.moveTo(M, ty).lineTo(W - M, ty).strokeColor(LINE).lineWidth(0.6).stroke();

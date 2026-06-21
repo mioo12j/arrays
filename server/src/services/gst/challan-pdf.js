@@ -40,19 +40,34 @@ function watermark(doc, text) {
   doc.fillOpacity(1).restore(); doc.x = sx; doc.y = sy;
 }
 
-function party(doc, x, y, w, label, p = {}) {
-  const h = 96; box(doc, x, y, w, h, SOFT);
-  doc.fontSize(8).fillColor(BRAND).font('Helvetica-Bold').text(label, x + 8, y + 6, { width: w - 16, lineBreak: false });
-  doc.fillColor(INK).fontSize(9.5).font('Helvetica-Bold').text(p.legalName || p.tradeName || '—', x + 8, y + 18, { width: w - 16, height: 12, ellipsis: true });
-  doc.font('Helvetica').fontSize(7.8).fillColor(MUTE);
+// Party (consignor/consignee) content — name + address lines (no truncation).
+function partyContent(p = {}) {
+  const name = p.legalName || p.tradeName || '—';
   const lines = [
     p.gstin ? `GSTIN: ${p.gstin}` : 'Unregistered',
     [p.addr1, p.addr2].filter(Boolean).join(', '),
     [p.location, p.pincode].filter(Boolean).join(' - '),
     p.stateCode ? `State: ${st(p.stateCode)} (${String(p.stateCode).padStart(2, '0')})` : null,
     p.phone ? `Ph: ${p.phone}` : null,
-  ].filter(Boolean).slice(0, 5);
-  let ly = y + 32; lines.forEach((ln) => { doc.text(ln, x + 8, ly, { width: w - 16, height: 9, ellipsis: true }); ly += 11; });
+  ].filter(Boolean);
+  return { name, lines };
+}
+// Measure the height a party card needs to show all its text.
+function partyHeight(doc, w, p) {
+  const innerW = w - 16, { name, lines } = partyContent(p);
+  doc.font('Helvetica-Bold').fontSize(9.5); const nameH = doc.heightOfString(name, { width: innerW });
+  doc.font('Helvetica').fontSize(7.8); const bodyH = doc.heightOfString(lines.join('\n'), { width: innerW });
+  return Math.max(96, 6 + 12 + nameH + 2 + bodyH + 8);
+}
+// Draw a party card; height grows to fit (pass a shared h to align two cards).
+function party(doc, x, y, w, label, p = {}, h) {
+  const innerW = w - 16, { name, lines } = partyContent(p);
+  if (!h) h = partyHeight(doc, w, p);
+  box(doc, x, y, w, h, SOFT);
+  doc.fontSize(8).fillColor(BRAND).font('Helvetica-Bold').text(label, x + 8, y + 6, { width: innerW, lineBreak: false });
+  doc.fillColor(INK).fontSize(9.5).font('Helvetica-Bold').text(name, x + 8, y + 18, { width: innerW });
+  const cy = y + 18 + doc.heightOfString(name, { width: innerW }) + 2;
+  doc.font('Helvetica').fontSize(7.8).fillColor(MUTE).text(lines.join('\n'), x + 8, cy, { width: innerW });
   doc.fillColor(INK); return h;
 }
 
@@ -93,11 +108,12 @@ export async function challanPdf(dc, branding = {}, lang = 'en') {
   metaCell('Status', String(dc.status || '').replace(/_/g, ' '), M + 3 * c4, c4);
   doc.y = my + 44;
 
-  // ── Parties ────────────────────────────────────────────────────────────────
+  // ── Parties (cards grow to fit, aligned to the taller of the two) ───────────
   const py = doc.y, half = (CW - 10) / 2;
-  party(doc, M, py, half, 'CONSIGNOR (From)', dc.consignor);
-  party(doc, M + half + 10, py, half, 'CONSIGNEE (To)', dc.consignee);
-  doc.y = py + 106;
+  const ph = Math.max(partyHeight(doc, half, dc.consignor), partyHeight(doc, half, dc.consignee));
+  party(doc, M, py, half, 'CONSIGNOR (From)', dc.consignor, ph);
+  party(doc, M + half + 10, py, half, 'CONSIGNEE (To)', dc.consignee, ph);
+  doc.y = py + ph + 10;
 
   // ── Items table ────────────────────────────────────────────────────────────
   const cols = [
@@ -113,16 +129,23 @@ export async function challanPdf(dc, branding = {}, lang = 'en') {
     return yy + 17;
   };
   let ty = drawHead(doc.y);
-  const rowH = 16;
+  const descIdx = 1, descW = cols[descIdx].w * CW - 8;
   (dc.items || []).forEach((it, i) => {
-    if (ty + rowH > bottomLimit()) { doc.addPage(); watermark(doc, wm); ty = drawHead(M + 10); }
-    if (i % 2) doc.rect(M, ty, CW, rowH).fill(SOFT);
     const val = Number(it.taxableValue || 0) + Number(it.cgstAmount || 0) + Number(it.sgstAmount || 0) + Number(it.igstAmount || 0) + Number(it.cessAmount || 0);
     const cells = [String(it.lineNo || i + 1), it.productName || '—', it.hsn || '—',
       [it.batchNo, it.serialNo].filter(Boolean).join(' / ') || '—',
       String(it.quantity ?? ''), it.unit || '', inr(it.rate), inr(it.taxableValue), `${Number(it.gstRate || 0)}%`, inr(val)];
+    // Row height grows to fit the (possibly long) wrapped description — no cut-off.
+    doc.font('Helvetica').fontSize(7.3);
+    const rowH = Math.max(16, doc.heightOfString(cells[descIdx], { width: descW }) + 7);
+    if (ty + rowH > bottomLimit()) { doc.addPage(); watermark(doc, wm); ty = drawHead(M + 10); }
+    if (i % 2) doc.rect(M, ty, CW, rowH).fill(SOFT);
     doc.fillColor(INK).font('Helvetica').fontSize(7.3);
-    let cx = M; cols.forEach((c, k) => { doc.text(cells[k], cx + 4, ty + 4.5, { width: c.w * CW - 8, align: c.a, ellipsis: true, lineBreak: false }); cx += c.w * CW; });
+    let cx = M; cols.forEach((c, k) => {
+      if (k === descIdx) doc.text(cells[k], cx + 4, ty + 4, { width: c.w * CW - 8 });
+      else doc.text(cells[k], cx + 4, ty + 4.5, { width: c.w * CW - 8, align: c.a, ellipsis: true, lineBreak: false });
+      cx += c.w * CW;
+    });
     ty += rowH;
   });
   doc.moveTo(M, ty).lineTo(W - M, ty).strokeColor(LINE).lineWidth(0.6).stroke();

@@ -6,6 +6,8 @@ export const company = {
   name: 'ARRAYS INGENIERIA PRIVATE LIMITED',
   shortName: 'INGENIERIA',
   pdfName: 'ARRAYS INGENIERIA PVT LTD', // compact form for PDF headers
+  subtitle: 'Engineers, Suppliers & Contractor', // line under the name on invoices
+  slogan: 'Developing Green Energy for Nation',   // footer slogan on tax invoices
   tagline: 'Engineering Excellence in Renewable Energy',
   gstin: '09AARCA4610L1ZC',
   pan: 'AARCA4610L',

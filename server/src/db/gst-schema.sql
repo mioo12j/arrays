@@ -831,6 +831,63 @@ ALTER TABLE invoices ADD COLUMN IF NOT EXISTS sgst_amount       NUMERIC(16,2) NO
 ALTER TABLE invoices ADD COLUMN IF NOT EXISTS igst_amount       NUMERIC(16,2) NOT NULL DEFAULT 0;
 ALTER TABLE invoices ADD COLUMN IF NOT EXISTS linked_ewb_id     UUID REFERENCES gst_eway_bills(id);
 
+-- EPC tax-invoice header fields (ARRAYS running-account format): a free-text
+-- "Type of Invoice" subtitle (e.g. "Supply and Installation"), purchase-order
+-- reference + date, an optional site/works address block (multi-line), and a
+-- flag controlling whether a Measurement Sheet page is appended to the PDF.
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS supply_type      TEXT;   -- "Type of Invoice" line
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS po_no            TEXT;
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS po_date          DATE;
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS site_address     TEXT;   -- "Site Address" block (overrides shipping)
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS with_measurement BOOLEAN NOT NULL DEFAULT TRUE;
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS header_text      TEXT;   -- operator-chosen letterhead name (overrides branding)
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS footer_text      TEXT;   -- operator-chosen footer slogan line
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS header_address   TEXT;   -- operator-chosen letterhead address
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS header_cin       TEXT;   -- operator-chosen letterhead CIN
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS header_email     TEXT;   -- operator-chosen letterhead email
+-- Soft delete (recoverable from the System Recovery Center).
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS is_deleted       BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS deleted_at       TIMESTAMPTZ;
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS deleted_by       UUID REFERENCES users(id);
+
+-- Soft delete on outgoing payments (recoverable from the Recovery Center).
+ALTER TABLE payments ADD COLUMN IF NOT EXISTS is_deleted BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE payments ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
+ALTER TABLE payments ADD COLUMN IF NOT EXISTS deleted_by UUID REFERENCES users(id);
+
+-- Soft delete on projects (recoverable from the Recovery Center).
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS is_deleted BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS deleted_by UUID REFERENCES users(id);
+
+-- Purchase-order reference on projects and sites (editable after creation).
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS po_number TEXT;
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS po_date   DATE;
+ALTER TABLE sites    ADD COLUMN IF NOT EXISTS po_number TEXT;
+ALTER TABLE sites    ADD COLUMN IF NOT EXISTS po_date   DATE;
+ALTER TABLE sites    ADD COLUMN IF NOT EXISTS capacity_kw NUMERIC(14,2);
+
+-- Project payment terms / milestone schedule. Each row is a stage ("after X
+-- work, release Y") that the operator ticks off as the work completes; the due
+-- amount is a percentage of the contract value or a fixed figure, and a
+-- released figure tracks how much has actually been paid against that stage.
+CREATE TABLE IF NOT EXISTS project_payment_terms (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id      UUID NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  seq             INT NOT NULL DEFAULT 1,
+  title           TEXT NOT NULL,                 -- work / milestone description
+  percent         NUMERIC(6,2),                  -- % of contract value (if amount null)
+  amount          NUMERIC(16,2),                 -- fixed due amount (overrides percent)
+  is_done         BOOLEAN NOT NULL DEFAULT FALSE, -- work completed (checklist)
+  done_at         TIMESTAMPTZ,
+  released_amount NUMERIC(16,2) NOT NULL DEFAULT 0, -- amount actually released so far
+  released_at     TIMESTAMPTZ,
+  notes           TEXT,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_ppt_project ON project_payment_terms(project_id);
+
 CREATE TABLE IF NOT EXISTS invoice_items (
   id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   invoice_id    UUID NOT NULL REFERENCES invoices(id) ON DELETE CASCADE,
@@ -848,3 +905,10 @@ CREATE TABLE IF NOT EXISTS invoice_items (
   amount        NUMERIC(16,2) NOT NULL DEFAULT 0
 );
 CREATE INDEX IF NOT EXISTS idx_invoice_items_invoice ON invoice_items(invoice_id);
+
+-- Running-account / measurement-sheet quantities per line. quantity (above) is
+-- the PRESENT bill quantity; order_qty is the total contracted quantity and
+-- previous_qty is what was billed in earlier running bills. Total = previous +
+-- present; amounts are derived from rate in the PDF/measurement sheet.
+ALTER TABLE invoice_items ADD COLUMN IF NOT EXISTS order_qty    NUMERIC(16,3);
+ALTER TABLE invoice_items ADD COLUMN IF NOT EXISTS previous_qty NUMERIC(16,3) NOT NULL DEFAULT 0;

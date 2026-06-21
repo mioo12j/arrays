@@ -6,7 +6,20 @@
 //  Returns { vendor_id, vendor_name, confidence (0-100), method } or null.
 // ============================================================================
 
-const NAME_THRESHOLD = 0.42; // trigram similarity floor for a confident name match
+const NAME_THRESHOLD = 0.34; // similarity floor for a confident name match (word_similarity catches subsets)
+
+// Strip bank-statement noise so "MR SANJEEV KUMAR SINGH S/O RAM" cleanly matches
+// a vendor named "Sanjeev Kumar Singh". pg_trgm already ignores case.
+export function normalizeName(s) {
+  return String(s || '')
+    .toUpperCase()
+    .replace(/\b[SDW]\/O\b.*$/, ' ')                     // drop "S/O ..."/"D/O ..."/"W/O ..." tail
+    .replace(/\b(MR|MRS|MS|MISS|DR|SHRI|SHRImati|SMT|SH|KM|KUMARI)\b/g, ' ')  // honorifics
+    .replace(/\b(NEFT|RTGS|IMPS|UPI|PMT|PAYMENT|TXN|REF|TRANSFER|TO|A\/C|AC)\b/g, ' ') // bank tokens
+    .replace(/[^A-Z0-9 ]/g, ' ')                          // punctuation → space
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
 export async function findVendorByAccount(db, accountNumber) {
   if (!accountNumber) return null;
@@ -28,12 +41,15 @@ export async function findVendorByAccount(db, accountNumber) {
 
 export async function findVendorByName(db, name) {
   if (!name) return null;
-  const clean = String(name).trim();
+  const clean = normalizeName(name);
   if (clean.length < 3) return null;
+  // GREATEST of plain similarity and both-direction word_similarity so a subset
+  // name ("Sanjeev Kumar") still matches a fuller one ("Sanjeev Kumar Singh").
   const { rows } = await db.query(
-    `SELECT id, name, similarity(name, $1) AS score
+    `SELECT id, name,
+            GREATEST(similarity(name,$1), word_similarity($1,name), word_similarity(name,$1)) AS score
        FROM vendors
-      WHERE similarity(name, $1) > $2
+      WHERE GREATEST(similarity(name,$1), word_similarity($1,name), word_similarity(name,$1)) > $2
       ORDER BY score DESC
       LIMIT 1`,
     [clean, NAME_THRESHOLD]

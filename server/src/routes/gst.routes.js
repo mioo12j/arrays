@@ -36,6 +36,8 @@ import * as views from '../services/gst/savedViewService.js';
 import * as brandingSvc from '../services/gst/brandingService.js';
 import * as feed from '../services/gst/feedService.js';
 import * as challans from '../services/gst/challanService.js';
+import * as invSvc from '../services/invoiceService.js';
+import * as paymentSvc from '../services/paymentService.js';
 import { challanPdf } from '../services/gst/challan-pdf.js';
 import { streamExcel, streamPdf } from '../services/export.service.js';
 import { upload } from '../middleware/upload.js';
@@ -604,7 +606,19 @@ router.get('/recovery/deleted', requirePerm(PERMS.ADMIN), asyncHandler(async (_r
     `SELECT id, ewb_no, doc_no, to_trade_name, tot_inv_value, deleted_at FROM gst_eway_bills WHERE is_deleted=TRUE ORDER BY deleted_at DESC NULLS LAST LIMIT 200`)).rows;
   const challans = (await pool.query(
     `SELECT id, challan_no, challan_type, consignee->>'legalName' AS consignee, total_value, deleted_at FROM delivery_challans WHERE is_deleted=TRUE ORDER BY deleted_at DESC NULLS LAST LIMIT 200`)).rows;
-  res.json({ einvoices, ewbs, challans, total: einvoices.length + ewbs.length + challans.length });
+  const invoices = (await pool.query(
+    `SELECT i.id, i.invoice_number, COALESCE(i.customer_name, c.name) AS customer_name, i.total_amount, i.deleted_at
+       FROM invoices i LEFT JOIN clients c ON c.id=i.client_id
+      WHERE i.is_deleted=TRUE ORDER BY i.deleted_at DESC NULLS LAST LIMIT 200`)).rows;
+  const payments = (await pool.query(
+    `SELECT p.id, p.reference_id, COALESCE(v.name, e.name, p.beneficiary_name) AS payee, p.amount, p.deleted_at
+       FROM payments p LEFT JOIN vendors v ON v.id=p.vendor_id LEFT JOIN employees e ON e.id=p.employee_id
+      WHERE p.is_deleted=TRUE ORDER BY p.deleted_at DESC NULLS LAST LIMIT 200`)).rows;
+  const projects = (await pool.query(
+    `SELECT id, name, COALESCE(client_name,'') AS client, contract_value, deleted_at
+       FROM projects WHERE is_deleted=TRUE ORDER BY deleted_at DESC NULLS LAST LIMIT 200`)).rows;
+  res.json({ einvoices, ewbs, challans, invoices, payments, projects,
+    total: einvoices.length + ewbs.length + challans.length + invoices.length + payments.length + projects.length });
 }));
 
 router.post('/recovery/restore', requirePerm(PERMS.ADMIN), asyncHandler(async (req, res) => {
@@ -614,6 +628,9 @@ router.post('/recovery/restore', requirePerm(PERMS.ADMIN), asyncHandler(async (r
     if (type === 'einvoice') return einv.restore(db, id, uid(req));
     if (type === 'ewb') return ewb.restore(db, id, uid(req));
     if (type === 'challan') return challans.restore(db, id, uid(req));
+    if (type === 'invoice') return invSvc.restore(db, id, uid(req));
+    if (type === 'payment') return paymentSvc.restore(db, id, uid(req));
+    if (type === 'project') return db.query('UPDATE projects SET is_deleted=FALSE, deleted_at=NULL, deleted_by=NULL WHERE id=$1 RETURNING id', [id]).then((r) => r.rows[0] || null);
     throw new ApiError(400, 'Unknown record type.');
   });
   await recordAccess(req, { action: 'restore', objectType: type, objectId: id });

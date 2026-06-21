@@ -113,5 +113,9 @@ app.listen(env.port, () => {
     import('./services/gst/autoBackup.js')
       .then((m) => m.startAutoBackup())
       .catch((e) => console.error('[auto-backup] start failed:', e.message));
+    // Recovery retention — purge soft-deleted records older than 30 days.
+    import('./services/gst/recoveryPurge.js')
+      .then((m) => m.startRecoveryPurge())
+      .catch((e) => console.error('[recovery-purge] start failed:', e.message));
   }
 });

@@ -19,7 +19,11 @@ import * as config from './configService.js';
 
 const RETENTION_DEFAULT = { dailyDays: 30, weeklyWeeks: 12, monthlyMonths: 24, storageThresholdMb: 5000 };
 
-export const BACKUP_DIR = path.resolve(UPLOAD_ROOT, '..', 'backups');
+// Backups live in their own folder, separate from uploads. Set BACKUP_DIR in
+// .env to keep them on another drive / outside the app folder (recommended).
+export const BACKUP_DIR = process.env.BACKUP_DIR
+  ? path.resolve(process.env.BACKUP_DIR)
+  : path.resolve(UPLOAD_ROOT, '..', 'backups');
 if (!fs.existsSync(BACKUP_DIR)) fs.mkdirSync(BACKUP_DIR, { recursive: true });
 
 const sha = (buf) => crypto.createHash('sha256').update(buf).digest('hex');
@@ -294,10 +298,19 @@ export async function setRetention(db, policy, userId) {
   return next;
 }
 
-// Delete backups older than the configured retention (manual kept forever).
+// Delete backups older than the configured retention. Automated backups (auto /
+// pre-update) and daily/weekly/monthly snapshots are removed once they pass
+// their age limit; auto + pre-update use the 30-day daily window. Manual backups
+// the operator created by hand are kept (they're a deliberate off-site safety net).
 export async function applyRetention(db, userId = null) {
   const r = await getRetention(db);
-  const maxByKind = { daily: r.dailyDays, weekly: r.weeklyWeeks * 7, monthly: r.monthlyMonths * 30 };
+  const maxByKind = {
+    auto: r.dailyDays,             // automated 2-hourly backups → kept 30 days
+    'pre-update': r.dailyDays,     // safety backups taken before a software update
+    daily: r.dailyDays,
+    weekly: r.weeklyWeeks * 7,
+    monthly: r.monthlyMonths * 30,
+  };
   let removed = 0;
   for (const [kind, days] of Object.entries(maxByKind)) {
     const { rows } = await db.query(`SELECT id, file_path FROM gst_backups WHERE kind=$1 AND started_at < now() - ($2 || ' days')::interval`, [kind, String(days)]);

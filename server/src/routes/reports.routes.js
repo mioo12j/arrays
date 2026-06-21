@@ -32,7 +32,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const { search, vendor_id, employee_id, project_id, site_id, category_id, invoice_status, from, to } = req.query;
     const p = [];
-    const where = [];
+    const where = ['p.is_deleted=FALSE'];
     if (search) { p.push(`%${search}%`); where.push(`(p.reference_id ILIKE $${p.length} OR p.beneficiary_name ILIKE $${p.length} OR p.comment ILIKE $${p.length} OR v.name ILIKE $${p.length} OR e.name ILIKE $${p.length})`); }
     if (vendor_id) { p.push(vendor_id); where.push(`p.vendor_id=$${p.length}`); }
     if (employee_id) { p.push(employee_id); where.push(`p.employee_id=$${p.length}`); }
@@ -295,10 +295,10 @@ router.get(
   asyncHandler(async (req, res) => {
     const { rows } = await query(`
       SELECT pr.name AS project, pr.status, pr.budget, pr.contract_value,
-        COALESCE((SELECT SUM(amount) FROM payments WHERE project_id=pr.id),0) AS spent,
+        COALESCE((SELECT SUM(amount) FROM payments WHERE project_id=pr.id AND is_deleted=FALSE),0) AS spent,
         COALESCE((SELECT SUM(credited_amount) FROM receipts WHERE project_id=pr.id),0) AS received,
-        pr.contract_value - COALESCE((SELECT SUM(amount) FROM payments WHERE project_id=pr.id),0) AS gross_margin
-      FROM projects pr ORDER BY pr.created_at DESC
+        pr.contract_value - COALESCE((SELECT SUM(amount) FROM payments WHERE project_id=pr.id AND is_deleted=FALSE),0) AS gross_margin
+      FROM projects pr WHERE pr.is_deleted=FALSE ORDER BY pr.created_at DESC
     `);
     await send(res, fmt(req), lng(req), {
       title: 'Project Profitability Report',

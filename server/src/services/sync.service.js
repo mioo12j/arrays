@@ -13,7 +13,10 @@ import pg from 'pg';
 const { Pool } = pg;
 
 // Tables in FK dependency order (parents first). Truncated + re-copied each run.
+// Tables not present in the cloud schema are skipped automatically, so this list
+// can safely include newer tables before the cloud has been migrated.
 const TABLES = [
+  'app_config',
   'users',
   'expense_categories',
   'clients',
@@ -21,9 +24,17 @@ const TABLES = [
   'employees',
   'projects',
   'sites',
+  'project_payment_terms',
   'vendor_accounts',
+  'gst_branches',
+  'gst_number_series',
   'documents',
   'invoices',
+  'invoice_items',
+  'gst_einvoices',
+  'gst_eway_bills',
+  'delivery_challans',
+  'delivery_challan_items',
   'payments',
   'receipts',
   'ledger_entries',
@@ -61,10 +72,17 @@ export async function syncToCloud(source, targetUrl) {
   });
   const counts = {};
   try {
-    // Clear the cloud data tables (single CASCADE handles cross-table FKs).
-    await target.query(`TRUNCATE ${TABLES.map((t) => `"${t}"`).join(', ')} RESTART IDENTITY CASCADE`);
+    // Only touch tables that actually exist in the cloud schema, so a cloud DB
+    // that hasn't been migrated to the very latest schema never breaks the run.
+    const { rows: cloudTables } = await target.query(
+      `SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'`);
+    const present = new Set(cloudTables.map((r) => r.table_name));
+    const tables = TABLES.filter((t) => present.has(t));
 
-    for (const table of TABLES) {
+    // Clear the cloud data tables (single CASCADE handles cross-table FKs).
+    if (tables.length) await target.query(`TRUNCATE ${tables.map((t) => `"${t}"`).join(', ')} RESTART IDENTITY CASCADE`);
+
+    for (const table of tables) {
       // Use the cloud schema's columns as the source of truth.
       const { rows: colMeta } = await target.query(
         `SELECT column_name, data_type FROM information_schema.columns

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LifeBuoy, Undo2, ShieldCheck, Download, DatabaseBackup, Activity, Loader2, FileText, Truck, ClipboardList, ArrowRight } from 'lucide-react';
+import { LifeBuoy, Undo2, ShieldCheck, Download, DatabaseBackup, Activity, Loader2, FileText, Truck, ClipboardList, ArrowRight, ReceiptText, Banknote, FolderKanban } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { api, apiError } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
@@ -31,6 +31,9 @@ export default function RecoveryCenter() {
     { key: 'einvoices', label: 'E-Invoices', icon: FileText, type: 'einvoice', cols: ['doc_no', 'buyer_name', 'total_inv_val'] },
     { key: 'ewbs', label: 'E-Way Bills', icon: Truck, type: 'ewb', cols: ['ewb_no', 'to_trade_name', 'tot_inv_value'] },
     { key: 'challans', label: 'Delivery Challans', icon: ClipboardList, type: 'challan', cols: ['challan_no', 'consignee', 'total_value'] },
+    { key: 'invoices', label: 'Invoices', icon: ReceiptText, type: 'invoice', cols: ['invoice_number', 'customer_name', 'total_amount'] },
+    { key: 'payments', label: 'Outgoing Payments', icon: Banknote, type: 'payment', cols: ['reference_id', 'payee', 'amount'] },
+    { key: 'projects', label: 'Projects', icon: FolderKanban, type: 'project', cols: ['name', 'client', 'contract_value'] },
   ];
 
   return (
@@ -43,7 +46,10 @@ export default function RecoveryCenter() {
           <h3 className="flex items-center gap-2 font-semibold text-slate-800 dark:text-slate-100"><Undo2 size={16} /> Deleted Records</h3>
           <span className="text-sm text-slate-400">{deleted?.total ?? 0} recoverable</span>
         </div>
-        {loading ? <Loading /> : !deleted?.total ? <EmptyState title="No deleted records" hint="Anything you delete can be recovered here." /> : (
+        <div className="border-b border-amber-100 bg-amber-50/60 px-4 py-2 text-xs text-amber-700 dark:border-amber-900/40 dark:bg-amber-900/10 dark:text-amber-400">
+          Deleted records are kept here for <b>30 days</b>, then permanently removed. Recover anything you still need before then.
+        </div>
+        {loading ? <Loading /> : !deleted?.total ? <EmptyState title="No deleted records" hint="Anything you delete can be recovered here for 30 days." /> : (
           <div className="divide-y divide-slate-100 dark:divide-slate-800">
             {groups.map((g) => (deleted[g.key] || []).length > 0 && (
               <div key={g.key} className="p-4">

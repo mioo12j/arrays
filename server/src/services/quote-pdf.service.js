@@ -130,18 +130,23 @@ export function streamQuotePdf(res, quote, branding = {}, lang = 'en') {
   ];
   drawTableHeader(doc, cols, W, M);
   doc.font('Helvetica').fontSize(8.5).fillColor(INK);
+  const itemW = cols[0].w * W - 10;
   (quote.line_items || []).forEach((row, idx) => {
-    if (doc.y + 16 > bottom()) { doc.addPage(); drawTableHeader(doc, cols, W, M); }
+    // Row height grows to fit the wrapped Item description — no cut-off.
+    doc.font('Helvetica').fontSize(8.5);
+    const rowH = Math.max(16, doc.heightOfString(String(row.item ?? ''), { width: itemW }) + 7);
+    if (doc.y + rowH > bottom()) { doc.addPage(); drawTableHeader(doc, cols, W, M); }
     const y = doc.y;
-    if (idx % 2 === 0) doc.rect(M, y, W, 16).fill('#f1f5f9');
+    if (idx % 2 === 0) doc.rect(M, y, W, rowH).fill('#f1f5f9');
     let cx = M;
     cols.forEach((c) => {
       let v = row[c.k];
       v = c.m ? inr(v) : c.k === 'qty' ? new Intl.NumberFormat('en-IN').format(Number(v || 0)) : String(v ?? '');
-      doc.fillColor(INK).font('Helvetica').fontSize(8.5).text(v, cx + 5, y + 4, { width: c.w * W - 10, height: 12, align: c.a, ellipsis: true, lineBreak: false });
+      if (c.k === 'item') doc.fillColor(INK).font('Helvetica').fontSize(8.5).text(v, cx + 5, y + 4, { width: c.w * W - 10 });
+      else doc.fillColor(INK).font('Helvetica').fontSize(8.5).text(v, cx + 5, y + 4, { width: c.w * W - 10, align: c.a, ellipsis: true, lineBreak: false });
       cx += c.w * W;
     });
-    doc.y = y + 16;
+    doc.y = y + rowH;
   });
 
   // ── Commercial summary ────────────────────────────────────────────────────

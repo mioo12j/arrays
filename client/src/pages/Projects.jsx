@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Plus, Loader2, ChevronRight } from 'lucide-react';
 import { api, apiError } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
@@ -31,7 +32,7 @@ export default function Projects() {
             const pct = budget > 0 ? Math.min(100, (spent / budget) * 100) : 0;
             const over = budget > 0 && spent > budget;
             return (
-              <a key={p.id} href={`/projects/${p.id}`}>
+              <Link key={p.id} to={`/projects/${p.id}`}>
                 <Card className="h-full transition hover:shadow-soft">
                   <div className="flex items-start justify-between">
                     <div>
@@ -57,7 +58,7 @@ export default function Projects() {
                     <div><p className="text-[11px] uppercase text-slate-400">Capacity</p><p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{p.capacity_kw ? `${p.capacity_kw}kW` : '—'}</p></div>
                   </div>
                 </Card>
-              </a>
+              </Link>
             );
           })}
         </div>
@@ -68,9 +69,16 @@ export default function Projects() {
   );
 }
 
-function ProjectModal({ onClose, onSaved, clients }) {
+export function ProjectModal({ onClose, onSaved, clients, initial }) {
   const toast = useToast();
-  const [form, setForm] = useState({ name: '', code: '', client_id: '', capacity_kw: '', budget: '', contract_value: '', location: '', start_date: '', end_date: '', notes: '' });
+  const isEdit = !!initial?.id;
+  const [form, setForm] = useState({
+    name: initial?.name || '', code: initial?.code || '', client_id: initial?.client_id || '',
+    capacity_kw: initial?.capacity_kw ?? '', budget: initial?.budget ?? '', contract_value: initial?.contract_value ?? '',
+    location: initial?.location || '', po_number: initial?.po_number || '', po_date: initial?.po_date?.slice(0, 10) || '',
+    start_date: initial?.start_date?.slice(0, 10) || '', end_date: initial?.end_date?.slice(0, 10) || '',
+    status: initial?.status || 'active', notes: initial?.notes || '',
+  });
   const [saving, setSaving] = useState(false);
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
@@ -78,22 +86,23 @@ function ProjectModal({ onClose, onSaved, clients }) {
     if (!form.name.trim()) return toast.error('Project name is required');
     setSaving(true);
     try {
-      await api.post('/projects', {
+      const body = {
         ...form,
         client_id: form.client_id || null,
         capacity_kw: form.capacity_kw ? Number(form.capacity_kw) : null,
         budget: Number(form.budget || 0), contract_value: Number(form.contract_value || 0),
-        start_date: form.start_date || null, end_date: form.end_date || null,
-      });
+        po_date: form.po_date || null, start_date: form.start_date || null, end_date: form.end_date || null,
+      };
+      if (isEdit) await api.patch(`/projects/${initial.id}`, body); else await api.post('/projects', body);
       onSaved();
     } catch (err) { toast.error(apiError(err)); } finally { setSaving(false); }
   };
 
   return (
-    <Modal open onClose={onClose} title="New Project" size="lg"
+    <Modal open onClose={onClose} title={isEdit ? 'Edit Project' : 'New Project'} size="lg"
       footer={<>
         <button className="btn-ghost" onClick={onClose}>Cancel</button>
-        <button className="btn-primary" onClick={save} disabled={saving}>{saving ? <Loader2 className="animate-spin" size={16} /> : 'Create Project'}</button>
+        <button className="btn-primary" onClick={save} disabled={saving}>{saving ? <Loader2 className="animate-spin" size={16} /> : isEdit ? 'Save Changes' : 'Create Project'}</button>
       </>}>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label="Project Name" required><input className="input" value={form.name} onChange={set('name')} /></Field>
@@ -105,9 +114,18 @@ function ProjectModal({ onClose, onSaved, clients }) {
           </select>
         </Field>
         <Field label="Capacity (kW)"><input className="input" type="number" step="0.01" value={form.capacity_kw} onChange={set('capacity_kw')} /></Field>
+        <Field label="PO Number"><input className="input" value={form.po_number} onChange={set('po_number')} placeholder="Mar/004" /></Field>
+        <Field label="PO Date"><input className="input" type="date" value={form.po_date} onChange={set('po_date')} /></Field>
         <Field label="Budget"><input className="input" type="number" step="0.01" value={form.budget} onChange={set('budget')} /></Field>
         <Field label="Contract Value"><input className="input" type="number" step="0.01" value={form.contract_value} onChange={set('contract_value')} /></Field>
         <Field label="Location"><input className="input" value={form.location} onChange={set('location')} /></Field>
+        {isEdit && (
+          <Field label="Status">
+            <select className="input" value={form.status} onChange={set('status')}>
+              {['active', 'on_hold', 'completed', 'cancelled'].map((s) => <option key={s} value={s}>{s.replace('_', ' ')}</option>)}
+            </select>
+          </Field>
+        )}
         <Field label="Start Date"><input className="input" type="date" value={form.start_date} onChange={set('start_date')} /></Field>
         <Field label="End Date"><input className="input" type="date" value={form.end_date} onChange={set('end_date')} /></Field>
       </div>
