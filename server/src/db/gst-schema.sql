@@ -855,6 +855,18 @@ ALTER TABLE payments ADD COLUMN IF NOT EXISTS is_deleted BOOLEAN NOT NULL DEFAUL
 ALTER TABLE payments ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
 ALTER TABLE payments ADD COLUMN IF NOT EXISTS deleted_by UUID REFERENCES users(id);
 
+-- Redefine the top-vendor-spend view to ignore soft-deleted payments so the
+-- dashboard "Top Vendor Spend" updates live when a payment is deleted. (Defined
+-- here, after the is_deleted column exists.)
+CREATE OR REPLACE VIEW v_vendor_spend AS
+SELECT v.id AS vendor_id, v.name AS vendor_name, v.category,
+  COALESCE(SUM(p.amount),0) AS total_spent,
+  COUNT(p.id) AS payment_count,
+  MAX(p.payment_date) AS last_payment_date
+FROM vendors v
+LEFT JOIN payments p ON p.vendor_id = v.id AND p.is_deleted = FALSE
+GROUP BY v.id, v.name, v.category;
+
 -- Soft delete on projects (recoverable from the Recovery Center).
 ALTER TABLE projects ADD COLUMN IF NOT EXISTS is_deleted BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE projects ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
