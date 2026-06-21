@@ -57,8 +57,10 @@ router.get(
     if (search) { p.push(`%${search}%`); clauses.push(`i.invoice_number ILIKE $${p.length}`); }
     if (client_id) { p.push(client_id); clauses.push(`i.client_id=$${p.length}`); }
     if (project_id) { p.push(project_id); clauses.push(`i.project_id=$${p.length}`); }
-    if (status) { p.push(status); clauses.push(`i.status=$${p.length}`); }
-    if (type) { p.push(type); clauses.push(`i.type=$${p.length}`); }
+    if (status) { p.push(status); clauses.push(`i.status=$${p.length}::invoice_status`); }
+    // `type` here is the invoice_type enum (tax/proforma…). The dashboard's
+    // list filters "standard"/"einvoice"/"all" are not enum values — ignore them.
+    if (type && !['standard', 'einvoice', 'all'].includes(type)) { p.push(type); clauses.push(`i.type=$${p.length}::invoice_type`); }
     const whereSql = clauses.length ? `WHERE ${clauses.join(' AND ')}` : '';
     const { rows } = await query(
       `SELECT i.*, c.name AS client_name, pr.name AS project_name,
