@@ -55,10 +55,50 @@ export async function parseStatement(filePath, mimeType = '') {
   } else {
     // PDF / scanned image / exported statement: extract text then parse rows.
     const text = await extractText(filePath, mimeType);
-    // Prefer the IDBI multi-line block parser when the statement looks like one.
-    lines = looksLikeIdbi(text) ? parseIdbiBlocks(text) : parseTextLines(text);
+    // 1) IDBI "Statement of Transaction" tabular layout (Date | Particulars |
+    //    Withdrawals | Deposits | Balance, DD-MM-YYYY dates, wrapped narration).
+    const tabular = /withdrawals?\b/i.test(text) && /deposits?\b/i.test(text) ? parseIdbiTabular(text) : [];
+    // 2) IDBI "OpTransactionHistory" tail layout (Dr/Cr + INR + timestamp + serial).
+    // 3) Generic fallback.
+    if (tabular.length) lines = tabular;
+    else if (looksLikeIdbi(text)) lines = parseIdbiBlocks(text);
+    else lines = parseTextLines(text);
   }
   return lines.map(enrich);
+}
+
+// ── IDBI "Statement of Transaction" tabular parser ──────────────────────────
+// Each transaction begins on a line that starts with a DD-MM-YYYY date and ends
+// with three money columns (Withdrawals  Deposits  Balance) and a Cr/Dr marker.
+// The narration wraps onto following lines that carry no date/amounts; those are
+// appended (page headers/footers are skipped). Rows with no money movement
+// (e.g. the opening "B/F" balance line) are dropped.
+const TAB_DATE_START = /^(\d{1,2}-\d{1,2}-\d{2,4})\s*/;
+const TAB_AMOUNTS = /(\d[\d,]*\.\d{2})\s+(\d[\d,]*\.\d{2})\s+(\d[\d,]*\.\d{2})\s*(Cr|Dr)\.?\s*$/i;
+const TAB_SKIP = /^(Chq\.?\s*no|Date\b|Particulars|Customer\s*ID|Summary of|Account\s*(Number|Type)|Statement of|A\/c\s*Name|Monthly Average|Page\b|UNQ\s*SRL|GSTIN|SAC\s*Code|Closing Balance|Opening Balance|Balance\b|Withdrawals|Deposits|^\d{10,})/i;
+export function parseIdbiTabular(text) {
+  const rows = String(text || '').split(/\r?\n/).map((l) => l.replace(/ /g, ' ').trim());
+  const out = [];
+  let date = null, desc = [];
+  for (const raw of rows) {
+    if (!raw) continue;
+    let work = raw;
+    const dm = work.match(TAB_DATE_START);
+    if (dm) { date = dm[1]; desc = []; work = work.slice(dm[0].length).trim(); }   // a transaction opens
+    const am = work.match(TAB_AMOUNTS);
+    if (am && date) {                                                              // amounts line → close the txn
+      const before = work.slice(0, am.index).trim();
+      if (before && !TAB_SKIP.test(before)) desc.push(before);
+      const debit = NUM(am[1]), credit = NUM(am[2]), balance = NUM(am[3]);
+      if (debit > 0 || credit > 0) {
+        out.push({ txn_date: toISODate(date), description: desc.join(' ').replace(/\s+/g, ' ').trim(), reference_id: null, debit, credit, balance });
+      }
+      date = null; desc = [];
+    } else if (date && work && !TAB_SKIP.test(work)) {                            // wrapped narration line
+      desc.push(work);
+    }
+  }
+  return out;
 }
 
 const looksLikeIdbi = (text) => /IPAY\/|INET\/|\bDr\.|\bCr\./i.test(text || '');
