@@ -58,7 +58,7 @@ export default function Dashboard() {
   return (
     <div>
       <PageHeader
-        title="Financial Command Center"
+        title="Financial Data AIPL"
         subtitle="Real-time visibility across payments, receipts, receivables and reconciliation."
       />
 

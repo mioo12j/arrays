@@ -135,6 +135,27 @@ function stripColumnBleed(s) {
   return out || null;
 }
 
+// Capture a labelled NAME (e.g. "To Account: SANJEEV KUMAR SINGH" then "NIPPU"
+// on the next line). Trims any two-column bleed on the label line, then appends
+// following wrapped lines that look like name text, stopping at the next field
+// label or a numeric/account line. Returns null if the value is just a number.
+function multilineName(lines, labelRe) {
+  const idx = lines.findIndex((l) => labelRe.test(l));
+  if (idx < 0) return null;
+  let head = lines[idx].replace(new RegExp(`^.*?${labelRe.source}\\s*[:\\-]?\\s*`, 'i'), '');
+  head = cutAtLabel(head) || '';
+  const parts = head ? [head] : [];
+  for (let i = idx + 1; i < Math.min(lines.length, idx + 3); i++) {
+    const ln = (lines[i] || '').trim();
+    if (!ln || FIELD_LABELS.test(ln)) break;   // next field reached
+    if (!/[A-Za-z]/.test(ln) || /\d{5,}/.test(ln)) break; // not a name continuation
+    parts.push(cutAtLabel(ln) || ln);
+  }
+  const name = parts.join(' ').replace(/\s+/g, ' ').trim();
+  if (!name || /^[\dXx*\s.-]+$/.test(name)) return null; // pure number → not a name
+  return name;
+}
+
 // Capture a labelled value that may continue onto following (wrapped) lines.
 function multilineValue(lines, labelRe) {
   const idx = lines.findIndex((l) => labelRe.test(l));
@@ -181,10 +202,13 @@ export function parsePaymentFields(text) {
   const lines = t.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
 
   // Beneficiary = the "To Account" holder name (NOT "From Account" = sender).
-  let beneficiary = cutAtLabel(firstMatch(t, [
-    /\bto\s*account\s*[:\-]?\s*([A-Za-z][^\n]{1,60})/i,
-    /\b(?:beneficiary(?:\s*name)?|payee\s*name|payee|credited\s*to|paid\s*to)\s*[:\-]?\s*([A-Za-z][^\n]{1,60})/i,
-  ]));
+  // Use the multi-line capture so wrapped names (e.g. "SANJEEV KUMAR SINGH" then
+  // "NIPPU") are kept in full.
+  let beneficiary = multilineName(lines, /\b(?:to\s*account|beneficiary(?:\s*name)?|payee(?:\s*name)?|credited\s*to|paid\s*to)\b/i)
+    || cutAtLabel(firstMatch(t, [
+      /\bto\s*account\s*[:\-]?\s*([A-Za-z][^\n]{1,60})/i,
+      /\b(?:beneficiary(?:\s*name)?|payee\s*name|payee|credited\s*to|paid\s*to)\s*[:\-]?\s*([A-Za-z][^\n]{1,60})/i,
+    ]));
 
   // If "To Account" held a NUMBER, that's the beneficiary account (not a name).
   let toAccountNo = null;
