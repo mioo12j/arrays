@@ -220,6 +220,7 @@ async function openInvoice(id, setEditing, toast) {
       site_address: data.site_address || '', with_measurement: data.with_measurement !== false,
       header_text: data.header_text || '', footer_text: data.footer_text || '',
       header_address: data.header_address || '', header_cin: data.header_cin || '', header_email: data.header_email || '',
+      branch_id: data.branch_id || '',
       linked_ewb_no: data.linked_ewb_no, linked_ewb_status: data.linked_ewb_status,
       items: (data.items?.length ? data.items : [blankItem()]).map((it) => ({
         description: it.description || '', hsn: it.hsn || '', quantity: Number(it.quantity) || 1, unit: it.unit || 'NOS',
@@ -233,6 +234,7 @@ async function openInvoice(id, setEditing, toast) {
 function InvoiceEditor({ initial, clients, onClose, onSaved }) {
   const toast = useToast();
   const isEdit = !!initial.id;
+  const { data: branches } = useFetch('/gst/branches');
   const [f, setF] = useState(() => ({
     invoice_number: initial.invoice_number || '', status: initial.status || 'issued',
     issue_date: initial.issue_date || new Date().toISOString().slice(0, 10), due_date: initial.due_date || '',
@@ -242,6 +244,7 @@ function InvoiceEditor({ initial, clients, onClose, onSaved }) {
     site_address: initial.site_address || '', with_measurement: initial.with_measurement !== false,
     header_text: initial.header_text || '', footer_text: initial.footer_text || '',
     header_address: initial.header_address || '', header_cin: initial.header_cin || '', header_email: initial.header_email || '',
+    branch_id: initial.branch_id || '',
     notes: initial.notes || '', document_id: initial.document_id || null,
     items: (initial.items?.length ? initial.items : [blankItem()]).map((it) => ({ ...blankItem(), ...it })),
   }));
@@ -263,6 +266,19 @@ function InvoiceEditor({ initial, clients, onClose, onSaved }) {
   const addItem = () => setF((x) => ({ ...x, items: [...x.items, blankItem()] }));
   const delItem = (i) => setF((x) => ({ ...x, items: x.items.filter((_, j) => j !== i) }));
   const onClient = (e) => { const id = e.target.value; const c = clients?.find((x) => x.id === id); setF((x) => ({ ...x, client_id: id, customer_name: c?.name || x.customer_name, customer_gstin: c?.gstin || x.customer_gstin, place_of_supply: (c?.gstin || '').slice(0, 2) || x.place_of_supply })); };
+  const onBranch = (e) => {
+    const id = e.target.value;
+    const b = branches?.find((x) => x.id === id);
+    if (!b) { setF((x) => ({ ...x, branch_id: id })); return; }
+    const addr = [b.addr1, b.addr2, b.place, b.pincode].filter(Boolean).join(', ');
+    setF((x) => ({
+      ...x,
+      branch_id: id,
+      header_text: b.legal_name || b.trade_name || x.header_text,
+      header_address: addr || x.header_address,
+      header_email: b.email || x.header_email,
+    }));
+  };
 
   const totals = useMemo(() => {
     const inter = f.place_of_supply && f.place_of_supply !== SELLER_STATE;
@@ -289,6 +305,23 @@ function InvoiceEditor({ initial, clients, onClose, onSaved }) {
         {isEdit && <button className="btn-ghost" onClick={() => download(`/invoices/${initial.id}/pdf`)}><FileDown size={16} /> PDF</button>}
         <button className="btn-primary" onClick={save} disabled={busy}>{busy ? <Loader2 className="animate-spin" size={16} /> : <FileText size={16} />} {isEdit ? 'Save' : 'Create Invoice'}</button></>}>
       <div className="space-y-4">
+        <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-3 dark:border-blue-800 dark:bg-blue-900/20">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Office &amp; Billing GST</p>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <Field label="Select Office">
+              <select className="input" value={f.branch_id} onChange={onBranch}>
+                <option value="">— Select Office —</option>
+                {branches?.map((b) => (
+                  <option key={b.id} value={b.id}>{b.name} — {b.gstin}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Billing GSTIN">
+              <input className="input bg-slate-50 dark:bg-slate-800/60 cursor-default" readOnly value={branches?.find((b) => b.id === f.branch_id)?.gstin || ''} placeholder="Auto-filled when office is selected" />
+            </Field>
+          </div>
+          <p className="mt-1 text-xs text-slate-400">Selecting an office auto-fills the header name, address, and email below. The office GSTIN is used as the billing GST on the invoice.</p>
+        </div>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           <Field label="Invoice Number" required><input className="input" value={f.invoice_number} onChange={(e) => setF((x) => ({ ...x, invoice_number: e.target.value }))} placeholder="INV/26-27/001" /></Field>
           <Field label="Status"><select className="input" value={f.status} onChange={(e) => setF((x) => ({ ...x, status: e.target.value }))}>{STD_STATUS.map((s) => <option key={s} value={s}>{label(s)}</option>)}</select></Field>
