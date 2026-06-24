@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Plus, Search, Upload, Loader2, Sparkles, Paperclip, FileDown, Trash2 } from 'lucide-react';
+import { Plus, Search, Upload, Loader2, Sparkles, Paperclip, FileDown, Trash2, Layers } from 'lucide-react';
+import AllocationModal from '../components/AllocationModal.jsx';
 import { api, apiError, download } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -117,6 +118,7 @@ function ReceiptDetail({ receipt: r, onClose, onDeleted }) {
   const toast = useToast();
   const { canWrite } = useAuth();
   const [busy, setBusy] = useState(false);
+  const [alloc, setAlloc] = useState(false);
   const deductions =
     Number(r.tds_amount || 0) + Number(r.retention_amount || 0) + Number(r.deduction_amount || 0);
   const del = async () => {
@@ -129,6 +131,7 @@ function ReceiptDetail({ receipt: r, onClose, onDeleted }) {
     <Modal open onClose={onClose} title="Receipt Details" size="lg"
       footer={<>
         {canWrite && <button className="btn-ghost !text-red-600" onClick={del} disabled={busy}>{busy ? <Loader2 className="animate-spin" size={16} /> : <Trash2 size={16} />} Delete</button>}
+        {canWrite && <button className="btn-ghost" onClick={() => setAlloc(true)}><Layers size={16} /> Edit Allocation</button>}
         <button className="btn-ghost" onClick={onClose}>Close</button>
       </>}>
       <div className="mb-5 flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-800">
@@ -158,6 +161,11 @@ function ReceiptDetail({ receipt: r, onClose, onDeleted }) {
         <DescRow label="Recorded On">{fmtDateTime(r.created_at)}</DescRow>
         <DescRow label="Comment / Notes" wide>{r.comment}</DescRow>
       </DescList>
+      {alloc && (
+        <AllocationModal kind="incoming" id={r.id} amount={r.credited_amount}
+          meta={{ reference: r.reference_id, date: fmtDate(r.credited_date), party: r.client_name }}
+          onClose={() => setAlloc(false)} onSaved={() => setAlloc(false)} />
+      )}
     </Modal>
   );
 }

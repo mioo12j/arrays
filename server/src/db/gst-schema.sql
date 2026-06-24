@@ -905,6 +905,60 @@ CREATE TABLE IF NOT EXISTS project_payment_terms (
 );
 CREATE INDEX IF NOT EXISTS idx_ppt_project ON project_payment_terms(project_id);
 
+-- ── Payment allocation / tagging ─────────────────────────────────────────────
+-- A single bank transaction (receipt or payment) can be split across several
+-- projects / sites / milestones, or tagged as "Other" with free text. These are
+-- SEPARATE tables — the original receipts/payments rows are never modified.
+-- project_id/site_id/milestone_id all NULL = an "Other" line (description holds
+-- the custom text).
+CREATE TABLE IF NOT EXISTS incoming_payment_allocations (
+  id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  receipt_id   UUID NOT NULL REFERENCES receipts(id) ON DELETE CASCADE,
+  project_id   UUID REFERENCES projects(id) ON DELETE SET NULL,
+  milestone_id UUID REFERENCES project_payment_terms(id) ON DELETE SET NULL,
+  description  TEXT,
+  amount       NUMERIC(16,2) NOT NULL DEFAULT 0,
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_ipa_receipt ON incoming_payment_allocations(receipt_id);
+CREATE INDEX IF NOT EXISTS idx_ipa_project ON incoming_payment_allocations(project_id);
+
+CREATE TABLE IF NOT EXISTS outgoing_payment_allocations (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  payment_id  UUID NOT NULL REFERENCES payments(id) ON DELETE CASCADE,
+  project_id  UUID REFERENCES projects(id) ON DELETE SET NULL,
+  site_id     UUID REFERENCES sites(id) ON DELETE SET NULL,
+  description TEXT,
+  amount      NUMERIC(16,2) NOT NULL DEFAULT 0,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_opa_payment ON outgoing_payment_allocations(payment_id);
+CREATE INDEX IF NOT EXISTS idx_opa_project ON outgoing_payment_allocations(project_id);
+CREATE INDEX IF NOT EXISTS idx_opa_site    ON outgoing_payment_allocations(site_id);
+
+-- Allocation-aware views: use the explicit split when one exists, otherwise fall
+-- back to the transaction's own single project/site (so existing un-tagged data
+-- rolls up exactly as before). All reports/rollups read these.
+CREATE OR REPLACE VIEW v_outgoing_alloc AS
+  SELECT a.payment_id AS source_id, a.project_id, a.site_id, a.amount, a.description, p.payment_date AS dt
+    FROM outgoing_payment_allocations a
+    JOIN payments p ON p.id = a.payment_id AND p.is_deleted = FALSE
+  UNION ALL
+  SELECT p.id, p.project_id, p.site_id, p.amount, p.comment, p.payment_date
+    FROM payments p
+   WHERE p.is_deleted = FALSE
+     AND NOT EXISTS (SELECT 1 FROM outgoing_payment_allocations a WHERE a.payment_id = p.id);
+
+CREATE OR REPLACE VIEW v_incoming_alloc AS
+  SELECT a.receipt_id AS source_id, a.project_id, a.milestone_id, a.amount, a.description, r.credited_date AS dt
+    FROM incoming_payment_allocations a
+    JOIN receipts r ON r.id = a.receipt_id AND r.is_deleted = FALSE
+  UNION ALL
+  SELECT r.id, r.project_id, NULL::uuid, r.credited_amount, r.comment, r.credited_date
+    FROM receipts r
+   WHERE r.is_deleted = FALSE
+     AND NOT EXISTS (SELECT 1 FROM incoming_payment_allocations a WHERE a.receipt_id = r.id);
+
 CREATE TABLE IF NOT EXISTS invoice_items (
   id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   invoice_id    UUID NOT NULL REFERENCES invoices(id) ON DELETE CASCADE,

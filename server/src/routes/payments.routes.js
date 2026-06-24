@@ -10,6 +10,7 @@ import { parsePaymentFields, extractText } from '../services/ocr.service.js';
 import { removeLedgerForSource } from '../services/ledger.service.js';
 import { autoMapVendor } from '../services/vendor-match.service.js';
 import * as paymentSvc from '../services/paymentService.js';
+import * as allocSvc from '../services/allocationService.js';
 
 const router = Router();
 router.use(authenticate, denyWriteForAdmin);   // admin is view-only
@@ -249,6 +250,23 @@ router.post(
     if (!out) throw new ApiError(404, 'Payment not found');
     await audit(req, { action: 'restore', entity: 'payments', entityId: req.params.id });
     res.json({ ok: true, restored: out });
+  })
+);
+
+// ── Allocation / tagging — only the separate allocation table is changed; the
+//    payment's amount/date/transaction-id/vendor stay locked. ───────────────
+router.get(
+  '/:id/allocations',
+  asyncHandler(async (req, res) => res.json(await allocSvc.getPaymentAllocations({ query }, req.params.id)))
+);
+router.put(
+  '/:id/allocations',
+  asyncHandler(async (req, res) => {
+    const pay = (await query('SELECT amount, is_deleted FROM payments WHERE id=$1', [req.params.id])).rows[0];
+    if (!pay || pay.is_deleted) throw new ApiError(404, 'Payment not found');
+    const out = await withTransaction((db) => allocSvc.setPaymentAllocations(db, req.params.id, req.body?.items || [], pay.amount));
+    await audit(req, { action: 'allocate', entity: 'payments', entityId: req.params.id, changes: { count: (req.body?.items || []).length } });
+    res.json(out);
   })
 );
 

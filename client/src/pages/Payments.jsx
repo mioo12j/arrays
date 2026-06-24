@@ -8,6 +8,8 @@ import Modal from '../components/ui/Modal.jsx';
 import { Card, PageHeader, Loading, Badge, Table, Field, DescList, DescRow } from '../components/ui/index.jsx';
 import { inr, fmtDate, fmtDateTime, titleCase } from '../lib/format.js';
 import { PRESETS, presetRange } from '../lib/dateRange.js';
+import AllocationModal from '../components/AllocationModal.jsx';
+import { Layers } from 'lucide-react';
 
 const BLANK = {
   reference_id: '', amount: '', payment_date: '', beneficiary_name: '', account_details: '',
@@ -175,6 +177,7 @@ function PaymentDetail({ payment: p, onClose, onAttach, onDeleted }) {
   const toast = useToast();
   const { canWrite } = useAuth();
   const [busy, setBusy] = useState(false);
+  const [alloc, setAlloc] = useState(false);
   const del = async () => {
     if (!window.confirm('Delete this payment? It will move to the Recovery Center (recoverable for 30 days) and its ledger entry is reversed.')) return;
     setBusy(true);
@@ -185,6 +188,7 @@ function PaymentDetail({ payment: p, onClose, onAttach, onDeleted }) {
     <Modal open onClose={onClose} title="Payment Details" size="lg"
       footer={<>
         {canWrite && <button className="btn-ghost !text-red-600" onClick={del} disabled={busy}>{busy ? <Loader2 className="animate-spin" size={16} /> : <Trash2 size={16} />} Delete</button>}
+        {canWrite && <button className="btn-ghost" onClick={() => setAlloc(true)}><Layers size={16} /> Edit Allocation</button>}
         <button className="btn-ghost" onClick={onClose}>Close</button>
       </>}>
       <div className="mb-5 flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-800">
@@ -221,6 +225,11 @@ function PaymentDetail({ payment: p, onClose, onAttach, onDeleted }) {
         <button className="btn-ghost mt-5" onClick={() => onAttach(p.id)}>
           <Paperclip size={14} /> Attach Invoice
         </button>
+      )}
+      {alloc && (
+        <AllocationModal kind="outgoing" id={p.id} amount={p.amount}
+          meta={{ reference: p.reference_id, date: fmtDate(p.payment_date), party: p.vendor_name || p.employee_name || p.beneficiary_name }}
+          onClose={() => setAlloc(false)} onSaved={() => setAlloc(false)} />
       )}
     </Modal>
   );

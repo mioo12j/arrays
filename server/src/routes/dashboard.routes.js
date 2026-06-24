@@ -123,10 +123,9 @@ router.get(
   asyncHandler(async (_req, res) => {
     const { rows } = await query(`
       SELECT pr.name AS project, pr.budget,
-        COALESCE(SUM(p.amount),0) AS spent,
-        COALESCE((SELECT SUM(credited_amount) FROM receipts r WHERE r.project_id=pr.id AND r.is_deleted=FALSE),0) AS received
+        COALESCE((SELECT SUM(amount) FROM v_outgoing_alloc WHERE project_id=pr.id),0) AS spent,
+        COALESCE((SELECT SUM(amount) FROM v_incoming_alloc WHERE project_id=pr.id),0) AS received
       FROM projects pr
-      LEFT JOIN payments p ON p.project_id=pr.id AND p.is_deleted=FALSE
       WHERE pr.is_deleted=FALSE
       GROUP BY pr.id, pr.name, pr.budget
       ORDER BY spent DESC

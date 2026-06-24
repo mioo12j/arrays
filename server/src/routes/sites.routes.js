@@ -14,7 +14,7 @@ router.get(
     const { project_id } = req.query;
     const { rows } = await query(
       `SELECT s.*, p.name AS project_name,
-        (SELECT COALESCE(SUM(amount),0) FROM payments WHERE site_id=s.id AND is_deleted=FALSE) AS site_spent
+        (SELECT COALESCE(SUM(amount),0) FROM v_outgoing_alloc WHERE site_id=s.id) AS site_spent
        FROM sites s JOIN projects p ON p.id=s.project_id
        WHERE p.is_deleted=FALSE AND ($1::uuid IS NULL OR s.project_id=$1)
        ORDER BY p.name, s.name`,

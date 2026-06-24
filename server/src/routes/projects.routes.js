@@ -17,8 +17,8 @@ router.get(
     const { rows } = await query(`
       SELECT p.*,
         c.name AS client_full_name,
-        (SELECT COALESCE(SUM(amount),0) FROM payments  WHERE project_id=p.id AND is_deleted=FALSE) AS total_spent,
-        (SELECT COALESCE(SUM(credited_amount),0) FROM receipts WHERE project_id=p.id AND is_deleted=FALSE) AS total_received,
+        (SELECT COALESCE(SUM(amount),0) FROM v_outgoing_alloc WHERE project_id=p.id) AS total_spent,
+        (SELECT COALESCE(SUM(amount),0) FROM v_incoming_alloc WHERE project_id=p.id) AS total_received,
         (SELECT COUNT(*) FROM sites WHERE project_id=p.id) AS site_count
       FROM projects p
       LEFT JOIN clients c ON c.id = p.client_id
@@ -42,14 +42,14 @@ router.get(
     const project = rows[0];
 
     const { rows: spend } = await query(
-      'SELECT COALESCE(SUM(amount),0) AS v FROM payments WHERE project_id=$1 AND is_deleted=FALSE', [project.id]
+      'SELECT COALESCE(SUM(amount),0) AS v FROM v_outgoing_alloc WHERE project_id=$1', [project.id]
     );
     const { rows: recv } = await query(
-      'SELECT COALESCE(SUM(credited_amount),0) AS v FROM receipts WHERE project_id=$1 AND is_deleted=FALSE', [project.id]
+      'SELECT COALESCE(SUM(amount),0) AS v FROM v_incoming_alloc WHERE project_id=$1', [project.id]
     );
     const { rows: sites } = await query(
       `SELECT s.*,
-        (SELECT COALESCE(SUM(amount),0) FROM payments WHERE site_id=s.id AND is_deleted=FALSE) AS site_spent
+        (SELECT COALESCE(SUM(amount),0) FROM v_outgoing_alloc WHERE site_id=s.id) AS site_spent
        FROM sites s WHERE s.project_id=$1 ORDER BY s.created_at`, [project.id]
     );
 
@@ -157,7 +157,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const { rows } = await query(
       `SELECT s.*,
-        (SELECT COALESCE(SUM(amount),0) FROM payments WHERE site_id=s.id AND is_deleted=FALSE) AS site_spent
+        (SELECT COALESCE(SUM(amount),0) FROM v_outgoing_alloc WHERE site_id=s.id) AS site_spent
        FROM sites s WHERE s.project_id=$1 ORDER BY s.created_at`,
       [req.params.id]
     );

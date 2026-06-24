@@ -295,9 +295,9 @@ router.get(
   asyncHandler(async (req, res) => {
     const { rows } = await query(`
       SELECT pr.name AS project, pr.status, pr.budget, pr.contract_value,
-        COALESCE((SELECT SUM(amount) FROM payments WHERE project_id=pr.id AND is_deleted=FALSE),0) AS spent,
-        COALESCE((SELECT SUM(credited_amount) FROM receipts WHERE project_id=pr.id AND is_deleted=FALSE),0) AS received,
-        pr.contract_value - COALESCE((SELECT SUM(amount) FROM payments WHERE project_id=pr.id AND is_deleted=FALSE),0) AS gross_margin
+        COALESCE((SELECT SUM(amount) FROM v_outgoing_alloc WHERE project_id=pr.id),0) AS spent,
+        COALESCE((SELECT SUM(amount) FROM v_incoming_alloc WHERE project_id=pr.id),0) AS received,
+        pr.contract_value - COALESCE((SELECT SUM(amount) FROM v_outgoing_alloc WHERE project_id=pr.id),0) AS gross_margin
       FROM projects pr WHERE pr.is_deleted=FALSE ORDER BY pr.created_at DESC
     `);
     await send(res, fmt(req), lng(req), {
@@ -318,6 +318,43 @@ router.get(
         spent: sum(rows, 'spent'), received: sum(rows, 'received'), gross_margin: sum(rows, 'gross_margin'),
       },
     });
+  })
+);
+
+// ── Allocation breakdowns (incoming = collections, outgoing = expenses) ──────
+// JSON summaries that respect the per-project/site/milestone/Other tagging.
+router.get(
+  '/allocations/incoming',
+  asyncHandler(async (_req, res) => {
+    const byProject = (await query(
+      `SELECT pr.name AS project, COALESCE(SUM(v.amount),0) AS amount
+         FROM v_incoming_alloc v JOIN projects pr ON pr.id=v.project_id
+        WHERE v.project_id IS NOT NULL GROUP BY pr.name ORDER BY amount DESC`)).rows;
+    const byMilestone = (await query(
+      `SELECT pr.name AS project, t.title AS milestone, COALESCE(SUM(v.amount),0) AS amount
+         FROM v_incoming_alloc v JOIN project_payment_terms t ON t.id=v.milestone_id JOIN projects pr ON pr.id=t.project_id
+        WHERE v.milestone_id IS NOT NULL GROUP BY pr.name, t.title ORDER BY amount DESC`)).rows;
+    const other = (await query(
+      `SELECT COALESCE(NULLIF(TRIM(description),''),'Other') AS label, COALESCE(SUM(amount),0) AS amount
+         FROM v_incoming_alloc WHERE project_id IS NULL AND milestone_id IS NULL GROUP BY 1 ORDER BY amount DESC`)).rows;
+    res.json({ byProject, byMilestone, other });
+  })
+);
+router.get(
+  '/allocations/outgoing',
+  asyncHandler(async (_req, res) => {
+    const byProject = (await query(
+      `SELECT pr.name AS project, COALESCE(SUM(v.amount),0) AS amount
+         FROM v_outgoing_alloc v JOIN projects pr ON pr.id=v.project_id
+        WHERE v.project_id IS NOT NULL GROUP BY pr.name ORDER BY amount DESC`)).rows;
+    const bySite = (await query(
+      `SELECT s.name AS site, COALESCE(SUM(v.amount),0) AS amount
+         FROM v_outgoing_alloc v JOIN sites s ON s.id=v.site_id
+        WHERE v.site_id IS NOT NULL GROUP BY s.name ORDER BY amount DESC`)).rows;
+    const other = (await query(
+      `SELECT COALESCE(NULLIF(TRIM(description),''),'Other') AS label, COALESCE(SUM(amount),0) AS amount
+         FROM v_outgoing_alloc WHERE project_id IS NULL AND site_id IS NULL GROUP BY 1 ORDER BY amount DESC`)).rows;
+    res.json({ byProject, bySite, other });
   })
 );
 

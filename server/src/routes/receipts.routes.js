@@ -9,6 +9,7 @@ import { saveDocument } from '../services/document.service.js';
 import { parseReceiptFields, extractText } from '../services/ocr.service.js';
 import { postLedgerEntry, removeLedgerForSource, refreshInvoiceStatus } from '../services/ledger.service.js';
 import * as receiptSvc from '../services/receiptService.js';
+import * as allocSvc from '../services/allocationService.js';
 
 const router = Router();
 router.use(authenticate, denyWriteForAdmin);   // admin is view-only
@@ -169,6 +170,23 @@ router.post(
     if (!out) throw new ApiError(404, 'Receipt not found');
     await audit(req, { action: 'restore', entity: 'receipts', entityId: req.params.id });
     res.json({ ok: true, restored: out });
+  })
+);
+
+// ── Allocation / tagging — only touches the separate allocation table, never
+//    the receipt's amount/date/reference/party. ─────────────────────────────
+router.get(
+  '/:id/allocations',
+  asyncHandler(async (req, res) => res.json(await allocSvc.getReceiptAllocations({ query }, req.params.id)))
+);
+router.put(
+  '/:id/allocations',
+  asyncHandler(async (req, res) => {
+    const rc = (await query('SELECT credited_amount, is_deleted FROM receipts WHERE id=$1', [req.params.id])).rows[0];
+    if (!rc || rc.is_deleted) throw new ApiError(404, 'Receipt not found');
+    const out = await withTransaction((db) => allocSvc.setReceiptAllocations(db, req.params.id, req.body?.items || [], rc.credited_amount));
+    await audit(req, { action: 'allocate', entity: 'receipts', entityId: req.params.id, changes: { count: (req.body?.items || []).length } });
+    res.json(out);
   })
 );
 
