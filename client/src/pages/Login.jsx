@@ -69,7 +69,7 @@ export default function Login() {
             transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
           >
             <h1 className="text-4xl font-extrabold leading-tight">
-              Financial intelligence for renewable-energy engineering.
+              Financial Data AIPL
             </h1>
             <p className="mt-4 max-w-md text-brand-100">
               {company.name} — centralize payments, receipts, ledgers, invoicing, IDBI bank
