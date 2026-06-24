@@ -116,8 +116,10 @@ function Stat({ label: l, value, tone = 'text-slate-800' }) {
 function ChallanForm({ initial, masters, onClose, onSaved }) {
   const toast = useToast();
   const isEdit = !!initial.id;
+  const { data: branches } = useFetch('/gst/branches');
   const defaultConsignor = { legalName: company.pdfName, gstin: company.gstin, addr1: company.address, location: 'Madhubani', pincode: '847229', stateCode: stateFromGstin(company.gstin) };
   const [f, setF] = useState(() => ({
+    branchId: initial.branchId || '',
     challanType: initial.challanType || 'job_work',
     dispatchReason: initial.dispatchReason || '',
     challanDate: initial.challanDate ? String(initial.challanDate).slice(0, 10) : new Date().toISOString().slice(0, 10),
@@ -152,6 +154,27 @@ function ChallanForm({ initial, masters, onClose, onSaved }) {
   // auto-fill consignee state from its GSTIN
   const onConsigneeGstin = (e) => { const g = e.target.value.toUpperCase(); setF((x) => ({ ...x, consignee: { ...x.consignee, gstin: g, stateCode: stateFromGstin(g) || x.consignee.stateCode } })); };
 
+  // auto-fill consignor from selected branch
+  const onBranch = (e) => {
+    const id = e.target.value;
+    const b = branches?.find((x) => x.id === id);
+    if (!b) { setF((x) => ({ ...x, branchId: id })); return; }
+    setF((x) => ({
+      ...x,
+      branchId: id,
+      consignor: {
+        legalName: b.legal_name || b.trade_name || x.consignor.legalName,
+        gstin: b.gstin || x.consignor.gstin,
+        addr1: b.addr1 || x.consignor.addr1,
+        location: b.place || x.consignor.location,
+        pincode: b.pincode || x.consignor.pincode,
+        stateCode: b.state_code || x.consignor.stateCode,
+        phone: b.phone || x.consignor.phone,
+        email: b.email || x.consignor.email,
+      },
+    }));
+  };
+
   const liveTotals = useMemo(() => {
     const inter = f.consignor.stateCode && f.consignee.stateCode && f.consignor.stateCode !== f.consignee.stateCode;
     let taxable = 0, tax = 0;
@@ -178,6 +201,25 @@ function ChallanForm({ initial, masters, onClose, onSaved }) {
       footer={<><button className="btn-ghost" onClick={close}>Cancel</button>
         <button className="btn-primary" onClick={save} disabled={busy}>{busy ? <Loader2 className="animate-spin" size={16} /> : <Truck size={16} />} {isEdit ? 'Save' : 'Create Challan'}</button></>}>
       <div className="space-y-5">
+        {/* Office & GST selector */}
+        <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-3 dark:border-blue-800 dark:bg-blue-900/20">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Office &amp; Billing GST</p>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <L label="Select Office">
+              <select className="input" value={f.branchId} onChange={onBranch}>
+                <option value="">— Select Office —</option>
+                {branches?.map((b) => (
+                  <option key={b.id} value={b.id}>{b.name} — {b.gstin}</option>
+                ))}
+              </select>
+            </L>
+            <L label="Billing GSTIN">
+              <input className="input bg-slate-50 dark:bg-slate-800/60 cursor-default" readOnly value={branches?.find((b) => b.id === f.branchId)?.gstin || ''} placeholder="Auto-filled when office is selected" />
+            </L>
+          </div>
+          <p className="mt-1 text-xs text-slate-400">Selecting an office auto-fills the Consignor (From) block and sets the billing GST for this challan.</p>
+        </div>
+
         {/* header */}
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           <L label="Challan Type"><select className="input" value={f.challanType} onChange={(e) => setF((x) => ({ ...x, challanType: e.target.value }))}>{(masters?.types || []).map((t) => <option key={t.code} value={t.code}>{t.name}</option>)}</select></L>

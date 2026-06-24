@@ -7,6 +7,7 @@ import { audit } from '../middleware/audit.js';
 import { calculateQuote } from '../services/quote-calc.service.js';
 import { streamQuotePdf } from '../services/quote-pdf.service.js';
 import * as branding from '../services/gst/brandingService.js';
+import * as branchSvc from '../services/gst/branchService.js';
 
 const router = Router();
 router.use(authenticate, denyWriteForAdmin);   // admin is view-only
@@ -79,9 +80,9 @@ router.post(
          capacity_kw, location, issue_date, valid_until, inputs, line_items,
          subtotal, contingency_amount, margin_amount, taxable_amount, gst_amount, total_amount,
          cost_amount, per_watt, subsidy_amount, net_cost, annual_savings, payback_years, lifetime_savings,
-         notes, terms, exclusions, created_by)
+         notes, terms, exclusions, branch_id, created_by)
        VALUES ($1,1,COALESCE($2,'draft')::quote_status,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,
-               $15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31)
+               $15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32)
        RETURNING *`,
       [number, b.status, b.client_id || null, b.client_name, b.project_id || null, b.project_name, b.site_name, calc.project_type,
        calc.capacity_kw, b.location, b.issue_date || new Date().toISOString().slice(0, 10), b.valid_until || null,
@@ -89,7 +90,7 @@ router.post(
        calc.subtotal, calc.contingency_amount, calc.margin_amount, calc.taxable_amount, calc.gst_amount,
        calc.total_amount, calc.cost_amount, calc.per_watt, calc.subsidy_amount, calc.net_cost,
        calc.annual_savings, calc.payback_years, calc.lifetime_savings,
-       b.notes, b.terms, b.exclusions, req.user.id]
+       b.notes, b.terms, b.exclusions, b.branch_id || null, req.user.id]
     );
     await audit(req, { action: 'create', entity: 'quotes', entityId: rows[0].id, changes: { quote_number: number } });
     res.status(201).json(rows[0]);
@@ -113,13 +114,15 @@ router.patch(
          taxable_amount=$13, gst_amount=$14, total_amount=$15, cost_amount=$16, per_watt=$17,
          notes=COALESCE($18,notes), terms=COALESCE($19,terms), exclusions=COALESCE($20,exclusions),
          project_name=COALESCE($21,project_name), site_name=COALESCE($22,site_name),
-         subsidy_amount=$23, net_cost=$24, annual_savings=$25, payback_years=$26, lifetime_savings=$27
-       WHERE id=$28 RETURNING *`,
+         subsidy_amount=$23, net_cost=$24, annual_savings=$25, payback_years=$26, lifetime_savings=$27,
+         branch_id=COALESCE($28,branch_id)
+       WHERE id=$29 RETURNING *`,
       [b.status, b.client_id, b.client_name, calc.project_type, calc.capacity_kw, b.location, b.valid_until,
        JSON.stringify(calc.inputs), JSON.stringify(calc.line_items), calc.subtotal, calc.contingency_amount,
        calc.margin_amount, calc.taxable_amount, calc.gst_amount, calc.total_amount, calc.cost_amount,
        calc.per_watt, b.notes, b.terms, b.exclusions, b.project_name, b.site_name,
-       calc.subsidy_amount, calc.net_cost, calc.annual_savings, calc.payback_years, calc.lifetime_savings, req.params.id]
+       calc.subsidy_amount, calc.net_cost, calc.annual_savings, calc.payback_years, calc.lifetime_savings,
+       b.branch_id || null, req.params.id]
     );
     await audit(req, { action: 'update', entity: 'quotes', entityId: req.params.id, changes: b });
     res.json(rows[0]);
@@ -140,11 +143,11 @@ router.post(
           (quote_number, version, parent_id, status, client_id, client_name, project_id, project_type,
            capacity_kw, location, issue_date, valid_until, inputs, line_items,
            subtotal, contingency_amount, margin_amount, taxable_amount, gst_amount, total_amount,
-           cost_amount, per_watt, notes, terms, exclusions, created_by)
+           cost_amount, per_watt, notes, terms, exclusions, branch_id, created_by)
          SELECT quote_number, version+1, $1, 'draft', client_id, client_name, project_id, project_type,
            capacity_kw, location, CURRENT_DATE, valid_until, inputs, line_items,
            subtotal, contingency_amount, margin_amount, taxable_amount, gst_amount, total_amount,
-           cost_amount, per_watt, notes, terms, exclusions, $2
+           cost_amount, per_watt, notes, terms, exclusions, branch_id, $2
          FROM quotes WHERE id=$3 RETURNING *`,
         [src.parent_id || src.id, req.user.id, src.id]
       );
@@ -202,7 +205,16 @@ router.get(
     if (!rows[0]) throw new ApiError(404, 'Quote not found');
     const quote = { ...rows[0], client_name: rows[0].client_name || rows[0].client_full_name };
     let brand = {};
-    try { brand = await branding.get(pool); } catch { /* branding optional */ }
+    try { brand = await branding.getForBranch(pool, rows[0].branch_id); } catch { /* branding optional */ }
+    if (rows[0].branch_id) {
+      try {
+        const br = await branchSvc.get(pool, rows[0].branch_id);
+        const addrParts = [br.addr1, br.addr2, br.place, br.pincode].filter(Boolean);
+        if (!brand.headerAddr && addrParts.length) brand.headerAddr = addrParts.join(', ');
+        if (!brand.gstin) brand.gstin = br.gstin;
+        if (!brand.contactInfo && br.email) brand.contactInfo = br.email;
+      } catch { /* ignore */ }
+    }
     streamQuotePdf(res, quote, brand, req.query.lang);
   })
 );
