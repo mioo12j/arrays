@@ -41,6 +41,7 @@ const blankForm = {
   client_id: '', client_name: '', project_name: '', site_name: '',
   project_type: 'residential', capacity_kw: '5',
   location: '', valid_until: '', notes: '', terms: '', exclusions: '',
+  branch_id: '',
 };
 
 export default function QuoteBuilder() {
@@ -49,6 +50,7 @@ export default function QuoteBuilder() {
   const navigate = useNavigate();
   const toast = useToast();
   const { data: clients } = useFetch('/clients');
+  const { data: branches } = useFetch('/gst/branches');
 
   const [form, setForm] = useState(blankForm);
   const [rates, setRates] = useState({});
@@ -70,6 +72,7 @@ export default function QuoteBuilder() {
         project_type: data.project_type || 'rooftop', capacity_kw: String(data.capacity_kw || ''),
         location: data.location || '', valid_until: data.valid_until ? data.valid_until.slice(0, 10) : '',
         notes: data.notes || '', terms: data.terms || '', exclusions: data.exclusions || '',
+        branch_id: data.branch_id || '',
       });
       setRates(data.inputs || {});
     }).catch((e) => toast.error(apiError(e))).finally(() => setLoading(false));
@@ -102,6 +105,7 @@ export default function QuoteBuilder() {
     project_type: form.project_type, capacity_kw: Number(form.capacity_kw || 0),
     location: form.location, valid_until: form.valid_until || null,
     notes: form.notes, terms: form.terms, exclusions: form.exclusions,
+    branch_id: form.branch_id || null,
   });
 
   const save = async () => {
@@ -170,6 +174,23 @@ export default function QuoteBuilder() {
         <div className="space-y-4 lg:col-span-2">
           <Card>
             <h3 className="mb-3 font-semibold text-slate-800 dark:text-slate-100">Project Details</h3>
+            <div className="mb-3 rounded-lg border border-blue-200 bg-blue-50/50 p-3 dark:border-blue-800 dark:bg-blue-900/20">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Office &amp; Billing GST</p>
+              <div className="grid grid-cols-2 gap-3">
+                <Field label="Select Office">
+                  <select className="input" value={form.branch_id} onChange={(e) => setForm((f) => ({ ...f, branch_id: e.target.value }))}>
+                    <option value="">— Select Office —</option>
+                    {branches?.map((b) => (
+                      <option key={b.id} value={b.id}>{b.name} — {b.gstin}</option>
+                    ))}
+                  </select>
+                </Field>
+                <Field label="Billing GSTIN">
+                  <input className="input bg-slate-50 dark:bg-slate-800/60 cursor-default" readOnly value={branches?.find((b) => b.id === form.branch_id)?.gstin || ''} placeholder="Auto-filled from office" />
+                </Field>
+              </div>
+              <p className="mt-1 text-xs text-slate-400">The selected office's GST and address appear on the quotation PDF header.</p>
+            </div>
             <div className="grid grid-cols-2 gap-3">
               <Field label="Client">
                 <select className="input" value={form.client_id} onChange={set('client_id')}>

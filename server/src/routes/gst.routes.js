@@ -589,6 +589,15 @@ router.post('/challans/:id/convert', requirePerm(PERMS.CREATE), asyncHandler(asy
 router.get('/challans/:id/pdf', requirePerm(PERMS.DOWNLOAD), asyncHandler(async (req, res) => {
   const dc = await challans.get(pool, req.params.id);
   const branding = await brandingSvc.getForBranch(pool, dc.branchId);
+  if (dc.branchId) {
+    try {
+      const br = await branchSvc.get(pool, dc.branchId);
+      const addrParts = [br.addr1, br.addr2, br.place, br.pincode].filter(Boolean);
+      if (!branding.headerAddr && addrParts.length) branding.headerAddr = addrParts.join(', ');
+      if (!branding.gstin) branding.gstin = br.gstin;
+      if (!branding.contactInfo && br.email) branding.contactInfo = br.email;
+    } catch { /* ignore */ }
+  }
   const buf = await challanPdf(dc, branding, req.query.lang);
   await recordAccess(req, { action: 'download', objectType: 'delivery_challan', objectId: req.params.id, detail: { kind: 'pdf' } });
   res.setHeader('Content-Type', 'application/pdf');

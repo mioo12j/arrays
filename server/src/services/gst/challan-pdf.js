@@ -88,8 +88,8 @@ export async function challanPdf(dc, branding = {}, lang = 'en') {
   const hdrW = titleX - tx - 10;
   doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(14).text(branding.headerText || company.pdfName, tx, T + 11, { width: hdrW, height: 16, ellipsis: true });
   doc.font('Helvetica').fontSize(7.3).fillColor(SUBTX)
-    .text(company.address, tx, T + 29, { width: hdrW, height: 17, ellipsis: true })
-    .text(`GSTIN ${company.gstin}  •  ${branding.contactInfo || company.email}`, tx, T + 49, { width: hdrW, height: 9, ellipsis: true });
+    .text(branding.headerAddr || company.address, tx, T + 29, { width: hdrW, height: 17, ellipsis: true })
+    .text(`GSTIN ${branding.gstin || company.gstin}  •  ${branding.contactInfo || company.email}`, tx, T + 49, { width: hdrW, height: 9, ellipsis: true });
   doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(14).text('DELIVERY CHALLAN', titleX, T + 14, { width: 210, align: 'right' });
   doc.font('Helvetica').fontSize(7).fillColor(SUBTX).text('Rule 55, CGST Rules 2017 — not a tax invoice', titleX, T + 36, { width: 210, align: 'right' });
   doc.fillColor(INK); doc.y = T + 100;

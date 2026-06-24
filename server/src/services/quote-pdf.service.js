@@ -93,8 +93,8 @@ export function streamQuotePdf(res, quote, branding = {}, lang = 'en') {
   doc.fillColor(HEADER_TX).font('Helvetica-Bold').fontSize(18).text(branding.headerText || company.pdfName, hx, 20, { width: lw, height: 22, ellipsis: true });
   doc.font('Helvetica').fontSize(7.5).fillColor(SUBTX)
     .text(company.tagline, hx, 44, { width: fullW, height: 9, ellipsis: true })
-    .text(`GSTIN ${company.gstin}  |  CIN ${company.cin}`, hx, 56, { width: fullW, height: 9, ellipsis: true })
-    .text(company.address, hx, 67, { width: fullW, height: 9, ellipsis: true })
+    .text(`GSTIN ${branding.gstin || company.gstin}  |  CIN ${branding.cin || company.cin}`, hx, 56, { width: fullW, height: 9, ellipsis: true })
+    .text(branding.headerAddr || company.address, hx, 67, { width: fullW, height: 9, ellipsis: true })
     .text(`${branding.contactInfo || company.email}  |  ${company.certifications.join(' · ')}`, hx, 78, { width: fullW, height: 9, ellipsis: true });
   doc.font('Helvetica-Bold').fontSize(22).fillColor(HEADER_TX).text('QUOTATION', M, 24, { width: W, align: 'right' });
   doc.font('Helvetica').fontSize(9).fillColor(SUBTX)

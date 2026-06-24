@@ -983,3 +983,6 @@ CREATE INDEX IF NOT EXISTS idx_invoice_items_invoice ON invoice_items(invoice_id
 -- present; amounts are derived from rate in the PDF/measurement sheet.
 ALTER TABLE invoice_items ADD COLUMN IF NOT EXISTS order_qty    NUMERIC(16,3);
 ALTER TABLE invoice_items ADD COLUMN IF NOT EXISTS previous_qty NUMERIC(16,3) NOT NULL DEFAULT 0;
+
+-- Office/branch selection on quotations
+ALTER TABLE quotes ADD COLUMN IF NOT EXISTS branch_id UUID REFERENCES gst_branches(id) ON DELETE SET NULL;
