@@ -711,6 +711,63 @@ const SECTIONS = [
       ],
     },
   },
+  {
+    id: 'own_accounts_transfers', icon: Banknote,
+    en: {
+      title: 'Own bank accounts & internal transfers',
+      body: [
+        'Under Ledgers → Own Bank Accounts, list every account your business owns — the current account, the OD/CC account, savings, anything you move money between. This one list is what stops the software from mistaking your own money movements for real business.',
+        'When you move money between your own accounts (for example OD → current), the receiving account shows a credit. Without this list the app would wrongly count that as income and even invent a “client” for your own company. Once the account is listed, such a line is tagged an internal transfer: it is excluded from your income and expense totals, and no client or vendor is created for it. The same applies to loan/OD drawdowns and repayments — mark them “Financing” and they stay out of your operating figures.',
+        'Already have old data that counted transfers as income? Open Own Bank Accounts and click “Re-scan existing” — it re-checks every past payment and receipt against your list, re-tags the transfers and reverses their ledger entries, so your historical totals become correct too.',
+      ],
+    },
+    hi: {
+      title: 'अपने बैंक खाते व आंतरिक स्थानांतरण',
+      body: [
+        'Ledgers → Own Bank Accounts में अपने व्यवसाय के हर खाते को सूचीबद्ध करें — चालू खाता, OD/CC खाता, बचत, और वे सब जिनके बीच आप पैसा भेजते हैं। यही सूची सॉफ़्टवेयर को आपके अपने पैसे के संचलन को असली व्यवसाय समझने से रोकती है।',
+        'जब आप अपने खातों के बीच पैसा भेजते हैं (जैसे OD → चालू), प्राप्त करने वाला खाता एक credit दिखाता है। इस सूची के बिना ऐप इसे गलती से आय गिन लेता और आपकी अपनी कंपनी के लिए “client” तक बना देता। खाता सूचीबद्ध होने पर ऐसी पंक्ति आंतरिक स्थानांतरण के रूप में चिह्नित होती है: आय व व्यय योग से बाहर, और कोई ग्राहक/विक्रेता नहीं बनता। यही ऋण/OD निकासी व चुकौती पर लागू होता है — उन्हें “Financing” चिह्नित करें और वे परिचालन आँकड़ों से बाहर रहते हैं।',
+        'पुराना डेटा जिसमें स्थानांतरण आय के रूप में गिने गए? Own Bank Accounts खोलें और “Re-scan existing” दबाएँ — यह हर पुराने भुगतान व प्राप्ति को आपकी सूची से पुनः जाँचता है, स्थानांतरणों को पुनः चिह्नित करता है और उनकी बही प्रविष्टियाँ उलट देता है, ताकि आपके पुराने योग भी सही हो जाएँ।',
+      ],
+    },
+  },
+  {
+    id: 'duplicates_health', icon: ShieldCheck,
+    en: {
+      title: 'Duplicates, editing entries & statement health',
+      body: [
+        'A bank statement is the source of truth: every debit and credit on it should map to one recorded transaction. So never delete an extra entry that came from a statement — deleting it makes that statement stop reconciling. Instead open the payment or receipt and click “Mark Duplicate”. A duplicate stays on record and stays linked to its statement line, but it is counted nowhere — no ledger, and out of every total. You can “Unmark” it later.',
+        'If you spot a typo — a wrong amount, date, beneficiary, project or note — you no longer need to delete and re-enter. Open the payment or receipt and click Edit; the form opens pre-filled and, on save, the ledger is re-posted correctly.',
+        'On the Bank Reconciliation screen the software checks statement health automatically. A “Missing” card and, when needed, a red banner tell you if any transaction that was on a statement has since been deleted, and each affected statement shows a red badge. Click a statement’s Health button for the exact list. You can also delete a whole statement (its parsed lines go, but the real payments and receipts stay), and open the original statement file right from its page.',
+      ],
+    },
+    hi: {
+      title: 'डुप्लिकेट, प्रविष्टि संपादन व स्टेटमेंट स्वास्थ्य',
+      body: [
+        'बैंक स्टेटमेंट सत्य का स्रोत है: उस पर हर debit व credit एक दर्ज लेनदेन से मेल खाना चाहिए। इसलिए स्टेटमेंट से आई अतिरिक्त प्रविष्टि कभी न हटाएँ — हटाने से वह स्टेटमेंट मिलान करना बंद कर देता है। इसके बजाय भुगतान या प्राप्ति खोलें और “Mark Duplicate” दबाएँ। डुप्लिकेट रिकॉर्ड पर बना रहता है और अपनी स्टेटमेंट पंक्ति से जुड़ा रहता है, पर कहीं नहीं गिना जाता — न बही में, न किसी योग में। बाद में “Unmark” भी कर सकते हैं।',
+        'कोई टाइपो दिखे — गलत राशि, दिनांक, लाभार्थी, परियोजना या टिप्पणी — तो अब हटाकर दोबारा दर्ज करने की ज़रूरत नहीं। भुगतान या प्राप्ति खोलें और Edit दबाएँ; फ़ॉर्म पहले से भरा खुलता है और सहेजने पर बही सही से पुनः दर्ज होती है।',
+        'Bank Reconciliation स्क्रीन पर सॉफ़्टवेयर स्टेटमेंट स्वास्थ्य स्वतः जाँचता है। एक “Missing” कार्ड और ज़रूरत होने पर लाल बैनर बताते हैं कि क्या स्टेटमेंट पर मौजूद कोई लेनदेन बाद में हटाया गया, और हर प्रभावित स्टेटमेंट लाल बैज दिखाता है। सटीक सूची के लिए स्टेटमेंट का Health बटन दबाएँ। आप पूरा स्टेटमेंट भी हटा सकते हैं (उसकी पंक्तियाँ जाती हैं, पर असली भुगतान-प्राप्तियाँ बनी रहती हैं), और मूल स्टेटमेंट फ़ाइल उसी पेज से खोल सकते हैं।',
+      ],
+    },
+  },
+  {
+    id: 'cloud_data', icon: CloudUpload,
+    en: {
+      title: 'Cloud publishing & your one data file',
+      body: [
+        'Publish to Cloud sends only your data — the numbers and text of every record — to a cloud database so the read-only Admin can review everything on the web. Your heavy files (proof screenshots, statements, PDFs) never leave this computer, keeping the cloud fast and light. Publishing now happens automatically after every change and again when you sign out, so the cloud stays current on its own; the manual “Publish to Cloud Now” button is still there whenever you want it.',
+        'From Data & Admin you can also click “Download All Data (JSON)” to save the entire database — every record shown anywhere in the app, from payments to audit history — as one lightweight file, with no images or attachments. It is the same data that goes to the cloud, so it doubles as a portable, human-readable snapshot you can keep as a light backup or move between machines.',
+        'Full backups (Backup & Restore) are different and larger: they bundle the data plus every uploaded file into one dated archive on this computer, and run automatically every couple of hours. Use a full backup to restore everything; use the JSON export when you just want the data.',
+      ],
+    },
+    hi: {
+      title: 'क्लाउड प्रकाशन व आपकी एक डेटा फ़ाइल',
+      body: [
+        'Publish to Cloud केवल आपका डेटा भेजता है — हर रिकॉर्ड की संख्याएँ व पाठ — एक क्लाउड डेटाबेस में, ताकि केवल-दृश्य Admin वेब पर सब देख सके। आपकी भारी फ़ाइलें (प्रूफ़ स्क्रीनशॉट, स्टेटमेंट, PDF) कभी इस कंप्यूटर से बाहर नहीं जातीं, जिससे क्लाउड तेज़ व हल्का रहता है। प्रकाशन अब हर बदलाव के बाद और साइन-आउट पर स्वतः होता है, इसलिए क्लाउड स्वयं अद्यतन रहता है; “Publish to Cloud Now” बटन भी जब चाहें उपलब्ध है।',
+        'Data & Admin से आप “Download All Data (JSON)” दबाकर पूरा डेटाबेस — भुगतान से ऑडिट इतिहास तक, ऐप में कहीं भी दिखने वाला हर रिकॉर्ड — एक हल्की फ़ाइल के रूप में सहेज सकते हैं, बिना किसी छवि या संलग्नक के। यह वही डेटा है जो क्लाउड जाता है, इसलिए यह एक पोर्टेबल, पठनीय स्नैपशॉट भी है जिसे हल्के बैकअप के रूप में रख सकते हैं या मशीनों के बीच ले जा सकते हैं।',
+        'पूर्ण बैकअप (Backup & Restore) अलग व बड़े होते हैं: वे डेटा के साथ हर अपलोड की गई फ़ाइल को एक दिनांकित अभिलेख में इसी कंप्यूटर पर बंडल करते हैं, और हर कुछ घंटों में स्वतः चलते हैं। सब कुछ पुनर्स्थापित करने के लिए पूर्ण बैकअप उपयोग करें; केवल डेटा चाहिए तो JSON निर्यात उपयोग करें।',
+      ],
+    },
+  },
 ];
 
 const CATS = [

@@ -24,7 +24,10 @@ export function format(series, seqNum, branchCode = '') {
        .replace(/\{DOCTYPE\}/gi, series.doc_type || '');
   if (/\{SEQ\}/i.test(s)) s = s.replace(/\{SEQ\}/gi, seq);
   else s += seq;
-  return s;
+  // Tidy up when an optional token (e.g. {BRANCH}) resolved to empty: drop a
+  // leading separator and collapse any doubled ones, so a no-branch invoice reads
+  // "26-27/00001" not "/26-27/00001".
+  return s.replace(/([/\-]){2,}/g, '$1').replace(/^[/\-]+/, '');
 }
 
 export async function list(db, { branchId } = {}) {

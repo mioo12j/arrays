@@ -53,12 +53,14 @@ export async function softDelete(db, id, userId) {
   return pay;
 }
 
-// Restore a soft-deleted payment and re-post its payee-ledger debit.
+// Restore a soft-deleted payment and re-post its payee-ledger debit — but ONLY
+// for real expenses. Internal transfers / financing / duplicates must never hit
+// a party ledger even after restore (they may still carry a vendor_id).
 export async function restore(db, id, userId) {
   const { rows } = await db.query(
     'UPDATE payments SET is_deleted=FALSE, deleted_at=NULL, deleted_by=NULL WHERE id=$1 RETURNING *', [id]);
   const pay = rows[0];
   if (!pay) return null;
-  await postPaymentLedger(db, pay, userId);
+  if (pay.txn_kind === 'expense') await postPaymentLedger(db, pay, userId);
   return pay;
 }

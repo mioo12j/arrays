@@ -9,13 +9,14 @@ import { Card, PageHeader, Loading, Badge, Table, Field, DescList, DescRow } fro
 import { inr, fmtDate, fmtDateTime, titleCase } from '../lib/format.js';
 import { PRESETS, presetRange } from '../lib/dateRange.js';
 import AllocationModal from '../components/AllocationModal.jsx';
-import { Layers } from 'lucide-react';
+import ProofView from '../components/ui/ProofView.jsx';
+import { Layers, Pencil, Copy } from 'lucide-react';
 
 const BLANK = {
   reference_id: '', amount: '', payment_date: '', beneficiary_name: '', account_details: '',
   bank_remarks: '', network_type: '', payment_mode: 'neft', comment: '',
   project_id: '', site_id: '', vendor_id: '', employee_id: '', payee_type: 'vendor',
-  category_id: '', material_type: '', tags: '',
+  category_id: '', material_type: '', tags: '', txn_kind: 'expense',
 };
 
 export default function Payments() {
@@ -37,6 +38,7 @@ export default function Payments() {
   const { data: categories } = useFetch('/categories');
 
   const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState(null);
   const [detail, setDetail] = useState(null);
   const fileRef = useRef(null);
   const attachId = useRef(null);
@@ -152,10 +154,11 @@ export default function Payments() {
 
       <input ref={fileRef} type="file" accept="image/*,application/pdf" className="hidden" onChange={onInvoiceFile} />
 
-      {open && (
+      {(open || editing) && (
         <PaymentModal
-          onClose={() => setOpen(false)}
-          onSaved={() => { setOpen(false); refetch(); toast.success('Payment saved & ledger updated'); }}
+          initial={editing}
+          onClose={() => { setOpen(false); setEditing(null); }}
+          onSaved={() => { setOpen(false); setEditing(null); refetch(); toast.success(editing ? 'Payment updated & ledger re-posted' : 'Payment saved & ledger updated'); }}
           vendors={vendors} employees={employees} projects={projects} sites={sites} categories={categories}
         />
       )}
@@ -164,7 +167,9 @@ export default function Payments() {
         <PaymentDetail
           payment={detail}
           onClose={() => setDetail(null)}
+          onEdit={(p) => { setDetail(null); setEditing(p); }}
           onAttach={(id) => { setDetail(null); pickInvoice(id); }}
+          onChanged={() => { setDetail(null); refetch(); }}
           onDeleted={() => { setDetail(null); refetch(); toast.success('Payment moved to Recovery Center'); }}
         />
       )}
@@ -173,24 +178,48 @@ export default function Payments() {
 }
 
 // Read-only detail view for a single payment — every field that was recorded.
-function PaymentDetail({ payment: p, onClose, onAttach, onDeleted }) {
+function PaymentDetail({ payment: p, onClose, onEdit, onAttach, onChanged, onDeleted }) {
   const toast = useToast();
   const { canWrite } = useAuth();
   const [busy, setBusy] = useState(false);
   const [alloc, setAlloc] = useState(false);
+  const fromStatement = p.source === 'reconciliation' || !!p.recon_item_id;
+  const isDuplicate = p.txn_kind === 'duplicate';
   const del = async () => {
-    if (!window.confirm('Delete this payment? It will move to the Recovery Center (recoverable for 30 days) and its ledger entry is reversed.')) return;
+    const warn = fromStatement
+      ? 'This payment came from a bank statement — deleting it will make that statement no longer reconcile.\n\nUnless it was never really paid, prefer "Mark Duplicate" (keeps it linked to the statement but counts it nowhere).\n\nDelete anyway?'
+      : 'Delete this payment? It will move to the Recovery Center (recoverable for 30 days) and its ledger entry is reversed.';
+    if (!window.confirm(warn)) return;
     setBusy(true);
     try { await api.delete(`/payments/${p.id}`); onDeleted(); }
+    catch (e) { toast.error(apiError(e)); } finally { setBusy(false); }
+  };
+  const markDuplicate = async () => {
+    if (!window.confirm('Mark this as a DUPLICATE payment? It stays on record and linked to its bank statement, but is excluded from every total and its ledger entry is removed.')) return;
+    setBusy(true);
+    try { await api.patch(`/payments/${p.id}`, { txn_kind: 'duplicate' }); toast.success('Marked as duplicate — excluded from all totals'); onChanged?.(); }
+    catch (e) { toast.error(apiError(e)); } finally { setBusy(false); }
+  };
+  const unmarkDuplicate = async () => {
+    setBusy(true);
+    try { await api.patch(`/payments/${p.id}`, { txn_kind: 'expense' }); toast.success('Restored as a normal expense'); onChanged?.(); }
     catch (e) { toast.error(apiError(e)); } finally { setBusy(false); }
   };
   return (
     <Modal open onClose={onClose} title="Payment Details" size="lg"
       footer={<>
         {canWrite && <button className="btn-ghost !text-red-600" onClick={del} disabled={busy}>{busy ? <Loader2 className="animate-spin" size={16} /> : <Trash2 size={16} />} Delete</button>}
+        {canWrite && !isDuplicate && <button className="btn-ghost !text-amber-600" onClick={markDuplicate} disabled={busy}><Copy size={16} /> Mark Duplicate</button>}
+        {canWrite && isDuplicate && <button className="btn-ghost" onClick={unmarkDuplicate} disabled={busy}><Copy size={16} /> Unmark Duplicate</button>}
+        {canWrite && onEdit && <button className="btn-ghost" onClick={() => onEdit(p)}><Pencil size={16} /> Edit</button>}
         {canWrite && <button className="btn-ghost" onClick={() => setAlloc(true)}><Layers size={16} /> Edit Allocation</button>}
         <button className="btn-ghost" onClick={onClose}>Close</button>
       </>}>
+      {isDuplicate && (
+        <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-800 dark:border-amber-900 dark:bg-amber-900/20 dark:text-amber-300">
+          Marked DUPLICATE — kept for the statement record, excluded from all totals and ledgers.
+        </div>
+      )}
       <div className="mb-5 flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-800">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Amount Paid</p>
@@ -221,6 +250,13 @@ function PaymentDetail({ payment: p, onClose, onAttach, onDeleted }) {
         <DescRow label="Comment (entered by operator)" wide>{p.comment}</DescRow>
       </DescList>
 
+      {p.proof_document_id && (
+        <div className="mt-4">
+          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Payment Proof</p>
+          <ProofView documentId={p.proof_document_id} name={p.proof_name || 'payment-proof'} label="Open payment proof" />
+        </div>
+      )}
+
       {p.invoice_status === 'pending' && onAttach && (
         <button className="btn-ghost mt-5" onClick={() => onAttach(p.id)}>
           <Paperclip size={14} /> Attach Invoice
@@ -235,14 +271,30 @@ function PaymentDetail({ payment: p, onClose, onAttach, onDeleted }) {
   );
 }
 
-function PaymentModal({ onClose, onSaved, vendors, employees, projects, sites, categories }) {
+function PaymentModal({ initial, onClose, onSaved, vendors, employees, projects, sites, categories }) {
   const toast = useToast();
   const { canImport } = useAuth();
-  const [form, setForm] = useState(BLANK);
-  const [documentId, setDocumentId] = useState(null);
+  const isEdit = !!initial?.id;
+  const [form, setForm] = useState(() => (initial ? {
+    ...BLANK,
+    reference_id: initial.reference_id || '', amount: initial.amount ?? '',
+    payment_date: initial.payment_date ? String(initial.payment_date).slice(0, 10) : '',
+    beneficiary_name: initial.beneficiary_name || '', account_details: initial.account_details || '',
+    bank_remarks: initial.bank_remarks || '', comment: initial.comment || '',
+    payment_mode: initial.payment_mode || 'neft', network_type: initial.network_type || '',
+    project_id: initial.project_id || '', site_id: initial.site_id || '',
+    vendor_id: initial.vendor_id || '', employee_id: initial.employee_id || '',
+    payee_type: initial.employee_id ? 'employee' : 'vendor',
+    category_id: initial.category_id || '', material_type: initial.material_type || '',
+    tags: Array.isArray(initial.tags) ? initial.tags.join(', ') : (initial.tags || ''),
+    txn_kind: initial.txn_kind || 'expense',
+  } : BLANK));
+  const [documentId, setDocumentId] = useState(initial?.proof_document_id || null);
   const [extracting, setExtracting] = useState(false);
   const [saving, setSaving] = useState(false);
   const [ocrPreview, setOcrPreview] = useState('');
+  const [warn, setWarn] = useState(null);     // { status, duplicate, own }
+  const [override, setOverride] = useState(false);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
   const siteOptions = sites?.filter((s) => !form.project_id || s.project_id === form.project_id) || [];
@@ -269,7 +321,12 @@ function PaymentModal({ onClose, onSaved, vendors, employees, projects, sites, c
         network_type: ex.network_type || f.network_type,
         payment_mode: ex.payment_mode || f.payment_mode,
         vendor_id: data.suggested_vendor?.vendor_id || f.vendor_id,
+        txn_kind: data.own_transfer ? 'internal_transfer' : f.txn_kind,
       }));
+      setWarn({ status: ex.status, duplicate: data.duplicate, own: data.own_transfer });
+      if (data.own_transfer) toast.info('Looks like a transfer between your own accounts — tagged as internal transfer.');
+      if (data.duplicate) toast.error('This UTR is already saved — check before saving again.');
+      if (ex.status === 'failed') toast.error('The proof shows a FAILED transaction — do not save unless it actually went through.');
       if (data.suggested_vendor) {
         toast.success(`Matched vendor: ${data.suggested_vendor.vendor_name} (${data.suggested_vendor.confidence}%)`);
       } else {
@@ -287,17 +344,21 @@ function PaymentModal({ onClose, onSaved, vendors, employees, projects, sites, c
     if (!form.amount || Number(form.amount) <= 0) return toast.error('Enter a valid amount');
     setSaving(true);
     try {
-      await api.post('/payments', {
+      const body = {
         ...form,
         amount: Number(form.amount),
         proof_document_id: documentId,
+        txn_kind: form.txn_kind || 'expense',
+        override_duplicate: override,
         tags: form.tags ? form.tags.split(',').map((t) => t.trim()).filter(Boolean) : [],
         project_id: form.project_id || null, site_id: form.site_id || null,
-        vendor_id: form.payee_type === 'vendor' ? (form.vendor_id || null) : null,
-        employee_id: form.payee_type === 'employee' ? (form.employee_id || null) : null,
+        vendor_id: form.txn_kind === 'expense' && form.payee_type === 'vendor' ? (form.vendor_id || null) : null,
+        employee_id: form.txn_kind === 'expense' && form.payee_type === 'employee' ? (form.employee_id || null) : null,
         category_id: form.category_id || null,
         payment_date: form.payment_date || null,
-      });
+      };
+      if (isEdit) await api.patch(`/payments/${initial.id}`, body);
+      else await api.post('/payments', body);
       onSaved();
     } catch (err) {
       toast.error(apiError(err));
@@ -310,13 +371,13 @@ function PaymentModal({ onClose, onSaved, vendors, employees, projects, sites, c
     <Modal
       open
       onClose={onClose}
-      title="New Outgoing Payment"
+      title={isEdit ? 'Edit Payment' : 'New Outgoing Payment'}
       size="lg"
       footer={
         <>
           <button className="btn-ghost" onClick={onClose}>Cancel</button>
           <button className="btn-primary" onClick={save} disabled={saving}>
-            {saving ? <Loader2 className="animate-spin" size={16} /> : 'Save Payment'}
+            {saving ? <Loader2 className="animate-spin" size={16} /> : (isEdit ? 'Update Payment' : 'Save Payment')}
           </button>
         </>
       }
@@ -344,6 +405,31 @@ function PaymentModal({ onClose, onSaved, vendors, employees, projects, sites, c
           </p>
         )}
       </div>
+      )}
+
+      {/* Extraction warnings — failed txn / duplicate UTR / internal transfer */}
+      {warn && (warn.status === 'failed' || warn.duplicate || warn.own) && (
+        <div className="mb-5 space-y-2">
+          {warn.status === 'failed' && (
+            <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs font-medium text-red-700 dark:border-red-900 dark:bg-red-900/20 dark:text-red-300">
+              The proof appears to show a <strong>FAILED / unsuccessful</strong> transaction. Do not save unless the money actually moved.
+            </div>
+          )}
+          {warn.duplicate && (
+            <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-800 dark:border-amber-900 dark:bg-amber-900/20 dark:text-amber-300">
+              This reference/UTR is already saved as a payment{warn.duplicate.payment_date ? ` on ${fmtDate(warn.duplicate.payment_date)}` : ''}. Saving again will double-count it.
+              <label className="mt-1 flex items-center gap-2">
+                <input type="checkbox" checked={override} onChange={(e) => setOverride(e.target.checked)} />
+                Yes, this is a genuinely different transaction — save anyway.
+              </label>
+            </div>
+          )}
+          {warn.own && (
+            <div className="rounded-lg border border-brand-200 bg-brand-50 px-3 py-2 text-xs font-medium text-brand-700 dark:border-brand-900 dark:bg-brand-900/20 dark:text-brand-300">
+              Counterparty matches one of your <strong>own accounts</strong> — tagged as an <strong>internal transfer</strong> (excluded from expenses).
+            </div>
+          )}
+        </div>
       )}
 
       {/* Step 2 — verify extracted fields */}
@@ -378,6 +464,13 @@ function PaymentModal({ onClose, onSaved, vendors, employees, projects, sites, c
       {/* Step 3 — classification */}
       <h4 className="mb-3 mt-6 text-sm font-semibold text-slate-700 dark:text-slate-200">Classification</h4>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Field label="Transaction Type" hint="Internal transfer / financing are excluded from expense totals">
+          <select className="input" value={form.txn_kind} onChange={set('txn_kind')}>
+            <option value="expense">Expense (real payment to a vendor/employee)</option>
+            <option value="internal_transfer">Internal transfer (between your own accounts)</option>
+            <option value="financing">Financing (loan / OD drawdown or repayment)</option>
+          </select>
+        </Field>
         <Field label="Payee Type">
           <div className="flex gap-2">
             {['vendor', 'employee'].map((t) => (

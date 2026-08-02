@@ -9,6 +9,7 @@ import { saveDocument } from '../services/document.service.js';
 import { parsePaymentFields, extractText } from '../services/ocr.service.js';
 import { removeLedgerForSource } from '../services/ledger.service.js';
 import { autoMapVendor } from '../services/vendor-match.service.js';
+import { isOwnAccount } from '../services/ownAccountsService.js';
 import * as paymentSvc from '../services/paymentService.js';
 import * as allocSvc from '../services/allocationService.js';
 
@@ -17,6 +18,28 @@ router.use(authenticate, denyWriteForAdmin);   // admin is view-only
 
 // Post the payment as a debit to its payee ledger (employee if set, else vendor).
 const postPaymentLedger = paymentSvc.postPaymentLedger;
+
+// Find an existing (non-deleted) payment with the same bank reference/UTR — the
+// core duplicate-screenshot / re-import guard. Blank references never match.
+async function findDuplicatePayment(db, referenceId, excludeId = null) {
+  const ref = String(referenceId || '').trim();
+  if (!ref) return null;
+  const { rows } = await db.query(
+    `SELECT id, amount, payment_date, beneficiary_name FROM payments
+      WHERE is_deleted=FALSE AND reference_id IS NOT NULL AND TRIM(reference_id) <> ''
+        AND lower(trim(reference_id)) = lower($1) AND ($2::uuid IS NULL OR id <> $2)
+      LIMIT 1`,
+    [ref, excludeId]
+  );
+  return rows[0] || null;
+}
+
+// Payments never carry operating income; the operating kinds here are:
+//   'expense' (default, hits vendor ledger) | 'internal_transfer' | 'financing'
+//   'duplicate' — a repeat of another payment (e.g. the same statement debit
+//   captured twice): kept and still linked to its statement line so the statement
+//   stays reconciled, but counted NOWHERE (no ledger, excluded from every total).
+const PAYMENT_KINDS = new Set(['expense', 'internal_transfer', 'financing', 'duplicate']);
 
 // ── Step 1: Upload proof & auto-extract (OCR) ───────────────────────────────
 // POST /api/payments/extract   (multipart: file)
@@ -43,8 +66,15 @@ router.post(
     const suggested = await autoMapVendor(pool, {
       accountNumber: fields.account_details, beneficiary: fields.beneficiary_name,
     });
+    // Warn if this UTR/reference was already saved (duplicate screenshot guard).
+    const duplicate = await findDuplicatePayment(pool, fields.reference_id);
+    // Flag if the counterparty is one of our own accounts (internal transfer).
+    const ownTransfer = await isOwnAccount(pool, {
+      accountNumber: fields.account_details, name: fields.beneficiary_name,
+    });
     res.json({
       document_id: doc.id, extracted: fields, suggested_vendor: suggested,
+      duplicate, own_transfer: ownTransfer,
       ocr_preview: (text || '').slice(0, 600),
     });
   })
@@ -64,35 +94,53 @@ router.post(
     if (!b.amount || Number(b.amount) <= 0) {
       throw new ApiError(400, 'A valid amount is required');
     }
+    const txnKind = PAYMENT_KINDS.has(b.txn_kind) ? b.txn_kind : 'expense';
+    const isExpense = txnKind === 'expense';
+
+    // Duplicate-screenshot / re-import guard: block on a repeated UTR unless the
+    // operator explicitly overrides (override_duplicate=true).
+    if (!b.override_duplicate) {
+      const dup = await findDuplicatePayment(pool, b.reference_id);
+      if (dup) {
+        throw new ApiError(409, `This reference/UTR is already saved as a payment on ${dup.payment_date || 'an earlier date'} (${dup.beneficiary_name || 'unknown payee'}). Re-save only if it is genuinely a different transaction.`);
+      }
+    }
 
     const payment = await withTransaction(async (db) => {
-      if (b.payee_type === 'employee' && !b.employee_id) {
-        // Paying an employee not yet in the master → create them automatically.
-        const emp = await paymentSvc.findOrCreateEmployee(db, b.beneficiary_name);
-        if (emp) b.employee_id = emp.id;
-      } else if (!b.vendor_id && !b.employee_id) {
-        // Auto-map a vendor if neither vendor nor employee was picked.
-        const m = await autoMapVendor(db, {
-          accountNumber: b.account_details, beneficiary: b.beneficiary_name,
-        });
-        if (m) b.vendor_id = m.vendor_id;
+      // Party mapping & ledger only apply to real operating expenses. Internal
+      // transfers / financing move between your own accounts — no vendor, no
+      // ledger, and they are excluded from the expense totals.
+      if (isExpense) {
+        if (b.payee_type === 'employee' && !b.employee_id) {
+          // Paying an employee not yet in the master → create them automatically.
+          const emp = await paymentSvc.findOrCreateEmployee(db, b.beneficiary_name);
+          if (emp) b.employee_id = emp.id;
+        } else if (!b.vendor_id && !b.employee_id) {
+          // Auto-map a vendor if neither vendor nor employee was picked.
+          const m = await autoMapVendor(db, {
+            accountNumber: b.account_details, beneficiary: b.beneficiary_name,
+          });
+          if (m) b.vendor_id = m.vendor_id;
+        }
+      } else {
+        b.vendor_id = null; b.employee_id = null;
       }
       const { rows } = await db.query(
         `INSERT INTO payments
           (reference_id, amount, payment_date, beneficiary_name, account_details,
            bank_remarks, comment, payment_mode, network_type,
            project_id, site_id, vendor_id, employee_id, category_id, material_type, tags,
-           invoice_status, proof_document_id, source, created_by)
+           invoice_status, proof_document_id, source, txn_kind, created_by)
          VALUES ($1,$2,$3,$4,$5,$6,$7,COALESCE($8,'neft')::payment_mode,$9,
                  $10,$11,$12,$13,$14,$15,$16,
-                 COALESCE($17,'pending')::invoice_link,$18,'manual',$19)
+                 COALESCE($17,'pending')::invoice_link,$18,'manual',$19,$20)
          RETURNING *`,
         [
           b.reference_id, b.amount, b.payment_date || null, b.beneficiary_name, b.account_details,
           b.bank_remarks, b.comment.trim(), b.payment_mode, b.network_type,
           b.project_id || null, b.site_id || null, b.vendor_id || null, b.employee_id || null,
           b.category_id || null, b.material_type, b.tags || [],
-          b.invoice_status, b.proof_document_id || null, req.user.id,
+          b.invoice_status, b.proof_document_id || null, txnKind, req.user.id,
         ]
       );
       const created = rows[0];
@@ -106,8 +154,8 @@ router.post(
       }
 
       // Automation: post a debit to the payee ledger (employee takes priority,
-      // else vendor) so money paid out reflects in that party's statement.
-      await postPaymentLedger(db, created, req.user.id);
+      // else vendor) — only for real operating expenses.
+      if (isExpense) await postPaymentLedger(db, created, req.user.id);
       return created;
     });
 
@@ -193,17 +241,19 @@ router.patch(
           network_type=COALESCE($9,network_type), project_id=COALESCE($10,project_id),
           site_id=COALESCE($11,site_id), vendor_id=COALESCE($12,vendor_id),
           category_id=COALESCE($13,category_id), material_type=COALESCE($14,material_type),
-          tags=COALESCE($15,tags), employee_id=COALESCE($17,employee_id)
+          tags=COALESCE($15,tags), employee_id=COALESCE($17,employee_id),
+          txn_kind=COALESCE($18,txn_kind)
          WHERE id=$16 RETURNING *`,
         [b.reference_id, b.amount, b.payment_date, b.beneficiary_name, b.account_details,
          b.bank_remarks, b.comment, b.payment_mode, b.network_type, b.project_id,
-         b.site_id, b.vendor_id, b.category_id, b.material_type, b.tags, req.params.id, b.employee_id]
+         b.site_id, b.vendor_id, b.category_id, b.material_type, b.tags, req.params.id, b.employee_id,
+         PAYMENT_KINDS.has(b.txn_kind) ? b.txn_kind : null]
       );
       if (!rows[0]) throw new ApiError(404, 'Payment not found');
       const pay = rows[0];
-      // Rebuild the payee ledger entry for this payment (employee or vendor)
+      // Rebuild the payee ledger entry — only real expenses hit a party ledger.
       await removeLedgerForSource(db, 'payment', pay.id);
-      await postPaymentLedger(db, pay, req.user.id);
+      if (pay.txn_kind === 'expense') await postPaymentLedger(db, pay, req.user.id);
       return pay;
     });
     await audit(req, { action: 'update', entity: 'payments', entityId: req.params.id, changes: b });

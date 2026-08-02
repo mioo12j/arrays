@@ -6,6 +6,7 @@ import { useFetch } from '../lib/useFetch.js';
 import { useToast } from '../components/ui/Toast.jsx';
 import Modal from '../components/ui/Modal.jsx';
 import { Card, Loading, Table, Badge, Field } from '../components/ui/index.jsx';
+import ProofView from '../components/ui/ProofView.jsx';
 import { inr, fmtDate } from '../lib/format.js';
 
 export default function ReconciliationDetail() {
@@ -44,6 +45,7 @@ export default function ReconciliationDetail() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
+          {statement.document_id && <ProofView documentId={statement.document_id} name={`${statement.label || 'statement'}`} label="Open statement" />}
           <button className="btn-ghost" onClick={() => download(`/reports/reconciliation/${id}?format=pdf`)}><FileDown size={16} /> Export</button>
           <button className="btn-primary" onClick={importMissing} disabled={importing || pendingCount === 0}>
             {importing ? <Loader2 className="animate-spin" size={16} /> : <DownloadCloud size={16} />}
@@ -113,7 +115,21 @@ function ResolveModal({ line, onClose, onDone }) {
     vendor_id: line.vendor_id || '', client_id: '', project_id: '', category_id: '',
   });
   const [saving, setSaving] = useState(false);
+  const [extraClients, setExtraClients] = useState([]);
+  const allClients = [...(clients || []), ...extraClients];
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+
+  // Create a client on the spot so the operator never has to leave reconciliation.
+  const quickClient = async () => {
+    const name = window.prompt('New client name:', line.beneficiary || line.description || '');
+    if (!name || !name.trim()) return;
+    try {
+      const { data } = await api.post('/clients', { name: name.trim() });
+      setExtraClients((x) => [...x, data]);
+      setForm((f) => ({ ...f, client_id: data.id }));
+      toast.success('Client created');
+    } catch (e) { toast.error(apiError(e)); }
+  };
 
   const save = async () => {
     if (!form.comment.trim()) return toast.error('A comment is mandatory');
@@ -162,10 +178,13 @@ function ResolveModal({ line, onClose, onDone }) {
           </>
         ) : (
           <Field label="Client" required>
-            <select className="input" value={form.client_id} onChange={set('client_id')}>
-              <option value="">Select client</option>
-              {clients?.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-            </select>
+            <div className="flex gap-2">
+              <select className="input flex-1" value={form.client_id} onChange={set('client_id')}>
+                <option value="">Select client</option>
+                {allClients.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+              <button type="button" className="btn-ghost shrink-0" onClick={quickClient} title="Create a new client">+ New</button>
+            </div>
           </Field>
         )}
         <Field label="Project">

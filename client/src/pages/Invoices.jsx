@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../components/ui/Toast.jsx';
 import Modal from '../components/ui/Modal.jsx';
 import { Card, PageHeader, Loading, Table, Badge, Field, EmptyState } from '../components/ui/index.jsx';
-import { inr, fmtDate } from '../lib/format.js';
+import { inr, fmtDate, todayISO } from '../lib/format.js';
 import { useUnsavedGuard, useDraft, loadDraft, clearDraft } from '../context/UnsavedChangesContext.jsx';
 
 const SELLER_STATE = '09'; // ARRAYS main office (Greater Noida, UP)
@@ -237,7 +237,7 @@ function InvoiceEditor({ initial, clients, onClose, onSaved }) {
   const { data: branches } = useFetch('/gst/branches');
   const [f, setF] = useState(() => ({
     invoice_number: initial.invoice_number || '', status: initial.status || 'issued',
-    issue_date: initial.issue_date || new Date().toISOString().slice(0, 10), due_date: initial.due_date || '',
+    issue_date: initial.issue_date || todayISO(), due_date: initial.due_date || '',
     client_id: initial.client_id || '', customer_name: initial.customer_name || '', customer_gstin: initial.customer_gstin || '',
     place_of_supply: initial.place_of_supply || '', billing_address: initial.billing_address || '', shipping_address: initial.shipping_address || '',
     supply_type: initial.supply_type || '', po_no: initial.po_no || '', po_date: initial.po_date || '',
@@ -258,7 +258,12 @@ function InvoiceEditor({ initial, clients, onClose, onSaved }) {
   useEffect(() => {
     if (initial.id) return;
     const d = loadDraft(draftKey);
-    if (d && window.confirm('Restore your unsaved invoice draft from earlier?')) setF(d);
+    if (d && window.confirm('Restore your unsaved invoice draft from earlier?')) { setF(d); return; }
+    // Pre-fill the next invoice number from the series so it's sequential and the
+    // operator never has to hand-track it (still editable; server enforces it too).
+    api.get('/gst/number-series/preview').then(({ data }) => {
+      if (data?.next) setF((x) => (x.invoice_number ? x : { ...x, invoice_number: data.next }));
+    }).catch(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const close = () => { if (dirty && !window.confirm('Discard unsaved changes? Your draft is saved and can be restored later.')) return; onClose(); };
@@ -288,7 +293,7 @@ function InvoiceEditor({ initial, clients, onClose, onSaved }) {
   }, [f.items, f.place_of_supply]);
 
   const save = async () => {
-    if (!f.invoice_number.trim()) return toast.error('Invoice number is required');
+    // Number may be left blank — the server auto-allocates the next one in the series.
     if (!f.items.some((it) => it.description && Number(it.quantity) > 0)) return toast.error('Add at least one item');
     setBusy(true);
     try {
@@ -323,7 +328,7 @@ function InvoiceEditor({ initial, clients, onClose, onSaved }) {
           <p className="mt-1 text-xs text-slate-400">Selecting an office auto-fills the header name, address, and email below. The office GSTIN is used as the billing GST on the invoice.</p>
         </div>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-          <Field label="Invoice Number" required><input className="input" value={f.invoice_number} onChange={(e) => setF((x) => ({ ...x, invoice_number: e.target.value }))} placeholder="INV/26-27/001" /></Field>
+          <Field label="Invoice Number" hint="Auto-filled from your series — leave blank to auto-number"><input className="input" value={f.invoice_number} onChange={(e) => setF((x) => ({ ...x, invoice_number: e.target.value }))} placeholder="Leave blank to auto-number" /></Field>
           <Field label="Status"><select className="input" value={f.status} onChange={(e) => setF((x) => ({ ...x, status: e.target.value }))}>{STD_STATUS.map((s) => <option key={s} value={s}>{label(s)}</option>)}</select></Field>
           <Field label="Invoice Date"><input type="date" className="input" value={f.issue_date} onChange={(e) => setF((x) => ({ ...x, issue_date: e.target.value }))} /></Field>
           <Field label="Due Date"><input type="date" className="input" value={f.due_date} onChange={(e) => setF((x) => ({ ...x, due_date: e.target.value }))} /></Field>

@@ -9,9 +9,21 @@ import { saveDocument } from '../services/document.service.js';
 import { postLedgerEntry, removeLedgerForSource, refreshInvoiceStatus } from '../services/ledger.service.js';
 import { extractText, parseInvoiceFields } from '../services/ocr.service.js';
 import * as invSvc from '../services/invoiceService.js';
+import * as seriesSvc from '../services/gst/seriesService.js';
 import { company } from '../config/company.js';
 import { invoicePdf } from '../services/invoice-pdf.js';
 import * as brandingSvc from '../services/gst/brandingService.js';
+
+// Reject a duplicate invoice number (tax numbers must be unique). Case-insensitive,
+// ignores soft-deleted invoices, and (on edit) excludes the invoice itself.
+async function assertUniqueNumber(db, number, excludeId = null) {
+  const { rows } = await db.query(
+    `SELECT 1 FROM invoices
+      WHERE lower(invoice_number)=lower($1) AND is_deleted=FALSE AND ($2::uuid IS NULL OR id<>$2) LIMIT 1`,
+    [number, excludeId]
+  );
+  if (rows.length) throw new ApiError(409, `Invoice number "${number}" already exists. Use a different number.`);
+}
 
 const router = Router();
 router.use(authenticate, denyWriteForAdmin);   // admin is view-only
@@ -113,9 +125,17 @@ router.post(
   '/',
   asyncHandler(async (req, res) => {
     const b = req.body || {};
-    if (!b.invoice_number) throw new ApiError(400, 'Invoice number is required');
 
     const invoice = await withTransaction(async (db) => {
+      // Auto-allocate the next number from the series when the operator leaves it
+      // blank, so numbering is sequential and never hand-tracked. A manually typed
+      // number is honoured but must be unique.
+      let invoiceNumber = b.invoice_number ? String(b.invoice_number).trim() : '';
+      if (!invoiceNumber) {
+        invoiceNumber = await seriesSvc.allocate(db, { branchId: b.branch_id || null, docType: 'INV' }, req.user.id);
+        if (!invoiceNumber) throw new ApiError(400, 'No invoice number was given and no number series is configured. Set one up under Number Series, or type a number.');
+      }
+      await assertUniqueNumber(db, invoiceNumber);
       // With line items → compute taxable + CGST/SGST/IGST; else use posted amounts.
       let taxable = Number(b.taxable_amount || 0), gst = Number(b.gst_amount || 0);
       let cgst = Number(b.cgst_amount || 0), sgst = Number(b.sgst_amount || 0), igst = Number(b.igst_amount || 0);
@@ -135,7 +155,7 @@ router.post(
            header_text, footer_text, header_address, header_cin, header_email, created_by)
          VALUES ($1,COALESCE($2,'tax')::invoice_type,COALESCE($3,'draft')::invoice_status,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,COALESCE($27,TRUE),$28,$29,$30,$31,$32,$33)
          RETURNING *`,
-        [b.invoice_number, b.type, b.status, b.client_id || null, b.project_id || null, b.site_id || null, b.branch_id || null,
+        [invoiceNumber, b.type, b.status, b.client_id || null, b.project_id || null, b.site_id || null, b.branch_id || null,
          b.customer_name || null, b.customer_gstin || null, b.billing_address || null, b.shipping_address || null, b.place_of_supply || null,
          b.issue_date || null, b.due_date || null, taxable, gst, cgst, sgst, igst, total, b.notes, b.document_id || null,
          b.supply_type || null, b.po_no || null, b.po_date || null, b.site_address || null,
@@ -158,6 +178,9 @@ router.patch(
   asyncHandler(async (req, res) => {
     const b = req.body || {};
     const updated = await withTransaction(async (db) => {
+      if (b.invoice_number != null && String(b.invoice_number).trim()) {
+        await assertUniqueNumber(db, String(b.invoice_number).trim(), req.params.id);
+      }
       let taxable = b.taxable_amount, gst = b.gst_amount, cgst = b.cgst_amount, sgst = b.sgst_amount, igst = b.igst_amount, total = b.total_amount, lineItems = null;
       if (Array.isArray(b.items)) {
         const cur = (await db.query('SELECT branch_id, place_of_supply FROM invoices WHERE id=$1', [req.params.id])).rows[0] || {};

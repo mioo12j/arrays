@@ -221,18 +221,18 @@ function partyLines(p = {}) {
 }
 function partyHeight(doc, w, p) {
   const innerW = w - 16, { name, lines } = partyLines(p);
-  doc.font('Helvetica-Bold').fontSize(9); const nameH = doc.heightOfString(name, { width: innerW });
-  doc.font('Helvetica').fontSize(7.8); const bodyH = doc.heightOfString(lines.join('\n'), { width: innerW });
-  return Math.max(92, 6 + 12 + nameH + 2 + bodyH + 8);
+  doc.font('Helvetica-Bold').fontSize(10.5); const nameH = doc.heightOfString(name, { width: innerW });
+  doc.font('Helvetica').fontSize(8.6); const bodyH = doc.heightOfString(lines.join('\n'), { width: innerW });
+  return Math.max(100, 8 + 13 + nameH + 3 + bodyH + 10);
 }
 function partyBlock(doc, x, y, w, label, p = {}, h) {
   const innerW = w - 16, { name, lines } = partyLines(p);
   if (!h) h = partyHeight(doc, w, p);
   box(doc, x, y, w, h, SOFT);
-  doc.fontSize(8).fillColor(BRAND).font('Helvetica-Bold').text(label, x + 8, y + 6, { width: innerW, lineBreak: false });
-  doc.fillColor(INK).fontSize(9).font('Helvetica-Bold').text(name, x + 8, y + 18, { width: innerW });
-  const cy = y + 18 + doc.heightOfString(name, { width: innerW }) + 2;
-  doc.font('Helvetica').fontSize(7.8).fillColor(MUTE).text(lines.join('\n'), x + 8, cy, { width: innerW });
+  doc.fontSize(8.5).fillColor(BRAND).font('Helvetica-Bold').text(label, x + 8, y + 8, { width: innerW, lineBreak: false });
+  doc.fillColor(INK).fontSize(10.5).font('Helvetica-Bold').text(name, x + 8, y + 21, { width: innerW });
+  const cy = y + 21 + doc.heightOfString(name, { width: innerW }) + 3;
+  doc.font('Helvetica').fontSize(8.6).fillColor(MUTE).text(lines.join('\n'), x + 8, cy, { width: innerW });
   doc.fillColor(INK);
   return h;
 }
@@ -268,25 +268,29 @@ export async function einvoicePdf(rec, branding = {}, lang = 'en') {
   watermark(doc, wm);
 
   // ── IRN / Ack strip + QR ───────────────────────────────────────────────────
-  const stripY = doc.y, stripH = 104, qrW = 116;        // taller strip + larger QR box
+  // Tall strip with a large, crisp QR (the signed QR is the most-scanned element
+  // on the page — the empty lower half of the page gives us room to enlarge it).
+  const stripY = doc.y, stripH = 150, qrW = 158;
   box(doc, M, stripY, CW - qrW - 10, stripH, BLUE_SOFT);
-  doc.fontSize(7).fillColor(MUTE).font('Helvetica-Bold').text('IRN (Invoice Reference Number)', M + 10, stripY + 10);
-  doc.fontSize(8).fillColor(INK).font('Courier-Bold').text(rec.irn || '— pending registration —', M + 10, stripY + 22, { width: CW - qrW - 30 });
-  doc.font('Helvetica').fontSize(7.5).fillColor(FAINT).text('Ack No', M + 10, stripY + 62);
-  doc.font('Helvetica-Bold').fillColor(INK).text(rec.ackNo || '—', M + 55, stripY + 62, { width: 120, lineBreak: false });
-  doc.font('Helvetica').fillColor(FAINT).text('Ack Date', M + 200, stripY + 62);
-  doc.font('Helvetica-Bold').fillColor(INK).text(rec.ackDate ? dmy(rec.ackDate) : '—', M + 245, stripY + 62, { width: 120, lineBreak: false });
+  doc.fontSize(8).fillColor(MUTE).font('Helvetica-Bold').text('IRN (Invoice Reference Number)', M + 12, stripY + 14);
+  doc.fontSize(8).fillColor(INK).font('Courier-Bold').text(rec.irn || '— pending registration —', M + 12, stripY + 30, { width: CW - qrW - 34 });
+  doc.font('Helvetica').fontSize(8.5).fillColor(FAINT).text('Ack No', M + 12, stripY + 92);
+  doc.font('Helvetica-Bold').fontSize(9).fillColor(INK).text(rec.ackNo || '—', M + 64, stripY + 91, { width: 130, lineBreak: false });
+  doc.font('Helvetica').fontSize(8.5).fillColor(FAINT).text('Ack Date', M + 210, stripY + 92);
+  doc.font('Helvetica-Bold').fontSize(9).fillColor(INK).text(rec.ackDate ? dmy(rec.ackDate) : '—', M + 262, stripY + 91, { width: 130, lineBreak: false });
+  doc.font('Helvetica').fontSize(7.5).fillColor(FAINT).text('Scan the QR on the right to verify this e-Invoice on the government portal.', M + 12, stripY + 122, { width: CW - qrW - 34 });
 
   box(doc, W - M - qrW, stripY, qrW, stripH, '#ffffff');
   if (rec.signedQr) {
     try {
       // Encode the FULL signed QR string (never truncate — slicing corrupts the QR).
-      const png = await QRCode.toBuffer(String(rec.signedQr), { margin: 1, width: 360, errorCorrectionLevel: 'L' });
-      const q = qrW - 12;
-      doc.image(png, W - M - qrW + 6, stripY + 6, { width: q, height: q });
+      // Render at high resolution and enlarge for a sharp, easily-scanned code.
+      const png = await QRCode.toBuffer(String(rec.signedQr), { margin: 1, width: 720, errorCorrectionLevel: 'L' });
+      const q = qrW - 20;                                    // large square QR (~138pt)
+      doc.image(png, W - M - qrW + (qrW - q) / 2, stripY + (stripH - q) / 2, { width: q, height: q });
     } catch { /* ignore */ }
   } else {
-    doc.fontSize(7).fillColor(FAINT).font('Helvetica').text('QR after\nregistration', W - M - qrW, stripY + stripH / 2 - 8, { width: qrW, align: 'center' });
+    doc.fontSize(8).fillColor(FAINT).font('Helvetica').text('QR after\nregistration', W - M - qrW, stripY + stripH / 2 - 8, { width: qrW, align: 'center' });
   }
   doc.y = stripY + stripH + 10;
 

@@ -38,12 +38,20 @@ export default function Topbar({ onMenu }) {
 
   const [doing, setDoing] = useState('');   // '' | 'backup' | 'publish'
 
-  // §7 Before logout — offer a local backup; never silently lose work.
+  // §7 Before logout — take a local backup AND publish to the cloud (so the
+  // owner always sees the latest), then sign out. Never silently lose work.
   const backupAndLogout = async () => {
     setBacking(true);
     try { await api.post('/gst/backups', { kind: 'manual' }); toast.success('Local backup created'); }
-    catch { toast.error('Backup failed — logging out anyway'); }
-    finally { setBacking(false); logout(); }
+    catch { toast.error('Backup failed — continuing'); }
+    try { await logout(); }   // logout() publishes to cloud (flush-on-exit) before clearing
+    finally { setBacking(false); }
+  };
+
+  // Sign out and publish, without a local backup.
+  const publishAndLogout = async () => {
+    setBacking(true);
+    try { await logout(); } finally { setBacking(false); }
   };
 
   // One-click backup / publish (operator) — always reachable from the account menu.
@@ -167,7 +175,7 @@ export default function Topbar({ onMenu }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4" onClick={() => !backing && setLogoutAsk(false)}>
           <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-5 shadow-xl dark:border-slate-700 dark:bg-slate-900" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-base font-semibold text-slate-900 dark:text-white">Sign out</h3>
-            <p className="mt-1 text-sm text-slate-500">Create a local backup before leaving so nothing is lost. All data stays on this computer.</p>
+            <p className="mt-1 text-sm text-slate-500">Signing out publishes your latest data to the cloud automatically. You can also take a local backup first.</p>
             {dirty && (
               <div className="mt-3 flex items-center gap-2 rounded-lg bg-amber-50 px-3 py-2 text-xs font-medium text-amber-700 dark:bg-amber-900/20 dark:text-amber-300">
                 <AlertTriangle size={14} /> You have unsaved changes in an open form.
@@ -175,11 +183,11 @@ export default function Topbar({ onMenu }) {
             )}
             <div className="mt-4 flex flex-col gap-2">
               <button className="btn-primary justify-center" disabled={backing} onClick={backupAndLogout}>
-                {backing ? <Loader2 className="animate-spin" size={16} /> : <DatabaseBackup size={16} />} Create Backup &amp; Sign Out
+                {backing ? <Loader2 className="animate-spin" size={16} /> : <DatabaseBackup size={16} />} Backup, Publish &amp; Sign Out
               </button>
               <div className="flex gap-2">
                 <button className="btn-ghost flex-1 justify-center" disabled={backing} onClick={() => setLogoutAsk(false)}>Cancel</button>
-                <button className="btn-ghost flex-1 justify-center !text-red-600" disabled={backing} onClick={logout}>Sign out without backup</button>
+                <button className="btn-ghost flex-1 justify-center" disabled={backing} onClick={publishAndLogout}>Publish &amp; sign out</button>
               </div>
             </div>
           </div>

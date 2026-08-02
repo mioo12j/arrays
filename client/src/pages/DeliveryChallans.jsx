@@ -9,6 +9,7 @@ import { useToast } from '../components/ui/Toast.jsx';
 import { PageHeader, Card, Loading, Table, Badge, EmptyState } from '../components/ui/index.jsx';
 import Modal from '../components/ui/Modal.jsx';
 import { gstDownload, inr, dmy } from '../lib/gst.js';
+import { todayISO } from '../lib/format.js';
 import { company } from '../config/company.js';
 import { useUnsavedGuard, useDraft, loadDraft, clearDraft } from '../context/UnsavedChangesContext.jsx';
 
@@ -122,7 +123,7 @@ function ChallanForm({ initial, masters, onClose, onSaved }) {
     branchId: initial.branchId || '',
     challanType: initial.challanType || 'job_work',
     dispatchReason: initial.dispatchReason || '',
-    challanDate: initial.challanDate ? String(initial.challanDate).slice(0, 10) : new Date().toISOString().slice(0, 10),
+    challanDate: initial.challanDate ? String(initial.challanDate).slice(0, 10) : todayISO(),
     consigneeKind: initial.consigneeKind || 'registered',
     consignor: initial.consignor || defaultConsignor,
     consignee: initial.consignee || { legalName: '', gstin: '', addr1: '', location: '', pincode: '', stateCode: '' },

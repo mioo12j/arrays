@@ -34,11 +34,22 @@ export function AuthProvider({ children }) {
     return data.user;
   }, []);
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    // Mandatory publish-before-exit: flush all local data to the cloud so the
+    // owner always sees the latest. Best-effort with a short timeout, and only
+    // for roles that write locally (never the view-only admin/auditor).
+    if (user && user.role !== 'admin' && user.role !== 'auditor') {
+      try {
+        await Promise.race([
+          api.post('/system/flush-on-exit'),
+          new Promise((r) => setTimeout(r, 6000)),
+        ]);
+      } catch { /* offline / not configured — sign out anyway */ }
+    }
     localStorage.removeItem('epc_token');
     localStorage.removeItem('epc_user');
     setUser(null);
-  }, []);
+  }, [user]);
 
   // 'editor' is a super-admin — it has every admin power, plus exclusive tools.
   const isEditor = user?.role === 'editor';

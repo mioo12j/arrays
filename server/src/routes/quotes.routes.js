@@ -8,6 +8,7 @@ import { calculateQuote } from '../services/quote-calc.service.js';
 import { streamQuotePdf } from '../services/quote-pdf.service.js';
 import * as branding from '../services/gst/brandingService.js';
 import * as branchSvc from '../services/gst/branchService.js';
+import { todayIST } from '../services/gst/util.js';
 
 const router = Router();
 router.use(authenticate, denyWriteForAdmin);   // admin is view-only
@@ -85,7 +86,7 @@ router.post(
                $15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32)
        RETURNING *`,
       [number, b.status, b.client_id || null, b.client_name, b.project_id || null, b.project_name, b.site_name, calc.project_type,
-       calc.capacity_kw, b.location, b.issue_date || new Date().toISOString().slice(0, 10), b.valid_until || null,
+       calc.capacity_kw, b.location, b.issue_date || todayIST(), b.valid_until || null,
        JSON.stringify(calc.inputs), JSON.stringify(calc.line_items),
        calc.subtotal, calc.contingency_amount, calc.margin_amount, calc.taxable_amount, calc.gst_amount,
        calc.total_amount, calc.cost_amount, calc.per_watt, calc.subsidy_amount, calc.net_cost,

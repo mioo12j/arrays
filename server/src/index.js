@@ -15,6 +15,7 @@ import sitesRoutes from './routes/sites.routes.js';
 import vendorsRoutes from './routes/vendors.routes.js';
 import employeesRoutes from './routes/employees.routes.js';
 import clientsRoutes from './routes/clients.routes.js';
+import ownAccountsRoutes from './routes/ownAccounts.routes.js';
 import categoriesRoutes from './routes/categories.routes.js';
 import paymentsRoutes from './routes/payments.routes.js';
 import receiptsRoutes from './routes/receipts.routes.js';
@@ -30,7 +31,18 @@ import systemRoutes from './routes/system.routes.js';
 import gstRoutes from './routes/gst.routes.js';
 
 import { UPLOAD_ROOT } from './middleware/upload.js';
+import { autoSyncOnWrite } from './services/autoSync.js';
 import { notFound, errorHandler } from './middleware/error.js';
+
+// Keep the ERP alive: a stray failure in a background worker (e.g. an OCR native
+// crash on a corrupt upload, or a failed cloud publish) must never take the whole
+// server down. Log it and keep serving.
+process.on('unhandledRejection', (reason) => {
+  console.error('[unhandledRejection]', reason?.message || reason); // eslint-disable-line no-console
+});
+process.on('uncaughtException', (err) => {
+  console.error('[uncaughtException]', err?.message || err); // eslint-disable-line no-console
+});
 
 const app = express();
 
@@ -57,6 +69,10 @@ app.get('/api/health', async (_req, res) => {
   }
 });
 
+// After any successful data change, schedule a debounced background publish to
+// the cloud (no-op if CLOUD_DATABASE_URL isn't set on this machine).
+app.use('/api', autoSyncOnWrite);
+
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/projects', projectsRoutes);
@@ -64,6 +80,7 @@ app.use('/api/sites', sitesRoutes);
 app.use('/api/vendors', vendorsRoutes);
 app.use('/api/employees', employeesRoutes);
 app.use('/api/clients', clientsRoutes);
+app.use('/api/own-accounts', ownAccountsRoutes);
 app.use('/api/categories', categoriesRoutes);
 app.use('/api/payments', paymentsRoutes);
 app.use('/api/receipts', receiptsRoutes);
@@ -117,5 +134,9 @@ app.listen(env.port, () => {
     import('./services/gst/recoveryPurge.js')
       .then((m) => m.startRecoveryPurge())
       .catch((e) => console.error('[recovery-purge] start failed:', e.message));
+    // Storage housekeeping — zip proof/statement files older than 30 days.
+    import('./services/proofArchiver.js')
+      .then((m) => m.startProofArchive())
+      .catch((e) => console.error('[proof-archive] start failed:', e.message));
   }
 });

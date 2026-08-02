@@ -19,6 +19,12 @@ export const inr = (value, { compact = false } = {}) => {
 export const num = (value) =>
   new Intl.NumberFormat('en-IN').format(Number(value || 0));
 
+// Today's date in India (Asia/Kolkata) as YYYY-MM-DD. Use this for every date
+// DEFAULT — never `new Date().toISOString().slice(0,10)`, which is the UTC date
+// and reads as "yesterday" in IST during the early-morning hours.
+export const todayISO = () =>
+  new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+
 export const fmtDate = (d) => {
   if (!d) return '—';
   const date = new Date(d);

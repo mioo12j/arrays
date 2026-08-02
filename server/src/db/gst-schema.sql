@@ -986,3 +986,81 @@ ALTER TABLE invoice_items ADD COLUMN IF NOT EXISTS previous_qty NUMERIC(16,3) NO
 
 -- Office/branch selection on quotations
 ALTER TABLE quotes ADD COLUMN IF NOT EXISTS branch_id UUID REFERENCES gst_branches(id) ON DELETE SET NULL;
+
+-- ============================================================================
+--  FINANCIAL CLASSIFICATION  (functional-audit 2026-08)
+--  Fixes: internal transfers booked as income/expense; own company created as a
+--  party; loan/OD financing counted as operating cash. A transaction now carries
+--  a `txn_kind` so the dashboards can exclude non-operating money.
+--    payments.txn_kind : 'expense' (default) | 'internal_transfer' | 'financing'
+--    receipts.txn_kind : 'income'  (default) | 'internal_transfer' | 'financing' | 'refund'
+--  Only 'expense'/'income' feed the operating income & expense totals.
+-- ============================================================================
+
+-- Own bank accounts (OD, current, savings…). A statement credit/debit whose
+-- counterparty matches one of these is an INTERNAL TRANSFER, not real income or
+-- expense — it must never create a client/vendor or hit a party ledger.
+CREATE TABLE IF NOT EXISTS own_accounts (
+  id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  account_number TEXT NOT NULL,
+  holder_name    TEXT,                        -- name as it appears in narrations (for name-based match)
+  bank_name      TEXT,
+  account_type   TEXT DEFAULT 'current',      -- current | od | savings | cc | other
+  label          TEXT,
+  is_active      BOOLEAN NOT NULL DEFAULT true,
+  notes          TEXT,
+  created_by     UUID REFERENCES users(id) ON DELETE SET NULL,
+  created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (account_number)
+);
+CREATE INDEX IF NOT EXISTS idx_own_accounts_active ON own_accounts(is_active);
+
+ALTER TABLE payments             ADD COLUMN IF NOT EXISTS txn_kind TEXT NOT NULL DEFAULT 'expense';
+ALTER TABLE receipts             ADD COLUMN IF NOT EXISTS txn_kind TEXT NOT NULL DEFAULT 'income';
+ALTER TABLE bank_statement_lines ADD COLUMN IF NOT EXISTS txn_kind TEXT;   -- set to 'internal_transfer' when a leg matches an own account
+CREATE INDEX IF NOT EXISTS idx_payments_kind ON payments(txn_kind);
+CREATE INDEX IF NOT EXISTS idx_receipts_kind ON receipts(txn_kind);
+
+-- Allocation-aware views must NOT roll internal-transfer / financing money into
+-- project spend or receipts. Only operating money is attributed to projects.
+CREATE OR REPLACE VIEW v_outgoing_alloc AS
+  SELECT a.payment_id AS source_id, a.project_id, a.site_id, a.amount, a.description, p.payment_date AS dt
+    FROM outgoing_payment_allocations a
+    JOIN payments p ON p.id = a.payment_id AND p.is_deleted = FALSE AND p.txn_kind = 'expense'
+  UNION ALL
+  SELECT p.id, p.project_id, p.site_id, p.amount, p.comment, p.payment_date
+    FROM payments p
+   WHERE p.is_deleted = FALSE AND p.txn_kind = 'expense'
+     AND NOT EXISTS (SELECT 1 FROM outgoing_payment_allocations a WHERE a.payment_id = p.id);
+
+CREATE OR REPLACE VIEW v_incoming_alloc AS
+  SELECT a.receipt_id AS source_id, a.project_id, a.milestone_id, a.amount, a.description, r.credited_date AS dt
+    FROM incoming_payment_allocations a
+    JOIN receipts r ON r.id = a.receipt_id AND r.is_deleted = FALSE AND r.txn_kind = 'income'
+  UNION ALL
+  SELECT r.id, r.project_id, NULL::uuid, r.credited_amount, r.comment, r.credited_date
+    FROM receipts r
+   WHERE r.is_deleted = FALSE AND r.txn_kind = 'income'
+     AND NOT EXISTS (SELECT 1 FROM incoming_payment_allocations a WHERE a.receipt_id = r.id);
+
+-- Vendor spend must exclude internal-transfer / financing payments too.
+CREATE OR REPLACE VIEW v_vendor_spend AS
+SELECT v.id AS vendor_id, v.name AS vendor_name, v.category,
+  COALESCE(SUM(p.amount),0) AS total_spent,
+  COUNT(p.id) AS payment_count,
+  MAX(p.payment_date) AS last_payment_date
+FROM vendors v
+LEFT JOIN payments p ON p.vendor_id = v.id AND p.is_deleted = FALSE AND p.txn_kind = 'expense'
+GROUP BY v.id, v.name, v.category;
+
+-- Proof-archive (§ storage): once a proof/statement file is older than ~30 days
+-- it is moved into a monthly zip to save disk. This column points at that zip;
+-- the document endpoint serves the entry (by stored_name) straight from it.
+ALTER TABLE documents ADD COLUMN IF NOT EXISTS archived_zip TEXT;
+
+-- Vendor refunds (#5): a credit that is money coming BACK from a vendor is not
+-- client income. A receipt tagged txn_kind='refund' can point at the vendor so
+-- it posts a credit to that vendor's ledger (reducing net amount paid) instead.
+ALTER TABLE receipts ADD COLUMN IF NOT EXISTS vendor_id UUID REFERENCES vendors(id) ON DELETE SET NULL;
+CREATE INDEX IF NOT EXISTS idx_receipts_vendor ON receipts(vendor_id);

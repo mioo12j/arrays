@@ -9,6 +9,7 @@
 
 import { ApiError } from '../../utils/asyncHandler.js';
 import { recordAudit } from './log.js';
+import { todayIST } from './util.js';
 import * as branches from './branchService.js';
 import * as series from './seriesService.js';
 import { financialYear } from './seriesService.js';
@@ -164,7 +165,7 @@ export async function create(db, body, userId) {
        source_invoice_id, prepared_by, created_by)
      VALUES ($1,$2,$3,$4,$5,$6,$7,'draft',$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$29)
      RETURNING id`,
-    [challanNo, body.challanDate || new Date().toISOString().slice(0, 10), body.challanTime || null, financialYear(),
+    [challanNo, body.challanDate || todayIST(), body.challanTime || null, financialYear(),
      branchId, body.challanType || 'job_work', body.dispatchReason || null, body.currency || 'INR',
      body.remarks || null, body.internalNotes || null,
      JSON.stringify(body.consignor || {}), JSON.stringify(body.consignee || {}), body.consigneeKind || 'registered',
@@ -260,7 +261,7 @@ export async function deliver(db, id, body = {}, userId) {
   const cur = await requireStatus(db, id, ['dispatched', 'in_transit', 'partially_delivered']);
   const partial = body.partial === true;
   const delivery = {
-    date: body.date || new Date().toISOString().slice(0, 10), time: body.time || null,
+    date: body.date || todayIST(), time: body.time || null,
     receiverName: body.receiverName || null, receiverMobile: body.receiverMobile || null,
     signatureFile: body.signatureFile || null, podFile: body.podFile || null, gps: body.gps || null,
   };
@@ -275,7 +276,7 @@ export async function returnGoods(db, id, body = {}, userId) {
   await db.query(
     `INSERT INTO delivery_challan_returns (challan_id, return_date, return_qty, reason, damage_notes, transport, items, created_by)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
-    [id, body.returnDate || new Date().toISOString().slice(0, 10), n(body.returnQty), body.reason || null,
+    [id, body.returnDate || todayIST(), n(body.returnQty), body.reason || null,
      body.damageNotes || null, JSON.stringify(body.transport || {}), JSON.stringify(body.items || []), userId]);
   // update returned_qty per item if provided
   for (const r of (body.items || [])) {

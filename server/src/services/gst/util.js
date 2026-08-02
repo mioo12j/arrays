@@ -10,6 +10,12 @@ export function toDdMmYyyy(d) {
   return `${dd}/${mm}/${dt.getFullYear()}`;
 }
 
+// Today's date in India (Asia/Kolkata) as YYYY-MM-DD. Use for every document-date
+// DEFAULT — `new Date().toISOString().slice(0,10)` is the UTC date and reads as
+// "yesterday" in IST during the early-morning hours.
+export const todayIST = () =>
+  new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+
 export const yn = (b) => (b ? 'Y' : 'N');
 export const n2 = (v) => Math.round((Number(v || 0) + Number.EPSILON) * 100) / 100;
 export const intOrNull = (v) => (v == null || v === '' ? null : parseInt(v, 10));

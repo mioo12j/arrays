@@ -19,15 +19,22 @@ const NUM = (v) => {
 function toISODate(raw) {
   if (!raw) return null;
   const s = String(raw).trim();
+  // Already ISO (YYYY-MM-DD) — take the date part verbatim (no timezone shift).
+  const iso = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
+  // Numeric DD/MM/YY(YY) — Indian bank convention is day-first.
   const m = s.match(/\b(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})\b/);
   if (m) {
     let [, d, mo, y] = m;
     if (y.length === 2) y = `20${y}`;
     return `${y}-${String(mo).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
   }
-  // Excel may already give an ISO-ish date
+  // Fallback (e.g. an Excel Date object): use LOCAL date parts, never toISOString
+  // (which converts to UTC and can shift the day back for IST).
   const d = new Date(s);
-  if (!Number.isNaN(d.getTime())) return d.toISOString().slice(0, 10);
+  if (!Number.isNaN(d.getTime())) {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
   return null;
 }
 

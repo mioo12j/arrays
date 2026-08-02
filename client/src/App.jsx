@@ -15,6 +15,7 @@ import VendorLedger from './pages/VendorLedger.jsx';
 import Employees from './pages/Employees.jsx';
 import EmployeeLedger from './pages/EmployeeLedger.jsx';
 import Clients from './pages/Clients.jsx';
+import OwnAccounts from './pages/OwnAccounts.jsx';
 import ClientLedger from './pages/ClientLedger.jsx';
 import Projects from './pages/Projects.jsx';
 import ProjectDetail from './pages/ProjectDetail.jsx';
@@ -79,6 +80,7 @@ export default function App() {
         <Route path="/employees" element={<Employees />} />
         <Route path="/employees/:id" element={<EmployeeLedger />} />
         <Route path="/clients" element={<Clients />} />
+        <Route path="/own-accounts" element={<Protected editorOnly><OwnAccounts /></Protected>} />
         <Route path="/clients/:id" element={<ClientLedger />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/projects/:id" element={<ProjectDetail />} />

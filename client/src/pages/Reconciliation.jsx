@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Upload, Loader2, CheckCircle2, AlertCircle, Copy, ChevronRight } from 'lucide-react';
+import { Upload, Loader2, CheckCircle2, AlertCircle, Copy, ChevronRight, HeartPulse, Trash2 } from 'lucide-react';
 import { api, apiError } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -11,17 +11,24 @@ import { fmtDate, fmtDateTime } from '../lib/format.js';
 
 export default function Reconciliation() {
   const toast = useToast();
-  const { canImport } = useAuth();
+  const { canImport, canWrite } = useAuth();
   const { data: statements, loading, refetch } = useFetch('/reconciliation/statements');
   const { data: summary, refetch: refetchSummary } = useFetch('/reconciliation/summary');
   const [open, setOpen] = useState(false);
+  const [healthFor, setHealthFor] = useState(null);
+
+  const delStatement = async (st) => {
+    if (!window.confirm(`Delete statement "${st.label}"? The parsed lines are removed, but the payments & receipts already imported from it are KEPT (they are real transactions).`)) return;
+    try { await api.delete(`/reconciliation/statements/${st.id}`); toast.success('Statement deleted'); refetch(); refetchSummary(); }
+    catch (err) { toast.error(apiError(err)); }
+  };
 
   const s = summary || {};
   const cards = [
     { label: 'Matched', value: s.matched || 0, icon: CheckCircle2, tone: 'text-emerald-600 bg-emerald-50' },
     { label: 'Unmatched', value: s.unmatched || 0, icon: AlertCircle, tone: 'text-red-600 bg-red-50' },
-    { label: 'Duplicates', value: s.duplicate || 0, icon: Copy, tone: 'text-purple-600 bg-purple-50' },
     { label: 'Pending Review', value: s.pending_review || 0, icon: AlertCircle, tone: 'text-amber-600 bg-amber-50' },
+    { label: 'Missing', value: s.missing || 0, icon: HeartPulse, tone: (s.missing ? 'text-red-600 bg-red-50' : 'text-emerald-600 bg-emerald-50') },
   ];
 
   return (
@@ -31,6 +38,16 @@ export default function Reconciliation() {
         subtitle="Upload a monthly statement — the system auto-matches transactions and flags what needs review."
         actions={canImport ? <button className="btn-primary" onClick={() => setOpen(true)}><Upload size={16} /> Upload Statement</button> : null}
       />
+
+      {s.missing > 0 && (
+        <div className="mb-5 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 dark:border-red-900 dark:bg-red-900/20">
+          <AlertCircle size={18} className="mt-0.5 shrink-0 text-red-600" />
+          <div className="text-sm text-red-700 dark:text-red-300">
+            <p className="font-semibold">{s.missing} transaction{s.missing > 1 ? 's' : ''} from {s.statements_affected} statement{s.statements_affected > 1 ? 's' : ''} {s.missing > 1 ? 'have' : 'has'} been deleted — {s.statements_affected > 1 ? 'those statements' : 'that statement'} no longer reconcile.</p>
+            <p className="mt-0.5 text-xs">Open the flagged statement{s.statements_affected > 1 ? 's' : ''} below (red “missing” badge) and check Health. If any was an extra entry, restore it from the Recovery Center and mark it <strong>Duplicate</strong> instead of deleting.</p>
+          </div>
+        </div>
+      )}
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
         {cards.map((c) => (
@@ -52,7 +69,7 @@ export default function Reconciliation() {
           <Table
             columns={[
               { header: 'Statement' }, { header: 'Uploaded' }, { header: 'Lines' }, { header: 'Matched' },
-              { header: 'Unmatched' }, { header: 'Review' }, { header: '' },
+              { header: 'Unmatched' }, { header: 'Review' }, { header: 'Health' }, { header: '' },
             ]}
             rows={statements || []}
             empty="No statements uploaded yet."
@@ -65,7 +82,16 @@ export default function Reconciliation() {
                 <td className="td"><Badge tone="green">{st.matched_count}</Badge></td>
                 <td className="td">{st.unmatched_count > 0 ? <Badge tone="red">{st.unmatched_count}</Badge> : '0'}</td>
                 <td className="td">{st.pending_review > 0 ? <Badge tone="amber">{st.pending_review}</Badge> : '—'}</td>
-                <td className="td text-right"><ChevronRight size={16} className="text-slate-300" /></td>
+                <td className="td">{Number(st.missing_count) > 0
+                  ? <Badge tone="red" title="Transactions that were on this statement have been deleted">{st.missing_count} missing</Badge>
+                  : <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600"><CheckCircle2 size={13} /> OK</span>}</td>
+                <td className="td text-right">
+                  <div className="flex items-center justify-end gap-1.5">
+                    <button className="btn-ghost !py-1 !px-2 !text-xs" title="Check statement health" onClick={(e) => { e.stopPropagation(); setHealthFor(st); }}><HeartPulse size={14} /></button>
+                    {canWrite && <button className="btn-ghost !py-1 !px-2 !text-xs !text-red-600" title="Delete statement" onClick={(e) => { e.stopPropagation(); delStatement(st); }}><Trash2 size={14} /></button>}
+                    <ChevronRight size={16} className="text-slate-300" />
+                  </div>
+                </td>
               </>
             )}
           />
@@ -73,7 +99,64 @@ export default function Reconciliation() {
       </Card>
 
       {open && <UploadModal onClose={() => setOpen(false)} onDone={() => { setOpen(false); refetch(); refetchSummary(); }} />}
+      {healthFor && <HealthModal statement={healthFor} onClose={() => setHealthFor(null)} />}
     </div>
+  );
+}
+
+// Cross-checks every matched line against the live record and lists any that are
+// broken (a payment/receipt that was on this statement has since been deleted).
+function HealthModal({ statement, onClose }) {
+  const { data, loading } = useFetch(`/reconciliation/statements/${statement.id}/health`);
+  return (
+    <Modal open onClose={onClose} title={`Statement Health — ${statement.label}`} size="lg"
+      footer={<button className="btn-ghost" onClick={onClose}>Close</button>}>
+      {loading ? <Loading /> : !data ? <p className="text-sm text-slate-500">Could not load health.</p> : (
+        <div>
+          <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {[
+              { label: 'Total lines', value: data.total, tone: 'text-slate-700' },
+              { label: 'Reconciled', value: data.matched_ok, tone: 'text-emerald-600' },
+              { label: 'Pending', value: data.unmatched, tone: 'text-amber-600' },
+              { label: 'Missing', value: data.broken_count, tone: data.broken_count ? 'text-red-600' : 'text-slate-400' },
+            ].map((c) => (
+              <div key={c.label} className="rounded-lg border border-slate-200 p-3 text-center dark:border-slate-700">
+                <p className="text-[11px] font-semibold uppercase text-slate-400">{c.label}</p>
+                <p className={`text-xl font-bold ${c.tone}`}>{c.value}</p>
+              </div>
+            ))}
+          </div>
+          {data.healthy ? (
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700 dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300">
+              <CheckCircle2 size={16} className="mr-1 inline" /> Every transaction on this statement is present and accounted for.
+            </div>
+          ) : (
+            <>
+              <p className="mb-2 text-sm font-semibold text-red-600">These transactions were on the statement but have been deleted — the statement no longer fully reconciles:</p>
+              <div className="overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700">
+                <table className="w-full text-sm">
+                  <thead className="bg-slate-50 text-left text-xs uppercase text-slate-400 dark:bg-slate-800">
+                    <tr><th className="px-3 py-2">Date</th><th className="px-3 py-2">Description</th><th className="px-3 py-2">Type</th><th className="px-3 py-2 text-right">Amount</th><th className="px-3 py-2">Reason</th></tr>
+                  </thead>
+                  <tbody>
+                    {data.broken.map((b) => (
+                      <tr key={b.id} className="border-t border-slate-100 dark:border-slate-800">
+                        <td className="px-3 py-2 whitespace-nowrap">{fmtDate(b.txn_date)}</td>
+                        <td className="px-3 py-2 max-w-[240px] truncate" title={b.description}>{b.description}</td>
+                        <td className="px-3 py-2 capitalize">{b.matched_type}</td>
+                        <td className="px-3 py-2 text-right font-semibold">{Number(b.debit) > 0 ? `− ${b.debit}` : `+ ${b.credit}`}</td>
+                        <td className="px-3 py-2 text-xs text-slate-500">{b.reason}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="mt-3 text-xs text-slate-500">Tip: if one of these was an extra/duplicate, restore it from the Recovery Center and mark it <strong>Duplicate</strong> instead of deleting — that keeps the statement reconciled.</p>
+            </>
+          )}
+        </div>
+      )}
+    </Modal>
   );
 }
 

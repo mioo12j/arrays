@@ -4,6 +4,7 @@ import {
   CheckCircle2, XCircle, Ban, Copy, Archive, Trash2, RefreshCw, Link2, AlertTriangle, ScanLine,
 } from 'lucide-react';
 import { pincodeToState } from '../lib/pincode.js';
+import { todayISO } from '../lib/format.js';
 import PortalUploadButton from '../components/gst/PortalUpload.jsx';
 import { api, apiError } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
@@ -124,7 +125,7 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
     location: 'Greater Noida', pincode: '201310', stateCode: String(co.gstin || '09').slice(0, 2), phone: '', email: co.email || '',
   };
   const [form, setForm] = useState(() => initial ? structuredClone(initial) : {
-    supplyType: 'B2B', docType: 'INV', docNo: '', docDate: new Date().toISOString().slice(0, 10),
+    supplyType: 'B2B', docType: 'INV', docNo: '', docDate: todayISO(),
     seller: sellerDefault, buyer: { gstin: '', legalName: '', pos: '', addr1: '', location: '', pincode: '', stateCode: '' },
     headerAddress: '', items: [blankItem()], val: {},
   });
@@ -549,7 +550,7 @@ function EwbForm({ master, onClose, onSaved }) {
   const { data: companyData } = useFetch('/company');
   const co = companyData || companyFallback;
   const [form, setForm] = useState({
-    supplyType: 'O', subSupplyType: '1', docType: 'INV', docNo: '', docDate: new Date().toISOString().slice(0, 10),
+    supplyType: 'O', subSupplyType: '1', docType: 'INV', docNo: '', docDate: todayISO(),
     transactionType: 1,
     fromGstin: co.gstin || '', fromTradeName: co.shortName || co.name || '', fromPlace: 'Madhubani', fromPincode: '847229', fromStateCode: String(co.gstin || '10').slice(0, 2),
     toGstin: '', toTradeName: '', toPlace: '', toPincode: '', toStateCode: '',

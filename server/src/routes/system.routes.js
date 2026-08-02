@@ -5,7 +5,7 @@ import { authenticate } from '../middleware/auth.js';
 import { editorOnly } from '../middleware/rbac.js';
 import { audit } from '../middleware/audit.js';
 import { clearAllData, seedDemo } from '../services/system.service.js';
-import { syncToCloud } from '../services/sync.service.js';
+import { runSyncNow, autoSyncStatus } from '../services/autoSync.js';
 import { getStatus, startSelfUpdate } from '../services/updateService.js';
 import * as backups from '../services/gst/backupService.js';
 
@@ -34,23 +34,48 @@ router.post(
   })
 );
 
-// Whether cloud publishing is configured on this (local) instance. (any user)
+// Whether cloud publishing is configured + the last auto/manual publish result.
 router.get('/cloud-status', (_req, res) => {
-  res.json({ configured: !!process.env.CLOUD_DATABASE_URL });
+  res.json({ configured: !!process.env.CLOUD_DATABASE_URL, ...autoSyncStatus() });
 });
 
-// Publish local data (rows only — not files) to the cloud database.
+// Publish local data (rows only — not files) to the cloud database. Shares the
+// same code path as the automatic background publish, so the "last synced"
+// stamp on the dashboard is always accurate.
 router.post(
   '/sync-to-cloud',
   asyncHandler(async (req, res) => {
-    const targetUrl = process.env.CLOUD_DATABASE_URL;
-    if (!targetUrl) {
+    if (!process.env.CLOUD_DATABASE_URL) {
       throw new ApiError(400, 'CLOUD_DATABASE_URL is not configured on this computer. Set it in server/.env, then restart the app.');
     }
-    const counts = await syncToCloud(pool, targetUrl);
-    const total = Object.values(counts).reduce((a, b) => a + b, 0);
-    await audit(req, { action: 'create', entity: 'system', changes: { published: total } });
-    res.json({ ok: true, total, counts });
+    const result = await runSyncNow();
+    if (result?.ok === false) throw new ApiError(502, `Publish failed: ${result.error || 'unknown error'}`);
+    await audit(req, { action: 'create', entity: 'system', changes: { published: result?.total ?? 0 } });
+    res.json({ ok: true, total: result?.total ?? 0, at: result?.at });
+  })
+);
+
+// Download EVERY table's data as one JSON file — data only, no proof/attachment
+// files. Same data that Publish to Cloud mirrors; a portable lightweight snapshot.
+router.get(
+  '/export-data',
+  asyncHandler(async (req, res) => {
+    if (['admin', 'auditor'].includes(req.user.role)) throw new ApiError(403, 'Exporting data is reserved for the operator/editor.');
+    const dump = await backups.exportData(pool);
+    const stamp = new Date().toISOString().slice(0, 10);
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', `attachment; filename="AIPL-data-${stamp}.json"`);
+    res.send(JSON.stringify(dump, null, 2));
+  })
+);
+
+// Mandatory flush before sign-out — publishes everything synchronously so the
+// operator can never leave un-synced local data behind. No-op if not configured.
+router.post(
+  '/flush-on-exit',
+  asyncHandler(async (_req, res) => {
+    const result = await runSyncNow();
+    res.json({ ok: true, ...result });
   })
 );
 

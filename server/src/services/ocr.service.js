@@ -177,20 +177,38 @@ function multilineValue(lines, labelRe) {
 export function parsePaymentFields(text) {
   const t = (text || '').replace(/ /g, ' ');
 
-  // Amount: look for ₹ / Rs / INR followed by number, else any large number
+  // Transaction status — so a FAILED / PENDING payment is not silently booked as
+  // successful. success | failed | pending | null (unknown).
+  let status = null;
+  if (/\b(failed|failure|declined|unsuccessful|rejected|not\s*successful|cancell?ed)\b/i.test(t)) status = 'failed';
+  else if (/\b(pending|processing|in\s*progress|awaited|initiated)\b/i.test(t)) status = 'pending';
+  else if (/\b(success(?:ful)?|completed|credited|transaction\s*successful|payment\s*successful)\b/i.test(t)) status = 'success';
+
+  // Amount: prefer a value tied to an amount label, then a currency-prefixed
+  // value; take the LARGEST money-formatted number as a final fallback (so an
+  // account tail or a date is never mistaken for the amount).
   let amount = null;
   const amtMatch =
+    t.match(/(?:amount\s*paid|transaction\s*amount|you\s*(?:paid|sent)|amount|amt|paid|total|debited)\s*[:\-]?\s*(?:₹|rs\.?|inr)?\s*([0-9][0-9,]*\.[0-9]{2})/i) ||
     t.match(/(?:₹|rs\.?|inr)\s*([0-9][0-9,]*\.?[0-9]{0,2})/i) ||
-    t.match(/amount\s*[:\-]?\s*(?:₹|rs\.?|inr)?\s*([0-9][0-9,]*\.?[0-9]{0,2})/i);
+    t.match(/(?:amount|amt|paid|total)\s*[:\-]?\s*([0-9][0-9,]*\.?[0-9]{0,2})/i);
   if (amtMatch) amount = Number(amtMatch[1].replace(/,/g, ''));
+  if (!amount) {
+    const nums = (t.match(/\b\d[\d,]*\.\d{2}\b/g) || []).map((n) => Number(n.replace(/,/g, ''))).filter((n) => n > 0);
+    if (nums.length) amount = Math.max(...nums);
+  }
 
-  // Reference / UTR / Ref. ID. Require a separator after the label so we don't
-  // partial-match words like "reference" in a sentence (e.g. the success banner).
+  // Reference / UTR / Ref. ID — bank UTR/RRN, generic txn ids, and the UPI
+  // ecosystem (UPI ref no, Google/PhonePe/Paytm ids, bare 12-digit UPI ref).
+  // A separator after the label avoids capturing the word "reference" from prose.
   const reference = firstMatch(t, [
-    /\b(?:utr|rrn)\b\s*[:\-]?\s*\[?([A-Za-z0-9]{6,30})\]?/i,
-    /\bref(?:erence|\.)?\s*id\s*[:\-]\s*\[?([A-Za-z0-9]{6,30})\]?/i,
-    /\b(?:txn|transaction)\s*(?:id|no)\s*[:\-]\s*\[?([A-Za-z0-9]{6,30})\]?/i,
+    /\b(?:utr|rrn)\b\s*(?:no\.?|number)?\s*[:\-]?\s*\[?([A-Za-z0-9]{6,30})\]?/i,
+    /\bupi\s*(?:ref(?:erence)?|transaction)\s*(?:id|no\.?|number)?\s*[:\-]?\s*\[?([A-Za-z0-9]{6,30})\]?/i,
+    /\b(?:google|phonepe|paytm|gpay|bhim)\s*(?:transaction|txn|upi)?\s*(?:id|no\.?)?\s*[:\-]?\s*\[?([A-Za-z0-9]{8,30})\]?/i,
+    /\bref(?:erence|\.)?\s*(?:id|no\.?|number)?\s*[:\-]\s*\[?([A-Za-z0-9]{6,30})\]?/i,
+    /\b(?:txn|transaction)\s*(?:id|no\.?|number|reference)?\s*[:\-]\s*\[?([A-Za-z0-9]{6,30})\]?/i,
     /\b([A-Z]{2,6}\d{8,20})\b/,
+    /\b(\d{12})\b/,
   ]);
 
   // Date
@@ -231,6 +249,11 @@ export function parsePaymentFields(text) {
   else if (/\bimps\b/i.test(t)) network = 'IMPS';
   else if (/\bupi\b/i.test(t)) network = 'UPI';
 
+  // A UPI VPA (name@bank) is a useful beneficiary/account hint when no bank
+  // account number is present (common in GPay/PhonePe screenshots).
+  const vpa = (t.match(/\b([a-z0-9._-]{2,}@[a-z]{2,})\b/i) || [])[1] || null;
+  if (vpa && !network) network = 'UPI';
+
   const modeMap = { RTGS: 'rtgs', NEFT: 'neft', IMPS: 'imps', UPI: 'upi' };
   const paymentMode = network ? modeMap[network] : null;
 
@@ -244,10 +267,12 @@ export function parsePaymentFields(text) {
     amount,
     payment_date: paymentDate,
     beneficiary_name: beneficiary,
-    account_details: account,
+    account_details: account || vpa,
     network_type: network,
     payment_mode: paymentMode,
     bank_remarks: remarks,
+    status,
+    upi_vpa: vpa,
   };
 }
 
@@ -287,5 +312,6 @@ export function parseReceiptFields(text) {
     credited_amount: base.amount,
     credited_date: base.payment_date,
     account_details: base.account_details,
+    status: base.status,
   };
 }

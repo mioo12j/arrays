@@ -6,7 +6,10 @@
 //  Returns { vendor_id, vendor_name, confidence (0-100), method } or null.
 // ============================================================================
 
-const NAME_THRESHOLD = 0.34; // similarity floor for a confident name match (word_similarity catches subsets)
+const NAME_THRESHOLD = 0.34; // floor for SUGGESTING a name match (shown with confidence)
+const ATTACH_THRESHOLD = 0.55; // higher bar before we SILENTLY link a bank line to an existing vendor
+                               // by name — below this we create a reviewable candidate instead, so a
+                               // wrong auto-link never corrupts a real vendor's ledger (merge tool cleans up).
 
 // Strip bank-statement noise so "MR SANJEEV KUMAR SINGH S/O RAM" cleanly matches
 // a vendor named "Sanjeev Kumar Singh". pg_trgm already ignores case.
@@ -87,7 +90,12 @@ export async function autoMapVendor(db, { accountNumber, beneficiary } = {}) {
  */
 export async function findOrCreateVendor(db, { accountNumber, beneficiary, reference, date, userId } = {}) {
   const matched = await autoMapVendor(db, { accountNumber, beneficiary });
-  if (matched) return { ...matched, created: false };
+  // An account-number match is always trusted. A NAME match is only trusted for
+  // silent linking above ATTACH_THRESHOLD; a weaker name match creates a new
+  // candidate instead of risking a wrong link onto a real vendor's ledger.
+  if (matched && (matched.method === 'account' || matched.confidence >= ATTACH_THRESHOLD * 100)) {
+    return { ...matched, created: false };
+  }
   if (!beneficiary && !accountNumber) return null;
 
   const name = (beneficiary && String(beneficiary).trim()) || `Vendor ${accountNumber}`;

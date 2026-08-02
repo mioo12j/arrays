@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { query } from '../config/db.js';
+import { query, withTransaction } from '../config/db.js';
 import { asyncHandler, ApiError } from '../utils/asyncHandler.js';
 import { authenticate } from '../middleware/auth.js';
 import { denyWriteForAdmin } from '../middleware/rbac.js';
@@ -9,18 +9,70 @@ import { customerGst } from '../services/gst/rollupService.js';
 const router = Router();
 router.use(authenticate, denyWriteForAdmin);   // admin is view-only
 
-// GET /api/clients (with receivable summary)
+// GET /api/clients (with receivable summary). ?candidates=1 → auto-created only.
 router.get(
   '/',
-  asyncHandler(async (_req, res) => {
+  asyncHandler(async (req, res) => {
+    const where = req.query.candidates === '1' ? 'WHERE c.is_candidate = TRUE' : '';
     const { rows } = await query(`
       SELECT c.*, b.total_billed, b.total_received, b.outstanding,
-        (SELECT COUNT(*) FROM invoices i WHERE i.client_id=c.id AND i.status='overdue' AND i.is_deleted=FALSE) AS overdue_invoices
+        (SELECT COUNT(*) FROM invoices i WHERE i.client_id=c.id AND i.status='overdue' AND i.is_deleted=FALSE) AS overdue_invoices,
+        (SELECT COUNT(*) FROM receipts r WHERE r.client_id=c.id AND r.is_deleted=FALSE) AS receipt_count
       FROM clients c
       LEFT JOIN v_client_balances b ON b.client_id=c.id
-      ORDER BY c.name
+      ${where}
+      ORDER BY c.is_candidate DESC, c.name
     `);
     res.json(rows);
+  })
+);
+
+// GET /api/clients/:id/duplicates — likely duplicate clients (fuzzy name match).
+router.get(
+  '/:id/duplicates',
+  asyncHandler(async (req, res) => {
+    const { rows: c } = await query('SELECT id, name FROM clients WHERE id=$1', [req.params.id]);
+    if (!c[0]) throw new ApiError(404, 'Client not found');
+    const { rows } = await query(
+      `SELECT id, name, is_candidate,
+              GREATEST(similarity(name,$2), word_similarity(name,$2), word_similarity($2,name)) AS score,
+              (SELECT COUNT(*) FROM receipts r WHERE r.client_id=clients.id AND r.is_deleted=FALSE) AS receipt_count
+         FROM clients
+        WHERE id <> $1
+          AND GREATEST(similarity(name,$2), word_similarity(name,$2), word_similarity($2,name)) > 0.3
+        ORDER BY score DESC LIMIT 10`,
+      [req.params.id, c[0].name]
+    );
+    res.json(rows);
+  })
+);
+
+// POST /api/clients/:id/merge { into } — repoint everything onto the survivor.
+router.post(
+  '/:id/merge',
+  asyncHandler(async (req, res) => {
+    const sourceId = req.params.id;
+    const targetId = req.body?.into;
+    if (!targetId) throw new ApiError(400, 'A survivor client (into) is required');
+    if (targetId === sourceId) throw new ApiError(400, 'Cannot merge a client into itself');
+    const out = await withTransaction(async (db) => {
+      const { rows: both } = await db.query('SELECT id, name, opening_balance FROM clients WHERE id IN ($1,$2)', [sourceId, targetId]);
+      const source = both.find((r) => r.id === sourceId);
+      const target = both.find((r) => r.id === targetId);
+      if (!source || !target) throw new ApiError(404, 'Both clients must exist');
+      await db.query('UPDATE receipts SET client_id=$1 WHERE client_id=$2', [targetId, sourceId]);
+      await db.query('UPDATE invoices SET client_id=$1 WHERE client_id=$2', [targetId, sourceId]);
+      await db.query('UPDATE projects SET client_id=$1 WHERE client_id=$2', [targetId, sourceId]);
+      await db.query("UPDATE ledger_entries SET party_id=$1 WHERE party_type='client' AND party_id=$2", [targetId, sourceId]);
+      try { await db.query('UPDATE quotes SET client_id=$1 WHERE client_id=$2', [targetId, sourceId]); } catch { /* optional */ }
+      if (Number(source.opening_balance) !== 0) {
+        await db.query('UPDATE clients SET opening_balance = COALESCE(opening_balance,0) + $1 WHERE id=$2', [source.opening_balance, targetId]);
+      }
+      await db.query('DELETE FROM clients WHERE id=$1', [sourceId]);
+      return { merged_from: source.name, into: target.name };
+    });
+    await audit(req, { action: 'merge', entity: 'clients', entityId: sourceId, changes: { into: targetId, ...out } });
+    res.json({ ok: true, ...out });
   })
 );
 

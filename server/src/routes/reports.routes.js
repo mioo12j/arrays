@@ -33,6 +33,9 @@ router.get(
     const { search, vendor_id, employee_id, project_id, site_id, category_id, invoice_status, from, to } = req.query;
     const p = [];
     const where = ['p.is_deleted=FALSE'];
+    // Financial report: only real operating expenses by default (exclude internal
+    // transfers / financing). Pass include_transfers=1 to see every bank debit.
+    if (req.query.include_transfers !== '1') where.push("p.txn_kind='expense'");
     if (search) { p.push(`%${search}%`); where.push(`(p.reference_id ILIKE $${p.length} OR p.beneficiary_name ILIKE $${p.length} OR p.comment ILIKE $${p.length} OR v.name ILIKE $${p.length} OR e.name ILIKE $${p.length})`); }
     if (vendor_id) { p.push(vendor_id); where.push(`p.vendor_id=$${p.length}`); }
     if (employee_id) { p.push(employee_id); where.push(`p.employee_id=$${p.length}`); }
@@ -89,6 +92,9 @@ router.get(
     const { search, client_id, project_id, from, to } = req.query;
     const p = [];
     const where = ['r.is_deleted=FALSE'];
+    // Financial report: only real operating income by default (exclude internal
+    // transfers / financing / refunds). Pass include_transfers=1 for every credit.
+    if (req.query.include_transfers !== '1') where.push("r.txn_kind='income'");
     if (search) { p.push(`%${search}%`); where.push(`(r.reference_id ILIKE $${p.length} OR r.comment ILIKE $${p.length} OR c.name ILIKE $${p.length})`); }
     if (client_id) { p.push(client_id); where.push(`r.client_id=$${p.length}`); }
     if (project_id) { p.push(project_id); where.push(`r.project_id=$${p.length}`); }

@@ -97,6 +97,19 @@ export async function create(db, { kind = 'manual' } = {}, userId) {
   return { ...rows[0], record_counts: counts, totalRecords };
 }
 
+// Data-only export: every table's rows in ONE JSON file — no proof/attachment
+// files, nothing heavy. This is exactly the data that Publish to Cloud mirrors,
+// so it doubles as a portable, human-readable snapshot / lightweight backup.
+export async function exportData(db) {
+  const tables = await allTables(db);
+  const dump = { meta: { createdAt: new Date().toISOString(), scope: 'data-only', version: 2 }, tables: {} };
+  const counts = {};
+  for (const t of tables) { const { rows } = await db.query(`SELECT * FROM ${t}`); dump.tables[t] = rows; counts[t] = rows.length; }
+  dump.meta.counts = counts;
+  dump.meta.totalRecords = Object.values(counts).reduce((a, b) => a + b, 0);
+  return dump;
+}
+
 export async function hasTodayBackup(db) {
   const { rows } = await db.query("SELECT count(*) c FROM gst_backups WHERE status='success' AND started_at::date = now()::date");
   return Number(rows[0].c) > 0;

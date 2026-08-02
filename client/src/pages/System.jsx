@@ -41,6 +41,19 @@ export default function System() {
     finally { setBusy(''); }
   };
 
+  const exportData = async () => {
+    setBusy('export');
+    try {
+      const res = await api.get('/system/export-data', { responseType: 'blob' });
+      const url = URL.createObjectURL(res.data);
+      const a = document.createElement('a');
+      a.href = url; a.download = `AIPL-data-${new Date().toISOString().slice(0, 10)}.json`; a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      toast.success('All data downloaded as one JSON file');
+    } catch (e) { toast.error(apiError(e)); }
+    finally { setBusy(''); }
+  };
+
   const copyCmd = () => {
     navigator.clipboard?.writeText(SYNC_COMMAND);
     setCopied(true);
@@ -117,12 +130,18 @@ export default function System() {
               <button className="btn-primary" onClick={publish} disabled={busy === 'publish' || cloud?.configured === false}>
                 {busy === 'publish' ? <Loader2 className="animate-spin" size={16} /> : <CloudUpload size={16} />} Publish to Cloud Now
               </button>
+              <button className="btn-ghost" onClick={exportData} disabled={busy === 'export'}>
+                {busy === 'export' ? <Loader2 className="animate-spin" size={16} /> : <DatabaseZap size={16} />} Download All Data (JSON)
+              </button>
               {cloud && (
                 <span className={`text-xs font-medium ${cloud.configured ? 'text-emerald-600' : 'text-amber-600'}`}>
                   {cloud.configured ? '● Cloud target configured' : '● Set CLOUD_DATABASE_URL in server/.env to enable'}
                 </span>
               )}
             </div>
+            <p className="mt-2 text-xs text-slate-400">
+              Auto-publish keeps the cloud current after every change and on sign-out. “Download All Data” saves the entire database — every record shown anywhere in the app — as one lightweight JSON file (no images/attachments), the same data that goes to the cloud.
+            </p>
 
             <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">Or run from the command prompt</p>
             <div className="mt-1 flex items-center gap-2">

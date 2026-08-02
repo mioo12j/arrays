@@ -46,17 +46,79 @@ async function upsertVendor(db, v, userId) {
 }
 
 // GET /api/vendors  (with balances from the view)
+// ?candidates=1 → only auto-created candidates awaiting review
 router.get(
   '/',
   asyncHandler(async (req, res) => {
+    const where = req.query.candidates === '1' ? 'WHERE v.is_candidate = TRUE' : '';
     const { rows } = await query(`
       SELECT v.*, b.balance, b.total_paid,
-        (SELECT COUNT(*) FROM payments p WHERE p.vendor_id=v.id AND p.invoice_status='pending' AND p.is_deleted=FALSE) AS pending_invoices
+        (SELECT COUNT(*) FROM payments p WHERE p.vendor_id=v.id AND p.invoice_status='pending' AND p.is_deleted=FALSE) AS pending_invoices,
+        (SELECT COUNT(*) FROM payments p WHERE p.vendor_id=v.id AND p.is_deleted=FALSE) AS payment_count
       FROM vendors v
       LEFT JOIN v_vendor_balances b ON b.vendor_id = v.id
-      ORDER BY v.name
+      ${where}
+      ORDER BY v.is_candidate DESC, v.name
     `);
     res.json(rows);
+  })
+);
+
+// GET /api/vendors/:id/duplicates — likely duplicate vendors (fuzzy name match)
+// so the operator can merge them. Uses pg_trgm similarity on the name.
+router.get(
+  '/:id/duplicates',
+  asyncHandler(async (req, res) => {
+    const { rows: v } = await query('SELECT id, name FROM vendors WHERE id=$1', [req.params.id]);
+    if (!v[0]) throw new ApiError(404, 'Vendor not found');
+    const { rows } = await query(
+      `SELECT id, name, is_candidate,
+              GREATEST(similarity(name,$2), word_similarity(name,$2), word_similarity($2,name)) AS score,
+              (SELECT COUNT(*) FROM payments p WHERE p.vendor_id=vendors.id AND p.is_deleted=FALSE) AS payment_count
+         FROM vendors
+        WHERE id <> $1
+          AND GREATEST(similarity(name,$2), word_similarity(name,$2), word_similarity($2,name)) > 0.3
+        ORDER BY score DESC LIMIT 10`,
+      [req.params.id, v[0].name]
+    );
+    res.json(rows);
+  })
+);
+
+// POST /api/vendors/:id/merge  { into: <survivorVendorId> }
+// Repoints every reference from this (duplicate) vendor onto the survivor, then
+// deletes the duplicate. Balances are preserved (opening balances add up; ledger
+// entries move over).
+router.post(
+  '/:id/merge',
+  asyncHandler(async (req, res) => {
+    const sourceId = req.params.id;
+    const targetId = req.body?.into;
+    if (!targetId) throw new ApiError(400, 'A survivor vendor (into) is required');
+    if (targetId === sourceId) throw new ApiError(400, 'Cannot merge a vendor into itself');
+
+    const out = await withTransaction(async (db) => {
+      const { rows: both } = await db.query('SELECT id, name, opening_balance FROM vendors WHERE id IN ($1,$2)', [sourceId, targetId]);
+      const source = both.find((r) => r.id === sourceId);
+      const target = both.find((r) => r.id === targetId);
+      if (!source || !target) throw new ApiError(404, 'Both vendors must exist');
+
+      await db.query('UPDATE payments SET vendor_id=$1 WHERE vendor_id=$2', [targetId, sourceId]);
+      await db.query("UPDATE ledger_entries SET party_id=$1 WHERE party_type='vendor' AND party_id=$2", [targetId, sourceId]);
+      await db.query('UPDATE vendor_accounts SET vendor_id=$1 WHERE vendor_id=$2', [targetId, sourceId]);
+      await db.query('UPDATE bank_statement_lines SET vendor_id=$1 WHERE vendor_id=$2', [targetId, sourceId]);
+      // materials.vendor_id exists in the base schema; guard in case it's absent.
+      try { await db.query('UPDATE materials SET vendor_id=$1 WHERE vendor_id=$2', [targetId, sourceId]); } catch { /* table may not exist */ }
+      // Fold the duplicate's opening balance into the survivor.
+      if (Number(source.opening_balance) !== 0) {
+        await db.query('UPDATE vendors SET opening_balance = COALESCE(opening_balance,0) + $1 WHERE id=$2', [source.opening_balance, targetId]);
+      }
+      await db.query('DELETE FROM vendors WHERE id=$1', [sourceId]);
+      return { merged_from: source.name, into: target.name };
+    });
+
+    await audit(req, { action: 'merge', entity: 'vendors', entityId: sourceId, changes: { into: targetId, ...out } });
+    res.json({ ok: true, ...out });
   })
 );
 
