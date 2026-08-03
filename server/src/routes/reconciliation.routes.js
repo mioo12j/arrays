@@ -179,6 +179,30 @@ router.get(
   })
 );
 
+// ── Health of ALL statements in one call (for the "Check all" button) ────────
+router.get(
+  '/health-all',
+  asyncHandler(async (_req, res) => {
+    const { rows } = await query(
+      `SELECT bs.id, bs.label, bs.created_at, bs.total_lines,
+        (SELECT COUNT(*) FROM bank_statement_lines l
+           WHERE l.statement_id=bs.id AND l.matched_id IS NOT NULL AND (
+             (l.matched_type='payment' AND NOT EXISTS (SELECT 1 FROM payments p WHERE p.id=l.matched_id AND p.is_deleted=FALSE))
+          OR (l.matched_type='receipt' AND NOT EXISTS (SELECT 1 FROM receipts r WHERE r.id=l.matched_id AND r.is_deleted=FALSE)))) AS missing,
+        (SELECT COUNT(*) FROM bank_statement_lines l WHERE l.statement_id=bs.id AND l.status='matched') AS matched,
+        (SELECT COUNT(*) FROM bank_statement_lines l WHERE l.statement_id=bs.id AND l.status='unmatched') AS unmatched
+       FROM bank_statements bs
+       ORDER BY (SELECT COUNT(*) FROM bank_statement_lines l
+           WHERE l.statement_id=bs.id AND l.matched_id IS NOT NULL AND (
+             (l.matched_type='payment' AND NOT EXISTS (SELECT 1 FROM payments p WHERE p.id=l.matched_id AND p.is_deleted=FALSE))
+          OR (l.matched_type='receipt' AND NOT EXISTS (SELECT 1 FROM receipts r WHERE r.id=l.matched_id AND r.is_deleted=FALSE)))) DESC, bs.created_at DESC`
+    );
+    const totalMissing = rows.reduce((a, r) => a + Number(r.missing), 0);
+    const affected = rows.filter((r) => Number(r.missing) > 0).length;
+    res.json({ statements: rows, total_statements: rows.length, total_missing: totalMissing, statements_affected: affected, healthy: totalMissing === 0 });
+  })
+);
+
 // ── Statement health: cross-check every matched line against the live record ─
 // A statement is the source of truth. If a payment/receipt that was created from
 // (or matched to) a line has since been deleted, that line is "broken" and the

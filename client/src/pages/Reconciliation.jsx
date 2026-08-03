@@ -16,6 +16,7 @@ export default function Reconciliation() {
   const { data: summary, refetch: refetchSummary } = useFetch('/reconciliation/summary');
   const [open, setOpen] = useState(false);
   const [healthFor, setHealthFor] = useState(null);
+  const [healthAll, setHealthAll] = useState(false);
 
   const delStatement = async (st) => {
     if (!window.confirm(`Delete statement "${st.label}"? The parsed lines are removed, but the payments & receipts already imported from it are KEPT (they are real transactions).`)) return;
@@ -36,7 +37,10 @@ export default function Reconciliation() {
       <PageHeader
         title="Bank Statement Reconciliation"
         subtitle="Upload a monthly statement — the system auto-matches transactions and flags what needs review."
-        actions={canImport ? <button className="btn-primary" onClick={() => setOpen(true)}><Upload size={16} /> Upload Statement</button> : null}
+        actions={<>
+          <button className="btn-ghost" onClick={() => setHealthAll(true)}><HeartPulse size={16} /> Check All Health</button>
+          {canImport && <button className="btn-primary" onClick={() => setOpen(true)}><Upload size={16} /> Upload Statement</button>}
+        </>}
       />
 
       {s.missing > 0 && (
@@ -100,7 +104,52 @@ export default function Reconciliation() {
 
       {open && <UploadModal onClose={() => setOpen(false)} onDone={() => { setOpen(false); refetch(); refetchSummary(); }} />}
       {healthFor && <HealthModal statement={healthFor} onClose={() => setHealthFor(null)} />}
+      {healthAll && <AllHealthModal onClose={() => setHealthAll(false)} onOpenOne={(st) => { setHealthAll(false); setHealthFor(st); }} />}
     </div>
+  );
+}
+
+// One place to see the health of EVERY statement — which reconcile cleanly and
+// which have transactions that were deleted (worst first).
+function AllHealthModal({ onClose, onOpenOne }) {
+  const { data, loading } = useFetch('/reconciliation/health-all');
+  return (
+    <Modal open onClose={onClose} title="Health of All Statements" size="lg"
+      footer={<button className="btn-ghost" onClick={onClose}>Close</button>}>
+      {loading ? <Loading /> : !data ? <p className="text-sm text-slate-500">Could not load.</p> : (
+        <div>
+          <div className={`mb-4 rounded-lg border px-4 py-3 text-sm font-medium ${data.healthy
+            ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300'
+            : 'border-red-200 bg-red-50 text-red-700 dark:border-red-900 dark:bg-red-900/20 dark:text-red-300'}`}>
+            {data.healthy
+              ? <><CheckCircle2 size={16} className="mr-1 inline" /> All {data.total_statements} statement{data.total_statements === 1 ? '' : 's'} reconcile — nothing missing.</>
+              : <><AlertCircle size={16} className="mr-1 inline" /> {data.total_missing} transaction{data.total_missing === 1 ? '' : 's'} missing across {data.statements_affected} of {data.total_statements} statements.</>}
+          </div>
+          <div className="overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700">
+            <table className="w-full text-sm">
+              <thead className="bg-slate-50 text-left text-xs uppercase text-slate-400 dark:bg-slate-800">
+                <tr><th className="px-3 py-2">Statement</th><th className="px-3 py-2">Uploaded</th><th className="px-3 py-2 text-center">Lines</th><th className="px-3 py-2 text-center">Health</th><th className="px-3 py-2"></th></tr>
+              </thead>
+              <tbody>
+                {(data.statements || []).map((st) => (
+                  <tr key={st.id} className="border-t border-slate-100 dark:border-slate-800">
+                    <td className="px-3 py-2 font-medium text-slate-800 dark:text-slate-100">{st.label}</td>
+                    <td className="px-3 py-2 text-slate-500">{fmtDate(st.created_at)}</td>
+                    <td className="px-3 py-2 text-center">{st.total_lines}</td>
+                    <td className="px-3 py-2 text-center">{Number(st.missing) > 0
+                      ? <Badge tone="red">{st.missing} missing</Badge>
+                      : <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600"><CheckCircle2 size={13} /> OK</span>}</td>
+                    <td className="px-3 py-2 text-right">
+                      {Number(st.missing) > 0 && <button className="btn-ghost !py-1 !px-2 !text-xs" onClick={() => onOpenOne(st)}>Details</button>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </Modal>
   );
 }
 

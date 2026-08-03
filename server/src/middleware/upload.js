@@ -47,3 +47,16 @@ export const upload = multer({
     cb(new Error(`Unsupported file type: ${file.mimetype}`));
   },
 });
+
+// Dedicated uploader for backup archives — a full backup .zip can be large
+// (data + all attachment files), so this allows big zips only.
+export const uploadBackup = multer({
+  storage,
+  limits: { fileSize: 1024 * 1024 * 1024 },   // up to 1 GB
+  fileFilter: (_req, file, cb) => {
+    const ok = /\.zip$/i.test(file.originalname) ||
+      ['application/zip', 'application/x-zip-compressed', 'application/octet-stream'].includes(file.mimetype);
+    if (ok) return cb(null, true);
+    cb(new Error('Please choose a CompanyBackup .zip file'));
+  },
+});

@@ -300,6 +300,53 @@ export async function fileFor(db, id) {
   return { path: b.file_path, name: path.basename(b.file_path) };
 }
 
+// Import a backup ZIP the operator uploaded from local storage (e.g. an off-site
+// copy, or one moved from another machine). It is validated, copied into the
+// backup folder and registered so it can be verified / previewed / restored like
+// any other backup.
+export async function importUploaded(db, file, userId) {
+  if (!file?.path) throw new ApiError(400, 'A backup .zip file is required');
+  let zip, data;
+  try {
+    zip = new AdmZip(file.path);
+    const entry = zip.getEntry('data.json');
+    if (!entry) throw new Error('no data.json');
+    data = JSON.parse(zip.readAsText(entry));
+  } catch {
+    try { fs.unlinkSync(file.path); } catch { /* */ }
+    throw new ApiError(422, 'That file is not a valid CompanyBackup .zip (missing data.json).');
+  }
+  const counts = {};
+  for (const [t, rows] of Object.entries(data.tables || {})) counts[t] = Array.isArray(rows) ? rows.length : 0;
+  const totalRecords = Object.values(counts).reduce((a, b) => a + b, 0);
+  const fileCount = (data.fileManifest || []).length;
+
+  const zipBuf = fs.readFileSync(file.path);
+  const fname = `Uploaded_${stamp()}_${(file.originalname || 'backup').replace(/[^A-Za-z0-9._-]+/g, '_')}`.replace(/\.zip$/i, '') + '.zip';
+  const fpath = path.join(BACKUP_DIR, fname);
+  fs.writeFileSync(fpath, zipBuf);
+  try { fs.unlinkSync(file.path); } catch { /* temp upload */ }
+
+  const { rows } = await db.query(
+    `INSERT INTO gst_backups (kind, scope, status, destination, file_path, size_bytes, file_count, record_counts, checksum, created_by, completed_at)
+     VALUES ('uploaded','full','success',$1,$2,$3,$4,$5,$6,$7, now()) RETURNING *`,
+    ['Uploaded from local storage', fpath, zipBuf.length, fileCount, JSON.stringify(counts), sha(zipBuf), userId]
+  );
+  await recordAudit(db, { objectType: 'system', objectId: rows[0].id, eventType: 'backup_uploaded', message: `Backup uploaded from local storage: ${fname} — ${totalRecords} records, ${fileCount} files`, userId });
+  return { ...rows[0], record_counts: counts, totalRecords };
+}
+
+// Manually delete a backup — removes its zip file and the ledger row. (Live data
+// is untouched; this only frees the backup archive.)
+export async function remove(db, id, userId) {
+  const b = (await db.query('SELECT * FROM gst_backups WHERE id=$1', [id])).rows[0];
+  if (!b) throw new ApiError(404, 'Backup not found');
+  try { if (b.file_path && fs.existsSync(b.file_path)) fs.unlinkSync(b.file_path); } catch { /* ignore */ }
+  await db.query('DELETE FROM gst_backups WHERE id=$1', [id]);
+  await recordAudit(db, { objectType: 'system', objectId: id, eventType: 'backup_deleted', message: `Backup ${b.file_path ? path.basename(b.file_path) : id} deleted`, userId });
+  return { deleted: id };
+}
+
 // ── Retention & storage management ─────────────────────────────────────────
 export async function getRetention(db) {
   return { ...RETENTION_DEFAULT, ...((await config.get(db, 'backup_retention', {})) || {}) };

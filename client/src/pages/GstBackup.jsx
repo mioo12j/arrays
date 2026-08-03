@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { DatabaseBackup, ShieldCheck, Download, RotateCcw, Loader2, Eye, FlaskConical, HeartPulse, AlertTriangle } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { DatabaseBackup, ShieldCheck, Download, RotateCcw, Loader2, Eye, FlaskConical, HeartPulse, AlertTriangle, Upload, Trash2 } from 'lucide-react';
 import { api, apiError } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
 import { useToast } from '../components/ui/Toast.jsx';
@@ -17,12 +17,33 @@ export default function GstBackup() {
   const [busy, setBusy] = useState('');
   const [preview, setPreview] = useState(null);   // { backup, data }
   const [restore, setRestore] = useState(null);   // { id, mode }
+  const fileRef = useRef(null);
   const refreshAll = () => { refetch(); refetchDash(); };
+
+  const onUploadFile = async (e) => {
+    const file = e.target.files?.[0];
+    if (fileRef.current) fileRef.current.value = '';
+    if (!file) return;
+    setBusy('upload');
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const { data } = await api.post('/gst/backups/upload', fd);
+      toast.success(`Backup imported — ${data.totalRecords} records. You can now verify or restore it.`);
+      refreshAll();
+    } catch (err) { toast.error(apiError(err)); } finally { setBusy(''); }
+  };
 
   const create = async () => { setBusy('create'); try { const { data } = await api.post('/gst/backups', { kind: 'manual' }); toast.success(`Full backup — ${data.totalRecords} records, ${data.file_count} files`); refreshAll(); } catch (e) { toast.error(apiError(e)); } finally { setBusy(''); } };
   const verify = async (id) => { setBusy(id); try { const { data } = await api.post(`/gst/backups/${id}/verify`); toast.success(`Verification: ${data.status}`); refreshAll(); } catch (e) { toast.error(apiError(e)); } finally { setBusy(''); } };
   const drTest = async (id) => { setBusy(id); try { const { data } = await api.post(`/gst/backups/${id}/dr-test`); toast.success(`DR test: ${data.verification.status} — safe, no live data touched`); } catch (e) { toast.error(apiError(e)); } finally { setBusy(''); } };
   const openPreview = async (b) => { setBusy(b.id); try { const { data } = await api.post(`/gst/backups/${b.id}/preview-restore`); setPreview({ backup: b, data }); } catch (e) { toast.error(apiError(e)); } finally { setBusy(''); } };
+  const delBackup = async (b) => {
+    if (!window.confirm(`Delete this backup (${dmyt(b.started_at)})? The archive file is removed. Your live data is not affected.`)) return;
+    setBusy(b.id);
+    try { await api.delete(`/gst/backups/${b.id}`); toast.success('Backup deleted'); refreshAll(); }
+    catch (e) { toast.error(apiError(e)); } finally { setBusy(''); }
+  };
   const doRestore = async (id, mode, otpToken) => {
     setBusy(id);
     try { const { data } = await api.post(`/gst/backups/${id}/restore`, { mode, otpToken }); toast.success(`Restored ${data.restored} records + ${data.filesRestored} files`); setRestore(null); setPreview(null); refreshAll(); }
@@ -32,7 +53,13 @@ export default function GstBackup() {
   return (
     <div>
       <PageHeader title="Full-System Backup & Disaster Recovery" subtitle="One timestamped ZIP of the entire application — every table plus attachment files."
-        actions={<button className="btn-primary" onClick={create} disabled={busy === 'create'}>{busy === 'create' ? <Loader2 className="animate-spin" size={16} /> : <DatabaseBackup size={16} />} Backup Now</button>} />
+        actions={<>
+          <button className="btn-ghost" onClick={() => fileRef.current?.click()} disabled={busy === 'upload'}>
+            {busy === 'upload' ? <Loader2 className="animate-spin" size={16} /> : <Upload size={16} />} Upload Backup
+          </button>
+          <input ref={fileRef} type="file" accept=".zip" className="hidden" onChange={onUploadFile} />
+          <button className="btn-primary" onClick={create} disabled={busy === 'create'}>{busy === 'create' ? <Loader2 className="animate-spin" size={16} /> : <DatabaseBackup size={16} />} Backup Now</button>
+        </>} />
 
       {dash && !dash.hasToday && (
         <div className="mb-4 flex items-center gap-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 dark:border-amber-900/40 dark:bg-amber-900/10">
@@ -73,6 +100,7 @@ export default function GstBackup() {
                     <button className="btn-ghost !py-1 !px-2 !text-xs" disabled={busy === b.id} onClick={() => drTest(b.id)} title="DR test (safe)"><FlaskConical size={12} /></button>
                     <button className="btn-ghost !py-1 !px-2 !text-xs" disabled={!b.exists || busy === b.id} onClick={() => openPreview(b)} title="Preview restore"><Eye size={12} /></button>
                     <button className="btn-ghost !py-1 !px-2 !text-xs" disabled={!b.exists} onClick={() => gstDownload(`/gst/backups/${b.id}/download`, 'backup.zip')}><Download size={12} /></button>
+                    <button className="btn-ghost !py-1 !px-2 !text-xs !text-red-600" disabled={busy === b.id} onClick={() => delBackup(b)} title="Delete this backup"><Trash2 size={12} /></button>
                   </td>
                 </>
               );

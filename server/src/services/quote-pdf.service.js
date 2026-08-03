@@ -119,6 +119,9 @@ export function streamQuotePdf(res, quote, branding = {}, lang = 'en') {
   }
   doc.y = my + 8;
 
+  // ── Opening letter ────────────────────────────────────────────────────────
+  openingLetter(doc, quote, branding);
+
   // ── BOQ table ─────────────────────────────────────────────────────────────
   section(doc, 'Scope & Bill of Quantities');
   const cols = [
@@ -249,6 +252,12 @@ export function streamQuotePdf(res, quote, branding = {}, lang = 'en') {
     doc.moveDown(0.6);
   }
 
+  // ── Annexures — scope matrix, technical spec, assumptions & exclusions ─────
+  doc.addPage();
+  scopeMatrix(doc, quote);
+  technicalSpec(doc, quote);
+  assumptionsExclusions(doc, quote);
+
   // ── Terms / scope / exclusions ────────────────────────────────────────────
   [['Technical Scope', quote.notes || branding.quoteScope], ['Commercial Terms', quote.terms || branding.quoteTerms || defaultTerms()], ['Exclusions', quote.exclusions || branding.quoteExclusions || defaultExclusions()]]
     .forEach(([h, body]) => {
@@ -353,6 +362,160 @@ function costBreakdownChart(doc, x, y, w, items) {
   });
   doc.y = Math.max(doc.y, by);
 }
+// ── Opening acknowledgement letter (adds the warm, professional preamble) ────
+function openingLetter(doc, quote, branding) {
+  const M = doc.page.margins.left, W = doc.page.width - M * 2;
+  const name = quote.client_name || 'Sir / Madam';
+  doc.roundedRect(M, doc.y, W, 6, 0);            // spacer
+  doc.font('Helvetica-Bold').fontSize(9.5).fillColor(INK).text(`Kind Attention: ${name}`, M, doc.y + 4, { width: W });
+  doc.moveDown(0.3);
+  doc.font('Helvetica').fontSize(8.7).fillColor('#334155').text(
+    (branding.quoteIntro
+      || `${branding.headerText || company.pdfName} is a trusted provider of innovative solar and renewable-energy solutions, delivering efficient, reliable and sustainable systems for residential, commercial and industrial applications. Driven by discipline, innovation and excellence, we are committed to accelerating the transition to a cleaner, greener future.`),
+    M, doc.y, { width: W, align: 'justify' });
+  doc.moveDown(0.4);
+  doc.font('Helvetica').fontSize(8.7).fillColor('#334155').text(
+    `We sincerely acknowledge receipt of your enquiry and thank you for the opportunity. With reference to the same, we are pleased to submit our competitive proposal for a ${quote.capacity_kw} kW ${(TYPE_LABEL[quote.project_type] || quote.project_type || 'solar')} plant, detailed below.`,
+    M, doc.y, { width: W, align: 'justify' });
+  doc.moveDown(0.6);
+}
+
+// ── Reusable bordered data-table with wrapping cells, striping, group rows and
+//    automatic page breaks. `rows` items may be { group: 'Heading' } or an
+//    array of cell values matching `cols`. Cells can be { text, badge } objects.
+function dataTable(doc, cols, rows, opts = {}) {
+  const M = doc.page.margins.left, W = doc.page.width - M * 2;
+  const bottom = () => doc.page.height - 70;
+  const fs = opts.fontSize || 8.2, pad = 5;
+  const colW = (i) => cols[i].w * W;
+  const header = () => {
+    const y = doc.y;
+    doc.rect(M, y, W, 18).fill(THEAD_BG);
+    doc.fillColor(THEAD_TX).font('Helvetica-Bold').fontSize(fs);
+    let cx = M;
+    cols.forEach((c) => { doc.text(c.h, cx + pad, y + 5, { width: colW(cols.indexOf(c)) - pad * 2, align: c.a || 'left', lineBreak: false }); cx += colW(cols.indexOf(c)); });
+    doc.y = y + 18;
+  };
+  header();
+  let stripe = 0;
+  rows.forEach((r) => {
+    // Group heading row
+    if (r && r.group) {
+      if (doc.y + 16 > bottom()) { doc.addPage(); header(); }
+      doc.rect(M, doc.y, W, 15).fill(mix2(BRAND, '#ffffff', 0.86));
+      doc.fillColor(BRAND).font('Helvetica-Bold').fontSize(fs).text(r.group, M + pad, doc.y + 4, { width: W - pad * 2, lineBreak: false });
+      doc.y += 15;
+      return;
+    }
+    const cells = r;
+    // measure row height from wrapping text cells
+    let h = 15;
+    cells.forEach((cell, i) => {
+      const t = cell && typeof cell === 'object' ? (cell.text || '') : String(cell ?? '');
+      doc.font('Helvetica').fontSize(fs);
+      h = Math.max(h, doc.heightOfString(t, { width: colW(i) - pad * 2 }) + 8);
+    });
+    if (doc.y + h > bottom()) { doc.addPage(); header(); stripe = 0; }
+    const y = doc.y;
+    if (stripe % 2 === 0) doc.rect(M, y, W, h).fill('#f8fafc');
+    doc.rect(M, y, W, h).lineWidth(0.4).strokeColor(LINE).stroke();
+    let cx = M;
+    cells.forEach((cell, i) => {
+      const isObj = cell && typeof cell === 'object';
+      const t = isObj ? (cell.text || '') : String(cell ?? '');
+      if (isObj && cell.badge) {
+        const tone = cell.badge === 'client' ? ['#fef3c7', '#92400e'] : ['#dcfce7', '#166534'];
+        const label = cell.badge === 'client' ? 'CLIENT' : (isObj && cell.text ? cell.text : 'ARRAYS');
+        doc.roundedRect(cx + pad, y + (h - 12) / 2, 48, 12, 6).fill(tone[0]);
+        doc.fillColor(tone[1]).font('Helvetica-Bold').fontSize(6.6).text(label, cx + pad, y + (h - 12) / 2 + 3, { width: 48, align: 'center', lineBreak: false });
+      } else {
+        doc.fillColor(cols[i].bold ? INK : '#334155').font(cols[i].bold ? 'Helvetica-Bold' : 'Helvetica').fontSize(fs)
+          .text(t, cx + pad, y + 4, { width: colW(i) - pad * 2, align: cols[i].a || 'left' });
+      }
+      cx += colW(i);
+    });
+    doc.y = y + h;
+    stripe++;
+  });
+  doc.moveDown(0.5);
+}
+
+// ── Annexure 1 — Scope Matrix (supply & responsibility split) ───────────────
+function scopeMatrix(doc) {
+  section(doc, 'Annexure 1 — Scope Matrix');
+  const cols = [
+    { h: 'Sl.', w: 0.08, a: 'center' },
+    { h: 'Supply Item', w: 0.62, bold: false },
+    { h: 'Responsibility', w: 0.30, a: 'center' },
+  ];
+  const A = { badge: 'arrays' }, C = { badge: 'client' };
+  const rows = [
+    { group: '1. Array Yard' },
+    ['1.1', 'Solar PV Modules', A], ['1.2', 'Grid-tie / Hybrid Inverter', A],
+    { group: '2. Mechanical & Civil (BOS)' },
+    ['2.1', 'Module Mounting Structure (MMS)', A], ['2.2', 'MMS & Module Fasteners', A], ['2.3', 'Civil Foundation (if applicable)', A],
+    { group: '3. Electrical (BOS)' },
+    ['3.1', 'Solar DC Cable (Array to Inverter)', A], ['3.2', 'AC Cable (Inverter to LT panel)', A],
+    ['3.3', 'Module & Inverter Earthing Cable', A], ['3.4', 'DCDB / ACDB / MCCB', A],
+    { group: '4. Evacuation (BOS)' },
+    ['4.1', 'Spare evacuation point at each roof', C], ['4.2', 'Technical specification & drawings', A],
+    { group: '5. Protection (BOS)' },
+    ['5.1', 'Earthing system', A], ['5.2', 'Lightning-arrestor system', A],
+    { group: '6. Hardware / Miscellaneous (BOS)' },
+    ['6.1', 'PVC pipe for cable laying', A], ['6.2', 'Lugs & glands', A],
+    ['6.3', 'Cement / sand / aggregate / civil works, technician lodging, net-metering / LTCT cost', C],
+    { group: '7. Services (BOS)' },
+    ['7.1', 'Installation & Commissioning', A],
+  ];
+  dataTable(doc, cols, rows);
+}
+
+// ── Annexure 2 — Technical Specification of the plant ───────────────────────
+function technicalSpec(doc, quote) {
+  section(doc, 'Annexure 2 — Technical Specification of Plant');
+  const cap = quote.capacity_kw || '—';
+  const roof = /ground/i.test(quote.project_type || '') ? 'Ground-mounted' : 'RCC Rooftop';
+  const cols = [
+    { h: 'Sl.', w: 0.07, a: 'center' },
+    { h: 'Activity', w: 0.34, bold: true },
+    { h: 'UoM', w: 0.12, a: 'center' },
+    { h: 'Qty.', w: 0.15, a: 'center' },
+    { h: 'Specification / Make', w: 0.32 },
+  ];
+  const rows = [
+    ['1', 'Inverter Capacity (On-Grid)', 'kVA', String(cap), 'Grid-tie string inverter, IEC-certified'],
+    ['2', 'DC Capacity', 'kWp', String(cap), 'Mono-PERC / Bifacial DCR modules'],
+    ['3', 'Type of Installation', '—', '—', roof],
+    ['4', 'Power Evacuation', '—', '—', '440 V / 3-phase at main LT panel'],
+    ['5', 'Module Mounting', '—', '—', 'Hot-dip galvanised (Tata / Jindal grade)'],
+    ['6', 'Monitoring', '—', '—', 'Remote Wi-Fi / GPRS data logging'],
+    ['7', 'Warranty', 'Years', '25 / 5', 'Module performance 25 yrs · inverter 5 yrs'],
+  ];
+  dataTable(doc, cols, rows);
+}
+
+// ── Annexure 3 — Assumptions & Exclusions ───────────────────────────────────
+function assumptionsExclusions(doc) {
+  section(doc, 'Annexure 3 — Assumptions & Exclusions');
+  const cols = [
+    { h: 'S.No.', w: 0.09, a: 'center' },
+    { h: 'Activity', w: 0.28, bold: true },
+    { h: 'Assumption / Exclusion', w: 0.63 },
+  ];
+  const rows = [
+    ['1', 'PV Capacity', 'Proposed capacity & bill of material may vary from actual site conditions after detailed engineering.'],
+    ['2', 'Site Accessibility', 'A shadow-free rooftop area suitable for installation, with easy access for erection & maintenance, to be provided by the client.'],
+    ['3', 'Load Bearing', 'Roof load-bearing capacity must be adequate to carry the MMS system considering the applicable wind-zone load.'],
+    ['4', 'Component Makes', 'Best-evaluated vendor items are packaged & delivered; equivalent makes may be substituted on availability.'],
+    ['5', 'DC Cabling', 'Module inter-connection may be partially routed through PVC conduits as per site.'],
+    ['6', 'Standards', 'All works as per the relevant IEC / IS codes.'],
+    ['7', 'Water & Electricity', 'Construction water & power to be arranged by the client at site.'],
+    ['8', 'Connectivity', 'LAN / Wi-Fi to be provided by the client for the remote-monitoring system during commissioning.'],
+    ['9', 'AMC / Warranty', '2 years free AMC · 25-year module performance warranty.'],
+  ];
+  dataTable(doc, cols, rows);
+}
+
 function defaultTerms() {
   return '1. Payment: 30% advance, 60% against material delivery, 10% on commissioning. ' +
     '2. Delivery: 4–6 weeks from PO & advance. 3. Warranty: OEM (modules 25 yrs performance, inverter 5 yrs). ' +

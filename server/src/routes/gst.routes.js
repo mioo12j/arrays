@@ -41,7 +41,7 @@ import * as paymentSvc from '../services/paymentService.js';
 import * as receiptSvc from '../services/receiptService.js';
 import { challanPdf } from '../services/gst/challan-pdf.js';
 import { streamExcel, streamPdf } from '../services/export.service.js';
-import { upload } from '../middleware/upload.js';
+import { upload, uploadBackup } from '../middleware/upload.js';
 import { einvoicePdf, ewbPdf } from '../services/gst/pdf.js';
 import { toCsv, toXlsx, exportContentType } from '../services/gst/exporter.js';
 import { recordAccess } from '../services/gst/log.js';
@@ -411,6 +411,8 @@ router.get('/backups/:id/download', requirePerm(PERMS.ADMIN), asyncHandler(async
   await recordAccess(req, { action: 'download', objectType: 'backup', objectId: req.params.id });
   res.download(f.path, f.name);
 }));
+router.post('/backups/upload', requirePerm(PERMS.ADMIN), uploadBackup.single('file'), asyncHandler(async (req, res) => res.status(201).json(await tx((db) => backups.importUploaded(db, req.file, uid(req))))));
+router.delete('/backups/:id', requirePerm(PERMS.ADMIN), asyncHandler(async (req, res) => res.json(await tx((db) => backups.remove(db, req.params.id, uid(req))))));
 router.post('/backups/:id/restore', requirePerm(PERMS.ADMIN), asyncHandler(async (req, res) => {
   await tx((db) => otp.assertForAction(db, { token: req.body?.otpToken, action: 'backup_restore', userId: uid(req) }));
   res.json(await tx((db) => backups.restore(db, req.params.id, { mode: req.body?.mode || 'full', tables: req.body?.tables }, uid(req))));
