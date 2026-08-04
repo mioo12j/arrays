@@ -6,6 +6,8 @@ import { denyWriteForAdmin } from '../middleware/rbac.js';
 import { audit } from '../middleware/audit.js';
 import { calculateQuote } from '../services/quote-calc.service.js';
 import { streamQuotePdf } from '../services/quote-pdf.service.js';
+import { renderProposal, PROPOSAL_BRAND } from '../services/proposal-pdf.service.js';
+import PDFDocument from 'pdfkit';
 import * as branding from '../services/gst/brandingService.js';
 import * as branchSvc from '../services/gst/branchService.js';
 import { todayIST } from '../services/gst/util.js';
@@ -217,6 +219,24 @@ router.get(
       } catch { /* ignore */ }
     }
     streamQuotePdf(res, quote, brand, req.query.lang);
+  })
+);
+
+// Premium proposal book (brochure-style sales document). Reads the quote's
+// project-info fields (proposal_inputs) to customise every page.
+router.get(
+  '/:id/proposal.pdf',
+  asyncHandler(async (req, res) => {
+    const { rows } = await query('SELECT q.*, c.name AS client_full_name FROM quotes q LEFT JOIN clients c ON c.id=q.client_id WHERE q.id=$1', [req.params.id]);
+    if (!rows[0]) throw new ApiError(404, 'Quote not found');
+    const q = rows[0];
+    const data = { ...q, ...(q.proposal_inputs || {}), client_name: q.client_name || q.client_full_name };
+    const doc = new PDFDocument({ size: 'A4', margin: PROPOSAL_BRAND.M, bufferPages: true });
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="Proposal_${String(q.quote_number || 'quote').replace(/[^A-Za-z0-9._-]+/g, '_')}.pdf"`);
+    doc.pipe(res);
+    renderProposal(doc, data);
+    doc.end();
   })
 );
 
