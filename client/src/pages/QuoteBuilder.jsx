@@ -173,12 +173,13 @@ export default function QuoteBuilder() {
                 {docMenu && (
                   <div className="absolute right-0 z-20 mt-1 w-64 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-800">
                     {[
-                      { label: 'Complete Package', sub: 'Proposal + Quotation + BOQ', path: `/quotes/${id}/document.pdf`, star: true },
+                      { label: 'Complete Package', sub: 'Proposal + Quotation + BOQ + Scope', path: `/quotes/${id}/document.pdf`, star: true },
                       { label: 'Proposal (Brochure)', sub: 'Premium sales document', path: `/quotes/${id}/proposal.pdf` },
                       { label: 'Commercial Quotation', sub: 'Priced offer & terms', path: `/quotes/${id}/quotation.pdf` },
                       { label: 'Bill of Quantities', sub: 'Component-level breakdown', path: `/quotes/${id}/boq.pdf` },
+                      { label: 'Scope of Work', sub: 'Our scope vs client scope', path: `/quotes/${id}/scope.pdf` },
                       { label: 'Proposal + Quotation', sub: 'Sales + pricing', path: `/quotes/${id}/document.pdf?parts=proposal,quotation` },
-                      { label: 'Quotation + BOQ', sub: 'Pricing + breakdown', path: `/quotes/${id}/document.pdf?parts=quotation,boq` },
+                      { label: 'Quotation + BOQ + Scope', sub: 'Full commercial set', path: `/quotes/${id}/document.pdf?parts=quotation,boq,scope` },
                       { label: 'Technical Quote (legacy)', sub: 'Original annexure PDF', path: `/quotes/${id}/pdf` },
                     ].map((d) => (
                       <button

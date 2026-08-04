@@ -137,13 +137,14 @@ function panel(doc, x, y, w, h, fill, r = 9, stroke) {
 function chrome(doc, tag) {
   const W = doc.page.width, H = doc.page.height;
   doc.page.margins.bottom = 0;
-  // header
+  // header — logo left, section tag centred, company right
   logo(doc, M - 6, 22, 66);
-  eyebrow(doc, tag || 'Techno-Commercial Proposal', W - M - 240, 40, C.mute);
-  doc.font('ui').fontSize(8).fillColor(C.faint)
-     .text('ARRAYS INGENIERIA PVT. LTD.', W - M - 240, 52, { width: 240, align: 'right' });
+  doc.font('uiSB').fontSize(9).fillColor(C.mute)
+     .text(String(tag || 'Techno-Commercial Proposal').toUpperCase(), 0, 45, { width: W, align: 'center', characterSpacing: 2.6 });
+  doc.font('ui').fontSize(7.5).fillColor(C.faint)
+     .text('ARRAYS INGENIERIA', W - M - 160, 47, { width: 160, align: 'right' });
   doc.moveTo(M, 84).lineTo(W - M, 84).lineWidth(0.8).strokeColor(C.line).stroke();
-  doc.rect(M, 84, 46, 2).fill(C.gold);
+  doc.rect(W / 2 - 23, 84, 46, 2).fill(C.gold);
   // footer strip (full-bleed emerald)
   const fy = H - 30;
   doc.rect(0, fy, W, 30).fill(C.emerD);
@@ -249,7 +250,7 @@ function inrShort(n) {
 
 // derive a financial model from whatever the questionnaire gave us
 function model(data) {
-  const kwp = num(data.capacity_kwp || data.system_kwp || data.capacity, 0) || 100;
+  const kwp = num(data.capacity_kwp || data.system_kwp || data.capacity_kw || data.capacity, 0) || 100;
   const tariff = num(data.tariff, 0) || 8.5;
   const yieldPerKwp = 1500;                       // kWh/kWp/yr (India avg)
   const gen1 = kwp * yieldPerKwp;                 // year-1 units
@@ -290,74 +291,119 @@ function coverPage(doc, data) {
   doc.rect(0, 0, W, 4).fill(C.gold);
   // logo (original colour) top-left
   logo(doc, M - 10, 34, 104, false);
-  doc.font('uiSB').fontSize(9.5).fillColor(C.goldB)
-     .text('EX-SERVICEMEN LED  ·  ISO 9001 · 14001 · 45001  ·  SINCE 2018', M, 150, { characterSpacing: 1.6 });
+  // credential pill — lighter panel for contrast on the photo
+  const tc = 'EX-SERVICEMEN LED   ·   ISO 9001 · 14001 · 45001   ·   SINCE 2018';
+  doc.font('uiSB').fontSize(8.5);
+  const tcW = doc.widthOfString(tc, { characterSpacing: 1.4 }) + 34;
+  doc.save().roundedRect(M, 150, tcW, 24, 12).fillOpacity(0.16).fill('#ffffff').restore();
+  doc.save().roundedRect(M, 150, tcW, 24, 12).lineWidth(0.8).strokeOpacity(0.5).strokeColor(C.goldB).stroke().restore();
+  doc.font('uiSB').fontSize(8.5).fillColor('#ffffff').text(tc, M + 17, 158, { characterSpacing: 1.4, lineBreak: false });
 
   // title block on the dark lower band
-  let y = ph - 6;
-  eyebrow(doc, 'Techno-Commercial Proposal', M, y, C.goldB); y += 16;
+  const seg = titleCaseCover(data.project_type);
+  const grid = titleCaseCover(data.grid_type);
+  const kicker = [seg, grid].filter(Boolean).join(' · ') || 'Solar Power';
+  let y = ph - 20;
+  eyebrow(doc, kicker + ' Proposal', M, y, C.goldB); y += 16;
   doc.font('H').fontSize(52).fillColor('#ffffff')
      .text('Solar Power Plant', M, y, { width: W - 2 * M });
   doc.font('H').fontSize(52).fillColor('#ffffff')
      .text('for a Brighter Nation', M, doc.y - 6, { width: W - 2 * M });
   y = doc.y + 12;
   triTick(doc, M, y, 90); y += 18;
-  doc.font('bodyI').fontSize(13.5).fillColor('#dcf3e7')
-     .text('Engineered with military precision by Arrays Ingenieria.', M, y, { width: W * 0.72 });
-
-  // client / meta card bottom-right
-  const cw = 250, cx = W - M - cw, cy = H - 150;
-  panel(doc, cx, cy, cw, 108, '#ffffff', 10);
-  doc.rect(cx, cy, 4, 108).fill(C.gold);
-  const kv = (lbl, val, yy) => {
-    doc.font('ui').fontSize(7.5).fillColor(C.mute).text(String(lbl).toUpperCase(), cx + 18, yy, { characterSpacing: 1.5 });
-    doc.font('uiSB').fontSize(11).fillColor(C.ink).text(V(val), cx + 18, yy + 10, { width: cw - 34 });
-  };
   const m = model(data);
-  kv('Prepared For', data.client_name || data.customer_name || 'Valued Client', cy + 14);
-  kv('Proposed Capacity', (m.kwp ? m.kwp + ' kWp' : '—') + (data.grid_type ? '  ·  ' + data.grid_type : ''), cy + 44);
-  kv('Reference / Date', (V(data.quote_number, 'PROPOSAL')) + '   ·   ' +
-     new Date(data.date || Date.now()).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }), cy + 74);
+  const addr = addressLines(data);
+  const cw = 262, cx = W - M - cw;
+  doc.font('bodyI').fontSize(13).fillColor('#dcf3e7')
+     .text('Engineered with military precision by Arrays Ingenieria.', M, y, { width: cx - M - 24 });
+
+  // client / meta card bottom-right (height adjusts to the address)
+  const rowsMeta = [];
+  if (seg || grid) rowsMeta.push(['System', [seg, grid].filter(Boolean).join('  ·  ')]);
+  rowsMeta.push(['Prepared For', data.client_name || data.customer_name || 'Valued Client']);
+  if (addr.length) rowsMeta.push(['Address', addr]);           // array => multi-line
+  rowsMeta.push(['Proposed Capacity', m.kwp ? m.kwp + ' kWp' : '—']);
+  rowsMeta.push(['Reference', V(data.quote_number, 'PROPOSAL')]);
+  rowsMeta.push(['Date', new Date(data.issue_date || data.date || Date.now()).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })]);
+  // measure height
+  let mh = 14;
+  const rowH = (r) => (Array.isArray(r[1]) ? 14 + r[1].length * 11 : 30);
+  rowsMeta.forEach((r) => { mh += rowH(r); });
+  const cy = H - 30 - mh - 18;
+  panel(doc, cx, cy, cw, mh, '#ffffff', 10);
+  doc.rect(cx, cy, 4, mh).fill(C.gold);
+  let yy = cy + 14;
+  rowsMeta.forEach((r) => {
+    doc.font('ui').fontSize(7).fillColor(C.mute).text(String(r[0]).toUpperCase(), cx + 18, yy, { characterSpacing: 1.4 });
+    if (Array.isArray(r[1])) {
+      doc.font('uiSB').fontSize(9).fillColor(C.ink);
+      r[1].forEach((ln, i) => doc.text(ln, cx + 18, yy + 10 + i * 11, { width: cw - 34 }));
+    } else {
+      doc.font('uiSB').fontSize(10.5).fillColor(C.ink).text(V(r[1]), cx + 18, yy + 9, { width: cw - 34 });
+    }
+    yy += rowH(r);
+  });
+}
+
+// Title-case a segment/grid value for the cover (handles hyphens).
+function titleCaseCover(s) {
+  if (!s) return '';
+  return String(s).replace(/[-_]/g, '-').replace(/\b\w/g, (m) => m.toUpperCase());
+}
+
+// Build up to 5 address lines from whatever the questionnaire provided.
+function addressLines(data) {
+  const raw = data.client_address || data.address || data.site_address || '';
+  let lines = [];
+  if (raw) lines = String(raw).split(/\n|,\s*/).map((s) => s.trim()).filter(Boolean);
+  else {
+    lines = [data.site_name, data.location, [data.city, data.state].filter(Boolean).join(', '), data.pincode]
+      .filter(Boolean).map(String);
+  }
+  return lines.slice(0, 5);
 }
 
 // =============================================================================
 //  PAGE 2 — CONTENTS
 // =============================================================================
-function tocPage(doc) {
+function tocPage(doc, extras = []) {
   chrome(doc, 'Contents');
-  heading(doc, 'Inside This Proposal', 'Contents');
-  const items = [
-    ['01', 'Confidentiality & Conditions', 'The terms under which this proposal is shared'],
-    ['02', 'From the Leadership', 'A message from our veteran leadership'],
-    ['03', 'About Arrays Ingenieria', 'Where engineering meets resilience'],
-    ['04', 'The Veteran Advantage', 'Why India’s leaders choose us'],
-    ['05', 'End-to-End Capabilities', 'Our full-spectrum solar EPC services'],
-    ['06', 'Industries We Serve', 'Tailored solar for every sector'],
-    ['07', 'Trusted by India’s Leaders', 'Clients & landmark projects'],
-    ['08', 'Track Record', 'A portfolio delivered pan-India'],
-    ['09', 'Client Voices', 'In the words of those we’ve served'],
-    ['10', 'Recognition & Media', 'Honoured from the nation’s highest offices'],
-    ['11', 'Understanding Your Project', 'Your requirement, engineered'],
-    ['12', 'How Solar Works', 'From sunlight to savings'],
-    ['13', 'Net Metering Explained', 'On-grid, off-grid & hybrid'],
-    ['14', 'Execution Methodology', 'Our disciplined delivery process'],
-    ['15', 'Savings & ROI Analysis', 'The numbers behind your investment'],
-    ['16', 'Quality, Safety & Warranty', 'Triple-ISO systems, Tier-1 hardware'],
-    ['17', 'Your Questions, Answered', 'Frequently asked questions'],
+  heading(doc, 'Inside This Document', 'Contents');
+  const base = [
+    ['Confidentiality & Conditions', 'The terms under which this document is shared'],
+    ['From the Leadership', 'A personal message from our veteran leadership'],
+    ['About Arrays Ingenieria', 'Where engineering meets resilience'],
+    ['The Veteran Advantage', 'Why India’s leaders choose us'],
+    ['End-to-End Capabilities', 'Our full-spectrum solar EPC services'],
+    ['Industries We Serve', 'Tailored solar for every sector'],
+    ['Trusted by India’s Leaders', 'Clients & landmark projects'],
+    ['Track Record', 'A portfolio delivered pan-India'],
+    ['Client Voices', 'In the words of those we’ve served'],
+    ['Recognition & Media', 'Honoured from the nation’s highest offices'],
+    ['Understanding Your Project', 'Your requirement, engineered'],
+    ['How Solar Works', 'From sunlight to savings'],
+    ['Net Metering Explained', 'On-grid, off-grid & hybrid'],
+    ['Execution Methodology', 'Our disciplined delivery process'],
+    ['Savings & ROI Analysis', 'The numbers behind your investment'],
+    ['Quality, Safety & Warranty', 'Triple-ISO systems, Tier-1 hardware'],
+    ['Your Questions, Answered', 'Frequently asked questions'],
   ];
+  // append the extra documents actually included in this download
+  const items = base.concat(extras.map((e) => [e.label, e.sub]))
+    .map((it, i) => [String(i + 1).padStart(2, '0'), it[0], it[1]]);
   const colW = (doc.page.width - 2 * M - 24) / 2;
   const startY = doc.y + 4;
-  const rowH = 60;
   const half = Math.ceil(items.length / 2);
+  const rowH = Math.min(60, Math.floor((770 - startY) / half));
   items.forEach((it, i) => {
     const col = i < half ? 0 : 1;
     const row = col === 0 ? i : i - half;
     const x = M + col * (colW + 24);
     const y = startY + row * rowH;
-    doc.font('H').fontSize(22).fillColor(C.mint2).text(it[0], x, y - 2, { lineBreak: false });
+    doc.font('uiB').fontSize(20).fillColor(C.mint2).text(it[0], x, y - 1, { lineBreak: false });
     doc.font('uiSB').fontSize(10.5).fillColor(C.ink).text(it[1], x + 40, y, { width: colW - 40 });
     doc.font('body').fontSize(9).fillColor(C.mute).text(it[2], x + 40, y + 15, { width: colW - 40 });
-    doc.moveTo(x + 40, y + 40).lineTo(x + colW, y + 40).lineWidth(0.6).strokeColor(C.line).stroke();
+    doc.moveTo(x + 40, y + rowH - 20).lineTo(x + colW, y + rowH - 20).lineWidth(0.6).strokeColor(C.line).stroke();
   });
 }
 
@@ -381,21 +427,21 @@ function confidentialityPage(doc) {
     y = para(doc, p, M + 20, y, w - 20, { size: 10.4, lineGap: 3.6 }) + 12;
   });
   // signature-of-good-faith strip
-  const by = 676;
-  panel(doc, M, by, w, 66, C.mint, 9);
-  doc.rect(M, by, 4, 66).fill(C.emer);
-  doc.font('uiSB').fontSize(8.5).fillColor(C.emer).text('PREPARED IN GOOD FAITH', M + 20, by + 14, { characterSpacing: 1.4 });
+  const by = 672, bh = 82;
+  panel(doc, M, by, w, bh, C.mint, 9);
+  doc.rect(M, by, 4, bh).fill(C.emer);
+  doc.font('uiSB').fontSize(8.5).fillColor(C.emer).text('PREPARED IN GOOD FAITH', M + 22, by + 16, { characterSpacing: 1.4 });
   doc.font('body').fontSize(10).fillColor(C.body)
      .text('Every figure and commitment in this document reflects our military-grade standard of accuracy and accountability. We would be privileged to walk you through any part of it in person.',
-           M + 20, by + 28, { width: w - 200 });
+           M + 22, by + 32, { width: w - 44 });
   doc.font('bodyI').fontSize(11).fillColor(C.ink)
-     .text('Arrays Ingenieria Pvt. Ltd.', M + w - 180, by + 26, { width: 160, align: 'right' });
+     .text('— Arrays Ingenieria Pvt. Ltd.', M + 22, by + bh - 20, { width: w - 44, align: 'right' });
 }
 
 // =============================================================================
 //  PAGE 4 — LEADERSHIP LETTER
 // =============================================================================
-function leadershipPage(doc) {
+function leadershipPage(doc, data = {}) {
   chrome(doc, 'Leadership');
   const W = doc.page.width, w = W - 2 * M;
   // chancery flourish heading (the single script use)
@@ -409,28 +455,40 @@ function leadershipPage(doc) {
   drawImg(doc, press('ceo-president'), colX, y, colW, 208, 8);
   doc.font('bodyI').fontSize(8).fillColor(C.mute)
      .text('Honoured by the Hon’ble President of India', colX, y + 216, { width: colW, align: 'center' });
-  // identity card
+  // identity card — name AND medals in gold
   const idY = y + 236;
   panel(doc, colX, idY, colW, 92, C.mint, 9, C.line);
   doc.rect(colX, idY, colW, 3).fill(C.gold);
   doc.font('HB').fontSize(15.5).fillColor(C.gold).text('Lt. Gen. A.R. Prasad', colX + 14, idY + 14, { width: colW - 28 });
   doc.font('HB').fontSize(15.5).fillColor(C.gold).text('(Retd)', colX + 14, doc.y - 2, { width: colW - 28 });
-  doc.font('uiSB').fontSize(7.8).fillColor(C.emer).text('AVSM · VSM · ADC · Ph.D', colX + 14, idY + 56, { width: colW - 28, characterSpacing: 0.4 });
+  doc.font('uiSB').fontSize(8).fillColor(C.goldB).text('AVSM · VSM · ADC · Ph.D', colX + 14, idY + 56, { width: colW - 28, characterSpacing: 0.4 });
   doc.font('ui').fontSize(7.8).fillColor(C.mute).text('Chief Executive Officer', colX + 14, idY + 68, { width: colW - 28 });
 
-  // letter body (left)
+  // letter body (left) — personalised opening
   const bw = colX - M - 26;
-  doc.font('bodyI').fontSize(13).fillColor(C.emer).text('Respected Client,', M, y);
+  const name = data.client_name || data.customer_name || data.client_full_name;
+  const kwp = num(data.capacity_kw || data.capacity_kwp || data.capacity, 0);
+  const seg = titleCaseCover(data.project_type);
+  const grid = titleCaseCover(data.grid_type);
+  const loc = data.location || data.site_name || data.city;
+  doc.font('bodyI').fontSize(13).fillColor(C.emer).text(name ? `Dear ${name},` : 'Respected Client,', M, y);
   y = doc.y + 8;
+  // personalised first paragraph built from the questionnaire data
+  const sysWords = [grid, seg].filter(Boolean).join(' ');
+  let p1 = `Thank you for the opportunity to earn your trust. It is a privilege to place our engineering — and our discipline — at the service of ${name || 'your organisation'}`;
+  if (kwp) p1 += `, and to design the ${kwp} kWp ${sysWords || 'grid-connected solar'} power plant`;
+  else p1 += ', and to design the solar power plant';
+  if (loc) p1 += ` proposed at ${loc}`;
+  p1 += '. For us, every project of this kind is not merely a contract — it is a national mission carried forward by soldiers who have spent their lives in service of this country.';
   const letter = [
-    'Thank you for the opportunity to earn your trust. At Arrays Ingenieria, solar is more than a business — it is a national mission carried forward by soldiers who have spent their lives in service of this country.',
+    p1,
     'We founded this company in 2018 on a simple conviction: that the discipline, precision and accountability of the armed forces are exactly what India’s clean-energy transition demands. Every plant we build — from a rooftop on a factory shed to the 300 MW SECI solar park — is delivered with that same zero-compromise standard.',
-    'This proposal is our commitment to you in writing. Within it you will find not only competitive economics, but the engineering rigour, the quality systems and the long-term partnership that have earned us the trust of Tata Power, Tata Steel, Tata Motors, Bharat Petroleum and many more.',
+    'This document is our commitment to you in writing. Within it you will find not only competitive economics, but the engineering rigour, the quality systems and the long-term partnership that have earned us the trust of Tata Power, Tata Steel, Tata Motors, Bharat Petroleum and many more.',
     'We would be honoured to power your future.',
   ];
-  letter.forEach((p) => { y = para(doc, p, M, y, bw, { size: 11.5, lineGap: 4.2 }) + 9; });
-  doc.font('script').fontSize(26).fillColor(C.gold).text('A.R. Prasad', M, y + 4);
-  doc.font('uiSB').fontSize(8.5).fillColor(C.gold).text('LT. GEN. A.R. PRASAD (RETD)', M, doc.y + 3, { characterSpacing: 0.6 });
+  letter.forEach((p) => { y = para(doc, p, M, y, bw, { size: 11, lineGap: 3.9 }) + 8; });
+  doc.font('script').fontSize(26).fillColor(C.gold).text('A.R. Prasad', M, y + 2);
+  doc.font('uiSB').fontSize(8.5).fillColor(C.gold).text('LT. GEN. A.R. PRASAD (RETD) · AVSM · VSM · ADC · Ph.D', M, doc.y + 3, { characterSpacing: 0.4 });
   doc.font('ui').fontSize(8).fillColor(C.mute).text('Chief Executive Officer — Arrays Ingenieria Pvt. Ltd.', M, doc.y + 1);
 
   // emerald pull-quote band, anchored below the taller of the two columns
@@ -507,7 +565,7 @@ function statBand(doc, x, y, w, stats) {
   stats.forEach((s, i) => {
     const cx = x + i * cw;
     if (i) doc.moveTo(cx, y + 14).lineTo(cx, y + h - 14).lineWidth(0.6).strokeColor('#2f7a60').stroke();
-    doc.font('H').fontSize(23).fillColor('#ffffff').text(s[0], cx, y + 13, { width: cw, align: 'center' });
+    doc.font('uiB').fontSize(20).fillColor('#ffffff').text(s[0], cx, y + 15, { width: cw, align: 'center' });
     doc.font('ui').fontSize(7.6).fillColor('#bfe7d6').text(String(s[1]).toUpperCase(), cx, y + 44, { width: cw, align: 'center', characterSpacing: 1 });
   });
 }
@@ -530,22 +588,25 @@ function whyPage(doc) {
     ['tools', 'In-House Engineering', 'Feasibility, geo-technical survey, design, piling, civil and electrical — a single accountable team, start to finish.'],
     ['clock', 'On-Time, Every Time', 'Military logistics translated into renewable delivery: 100% on-time commissioning across our portfolio.'],
   ];
-  const cw = (w - 2 * 16) / 3, ch = 150;
+  const cw = (w - 2 * 16) / 3, ch = 158;
   const y0 = y;
   cards.forEach((c, i) => {
     const col = i % 3, row = Math.floor(i / 3);
-    const x = M + col * (cw + 16), yy = y0 + row * (ch + 18);
+    const x = M + col * (cw + 16), yy = y0 + row * (ch + 16);
     panel(doc, x, yy, cw, ch, C.paper, 9, C.line);
     doc.rect(x, yy, cw, 3).fill(i % 2 ? C.emer : C.gold);
     iconChip(doc, c[0], x + 18, yy + 20, 36, C.mint2, C.emer);
-    doc.font('H').fontSize(16).fillColor(C.ink).text(c[1], x + 18, yy + 64);
-    doc.font('body').fontSize(9.2).fillColor(C.body).text(c[2], x + 18, yy + 86, { width: cw - 36, lineGap: 2.6 });
+    doc.font('H').fontSize(15.5).fillColor(C.ink).text(c[1], x + 18, yy + 62, { width: cw - 36, height: 20 });
+    doc.font('body').fontSize(8.9).fillColor(C.body).text(c[2], x + 18, yy + 84, { width: cw - 36, lineGap: 2.2 });
   });
-  y = y0 + 2 * (ch + 18) + 10;
+  y = y0 + 2 * (ch + 16) + 12;
 
-  // performance metrics strip
+  // performance metrics strip — flawless track record
   eyebrow(doc, 'Performance You Can Measure', M, y, C.gold); y += 18;
-  statBand(doc, M, y, w, [['100%', 'On-Time'], ['100%', 'Safety Compliance'], ['98%', 'Quality Rating'], ['95%', 'Repeat & Referral'], ['100%', 'Client Satisfaction']]);
+  statBand(doc, M, y, w, [['100%', 'On-Time'], ['100%', 'Safety Compliance'], ['100%', 'Quality Assurance'], ['100%', 'Statutory Compliance'], ['100%', 'Client Satisfaction']]);
+  y += 66 + 8;
+  doc.font('bodyI').fontSize(7.8).fillColor(C.mute)
+     .text('Figures reflect our delivered track record under normal operating conditions. Outcomes on any given project may vary with weather, site conditions, grid availability and other force-majeure factors beyond our reasonable control.', M, y, { width: w, lineGap: 1.5 });
 }
 
 // =============================================================================
@@ -565,17 +626,17 @@ function servicesPage(doc) {
     ['shield', 'Civil & Fencing', 'Boundary walls, chain-link fencing, cable trenches and site infrastructure.'],
     ['clock', 'O&M & Support', 'Preventive & corrective maintenance, module cleaning, monitoring and rapid fault resolution.'],
   ];
-  const cw = (w - 2 * 16) / 3, ch = 142;
+  const cw = (w - 2 * 16) / 3, ch = 150;
   const y0 = y;
   svc.forEach((s, i) => {
     const col = i % 3, row = Math.floor(i / 3);
-    const x = M + col * (cw + 16), yy = y0 + row * (ch + 18);
+    const x = M + col * (cw + 16), yy = y0 + row * (ch + 16);
     panel(doc, x, yy, cw, ch, C.mint, 9, C.line);
     iconChip(doc, s[0], x + 18, yy + 20, 38, C.paper, C.emer);
-    doc.font('H').fontSize(17).fillColor(C.ink).text(s[1], x + 18, yy + 66);
-    doc.font('body').fontSize(9.2).fillColor(C.body).text(s[2], x + 18, yy + 88, { width: cw - 36, lineGap: 2.6 });
+    doc.font('H').fontSize(16.5).fillColor(C.ink).text(s[1], x + 18, yy + 66, { width: cw - 36, height: 20 });
+    doc.font('body').fontSize(8.9).fillColor(C.body).text(s[2], x + 18, yy + 88, { width: cw - 36, lineGap: 2.2 });
   });
-  y = y0 + 2 * (ch + 18) + 8;
+  y = y0 + 2 * (ch + 16) + 10;
   // photo strip with captions
   const iw = (w - 2 * 12) / 3;
   const caps = [['proj-seci', 'SECI · Piling'], ['proj-tml', 'Tata Motors · EPC'], ['proj-earthing', 'Earthing & Safety']];
@@ -751,14 +812,16 @@ function recognitionPage(doc) {
     [press('ceo-rajnath'), 'Raksha Mantri Rajnath Singh', 'Honouring our ex-servicemen'],
     [press('ceo-defcom'), 'Keynote at DEFCOM India', 'Addressing the defence community'],
   ];
-  const cw = (w - 3 * 14) / 4, ih = 122, y0 = y;
+  // landscape cells (shorter than the source) so wide two-person shots crop
+  // top/bottom instead of cutting people off the sides
+  const cw = (w - 3 * 14) / 4, ih = 90, y0 = y;
   items.forEach((it, i) => {
     const x = M + i * (cw + 14);
     drawImg(doc, it[0], x, y0, cw, ih, 8);
     doc.font('uiSB').fontSize(8.6).fillColor(C.ink).text(it[1], x, y0 + ih + 8, { width: cw, height: 24 });
     doc.font('body').fontSize(8).fillColor(C.mute).text(it[2], x, y0 + ih + 32, { width: cw, lineGap: 1.5 });
   });
-  y = y0 + ih + 62;
+  y = y0 + ih + 60;
 
   // TV / national-media band
   panel(doc, M, y, w, 74, C.mint, 9, C.line);
@@ -801,19 +864,20 @@ function understandPage(doc, data) {
   let y = doc.y + 2;
 
   // snapshot table (2 cols of key/value)
+  const tc = (v) => (v ? titleCaseCover(v) : v);
   const rows = [
     ['Client', data.client_name || data.customer_name],
     ['Site / Location', data.location || data.site || data.city],
     ['State / DISCOM', [V(data.state, ''), V(data.discom, '')].filter(Boolean).join(' · ') || null],
-    ['Segment', data.project_type],
-    ['Installation', data.install_type],
-    ['Grid Type', data.grid_type],
+    ['Segment', tc(data.project_type)],
+    ['Installation', tc(data.install_type)],
+    ['Grid Type', tc(data.grid_type)],
     ['Proposed Capacity', m.kwp ? m.kwp + ' kWp' : null],
     ['Est. Monthly Bill', data.monthly_bill ? inr(num(data.monthly_bill)) : null],
     ['Module / Inverter', [V(data.module_brand, ''), V(data.inverter_brand, '')].filter(Boolean).join(' · ') || null],
-    ['Structure', data.structure_type],
-    ['Net Metering', data.net_metering],
-    ['Battery Backup', data.battery],
+    ['Structure', tc(data.structure_type)],
+    ['Net Metering', tc(data.net_metering)],
+    ['Battery Backup', tc(data.battery)],
   ];
   const cw = (w - 18) / 2, rh = 38;
   rows.forEach((r, ci) => {
@@ -826,28 +890,43 @@ function understandPage(doc, data) {
   });
   y += Math.ceil(rows.length / 2) * rh + 16;
 
-  // customised narrative
+  // customised narrative — personalised to segment, grid type and battery
   const seg = String(data.project_type || '').toLowerCase();
   const inst = String(data.install_type || '').toLowerCase();
+  const gt = String(data.grid_type || '').toLowerCase();
+  const batt = String(data.battery || '').toLowerCase();
+  const hasBattery = /yes|hybrid|off|batt|backup/.test(batt) || gt.includes('off') || gt.includes('hybrid');
+  const kwpTxt = m.kwp ? `${m.kwp} kWp` : 'right-sized';
+  // 1) segment sentence
   let narr;
   if (seg.includes('resid'))
-    narr = 'For your home, we will right-size a rooftop system to your sanctioned load and daytime consumption, maximising self-consumption and net-metering export. As a residential consumer you are eligible for the PM Surya Ghar subsidy, shortening your payback further while delivering decades of near-free daytime power.';
+    narr = `For your home, we will right-size a ${kwpTxt} rooftop system to your sanctioned load and daytime consumption. As a residential consumer you are also eligible for the PM Surya Ghar subsidy, shortening your payback further.`;
   else if (seg.includes('indust') || seg.includes('factory'))
-    narr = 'For your industrial load, we engineer for maximum generation against your daytime demand — cutting the most expensive commercial tariff units first. You benefit from accelerated depreciation and a rapid 3–5 year payback, while our O&M keeps the plant at peak yield for its full 25-year life.';
+    narr = `For your industrial load, we engineer this ${kwpTxt} plant for maximum generation against your daytime demand — cutting the most expensive tariff units first, with accelerated depreciation and a rapid 3–5 year payback.`;
   else if (seg.includes('comm'))
-    narr = 'For your commercial premises, we design to slash the operating-hour tariff that hurts your bottom line, converting unused roof or land into a clean-power asset. Accelerated depreciation and low O&M make the economics compelling from year one.';
+    narr = `For your commercial premises, this ${kwpTxt} system is designed to slash your operating-hour tariff, converting unused roof or land into a clean-power asset with compelling economics from year one.`;
   else if (seg.includes('gov') || seg.includes('psu'))
-    narr = 'For your institutional / PSU requirement, we deliver exactly to tender specification — with the statutory compliance, documentation and quality systems that public projects demand, backed by our SECI and Tata Power EPC track record.';
+    narr = `For your institutional / PSU requirement, we deliver this ${kwpTxt} plant exactly to tender specification, backed by our SECI and Tata Power EPC track record.`;
   else
-    narr = 'We begin with a feasibility study and geo-technical survey of your site, then engineer a system sized precisely to your load and available roof or land. Every design decision is made to maximise lifetime generation, safety and return — and delivered with the discipline that defines Ingenieria.';
-  const nh = 120;
+    narr = `We begin with a feasibility study and geo-technical survey, then engineer this ${kwpTxt} system precisely to your load and available roof or land — for maximum lifetime generation, safety and return.`;
+  // 2) grid-type sentence
+  if (gt.includes('off'))
+    narr += ' As an off-grid system, battery storage delivers full energy autonomy — powering you day and night, independent of the utility.';
+  else if (gt.includes('hybrid'))
+    narr += ' As a hybrid system, you export surplus for net-metering credit and still keep critical loads running through outages on battery backup.';
+  else
+    narr += ' As an on-grid system, surplus daytime generation is exported to the grid and a bi-directional net meter credits every unit — no batteries required.';
+  if (hasBattery && !gt.includes('off') && !gt.includes('hybrid'))
+    narr += ' Battery backup is included for your critical loads.';
+
+  const nh = 134;
   panel(doc, M, y, w, nh, C.cream, 9);
   doc.rect(M, y, 4, nh).fill(C.gold);
   iconChip(doc, inst.includes('ground') ? 'grid' : 'home', M + 18, y + 18, 38, C.paper, C.gold);
   doc.font('H').fontSize(18).fillColor(C.ink).text('Engineered for Your Requirement', M + 68, y + 22);
-  doc.font('body').fontSize(10).fillColor(C.body).text(narr, M + 68, y + 48, { width: w - 88, lineGap: 3 });
-  y += nh + 16;
-  drawImg(doc, photo(inst.includes('ground') ? 'proj-seci' : 'proj-rooftop-pano'), M, y, w, 132, 9);
+  doc.font('body').fontSize(9.8).fillColor(C.body).text(narr, M + 68, y + 46, { width: w - 88, lineGap: 2.8 });
+  y += nh + 14;
+  drawImg(doc, photo(inst.includes('ground') ? 'proj-seci' : 'proj-rooftop-pano'), M, y, w, 120, 9);
 }
 
 // =============================================================================
@@ -979,20 +1058,20 @@ function executionPage(doc) {
     ['tools', 'Procurement', 'Tier-1 modules, smart inverters and BIS-grade balance-of-system — sourced & inspected.'],
     ['bolt', 'Piling & Civil', 'Hydraulic pile-driving, foundations, mounting structures, fencing & cable trenches.'],
     ['panel', 'Installation & Wiring', 'Module mounting, DC/AC wiring, earthing, LT/HT works and safety systems.'],
-    ['sun', 'Testing & Commissioning', 'Grid synchronisation, DISCOM liaison, net-meter installation & handover with O&M.'],
+    ['sun', 'Commissioning', 'Testing, grid synchronisation, DISCOM liaison, net-meter installation & handover with O&M.'],
   ];
-  const cw = (w - 2 * 16) / 3, ch = 134, y0 = y;
+  const cw = (w - 2 * 16) / 3, ch = 150, y0 = y;
   steps.forEach((s, i) => {
     const col = i % 3, row = Math.floor(i / 3);
-    const x = M + col * (cw + 16), yy = y0 + row * (ch + 18);
+    const x = M + col * (cw + 16), yy = y0 + row * (ch + 16);
     panel(doc, x, yy, cw, ch, C.paper, 9, C.line);
     doc.circle(x + 28, yy + 28, 17).fill(C.emer);
     doc.font('uiB').fontSize(12).fillColor('#fff').text(String(i + 1), x + 21, yy + 21, { width: 14, align: 'center' });
     icon(doc, s[0], x + cw - 24, yy + 26, 10, C.gold);
-    doc.font('H').fontSize(15.5).fillColor(C.ink).text(s[1], x + 18, yy + 54, { width: cw - 36 });
-    doc.font('body').fontSize(8.8).fillColor(C.body).text(s[2], x + 18, yy + 76, { width: cw - 36, lineGap: 2.4 });
+    doc.font('uiSB').fontSize(11).fillColor(C.ink).text(s[1], x + 18, yy + 56, { width: cw - 36, height: 26 });
+    doc.font('body').fontSize(8.8).fillColor(C.body).text(s[2], x + 18, yy + 92, { width: cw - 36, lineGap: 2.4 });
   });
-  y = y0 + 2 * (ch + 18) + 10;
+  y = y0 + 2 * (ch + 16) + 10;
   const iw = (w - 2 * 12) / 3;
   const ps = [['proj-piling-extra', 'Hydraulic Piling'], ['proj-earthing', 'Earthing & Safety'], ['proj-inauguration', 'Commissioning']];
   ps.forEach((p, i) => {
@@ -1025,7 +1104,7 @@ function savingsPage(doc, data) {
     panel(doc, x, y, cw, ch, C.mint, 9, C.line);
     doc.rect(x, y, 4, ch).fill(k[2]);
     doc.font('ui').fontSize(7.5).fillColor(C.mute).text(String(k[0]).toUpperCase(), x + 14, y + 11, { characterSpacing: 0.6 });
-    doc.font('H').fontSize(19).fillColor(C.ink).text(k[1], x + 14, y + 24);
+    doc.font('uiB').fontSize(15).fillColor(C.ink).text(k[1], x + 14, y + 27);
   });
   y += ch + 18;
 
@@ -1056,8 +1135,8 @@ function savingsPage(doc, data) {
     const px = plotX + (plotW * (yr - 1) / 24);
     doc.font('ui').fontSize(7).fillColor(C.mute).text('Yr ' + yr, px - 10, plotY + plotH + 8, { width: 20, align: 'center' });
   });
-  doc.font('ui').fontSize(7.5).fillColor(C.emer).text('25-YEAR TOTAL', plotX + plotW - 120, plotY + 6, { width: 116, align: 'right' });
-  doc.font('H').fontSize(20).fillColor(C.emer).text(inrShort(m.cum25), plotX + plotW - 120, plotY + 16, { width: 116, align: 'right' });
+  doc.font('ui').fontSize(7.5).fillColor(C.emer).text('25-YEAR TOTAL', plotX + plotW - 130, plotY + 6, { width: 126, align: 'right' });
+  doc.font('uiB').fontSize(17).fillColor(C.emer).text(inrShort(m.cum25), plotX + plotW - 130, plotY + 18, { width: 126, align: 'right' });
   y = chY + chH + 16;
 
   // environmental impact strip
@@ -1070,8 +1149,8 @@ function savingsPage(doc, data) {
   env.forEach((e, i) => {
     const cx = M + i * ew;
     if (i) doc.moveTo(cx, y + 12).lineTo(cx, y + 46).lineWidth(0.6).strokeColor('#2f7a60').stroke();
-    doc.font('H').fontSize(19).fillColor('#fff').text(e[0], cx, y + 10, { width: ew, align: 'center' });
-    doc.font('ui').fontSize(7.3).fillColor('#bfe7d6').text(String(e[1]).toUpperCase(), cx, y + 37, { width: ew, align: 'center', characterSpacing: 0.5 });
+    doc.font('uiB').fontSize(16).fillColor('#fff').text(e[0], cx, y + 13, { width: ew, align: 'center' });
+    doc.font('ui').fontSize(7.3).fillColor('#bfe7d6').text(String(e[1]).toUpperCase(), cx, y + 38, { width: ew, align: 'center', characterSpacing: 0.5 });
   });
   y += 58 + 8;
   doc.font('bodyI').fontSize(8).fillColor(C.mute)
@@ -1191,16 +1270,27 @@ function thankYouPage(doc) {
 // =============================================================================
 //  ORCHESTRATION
 // =============================================================================
-export function renderProposal(doc, data = {}) {
-  registerFonts(doc);
-  doc.page.margins.bottom = 0;
-  doc.on('pageAdded', () => { doc.page.margins.bottom = 0; });
+// Descriptions for the documents that may follow the proposal, for the
+// dynamic Contents page.
+const EXTRA_TOC = {
+  quotation: { label: 'Commercial Quotation', sub: 'Priced offer, payment terms & conditions' },
+  boq: { label: 'Bill of Quantities', sub: 'Component-level scope & pricing' },
+  scope: { label: 'Scope of Work', sub: 'Responsibilities — ours and yours' },
+};
+
+export function renderProposal(doc, data = {}, opts = {}) {
+  if (!opts.shared) {
+    registerFonts(doc);
+    doc.page.margins.bottom = 0;
+    doc.on('pageAdded', () => { doc.page.margins.bottom = 0; });
+  }
+  const extras = (opts.parts || []).map((p) => EXTRA_TOC[p]).filter(Boolean);
 
   const pages = [
     (d) => coverPage(d, data),
-    (d) => tocPage(d),
+    (d) => tocPage(d, extras),
     (d) => confidentialityPage(d),
-    (d) => leadershipPage(d),
+    (d) => leadershipPage(d, data),
     (d) => aboutPage(d),
     (d) => whyPage(d),
     (d) => servicesPage(d),
@@ -1216,9 +1306,17 @@ export function renderProposal(doc, data = {}) {
     (d) => savingsPage(d, data),
     (d) => qualityPage(d),
     (d) => faqPage(d),
-    (d) => thankYouPage(d),
   ];
+  if (!opts.skipThankYou) pages.push((d) => thankYouPage(d));
   pages.forEach((fn, i) => { if (i) doc.addPage(); fn(doc); });
+  return doc;
+}
+
+// The closing Thank-You page, exported so a combined package can place it last.
+// Renders on the current page — the caller adds a fresh page first.
+export function renderThankYou(doc, data = {}, opts = {}) {
+  if (!opts.shared) { registerFonts(doc); doc.page.margins.bottom = 0; doc.on('pageAdded', () => { doc.page.margins.bottom = 0; }); }
+  thankYouPage(doc);
   return doc;
 }
 
@@ -1228,7 +1326,7 @@ export { registerFonts };
 export const KIT = {
   C, M, chrome, bleed, heading, para, panel, eyebrow, triTick,
   iconChip, icon, drawImg, logo, statBand,
-  photo, press, cert, news, V, num, inr, inrShort, model,
+  photo, press, cert, news, V, num, inr, inrShort, model, addressLines, titleCaseCover,
 };
 
-export default { renderProposal, PROPOSAL_BRAND, KIT, registerFonts };
+export default { renderProposal, renderThankYou, PROPOSAL_BRAND, KIT, registerFonts };

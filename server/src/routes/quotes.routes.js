@@ -6,8 +6,8 @@ import { denyWriteForAdmin } from '../middleware/rbac.js';
 import { audit } from '../middleware/audit.js';
 import { calculateQuote } from '../services/quote-calc.service.js';
 import { streamQuotePdf } from '../services/quote-pdf.service.js';
-import { renderProposal, PROPOSAL_BRAND, registerFonts } from '../services/proposal-pdf.service.js';
-import { renderQuotation, renderBOQ } from '../services/quote-docs.service.js';
+import { renderProposal, renderThankYou, PROPOSAL_BRAND, registerFonts } from '../services/proposal-pdf.service.js';
+import { renderQuotation, renderBOQ, renderScope } from '../services/quote-docs.service.js';
 import PDFDocument from 'pdfkit';
 import * as branding from '../services/gst/brandingService.js';
 import * as branchSvc from '../services/gst/branchService.js';
@@ -228,13 +228,8 @@ router.get(
 //  Any combination can be downloaded as ONE PDF via /document.pdf?parts=...
 //  All render in the same Arrays Ingenieria identity.
 // -----------------------------------------------------------------------------
-const DOC_RENDERERS = {
-  proposal: (doc, data) => renderProposal(doc, data),
-  quotation: (doc, data) => renderQuotation(doc, data, { shared: true }),
-  boq: (doc, data) => renderBOQ(doc, data, { shared: true }),
-};
-const DOC_ORDER = ['proposal', 'quotation', 'boq'];
-const DOC_LABEL = { proposal: 'Proposal', quotation: 'Quotation', boq: 'BOQ' };
+const DOC_ORDER = ['proposal', 'quotation', 'boq', 'scope'];
+const DOC_LABEL = { proposal: 'Proposal', quotation: 'Quotation', boq: 'BOQ', scope: 'Scope' };
 
 async function loadQuoteData(id) {
   const { rows } = await query(
@@ -257,19 +252,30 @@ function streamParts(res, q, data, parts) {
   res.setHeader('Content-Type', 'application/pdf');
   res.setHeader('Content-Disposition', `attachment; filename="${name}_${ref}.pdf"`);
   doc.pipe(res);
-  parts.forEach((p, i) => { if (i) doc.addPage(); DOC_RENDERERS[p](doc, data); });
+
+  const hasProposal = parts.includes('proposal');
+  const extras = parts.filter((p) => p !== 'proposal');   // listed in the Contents page
+  parts.forEach((p, i) => {
+    if (i) doc.addPage();
+    if (p === 'proposal') renderProposal(doc, data, { shared: true, parts: extras, skipThankYou: true });
+    else if (p === 'quotation') renderQuotation(doc, data, { shared: true });
+    else if (p === 'boq') renderBOQ(doc, data, { shared: true });
+    else if (p === 'scope') renderScope(doc, data, { shared: true });
+  });
+  // the Thank-You page always closes the pack when the proposal is included
+  if (hasProposal) { doc.addPage(); renderThankYou(doc, data, { shared: true }); }
   doc.end();
 }
 
-// Combined / selectable download. ?parts=proposal,quotation,boq (any subset).
+// Combined / selectable download. ?parts=proposal,quotation,boq,scope (any subset).
 router.get(
   '/:id/document.pdf',
   asyncHandler(async (req, res) => {
     const { q, data } = await loadQuoteData(req.params.id);
-    const requested = String(req.query.parts || 'proposal,quotation,boq')
+    const requested = String(req.query.parts || 'proposal,quotation,boq,scope')
       .toLowerCase().split(',').map((s) => s.trim());
     const parts = DOC_ORDER.filter((p) => requested.includes(p));
-    if (!parts.length) throw new ApiError(400, 'No valid parts requested (proposal, quotation, boq)');
+    if (!parts.length) throw new ApiError(400, 'No valid parts requested (proposal, quotation, boq, scope)');
     streamParts(res, q, data, parts);
   })
 );
@@ -286,6 +292,10 @@ router.get('/:id/quotation.pdf', asyncHandler(async (req, res) => {
 router.get('/:id/boq.pdf', asyncHandler(async (req, res) => {
   const { q, data } = await loadQuoteData(req.params.id);
   streamParts(res, q, data, ['boq']);
+}));
+router.get('/:id/scope.pdf', asyncHandler(async (req, res) => {
+  const { q, data } = await loadQuoteData(req.params.id);
+  streamParts(res, q, data, ['scope']);
 }));
 
 router.delete(
