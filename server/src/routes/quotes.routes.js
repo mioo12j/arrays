@@ -81,16 +81,16 @@ router.post(
     const { rows } = await query(
       `INSERT INTO quotes
         (quote_number, version, status, client_id, client_name, project_id, project_name, site_name, project_type,
-         capacity_kw, location, issue_date, valid_until, inputs, line_items,
+         capacity_kw, location, issue_date, valid_until, inputs, proposal_inputs, line_items,
          subtotal, contingency_amount, margin_amount, taxable_amount, gst_amount, total_amount,
          cost_amount, per_watt, subsidy_amount, net_cost, annual_savings, payback_years, lifetime_savings,
          notes, terms, exclusions, branch_id, created_by)
-       VALUES ($1,1,COALESCE($2,'draft')::quote_status,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,
-               $15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32)
+       VALUES ($1,1,COALESCE($2,'draft')::quote_status,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,
+               $16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33)
        RETURNING *`,
       [number, b.status, b.client_id || null, b.client_name, b.project_id || null, b.project_name, b.site_name, calc.project_type,
        calc.capacity_kw, b.location, b.issue_date || todayIST(), b.valid_until || null,
-       JSON.stringify(calc.inputs), JSON.stringify(calc.line_items),
+       JSON.stringify(calc.inputs), JSON.stringify(b.proposal_inputs || {}), JSON.stringify(calc.line_items),
        calc.subtotal, calc.contingency_amount, calc.margin_amount, calc.taxable_amount, calc.gst_amount,
        calc.total_amount, calc.cost_amount, calc.per_watt, calc.subsidy_amount, calc.net_cost,
        calc.annual_savings, calc.payback_years, calc.lifetime_savings,
@@ -119,14 +119,16 @@ router.patch(
          notes=COALESCE($18,notes), terms=COALESCE($19,terms), exclusions=COALESCE($20,exclusions),
          project_name=COALESCE($21,project_name), site_name=COALESCE($22,site_name),
          subsidy_amount=$23, net_cost=$24, annual_savings=$25, payback_years=$26, lifetime_savings=$27,
-         branch_id=COALESCE($28,branch_id)
+         branch_id=COALESCE($28,branch_id),
+         proposal_inputs=COALESCE($30::jsonb, proposal_inputs)
        WHERE id=$29 RETURNING *`,
       [b.status, b.client_id, b.client_name, calc.project_type, calc.capacity_kw, b.location, b.valid_until,
        JSON.stringify(calc.inputs), JSON.stringify(calc.line_items), calc.subtotal, calc.contingency_amount,
        calc.margin_amount, calc.taxable_amount, calc.gst_amount, calc.total_amount, calc.cost_amount,
        calc.per_watt, b.notes, b.terms, b.exclusions, b.project_name, b.site_name,
        calc.subsidy_amount, calc.net_cost, calc.annual_savings, calc.payback_years, calc.lifetime_savings,
-       b.branch_id || null, req.params.id]
+       b.branch_id || null, req.params.id,
+       b.proposal_inputs ? JSON.stringify(b.proposal_inputs) : null]
     );
     await audit(req, { action: 'update', entity: 'quotes', entityId: req.params.id, changes: b });
     res.json(rows[0]);

@@ -578,6 +578,8 @@ CREATE TABLE IF NOT EXISTS quotes (
   valid_until    DATE,
   -- calculator inputs + computed breakdown stored as JSONB for full traceability
   inputs         JSONB NOT NULL DEFAULT '{}',
+  -- project-info questionnaire that drives the premium proposal / quotation PDFs
+  proposal_inputs JSONB NOT NULL DEFAULT '{}',
   line_items     JSONB NOT NULL DEFAULT '[]',
   subtotal       NUMERIC(16,2) NOT NULL DEFAULT 0,
   contingency_amount NUMERIC(16,2) NOT NULL DEFAULT 0,

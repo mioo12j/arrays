@@ -59,6 +59,8 @@ export default function QuoteBuilder() {
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [showRates, setShowRates] = useState(false);
+  const [showProposal, setShowProposal] = useState(false);
+  const [pinputs, setPinputs] = useState({});
   const [docMenu, setDocMenu] = useState(false);
   const debounceRef = useRef(null);
   const docMenuRef = useRef(null);
@@ -85,6 +87,7 @@ export default function QuoteBuilder() {
         branch_id: data.branch_id || '',
       });
       setRates(data.inputs || {});
+      setPinputs(data.proposal_inputs || {});
     }).catch((e) => toast.error(apiError(e))).finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
@@ -106,6 +109,7 @@ export default function QuoteBuilder() {
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
   const setRate = (k) => (e) => setRates((r) => ({ ...r, [k]: e.target.value === '' ? undefined : Number(e.target.value) }));
+  const setPI = (k) => (e) => setPinputs((p) => ({ ...p, [k]: e.target.value === '' ? undefined : e.target.value }));
 
   const payload = () => ({
     ...rates,
@@ -116,6 +120,7 @@ export default function QuoteBuilder() {
     location: form.location, valid_until: form.valid_until || null,
     notes: form.notes, terms: form.terms, exclusions: form.exclusions,
     branch_id: form.branch_id || null,
+    proposal_inputs: { ...pinputs, project_type: form.project_type, capacity_kw: Number(form.capacity_kw || 0) },
   });
 
   const save = async () => {
@@ -247,6 +252,67 @@ export default function QuoteBuilder() {
               <Field label="Location"><input className="input" value={form.location} onChange={set('location')} /></Field>
               <Field label="Valid Until"><input className="input" type="date" value={form.valid_until} onChange={set('valid_until')} /></Field>
             </div>
+          </Card>
+
+          <Card>
+            <button className="flex w-full items-center justify-between font-semibold text-slate-800 dark:text-slate-100" onClick={() => setShowProposal((s) => !s)}>
+              <span>Proposal Details <span className="ml-1 text-xs font-normal text-slate-400">— customises the proposal PDF</span></span>
+              <ChevronDown size={18} className={`transition ${showProposal ? 'rotate-180' : ''}`} />
+            </button>
+            {showProposal && (
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                <Field label="Installation">
+                  <select className="input" value={pinputs.install_type || ''} onChange={setPI('install_type')}>
+                    <option value="">—</option><option>Rooftop</option><option>Ground-Mount</option><option>Solar Carport</option>
+                  </select>
+                </Field>
+                <Field label="Grid Type">
+                  <select className="input" value={pinputs.grid_type || ''} onChange={setPI('grid_type')}>
+                    <option value="">—</option><option>On-Grid</option><option>Off-Grid</option><option>Hybrid</option>
+                  </select>
+                </Field>
+                <Field label="Sector">
+                  <select className="input" value={pinputs.sector || ''} onChange={setPI('sector')}>
+                    <option value="">—</option><option>Private</option><option>Government</option><option>PSU</option>
+                  </select>
+                </Field>
+                <Field label="Battery Backup">
+                  <select className="input" value={pinputs.battery || ''} onChange={setPI('battery')}>
+                    <option value="">—</option><option>No</option><option>Yes</option>
+                  </select>
+                </Field>
+                <Field label="Net Metering">
+                  <select className="input" value={pinputs.net_metering || ''} onChange={setPI('net_metering')}>
+                    <option value="">—</option><option>Yes</option><option>No</option>
+                  </select>
+                </Field>
+                <Field label="Monitoring">
+                  <select className="input" value={pinputs.monitoring || ''} onChange={setPI('monitoring')}>
+                    <option value="">—</option><option>Yes</option><option>No</option>
+                  </select>
+                </Field>
+                <Field label="State"><input className="input" value={pinputs.state || ''} onChange={setPI('state')} /></Field>
+                <Field label="DISCOM"><input className="input" value={pinputs.discom || ''} onChange={setPI('discom')} placeholder="e.g. WBSEDCL" /></Field>
+                <Field label="Monthly Bill (₹)"><input className="input" type="number" value={pinputs.monthly_bill || ''} onChange={setPI('monthly_bill')} /></Field>
+                <Field label="Structure Type"><input className="input" value={pinputs.structure_type || ''} onChange={setPI('structure_type')} placeholder="e.g. GI, elevated" /></Field>
+                <Field label="Module Brand"><input className="input" value={pinputs.module_brand || ''} onChange={setPI('module_brand')} /></Field>
+                <Field label="Inverter Brand"><input className="input" value={pinputs.inverter_brand || ''} onChange={setPI('inverter_brand')} /></Field>
+                <Field label="Warranty"><input className="input" value={pinputs.warranty || ''} onChange={setPI('warranty')} placeholder="e.g. 25 yr modules" /></Field>
+                <Field label="AMC / O&M"><input className="input" value={pinputs.amc || ''} onChange={setPI('amc')} placeholder="e.g. 5 yr" /></Field>
+                <Field label="Timeline"><input className="input" value={pinputs.timeline || ''} onChange={setPI('timeline')} placeholder="e.g. 6–8 weeks" /></Field>
+                <Field label="Subsidy"><input className="input" value={pinputs.subsidy || ''} onChange={setPI('subsidy')} placeholder="e.g. PM Surya Ghar" /></Field>
+                <div className="col-span-2">
+                  <Field label="Client Address (up to 5 lines)">
+                    <textarea className="input min-h-[64px]" rows={3} value={pinputs.client_address || ''} onChange={setPI('client_address')} placeholder="One line per address line" />
+                  </Field>
+                </div>
+                <div className="col-span-2">
+                  <Field label="Special Requirements">
+                    <textarea className="input min-h-[48px]" rows={2} value={pinputs.special_requirements || ''} onChange={setPI('special_requirements')} />
+                  </Field>
+                </div>
+              </div>
+            )}
           </Card>
 
           <Card>

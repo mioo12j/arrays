@@ -299,22 +299,23 @@ function coverPage(doc, data) {
   doc.save().roundedRect(M, 150, tcW, 24, 12).lineWidth(0.8).strokeOpacity(0.5).strokeColor(C.goldB).stroke().restore();
   doc.font('uiSB').fontSize(8.5).fillColor('#ffffff').text(tc, M + 17, 158, { characterSpacing: 1.4, lineBreak: false });
 
-  // title block on the dark lower band
+  // title block on the dark lower band — raised so the meta card never
+  // collides with the headline, even with a 5-line address
   const seg = titleCaseCover(data.project_type);
   const grid = titleCaseCover(data.grid_type);
   const kicker = [seg, grid].filter(Boolean).join(' · ') || 'Solar Power';
-  let y = ph - 20;
+  let y = ph - 54;
   eyebrow(doc, kicker + ' Proposal', M, y, C.goldB); y += 16;
-  doc.font('H').fontSize(52).fillColor('#ffffff')
+  doc.font('H').fontSize(46).fillColor('#ffffff')
      .text('Solar Power Plant', M, y, { width: W - 2 * M });
-  doc.font('H').fontSize(52).fillColor('#ffffff')
+  doc.font('H').fontSize(46).fillColor('#ffffff')
      .text('for a Brighter Nation', M, doc.y - 6, { width: W - 2 * M });
-  y = doc.y + 12;
-  triTick(doc, M, y, 90); y += 18;
+  y = doc.y + 10;
+  triTick(doc, M, y, 90); y += 16;
   const m = model(data);
   const addr = addressLines(data);
   const cw = 262, cx = W - M - cw;
-  doc.font('bodyI').fontSize(13).fillColor('#dcf3e7')
+  doc.font('bodyI').fontSize(12.5).fillColor('#dcf3e7')
      .text('Engineered with military precision by Arrays Ingenieria.', M, y, { width: cx - M - 24 });
 
   // client / meta card bottom-right (height adjusts to the address)
@@ -326,20 +327,20 @@ function coverPage(doc, data) {
   rowsMeta.push(['Reference', V(data.quote_number, 'PROPOSAL')]);
   rowsMeta.push(['Date', new Date(data.issue_date || data.date || Date.now()).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })]);
   // measure height
-  let mh = 14;
-  const rowH = (r) => (Array.isArray(r[1]) ? 14 + r[1].length * 11 : 30);
+  let mh = 12;
+  const rowH = (r) => (Array.isArray(r[1]) ? 12 + r[1].length * 10 : 26);
   rowsMeta.forEach((r) => { mh += rowH(r); });
-  const cy = H - 30 - mh - 18;
+  const cy = H - 30 - mh - 16;
   panel(doc, cx, cy, cw, mh, '#ffffff', 10);
   doc.rect(cx, cy, 4, mh).fill(C.gold);
   let yy = cy + 14;
   rowsMeta.forEach((r) => {
-    doc.font('ui').fontSize(7).fillColor(C.mute).text(String(r[0]).toUpperCase(), cx + 18, yy, { characterSpacing: 1.4 });
+    doc.font('ui').fontSize(6.8).fillColor(C.mute).text(String(r[0]).toUpperCase(), cx + 18, yy, { characterSpacing: 1.3 });
     if (Array.isArray(r[1])) {
-      doc.font('uiSB').fontSize(9).fillColor(C.ink);
-      r[1].forEach((ln, i) => doc.text(ln, cx + 18, yy + 10 + i * 11, { width: cw - 34 }));
+      doc.font('uiSB').fontSize(8.5).fillColor(C.ink);
+      r[1].forEach((ln, i) => doc.text(ln, cx + 18, yy + 9 + i * 10, { width: cw - 34 }));
     } else {
-      doc.font('uiSB').fontSize(10.5).fillColor(C.ink).text(V(r[1]), cx + 18, yy + 9, { width: cw - 34 });
+      doc.font('uiSB').fontSize(10).fillColor(C.ink).text(V(r[1]), cx + 18, yy + 9, { width: cw - 34 });
     }
     yy += rowH(r);
   });
