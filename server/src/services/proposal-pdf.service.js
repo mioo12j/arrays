@@ -1222,4 +1222,13 @@ export function renderProposal(doc, data = {}) {
   return doc;
 }
 
-export default { renderProposal, PROPOSAL_BRAND };
+// Shared brand toolkit so the Quotation & BOQ documents render in the exact
+// same identity (fonts, palette, chrome, helpers) as the proposal book.
+export { registerFonts };
+export const KIT = {
+  C, M, chrome, bleed, heading, para, panel, eyebrow, triTick,
+  iconChip, icon, drawImg, logo, statBand,
+  photo, press, cert, news, V, num, inr, inrShort, model,
+};
+
+export default { renderProposal, PROPOSAL_BRAND, KIT, registerFonts };

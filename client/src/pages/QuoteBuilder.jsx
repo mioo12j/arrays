@@ -59,7 +59,17 @@ export default function QuoteBuilder() {
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [showRates, setShowRates] = useState(false);
+  const [docMenu, setDocMenu] = useState(false);
   const debounceRef = useRef(null);
+  const docMenuRef = useRef(null);
+
+  // close the documents menu on outside click
+  useEffect(() => {
+    if (!docMenu) return;
+    const onClick = (e) => { if (docMenuRef.current && !docMenuRef.current.contains(e.target)) setDocMenu(false); };
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
+  }, [docMenu]);
 
   // Load existing quote
   useEffect(() => {
@@ -156,7 +166,33 @@ export default function QuoteBuilder() {
           </button>
           {!isNew && (
             <>
-              <button className="btn-ghost" onClick={() => download(`/quotes/${id}/pdf`)}><FileDown size={16} /> PDF</button>
+              <div className="relative" ref={docMenuRef}>
+                <button className="btn-ghost" onClick={() => setDocMenu((v) => !v)}>
+                  <FileDown size={16} /> Documents <ChevronDown size={14} />
+                </button>
+                {docMenu && (
+                  <div className="absolute right-0 z-20 mt-1 w-64 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-800">
+                    {[
+                      { label: 'Complete Package', sub: 'Proposal + Quotation + BOQ', path: `/quotes/${id}/document.pdf`, star: true },
+                      { label: 'Proposal (Brochure)', sub: 'Premium sales document', path: `/quotes/${id}/proposal.pdf` },
+                      { label: 'Commercial Quotation', sub: 'Priced offer & terms', path: `/quotes/${id}/quotation.pdf` },
+                      { label: 'Bill of Quantities', sub: 'Component-level breakdown', path: `/quotes/${id}/boq.pdf` },
+                      { label: 'Proposal + Quotation', sub: 'Sales + pricing', path: `/quotes/${id}/document.pdf?parts=proposal,quotation` },
+                      { label: 'Quotation + BOQ', sub: 'Pricing + breakdown', path: `/quotes/${id}/document.pdf?parts=quotation,boq` },
+                      { label: 'Technical Quote (legacy)', sub: 'Original annexure PDF', path: `/quotes/${id}/pdf` },
+                    ].map((d) => (
+                      <button
+                        key={d.label}
+                        onClick={() => { setDocMenu(false); download(d.path); }}
+                        className={`flex w-full flex-col items-start gap-0.5 px-4 py-2.5 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 ${d.star ? 'bg-brand-50/60 dark:bg-brand-900/20' : ''}`}
+                      >
+                        <span className={`text-sm font-semibold ${d.star ? 'text-brand-700 dark:text-brand-300' : 'text-slate-800 dark:text-slate-100'}`}>{d.label}</span>
+                        <span className="text-xs text-slate-500">{d.sub}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
               {quote?.status !== 'approved' && quote?.status !== 'converted' && (
                 <button className="btn-ghost" onClick={() => doAction('approve', 'Quote approved')}><CheckCircle2 size={16} /> Approve</button>
               )}

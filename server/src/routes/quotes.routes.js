@@ -6,7 +6,8 @@ import { denyWriteForAdmin } from '../middleware/rbac.js';
 import { audit } from '../middleware/audit.js';
 import { calculateQuote } from '../services/quote-calc.service.js';
 import { streamQuotePdf } from '../services/quote-pdf.service.js';
-import { renderProposal, PROPOSAL_BRAND } from '../services/proposal-pdf.service.js';
+import { renderProposal, PROPOSAL_BRAND, registerFonts } from '../services/proposal-pdf.service.js';
+import { renderQuotation, renderBOQ } from '../services/quote-docs.service.js';
 import PDFDocument from 'pdfkit';
 import * as branding from '../services/gst/brandingService.js';
 import * as branchSvc from '../services/gst/branchService.js';
@@ -222,23 +223,70 @@ router.get(
   })
 );
 
-// Premium proposal book (brochure-style sales document). Reads the quote's
-// project-info fields (proposal_inputs) to customise every page.
+// -----------------------------------------------------------------------------
+//  Branded document suite — Proposal (brochure), Commercial Quotation, and BOQ.
+//  Any combination can be downloaded as ONE PDF via /document.pdf?parts=...
+//  All render in the same Arrays Ingenieria identity.
+// -----------------------------------------------------------------------------
+const DOC_RENDERERS = {
+  proposal: (doc, data) => renderProposal(doc, data),
+  quotation: (doc, data) => renderQuotation(doc, data, { shared: true }),
+  boq: (doc, data) => renderBOQ(doc, data, { shared: true }),
+};
+const DOC_ORDER = ['proposal', 'quotation', 'boq'];
+const DOC_LABEL = { proposal: 'Proposal', quotation: 'Quotation', boq: 'BOQ' };
+
+async function loadQuoteData(id) {
+  const { rows } = await query(
+    'SELECT q.*, c.name AS client_full_name FROM quotes q LEFT JOIN clients c ON c.id=q.client_id WHERE q.id=$1',
+    [id]
+  );
+  if (!rows[0]) throw new ApiError(404, 'Quote not found');
+  const q = rows[0];
+  return { q, data: { ...q, ...(q.proposal_inputs || {}), client_name: q.client_name || q.client_full_name } };
+}
+
+function streamParts(res, q, data, parts) {
+  const doc = new PDFDocument({ size: 'A4', margin: PROPOSAL_BRAND.M, bufferPages: true });
+  registerFonts(doc);
+  doc.page.margins.bottom = 0;
+  doc.on('pageAdded', () => { doc.page.margins.bottom = 0; });
+  const ref = String(q.quote_number || 'quote').replace(/[^A-Za-z0-9._-]+/g, '_');
+  const name = parts.length === DOC_ORDER.length ? 'Complete-Package'
+    : parts.map((p) => DOC_LABEL[p]).join('-');
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `attachment; filename="${name}_${ref}.pdf"`);
+  doc.pipe(res);
+  parts.forEach((p, i) => { if (i) doc.addPage(); DOC_RENDERERS[p](doc, data); });
+  doc.end();
+}
+
+// Combined / selectable download. ?parts=proposal,quotation,boq (any subset).
 router.get(
-  '/:id/proposal.pdf',
+  '/:id/document.pdf',
   asyncHandler(async (req, res) => {
-    const { rows } = await query('SELECT q.*, c.name AS client_full_name FROM quotes q LEFT JOIN clients c ON c.id=q.client_id WHERE q.id=$1', [req.params.id]);
-    if (!rows[0]) throw new ApiError(404, 'Quote not found');
-    const q = rows[0];
-    const data = { ...q, ...(q.proposal_inputs || {}), client_name: q.client_name || q.client_full_name };
-    const doc = new PDFDocument({ size: 'A4', margin: PROPOSAL_BRAND.M, bufferPages: true });
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="Proposal_${String(q.quote_number || 'quote').replace(/[^A-Za-z0-9._-]+/g, '_')}.pdf"`);
-    doc.pipe(res);
-    renderProposal(doc, data);
-    doc.end();
+    const { q, data } = await loadQuoteData(req.params.id);
+    const requested = String(req.query.parts || 'proposal,quotation,boq')
+      .toLowerCase().split(',').map((s) => s.trim());
+    const parts = DOC_ORDER.filter((p) => requested.includes(p));
+    if (!parts.length) throw new ApiError(400, 'No valid parts requested (proposal, quotation, boq)');
+    streamParts(res, q, data, parts);
   })
 );
+
+// Convenience single-document routes.
+router.get('/:id/proposal.pdf', asyncHandler(async (req, res) => {
+  const { q, data } = await loadQuoteData(req.params.id);
+  streamParts(res, q, data, ['proposal']);
+}));
+router.get('/:id/quotation.pdf', asyncHandler(async (req, res) => {
+  const { q, data } = await loadQuoteData(req.params.id);
+  streamParts(res, q, data, ['quotation']);
+}));
+router.get('/:id/boq.pdf', asyncHandler(async (req, res) => {
+  const { q, data } = await loadQuoteData(req.params.id);
+  streamParts(res, q, data, ['boq']);
+}));
 
 router.delete(
   '/:id',
