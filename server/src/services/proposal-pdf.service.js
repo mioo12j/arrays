@@ -62,6 +62,7 @@ function registerFonts(doc) {
 const photo  = (n) => path.join(BRAND, 'photos', n + '.jpg');
 const press  = (n) => path.join(BRAND, 'press',  n + '.jpg');
 const cert   = (n) => path.join(BRAND, 'certs',  n + '.jpg');
+const news   = (n) => path.join(BRAND, 'news',   n + '.jpg');
 const LOGO_C = path.join(BRAND, 'logo-color.png');
 const LOGO_W = path.join(BRAND, 'logo-white.png');
 const has = (f) => { try { return fs.existsSync(f); } catch { return false; } };
@@ -287,23 +288,22 @@ function coverPage(doc, data) {
   doc.rect(0, 0, W, ph).fill(g);
   // thin gold rule top
   doc.rect(0, 0, W, 4).fill(C.gold);
-  // logo (white) top-left
-  logo(doc, M - 8, 40, 92, true);
-  doc.font('uiSB').fontSize(9).fillColor('#cfe9df')
-     .text('VETERAN-LED  ·  ISO 9001 · 14001 · 45001  ·  SINCE 2018', M, 150, { characterSpacing: 1.5 });
+  // logo (original colour) top-left
+  logo(doc, M - 10, 34, 104, false);
+  doc.font('uiSB').fontSize(9.5).fillColor(C.goldB)
+     .text('EX-SERVICEMEN LED  ·  ISO 9001 · 14001 · 45001  ·  SINCE 2018', M, 150, { characterSpacing: 1.6 });
 
   // title block on the dark lower band
   let y = ph - 6;
   eyebrow(doc, 'Techno-Commercial Proposal', M, y, C.goldB); y += 16;
-  doc.font('H').fontSize(50).fillColor('#ffffff')
+  doc.font('H').fontSize(52).fillColor('#ffffff')
      .text('Solar Power Plant', M, y, { width: W - 2 * M });
-  doc.font('H').fontSize(50).fillColor('#ffffff')
+  doc.font('H').fontSize(52).fillColor('#ffffff')
      .text('for a Brighter Nation', M, doc.y - 6, { width: W - 2 * M });
-  y = doc.y + 10;
+  y = doc.y + 12;
   triTick(doc, M, y, 90); y += 18;
   doc.font('bodyI').fontSize(13.5).fillColor('#dcf3e7')
-     .text('Engineered with military precision by Arrays Ingenieria — from a single rooftop to the 300 MW SECI solar park.',
-           M, y, { width: W * 0.72, lineGap: 3 });
+     .text('Engineered with military precision by Arrays Ingenieria.', M, y, { width: W * 0.72 });
 
   // client / meta card bottom-right
   const cw = 250, cx = W - M - cw, cy = H - 150;
@@ -400,21 +400,23 @@ function leadershipPage(doc) {
   const W = doc.page.width, w = W - 2 * M;
   // chancery flourish heading (the single script use)
   eyebrow(doc, 'Section 02', M, doc.y, C.gold);
-  doc.font('script').fontSize(44).fillColor(C.ink).text('From the Leadership', M, doc.y + 10);
+  doc.font('script').fontSize(44).fillColor(C.gold).text('From the Leadership', M, doc.y + 10);
   triTick(doc, M, doc.y + 6, 74);
   let y = doc.y + 22;
 
-  // portrait + president photo column (right)
-  const colX = W - M - 168, colW = 168;
-  drawImg(doc, press('ceo-official'), colX, y, colW, 196, 8);
-  doc.font('uiSB').fontSize(10).fillColor(C.ink).text('Lt. Gen. A.R. Prasad (Retd)', colX, y + 204, { width: colW });
-  doc.font('ui').fontSize(7.6).fillColor(C.mute)
-     .text('AVSM · VSM · ADC · Ph.D', colX, y + 218, { width: colW });
-  doc.font('ui').fontSize(7.6).fillColor(C.mute)
-     .text('Chief Executive Officer', colX, y + 229, { width: colW });
-  drawImg(doc, press('ceo-president'), colX, y + 248, colW, 112, 8);
-  doc.font('bodyI').fontSize(7.8).fillColor(C.mute)
-     .text('Honoured by the President of India', colX, y + 363, { width: colW, align: 'center' });
+  // president photo + identity card (right column)
+  const colX = W - M - 176, colW = 176;
+  drawImg(doc, press('ceo-president'), colX, y, colW, 208, 8);
+  doc.font('bodyI').fontSize(8).fillColor(C.mute)
+     .text('Honoured by the Hon’ble President of India', colX, y + 216, { width: colW, align: 'center' });
+  // identity card
+  const idY = y + 236;
+  panel(doc, colX, idY, colW, 92, C.mint, 9, C.line);
+  doc.rect(colX, idY, colW, 3).fill(C.gold);
+  doc.font('HB').fontSize(15.5).fillColor(C.gold).text('Lt. Gen. A.R. Prasad', colX + 14, idY + 14, { width: colW - 28 });
+  doc.font('HB').fontSize(15.5).fillColor(C.gold).text('(Retd)', colX + 14, doc.y - 2, { width: colW - 28 });
+  doc.font('uiSB').fontSize(7.8).fillColor(C.emer).text('AVSM · VSM · ADC · Ph.D', colX + 14, idY + 56, { width: colW - 28, characterSpacing: 0.4 });
+  doc.font('ui').fontSize(7.8).fillColor(C.mute).text('Chief Executive Officer', colX + 14, idY + 68, { width: colW - 28 });
 
   // letter body (left)
   const bw = colX - M - 26;
@@ -426,17 +428,19 @@ function leadershipPage(doc) {
     'This proposal is our commitment to you in writing. Within it you will find not only competitive economics, but the engineering rigour, the quality systems and the long-term partnership that have earned us the trust of Tata Power, Tata Steel, Tata Motors, Bharat Petroleum and many more.',
     'We would be honoured to power your future.',
   ];
-  letter.forEach((p) => { y = para(doc, p, M, y, bw, { size: 11, lineGap: 3.8 }) + 8; });
-  doc.font('script').fontSize(22).fillColor(C.ink).text('A.R. Prasad', M, y + 2);
-  doc.font('ui').fontSize(8).fillColor(C.mute).text('Lt. Gen. A.R. Prasad (Retd), CEO — Arrays Ingenieria Pvt. Ltd.', M, doc.y + 2);
+  letter.forEach((p) => { y = para(doc, p, M, y, bw, { size: 11.5, lineGap: 4.2 }) + 9; });
+  doc.font('script').fontSize(26).fillColor(C.gold).text('A.R. Prasad', M, y + 4);
+  doc.font('uiSB').fontSize(8.5).fillColor(C.gold).text('LT. GEN. A.R. PRASAD (RETD)', M, doc.y + 3, { characterSpacing: 0.6 });
+  doc.font('ui').fontSize(8).fillColor(C.mute).text('Chief Executive Officer — Arrays Ingenieria Pvt. Ltd.', M, doc.y + 1);
 
-  // emerald pull-quote band at the bottom
-  const bandY = 742, bandH = 52;
+  // emerald pull-quote band, anchored below the taller of the two columns
+  const bandY = Math.max(y + 40, idY + 92 + 24, 700), bandH = 64;
   panel(doc, M, bandY, w, bandH, C.emerD, 9);
-  doc.font('H').fontSize(40).fillColor(C.gold).text('“', M + 12, bandY - 2);
-  doc.font('bodyI').fontSize(12.5).fillColor('#ffffff')
+  doc.rect(M, bandY, 4, bandH).fill(C.gold);
+  doc.font('H').fontSize(46).fillColor(C.gold).text('“', M + 16, bandY + 2);
+  doc.font('bodyI').fontSize(13.5).fillColor('#ffffff')
      .text('Where engineering meets resilience — and every megawatt is a mission accomplished.',
-           M + 44, bandY + 15, { width: w - 70 });
+           M + 52, bandY + 22, { width: w - 80 });
 }
 
 // =============================================================================
@@ -448,36 +452,36 @@ function aboutPage(doc) {
   heading(doc, 'Section 03 · Who We Are', 'Where Engineering Meets Resilience');
   let y = doc.y;
   // intro + photo
-  const pw = 196;
-  drawImg(doc, photo('proj-rooftop-pano'), W - M - pw, y, pw, 118, 8);
+  const pw = 210;
+  drawImg(doc, photo('proj-rooftop-pano'), W - M - pw, y, pw, 168, 8);
   const bw = W - M - pw - 26 - M;
   y = para(doc,
     '"Ingeniería" means engineering in Spanish — a fitting symbol of our commitment to precision and discipline. Founded in 2018 and run entirely by former military personnel, Arrays Ingenieria designs and delivers ground-mount and rooftop solar power plants across India, along with pile foundations, civil works, grid commissioning and long-term O&M.',
-    M, y, bw, { size: 10.6, lineGap: 3.6 });
+    M, y, bw, { size: 10.8, lineGap: 3.8 });
   y = para(doc,
     'From a single rooftop to a 300 MW utility-scale solar park, we approach every project with the same focus on excellence, safety and sustainability — earning the trust of India’s biggest industrial names.',
-    M, y + 8, bw, { size: 10.6, lineGap: 3.6 });
+    M, y + 8, bw, { size: 10.8, lineGap: 3.8 });
 
-  y = Math.max(y, 206) + 14;
+  y = Math.max(y, 175 + 168) + 24;
 
   // mission / vision cards
   const cw = (w - 18) / 2;
-  const cardH = 96;
+  const cardH = 132;
   const mv = [
     ['sun', 'Our Mission', 'To accelerate India’s transition to clean, reliable and affordable energy — delivering projects of uncompromising quality that empower communities and protect the environment for generations.'],
-    ['flag', 'Our Vision', 'To be India’s most trusted, veteran-led renewable-energy partner — recognised nationwide for engineering excellence, safety and integrity, and for the enduring impact of every megawatt.'],
+    ['flag', 'Our Vision', 'To be India’s most trusted, veteran-led renewable-energy partner — recognised nationwide for engineering excellence, safety and integrity, and for the enduring impact of every megawatt online.'],
   ];
   mv.forEach((c, i) => {
     const x = M + i * (cw + 18);
     panel(doc, x, y, cw, cardH, C.mint, 9, C.line);
-    iconChip(doc, c[0], x + 16, y + 16, 30, C.mint2, C.emer);
-    doc.font('H').fontSize(17).fillColor(C.ink).text(c[1], x + 56, y + 18);
-    doc.font('body').fontSize(9.4).fillColor(C.body).text(c[2], x + 16, y + 46, { width: cw - 32, lineGap: 2.6 });
+    iconChip(doc, c[0], x + 16, y + 18, 32, C.mint2, C.emer);
+    doc.font('H').fontSize(18).fillColor(C.ink).text(c[1], x + 58, y + 22);
+    doc.font('body').fontSize(9.8).fillColor(C.body).text(c[2], x + 16, y + 56, { width: cw - 32, lineGap: 3 });
   });
-  y += cardH + 16;
+  y += cardH + 22;
 
   // values row
-  eyebrow(doc, 'Built on Military Values', M, y, C.gold); y += 16;
+  eyebrow(doc, 'Built on Military Values', M, y, C.gold); y += 18;
   const vals = [['shield', 'Discipline', 'Decisive, accountable execution'],
                 ['medal', 'Integrity', 'Transparent, dependable delivery'],
                 ['bolt', 'Quality & Safety', 'Triple-ISO, zero-compromise'],
@@ -485,26 +489,26 @@ function aboutPage(doc) {
   const vw = (w - 3 * 14) / 4;
   vals.forEach((v, i) => {
     const x = M + i * (vw + 14);
-    panel(doc, x, y, vw, 92, C.paper, 9, C.line);
-    iconChip(doc, v[0], x + vw / 2 - 16, y + 14, 32, C.mint2, C.emer);
-    doc.font('uiSB').fontSize(10).fillColor(C.ink).text(v[1], x + 8, y + 52, { width: vw - 16, align: 'center' });
-    doc.font('body').fontSize(8.4).fillColor(C.mute).text(v[2], x + 8, y + 66, { width: vw - 16, align: 'center' });
+    panel(doc, x, y, vw, 120, C.paper, 9, C.line);
+    iconChip(doc, v[0], x + vw / 2 - 19, y + 20, 38, C.mint2, C.emer);
+    doc.font('uiSB').fontSize(11).fillColor(C.ink).text(v[1], x + 8, y + 70, { width: vw - 16, align: 'center' });
+    doc.font('body').fontSize(8.8).fillColor(C.mute).text(v[2], x + 10, y + 88, { width: vw - 20, align: 'center', lineGap: 1.5 });
   });
-  y += 92 + 16;
+  y += 120 + 24;
 
-  // stat band
+  // stat band (anchored near bottom)
   statBand(doc, M, y, w, [['2018', 'Established'], ['50 MW+', 'Engineered'], ['40+', 'Projects'], ['100%', 'Ex-Servicemen Led'], ['3×', 'ISO Certified']]);
 }
 
 function statBand(doc, x, y, w, stats) {
-  const h = 58;
+  const h = 66;
   panel(doc, x, y, w, h, C.emer, 9);
   const cw = w / stats.length;
   stats.forEach((s, i) => {
     const cx = x + i * cw;
-    if (i) doc.moveTo(cx, y + 12).lineTo(cx, y + h - 12).lineWidth(0.6).strokeColor('#2f7a60').stroke();
-    doc.font('H').fontSize(21).fillColor('#ffffff').text(s[0], cx, y + 10, { width: cw, align: 'center' });
-    doc.font('ui').fontSize(7.6).fillColor('#bfe7d6').text(String(s[1]).toUpperCase(), cx, y + 37, { width: cw, align: 'center', characterSpacing: 1 });
+    if (i) doc.moveTo(cx, y + 14).lineTo(cx, y + h - 14).lineWidth(0.6).strokeColor('#2f7a60').stroke();
+    doc.font('H').fontSize(23).fillColor('#ffffff').text(s[0], cx, y + 13, { width: cw, align: 'center' });
+    doc.font('ui').fontSize(7.6).fillColor('#bfe7d6').text(String(s[1]).toUpperCase(), cx, y + 44, { width: cw, align: 'center', characterSpacing: 1 });
   });
 }
 
@@ -526,21 +530,21 @@ function whyPage(doc) {
     ['tools', 'In-House Engineering', 'Feasibility, geo-technical survey, design, piling, civil and electrical — a single accountable team, start to finish.'],
     ['clock', 'On-Time, Every Time', 'Military logistics translated into renewable delivery: 100% on-time commissioning across our portfolio.'],
   ];
-  const cw = (w - 2 * 16) / 3, ch = 118;
+  const cw = (w - 2 * 16) / 3, ch = 150;
   const y0 = y;
   cards.forEach((c, i) => {
     const col = i % 3, row = Math.floor(i / 3);
-    const x = M + col * (cw + 16), yy = y0 + row * (ch + 16);
+    const x = M + col * (cw + 16), yy = y0 + row * (ch + 18);
     panel(doc, x, yy, cw, ch, C.paper, 9, C.line);
     doc.rect(x, yy, cw, 3).fill(i % 2 ? C.emer : C.gold);
-    iconChip(doc, c[0], x + 16, yy + 16, 32, C.mint2, C.emer);
-    doc.font('H').fontSize(15).fillColor(C.ink).text(c[1], x + 16, yy + 54);
-    doc.font('body').fontSize(9).fillColor(C.body).text(c[2], x + 16, yy + 74, { width: cw - 32, lineGap: 2.4 });
+    iconChip(doc, c[0], x + 18, yy + 20, 36, C.mint2, C.emer);
+    doc.font('H').fontSize(16).fillColor(C.ink).text(c[1], x + 18, yy + 64);
+    doc.font('body').fontSize(9.2).fillColor(C.body).text(c[2], x + 18, yy + 86, { width: cw - 36, lineGap: 2.6 });
   });
-  y = y0 + 2 * (ch + 16) + 4;
+  y = y0 + 2 * (ch + 18) + 10;
 
   // performance metrics strip
-  eyebrow(doc, 'Performance You Can Measure', M, y, C.gold); y += 16;
+  eyebrow(doc, 'Performance You Can Measure', M, y, C.gold); y += 18;
   statBand(doc, M, y, w, [['100%', 'On-Time'], ['100%', 'Safety Compliance'], ['98%', 'Quality Rating'], ['95%', 'Repeat & Referral'], ['100%', 'Client Satisfaction']]);
 }
 
@@ -561,20 +565,25 @@ function servicesPage(doc) {
     ['shield', 'Civil & Fencing', 'Boundary walls, chain-link fencing, cable trenches and site infrastructure.'],
     ['clock', 'O&M & Support', 'Preventive & corrective maintenance, module cleaning, monitoring and rapid fault resolution.'],
   ];
-  const cw = (w - 2 * 16) / 3, ch = 116;
+  const cw = (w - 2 * 16) / 3, ch = 142;
   const y0 = y;
   svc.forEach((s, i) => {
     const col = i % 3, row = Math.floor(i / 3);
-    const x = M + col * (cw + 16), yy = y0 + row * (ch + 16);
+    const x = M + col * (cw + 16), yy = y0 + row * (ch + 18);
     panel(doc, x, yy, cw, ch, C.mint, 9, C.line);
-    iconChip(doc, s[0], x + 16, yy + 16, 34, C.paper, C.emer);
-    doc.font('H').fontSize(16).fillColor(C.ink).text(s[1], x + 16, yy + 56);
-    doc.font('body').fontSize(9).fillColor(C.body).text(s[2], x + 16, yy + 76, { width: cw - 32, lineGap: 2.4 });
+    iconChip(doc, s[0], x + 18, yy + 20, 38, C.paper, C.emer);
+    doc.font('H').fontSize(17).fillColor(C.ink).text(s[1], x + 18, yy + 66);
+    doc.font('body').fontSize(9.2).fillColor(C.body).text(s[2], x + 18, yy + 88, { width: cw - 36, lineGap: 2.6 });
   });
-  y = y0 + 2 * (ch + 16) + 6;
-  // photo strip
+  y = y0 + 2 * (ch + 18) + 8;
+  // photo strip with captions
   const iw = (w - 2 * 12) / 3;
-  ['proj-seci', 'proj-tml', 'proj-earthing'].forEach((p, i) => drawImg(doc, photo(p), M + i * (iw + 12), y, iw, 92, 8));
+  const caps = [['proj-seci', 'SECI · Piling'], ['proj-tml', 'Tata Motors · EPC'], ['proj-earthing', 'Earthing & Safety']];
+  caps.forEach((p, i) => {
+    const x = M + i * (iw + 12);
+    drawImg(doc, photo(p[0]), x, y, iw, 132, 8);
+    doc.font('uiSB').fontSize(8.5).fillColor(C.emer).text(p[1].toUpperCase(), x, y + 138, { width: iw, align: 'center', characterSpacing: 0.6 });
+  });
 }
 
 // =============================================================================
@@ -594,20 +603,21 @@ function industriesPage(doc) {
     ['leaf', 'Agriculture & Tea', 'Ground-mount plants for estates & agri-loads — proven across Assam’s tea gardens.'],
     ['flag', 'Government & PSU', 'Utility-scale & PSU projects (SECI, Tata Power EPC) executed exactly to specification.'],
   ];
-  const cw = (w - 16) / 2, ch = 86, y0 = y;
+  const cw = (w - 16) / 2, ch = 104, y0 = y;
   inds.forEach((c, i) => {
     const col = i % 2, row = Math.floor(i / 2);
-    const x = M + col * (cw + 16), yy = y0 + row * (ch + 14);
+    const x = M + col * (cw + 16), yy = y0 + row * (ch + 16);
     panel(doc, x, yy, cw, ch, C.paper, 9, C.line);
-    iconChip(doc, c[0], x + 16, yy + 16, 34, C.mint2, C.emer);
-    doc.font('H').fontSize(16).fillColor(C.ink).text(c[1], x + 60, yy + 18);
-    doc.font('body').fontSize(9).fillColor(C.body).text(c[2], x + 60, yy + 38, { width: cw - 76, lineGap: 2.4 });
+    iconChip(doc, c[0], x + 18, yy + 20, 38, C.mint2, C.emer);
+    doc.font('H').fontSize(17).fillColor(C.ink).text(c[1], x + 66, yy + 22);
+    doc.font('body').fontSize(9.2).fillColor(C.body).text(c[2], x + 66, yy + 44, { width: cw - 84, lineGap: 2.6 });
   });
-  y = y0 + 3 * (ch + 14) + 4;
-  panel(doc, M, y, w, 44, C.cream, 9);
-  doc.font('H').fontSize(24).fillColor(C.gold).text('“', M + 14, y + 2, { lineBreak: false });
-  doc.font('body').fontSize(10).fillColor(C.body)
-     .text('Residential clients benefit from the PM Surya Ghar subsidy; commercial and industrial clients gain from accelerated depreciation and rapid 3–5 year paybacks.', M + 38, y + 15, { width: w - 58 });
+  y = y0 + 3 * (ch + 16) + 10;
+  panel(doc, M, y, w, 58, C.cream, 9);
+  doc.rect(M, y, 4, 58).fill(C.gold);
+  doc.font('H').fontSize(28).fillColor(C.gold).text('“', M + 18, y + 8, { lineBreak: false });
+  doc.font('body').fontSize(10.4).fillColor(C.body)
+     .text('Residential clients benefit from the PM Surya Ghar subsidy; commercial and industrial clients gain from accelerated depreciation and rapid 3–5 year paybacks — solar that funds itself.', M + 46, y + 16, { width: w - 68, lineGap: 3 });
 }
 
 // =============================================================================
@@ -624,28 +634,29 @@ function clientsPage(doc) {
     ['SECI', '300 MW PARK'], ['BHARAT', 'PETROLEUM'], ['SUPER', 'SMELTERS'],
     ['DCM', 'HISAR'], ['JAY SHREE', 'TEA · BIRLA'], ['AMALGAMATED', 'PLANTATIONS'],
   ];
-  const cols = 3, gap = 14, tw = (w - (cols - 1) * gap) / cols, th = 62, y0 = y;
+  const cols = 3, gap = 16, tw = (w - (cols - 1) * gap) / cols, th = 78, y0 = y;
   clients.forEach((c, i) => {
     const col = i % cols, row = Math.floor(i / cols);
     const x = M + col * (tw + gap), yy = y0 + row * (th + gap);
     panel(doc, x, yy, tw, th, C.paper, 8, C.line);
-    doc.font('uiB').fontSize(13).fillColor(C.emer).text(c[0], x, yy + 16, { width: tw, align: 'center', characterSpacing: 0.5 });
-    doc.font('ui').fontSize(7.5).fillColor(C.mute).text(c[1], x, yy + 36, { width: tw, align: 'center', characterSpacing: 1.5 });
+    doc.rect(x, yy, tw, 3).fill(C.gold);
+    doc.font('uiB').fontSize(14).fillColor(C.emer).text(c[0], x, yy + 24, { width: tw, align: 'center', characterSpacing: 0.5 });
+    doc.font('ui').fontSize(7.5).fillColor(C.mute).text(c[1], x, yy + 46, { width: tw, align: 'center', characterSpacing: 1.5 });
   });
-  y = y0 + 3 * (th + gap) + 6;
+  y = y0 + 3 * (th + gap) + 12;
 
   // milestone project: photo + quote
-  const ph = 150;
+  const ph = 176;
   const iw = w * 0.46;
   drawImg(doc, photo('proj-supersmelters'), M, y, iw, ph, 9);
-  const tx = M + iw + 22, twq = w - iw - 22;
-  eyebrow(doc, 'Landmark Project', tx, y + 2, C.gold);
-  doc.font('H').fontSize(19).fillColor(C.ink).text('Super Smelters — 1,980 kWp', tx, y + 16);
-  doc.font('ui').fontSize(8.5).fillColor(C.mute).text('ASANSOL, WEST BENGAL  ·  WITH TATA POWER SOLAR', tx, y + 40, { characterSpacing: 0.8 });
-  doc.font('bodyI').fontSize(11.5).fillColor(C.body)
+  const tx = M + iw + 24, twq = w - iw - 24;
+  eyebrow(doc, 'Landmark Project', tx, y + 4, C.gold);
+  doc.font('H').fontSize(21).fillColor(C.ink).text('Super Smelters — 1,980 kWp', tx, y + 18);
+  doc.font('ui').fontSize(8.5).fillColor(C.mute).text('ASANSOL, WEST BENGAL  ·  WITH TATA POWER SOLAR', tx, y + 44, { characterSpacing: 0.8 });
+  doc.font('bodyI').fontSize(12.5).fillColor(C.body)
      .text('“Technical expertise, professionalism and timely delivery — with thorough inspections and meticulous attention to detail throughout.”',
-           tx, y + 58, { width: twq, lineGap: 3 });
-  doc.font('uiSB').fontSize(9).fillColor(C.emer).text('Inaugurated & featured in Dainik Bhaskar', tx, y + ph - 14);
+           tx, y + 64, { width: twq, lineGap: 3.4 });
+  doc.font('uiSB').fontSize(9).fillColor(C.emer).text('Inaugurated & featured in Dainik Bhaskar', tx, y + ph - 16);
 }
 
 // =============================================================================
@@ -669,26 +680,30 @@ function trackRecordPage(doc) {
     ['Manjushree Tea', 'Ground-Mount', 'Assam', '500 kWp'],
   ];
   const cols = [M, M + 128, M + 300, W - M - 76];
-  panel(doc, M, y, w, 22, C.emer, 5);
+  panel(doc, M, y, w, 26, C.emer, 5);
   doc.font('uiSB').fontSize(8).fillColor('#ffffff');
-  doc.text('CLIENT', cols[0] + 12, y + 7); doc.text('SCOPE', cols[1], y + 7);
-  doc.text('LOCATION', cols[2], y + 7); doc.text('CAPACITY', cols[3], y + 7, { width: 66, align: 'right' });
-  y += 22;
+  doc.text('CLIENT', cols[0] + 12, y + 9); doc.text('SCOPE', cols[1], y + 9);
+  doc.text('LOCATION', cols[2], y + 9); doc.text('CAPACITY', cols[3], y + 9, { width: 66, align: 'right' });
+  y += 26;
   rows.forEach((r, i) => {
-    const rh = 30;
+    const rh = 33;
     if (i % 2) doc.save().rect(M, y, w, rh).fill(C.mint).restore();
-    doc.font('uiSB').fontSize(9.5).fillColor(C.ink).text(r[0], cols[0] + 12, y + 9, { width: 120 });
-    doc.font('body').fontSize(9.5).fillColor(C.body).text(r[1], cols[1], y + 9, { width: 168 });
-    doc.font('body').fontSize(9.5).fillColor(C.mute).text(r[2], cols[2], y + 9, { width: 150 });
-    doc.font('uiB').fontSize(9.5).fillColor(C.emer).text(r[3], cols[3], y + 9, { width: 66, align: 'right' });
+    doc.font('uiSB').fontSize(9.8).fillColor(C.ink).text(r[0], cols[0] + 12, y + 11, { width: 120 });
+    doc.font('body').fontSize(9.8).fillColor(C.body).text(r[1], cols[1], y + 11, { width: 168 });
+    doc.font('body').fontSize(9.8).fillColor(C.mute).text(r[2], cols[2], y + 11, { width: 150 });
+    doc.font('uiB').fontSize(9.8).fillColor(C.emer).text(r[3], cols[3], y + 11, { width: 66, align: 'right' });
     doc.moveTo(M, y + rh).lineTo(W - M, y + rh).lineWidth(0.5).strokeColor(C.line).stroke();
     y += rh;
   });
-  y += 12;
-  // photo strip
+  y += 14;
+  // photo strip with captions
   const iw = (w - 3 * 12) / 4;
-  ['proj-dcm-hisar', 'proj-jayshree', 'proj-manjushree', 'proj-yiapl'].forEach((p, i) =>
-    drawImg(doc, photo(p), M + i * (iw + 12), y, iw, 84, 8));
+  const ps = [['proj-dcm-hisar', 'DCM · 10 MW'], ['proj-jayshree', 'Jayshree · 1 MW'], ['proj-manjushree', 'Manjushree · 500 kWp'], ['proj-yiapl', 'YIAPL · 14.36 MW']];
+  ps.forEach((p, i) => {
+    const x = M + i * (iw + 12);
+    drawImg(doc, photo(p[0]), x, y, iw, 104, 8);
+    doc.font('uiSB').fontSize(7.6).fillColor(C.emer).text(p[1].toUpperCase(), x, y + 110, { width: iw, align: 'center', characterSpacing: 0.4 });
+  });
 }
 
 // =============================================================================
@@ -707,14 +722,14 @@ function testimonialsPage(doc) {
     ['Pile-foundation works were executed to exacting standards and on schedule, even under demanding ground conditions.', 'Tata Power Solar (EPC)', 'SECI · 300 MW', C.sky],
     ['From design to grid synchronisation, every milestone was met with discipline and transparency. The veteran-led team inspires confidence.', 'DCM', 'Hisar · 10 MW', C.gold],
   ];
-  const cw = (w - 16) / 2, ch = 150, y0 = y;
+  const cw = (w - 16) / 2, ch = 166, y0 = y;
   t.forEach((q, i) => {
     const col = i % 2, row = Math.floor(i / 2);
-    const x = M + col * (cw + 16), yy = y0 + row * (ch + 14);
+    const x = M + col * (cw + 16), yy = y0 + row * (ch + 16);
     panel(doc, x, yy, cw, ch, C.paper, 9, C.line);
     doc.rect(x, yy, 4, ch).fill(q[3]);
-    doc.font('H').fontSize(38).fillColor(q[3]).text('“', x + 18, yy + 6);
-    doc.font('bodyI').fontSize(11).fillColor(C.body).text(q[0], x + 20, yy + 44, { width: cw - 40, lineGap: 3.2 });
+    doc.font('H').fontSize(40).fillColor(q[3]).text('“', x + 18, yy + 8);
+    doc.font('bodyI').fontSize(11.5).fillColor(C.body).text(q[0], x + 20, yy + 48, { width: cw - 40, lineGap: 3.6 });
     doc.moveTo(x + 20, yy + ch - 40).lineTo(x + cw - 20, yy + ch - 40).lineWidth(0.6).strokeColor(C.line).stroke();
     doc.font('uiSB').fontSize(10).fillColor(C.ink).text(q[1], x + 20, yy + ch - 32);
     doc.font('ui').fontSize(8).fillColor(C.mute).text(String(q[2]).toUpperCase(), x + 20, yy + ch - 18, { characterSpacing: 0.8 });
@@ -731,35 +746,48 @@ function recognitionPage(doc) {
   para(doc, 'From the nation’s highest offices to leading news channels, our work in renewable energy continues to earn trust and acclaim across India.', M, doc.y, w, { size: 10.6 });
   let y = doc.y + 14;
   const items = [
-    [press('ceo-president'), 'President of India', 'Honoured for distinguished service & leadership'],
-    [press('ceo-modi'), 'PM Shri Narendra Modi', 'A shared vision for a self-reliant, renewable India'],
-    [press('ceo-rajnath'), 'Defence Minister Rajnath Singh', 'Honouring the ex-servicemen behind our mission'],
-    [press('ceo-defcom'), 'Keynote at DEFCOM India', 'Addressing the defence-technology community'],
+    [press('ceo-president'), 'President of India', 'Honoured for distinguished service'],
+    [press('ceo-modi'), 'PM Shri Narendra Modi', 'A shared vision for a renewable India'],
+    [press('ceo-rajnath'), 'Raksha Mantri Rajnath Singh', 'Honouring our ex-servicemen'],
+    [press('ceo-defcom'), 'Keynote at DEFCOM India', 'Addressing the defence community'],
   ];
-  const cw = (w - 3 * 14) / 4, ih = 96, y0 = y;
+  const cw = (w - 3 * 14) / 4, ih = 122, y0 = y;
   items.forEach((it, i) => {
     const x = M + i * (cw + 14);
     drawImg(doc, it[0], x, y0, cw, ih, 8);
-    doc.font('uiSB').fontSize(9).fillColor(C.ink).text(it[1], x, y0 + ih + 8, { width: cw });
-    doc.font('body').fontSize(8.2).fillColor(C.mute).text(it[2], x, y0 + ih + 21, { width: cw, lineGap: 1.5 });
+    doc.font('uiSB').fontSize(8.6).fillColor(C.ink).text(it[1], x, y0 + ih + 8, { width: cw, height: 24 });
+    doc.font('body').fontSize(8).fillColor(C.mute).text(it[2], x, y0 + ih + 32, { width: cw, lineGap: 1.5 });
   });
   y = y0 + ih + 62;
 
-  // TV / press band
-  panel(doc, M, y, w, 96, C.mint, 9, C.line);
+  // TV / national-media band
+  panel(doc, M, y, w, 74, C.mint, 9, C.line);
   eyebrow(doc, 'As Seen on National Media', M + 18, y + 14, C.gold);
-  doc.font('body').fontSize(9.6).fillColor(C.body)
-     .text('Lt. Gen. A.R. Prasad (Retd) is a sought-after voice on national television — bringing strategic insight to the nation’s biggest stories.', M + 18, y + 28, { width: w - 240 });
+  doc.font('body').fontSize(9.4).fillColor(C.body)
+     .text('Lt. Gen. A.R. Prasad (Retd) is a sought-after voice on national television — bringing strategic insight to the nation’s biggest stories.', M + 18, y + 28, { width: w - 250 });
   const chans = ['India Today', 'Aaj Tak', 'India TV'];
   chans.forEach((c, i) => {
-    const cx = M + w - 210 + i * 68;
-    panel(doc, cx, y + 30, 60, 34, C.paper, 6, C.line);
-    doc.font('uiB').fontSize(8.5).fillColor(C.emer).text(c, cx, y + 42, { width: 60, align: 'center' });
+    const cx = M + w - 216 + i * 70;
+    panel(doc, cx, y + 24, 62, 32, C.paper, 6, C.line);
+    doc.font('uiB').fontSize(8.5).fillColor(C.emer).text(c, cx, y + 35, { width: 62, align: 'center' });
   });
-  y += 96 + 14;
-  const iw = (w - 12) / 2;
-  drawImg(doc, press('media-indiatoday'), M, y, iw, 74, 8);
-  drawImg(doc, press('ceo-defcom'), M + iw + 12, y, iw, 74, 8);
+  y += 74 + 18;
+
+  // In the Newspapers
+  eyebrow(doc, 'In the Newspapers', M, y, C.gold); y += 18;
+  const clips = [
+    ['news-bhaskar-tcpl', 'Dainik Bhaskar', '319 kWp rooftop solar for TCPL Greenery Agro (Tata Consumer), Vaishali.'],
+    ['news-supersmelters-inaug', 'Regional Press', '1,980 kWp solar plant inaugurated at Super Smelters, with Tata Power Solar.'],
+    ['news-supersmelters-rooftop', 'Jamuria Edition', '1,980 kWp rooftop solar power plant commissioned at Super Smelters, Asansol.'],
+  ];
+  const nw = (w - 2 * 14) / 3;
+  clips.forEach((c, i) => {
+    const x = M + i * (nw + 14);
+    panel(doc, x, y, nw, 176, C.paper, 9, C.line);
+    drawImg(doc, news(c[0]), x + 8, y + 8, nw - 16, 100, 5);
+    doc.font('uiSB').fontSize(8).fillColor(C.gold).text(c[1].toUpperCase(), x + 12, y + 118, { characterSpacing: 0.8 });
+    doc.font('body').fontSize(8.8).fillColor(C.body).text(c[2], x + 12, y + 131, { width: nw - 24, lineGap: 2 });
+  });
 }
 
 // =============================================================================
@@ -787,15 +815,16 @@ function understandPage(doc, data) {
     ['Net Metering', data.net_metering],
     ['Battery Backup', data.battery],
   ];
-  const cw = (w - 18) / 2, rh = 30;
+  const cw = (w - 18) / 2, rh = 38;
   rows.forEach((r, ci) => {
     const col = ci % 2, row = Math.floor(ci / 2);
     const x = M + col * (cw + 18), yy = y + row * rh;
-    panel(doc, x, yy, cw, rh - 6, C.mint, 6);
-    doc.font('ui').fontSize(8).fillColor(C.mute).text(String(r[0]).toUpperCase(), x + 12, yy + 5, { characterSpacing: 0.8 });
-    doc.font('uiSB').fontSize(10).fillColor(C.ink).text(V(r[1]), x + 12, yy + 15, { width: cw - 20 });
+    panel(doc, x, yy, cw, rh - 8, C.mint, 6);
+    doc.rect(x, yy, 3, rh - 8).fill(C.emer);
+    doc.font('ui').fontSize(8).fillColor(C.mute).text(String(r[0]).toUpperCase(), x + 14, yy + 6, { characterSpacing: 0.8 });
+    doc.font('uiSB').fontSize(10.5).fillColor(C.ink).text(V(r[1]), x + 14, yy + 17, { width: cw - 24 });
   });
-  y += Math.ceil(rows.length / 2) * rh + 12;
+  y += Math.ceil(rows.length / 2) * rh + 16;
 
   // customised narrative
   const seg = String(data.project_type || '').toLowerCase();
@@ -811,12 +840,14 @@ function understandPage(doc, data) {
     narr = 'For your institutional / PSU requirement, we deliver exactly to tender specification — with the statutory compliance, documentation and quality systems that public projects demand, backed by our SECI and Tata Power EPC track record.';
   else
     narr = 'We begin with a feasibility study and geo-technical survey of your site, then engineer a system sized precisely to your load and available roof or land. Every design decision is made to maximise lifetime generation, safety and return — and delivered with the discipline that defines Ingenieria.';
-  panel(doc, M, y, w, 96, C.cream, 9);
-  iconChip(doc, inst.includes('ground') ? 'grid' : 'home', M + 16, y + 16, 34, C.paper, C.gold);
-  doc.font('H').fontSize(16).fillColor(C.ink).text('Engineered for Your Requirement', M + 62, y + 16);
-  doc.font('body').fontSize(9.6).fillColor(C.body).text(narr, M + 62, y + 38, { width: w - 78, lineGap: 2.8 });
-  y += 96 + 12;
-  drawImg(doc, photo(inst.includes('ground') ? 'proj-seci' : 'proj-rooftop-pano'), M, y, w, 88, 9);
+  const nh = 120;
+  panel(doc, M, y, w, nh, C.cream, 9);
+  doc.rect(M, y, 4, nh).fill(C.gold);
+  iconChip(doc, inst.includes('ground') ? 'grid' : 'home', M + 18, y + 18, 38, C.paper, C.gold);
+  doc.font('H').fontSize(18).fillColor(C.ink).text('Engineered for Your Requirement', M + 68, y + 22);
+  doc.font('body').fontSize(10).fillColor(C.body).text(narr, M + 68, y + 48, { width: w - 88, lineGap: 3 });
+  y += nh + 16;
+  drawImg(doc, photo(inst.includes('ground') ? 'proj-seci' : 'proj-rooftop-pano'), M, y, w, 132, 9);
 }
 
 // =============================================================================
@@ -836,35 +867,35 @@ function howItWorksPage(doc) {
     ['home', 'Your Load', 'Clean AC power runs your lights, machines & equipment.'],
     ['grid', 'The Grid', 'Surplus is exported; a net meter credits every unit.'],
   ];
-  const n = steps.length, sw = (w - (n - 1) * 10) / n, sh = 116, y0 = y;
+  const n = steps.length, sw = (w - (n - 1) * 10) / n, sh = 150, y0 = y;
   steps.forEach((s, i) => {
     const x = M + i * (sw + 10);
     panel(doc, x, y0, sw, sh, C.mint, 9, C.line);
-    doc.circle(x + sw / 2, y0 + 26, 15).fill(C.emer);
-    doc.font('uiB').fontSize(10).fillColor('#fff').text(String(i + 1), x + sw / 2 - 6, y0 + 20, { width: 12, align: 'center' });
-    icon(doc, s[0], x + sw / 2, y0 + 56, 10, C.gold);
-    doc.font('uiSB').fontSize(10).fillColor(C.ink).text(s[1], x + 6, y0 + 72, { width: sw - 12, align: 'center' });
-    doc.font('body').fontSize(8).fillColor(C.mute).text(s[2], x + 8, y0 + 86, { width: sw - 16, align: 'center', lineGap: 1.5 });
-    if (i < n - 1) { doc.font('uiB').fontSize(14).fillColor(C.gold).text('›', x + sw + 0.5, y0 + 48, { width: 10, align: 'center' }); }
+    doc.circle(x + sw / 2, y0 + 30, 16).fill(C.emer);
+    doc.font('uiB').fontSize(11).fillColor('#fff').text(String(i + 1), x + sw / 2 - 6, y0 + 24, { width: 12, align: 'center' });
+    icon(doc, s[0], x + sw / 2, y0 + 68, 11, C.gold);
+    doc.font('uiSB').fontSize(10).fillColor(C.ink).text(s[1], x + 6, y0 + 90, { width: sw - 12, align: 'center' });
+    doc.font('body').fontSize(8.2).fillColor(C.mute).text(s[2], x + 8, y0 + 106, { width: sw - 16, align: 'center', lineGap: 1.6 });
+    if (i < n - 1) { doc.font('uiB').fontSize(15).fillColor(C.gold).text('›', x + sw + 0.5, y0 + 56, { width: 10, align: 'center' }); }
   });
-  y = y0 + sh + 18;
+  y = y0 + sh + 22;
 
   // photo + benefits
   const iw = w * 0.42;
-  drawImg(doc, photo('how-photo'), M, y, iw, 150, 9);
-  const bx = M + iw + 22, bw = w - iw - 22;
-  eyebrow(doc, 'Why It Pays', bx, y + 2, C.gold);
+  drawImg(doc, photo('how-photo'), M, y, iw, 184, 9);
+  const bx = M + iw + 24, bw = w - iw - 24;
+  eyebrow(doc, 'Why It Pays', bx, y + 4, C.gold);
   const bens = [
     ['rupee', 'Cut up to 90% of your electricity bill from day one.'],
     ['clock', 'Rapid 3–5 year payback, then decades of near-free power.'],
     ['shield', '25-year performance-warranted modules & robust structures.'],
     ['leaf', 'Slash your carbon footprint and meet ESG commitments.'],
   ];
-  let by = y + 18;
+  let by = y + 26;
   bens.forEach((b) => {
-    iconChip(doc, b[0], bx, by, 26, C.mint2, C.emer);
-    doc.font('body').fontSize(10).fillColor(C.body).text(b[1], bx + 36, by + 5, { width: bw - 40, lineGap: 2 });
-    by += 36;
+    iconChip(doc, b[0], bx, by, 30, C.mint2, C.emer);
+    doc.font('body').fontSize(10.4).fillColor(C.body).text(b[1], bx + 40, by + 7, { width: bw - 46, lineGap: 2 });
+    by += 42;
   });
 }
 
@@ -879,7 +910,7 @@ function netMeteringPage(doc, data) {
   let y = doc.y + 16;
 
   // simple flow diagram
-  const dY = y, dH = 118;
+  const dY = y, dH = 150;
   panel(doc, M, dY, w, dH, C.mint, 9, C.line);
   const nodes = [
     ['sun', 'Solar Array', 0.10],
@@ -887,22 +918,22 @@ function netMeteringPage(doc, data) {
     ['grid', 'Net Meter', 0.55],
     ['home', 'Your Load', 0.78],
   ];
-  const midY = dY + 52;
+  const midY = dY + 64;
   nodes.forEach((nd, i) => {
     const cx = M + w * nd[2];
-    doc.circle(cx, midY, 22).fill(C.paper); doc.circle(cx, midY, 22).lineWidth(1).strokeColor(C.emer).stroke();
-    icon(doc, nd[0], cx, midY, 11, C.emer);
-    doc.font('uiSB').fontSize(9).fillColor(C.ink).text(nd[1], cx - 45, midY + 30, { width: 90, align: 'center' });
+    doc.circle(cx, midY, 24).fill(C.paper); doc.circle(cx, midY, 24).lineWidth(1).strokeColor(C.emer).stroke();
+    icon(doc, nd[0], cx, midY, 12, C.emer);
+    doc.font('uiSB').fontSize(9.5).fillColor(C.ink).text(nd[1], cx - 45, midY + 34, { width: 90, align: 'center' });
     if (i < nodes.length - 1) {
       const nx = M + w * nodes[i + 1][2];
-      doc.moveTo(cx + 24, midY).lineTo(nx - 28, midY).lineWidth(1.4).strokeColor(C.gold).stroke();
-      doc.moveTo(nx - 26, midY).lineTo(nx - 33, midY - 4).lineTo(nx - 33, midY + 4).fill(C.gold);
+      doc.moveTo(cx + 26, midY).lineTo(nx - 30, midY).lineWidth(1.4).strokeColor(C.gold).stroke();
+      doc.moveTo(nx - 28, midY).lineTo(nx - 35, midY - 4).lineTo(nx - 35, midY + 4).fill(C.gold);
     }
   });
   const mx = M + w * 0.55;
-  doc.moveTo(mx, midY - 24).lineTo(mx, dY + 20).lineWidth(1.4).strokeColor(C.emer).dash(3, { space: 2 }).stroke().undash();
-  doc.font('ui').fontSize(7.5).fillColor(C.emer).text('EXPORT ↑', mx + 6, dY + 16);
-  y = dY + dH + 16;
+  doc.moveTo(mx, midY - 26).lineTo(mx, dY + 22).lineWidth(1.4).strokeColor(C.emer).dash(3, { space: 2 }).stroke().undash();
+  doc.font('ui').fontSize(7.5).fillColor(C.emer).text('EXPORT ↑', mx + 8, dY + 18);
+  y = dY + dH + 18;
 
   // three grid-type cards
   const modes = [
@@ -911,17 +942,26 @@ function netMeteringPage(doc, data) {
     ['shield', 'Hybrid', 'The best of both — grid-tied with battery backup. You export surplus for credit and still keep critical loads running during outages.', C.navy, 'hybrid'],
   ];
   const chosen = String(data.grid_type || '').toLowerCase().replace(/[^a-z]/g, '');
-  const cw = (w - 2 * 14) / 3, ch = 132;
+  const cw = (w - 2 * 14) / 3, ch = 168;
   modes.forEach((mo, i) => {
     const x = M + i * (cw + 14);
     const active = chosen && chosen.includes(mo[4].slice(0, 5));
     panel(doc, x, y, cw, ch, active ? C.mint2 : C.paper, 9, active ? mo[3] : C.line);
     doc.rect(x, y, cw, 3).fill(mo[3]);
-    iconChip(doc, mo[0], x + 16, y + 16, 32, C.mint2, mo[3]);
-    doc.font('H').fontSize(16).fillColor(C.ink).text(mo[1], x + 56, y + 20);
-    if (active) { doc.font('uiB').fontSize(7).fillColor(mo[3]).text('YOUR CHOICE', x + 56, y + 40); }
-    doc.font('body').fontSize(9).fillColor(C.body).text(mo[2], x + 16, y + 56, { width: cw - 32, lineGap: 2.6 });
+    iconChip(doc, mo[0], x + 16, y + 18, 34, C.mint2, mo[3]);
+    doc.font('H').fontSize(17).fillColor(C.ink).text(mo[1], x + 58, y + 24);
+    if (active) { doc.font('uiB').fontSize(7).fillColor(mo[3]).text('● YOUR CHOICE', x + 58, y + 44); }
+    doc.font('body').fontSize(9.4).fillColor(C.body).text(mo[2], x + 16, y + 64, { width: cw - 32, lineGap: 3 });
   });
+  y += ch + 18;
+
+  // billed-on-the-net example strip
+  panel(doc, M, y, w, 60, C.emerD, 9);
+  doc.rect(M, y, 4, 60).fill(C.gold);
+  doc.font('uiSB').fontSize(8.5).fillColor(C.goldB).text('BILLED ONLY ON THE NET', M + 20, y + 13, { characterSpacing: 1.2 });
+  doc.font('bodyI').fontSize(12).fillColor('#ffffff')
+     .text('Units exported to the grid are subtracted from units imported — you pay only for the difference, turning surplus daytime generation into real credit on your bill.',
+           M + 20, y + 27, { width: w - 40 });
 }
 
 // =============================================================================
@@ -941,21 +981,25 @@ function executionPage(doc) {
     ['panel', 'Installation & Wiring', 'Module mounting, DC/AC wiring, earthing, LT/HT works and safety systems.'],
     ['sun', 'Testing & Commissioning', 'Grid synchronisation, DISCOM liaison, net-meter installation & handover with O&M.'],
   ];
-  const cw = (w - 2 * 16) / 3, ch = 108, y0 = y;
+  const cw = (w - 2 * 16) / 3, ch = 134, y0 = y;
   steps.forEach((s, i) => {
     const col = i % 3, row = Math.floor(i / 3);
-    const x = M + col * (cw + 16), yy = y0 + row * (ch + 16);
+    const x = M + col * (cw + 16), yy = y0 + row * (ch + 18);
     panel(doc, x, yy, cw, ch, C.paper, 9, C.line);
-    doc.circle(x + 26, yy + 26, 16).fill(C.emer);
-    doc.font('uiB').fontSize(11).fillColor('#fff').text(String(i + 1), x + 20, yy + 19, { width: 12, align: 'center' });
-    icon(doc, s[0], x + cw - 22, yy + 24, 9, C.gold);
-    doc.font('H').fontSize(14.5).fillColor(C.ink).text(s[1], x + 16, yy + 48, { width: cw - 32 });
-    doc.font('body').fontSize(8.6).fillColor(C.body).text(s[2], x + 16, yy + 68, { width: cw - 32, lineGap: 2.2 });
+    doc.circle(x + 28, yy + 28, 17).fill(C.emer);
+    doc.font('uiB').fontSize(12).fillColor('#fff').text(String(i + 1), x + 21, yy + 21, { width: 14, align: 'center' });
+    icon(doc, s[0], x + cw - 24, yy + 26, 10, C.gold);
+    doc.font('H').fontSize(15.5).fillColor(C.ink).text(s[1], x + 18, yy + 54, { width: cw - 36 });
+    doc.font('body').fontSize(8.8).fillColor(C.body).text(s[2], x + 18, yy + 76, { width: cw - 36, lineGap: 2.4 });
   });
-  y = y0 + 2 * (ch + 16) + 6;
+  y = y0 + 2 * (ch + 18) + 10;
   const iw = (w - 2 * 12) / 3;
-  ['proj-piling-extra', 'proj-earthing', 'proj-inauguration'].forEach((p, i) =>
-    drawImg(doc, photo(p), M + i * (iw + 12), y, iw, 88, 8));
+  const ps = [['proj-piling-extra', 'Hydraulic Piling'], ['proj-earthing', 'Earthing & Safety'], ['proj-inauguration', 'Commissioning']];
+  ps.forEach((p, i) => {
+    const x = M + i * (iw + 12);
+    drawImg(doc, photo(p[0]), x, y, iw, 116, 8);
+    doc.font('uiSB').fontSize(8).fillColor(C.emer).text(p[1].toUpperCase(), x, y + 122, { width: iw, align: 'center', characterSpacing: 0.5 });
+  });
 }
 
 // =============================================================================
@@ -1045,17 +1089,17 @@ function qualityPage(doc) {
   let y = doc.y + 14;
 
   const certs = [['iso-9001', 'ISO 9001', 'Quality Management'], ['iso-14001', 'ISO 14001', 'Environmental Mgmt.'], ['iso-45001', 'ISO 45001', 'Occupational Safety'], ['award-india5000', 'India 5000', 'Best MSME Award']];
-  const cw = (w - 3 * 14) / 4, ih = 108, y0 = y;
+  const cw = (w - 3 * 14) / 4, ih = 150, y0 = y;
   certs.forEach((c, i) => {
     const x = M + i * (cw + 14);
-    panel(doc, x, y0, cw, ih + 34, C.paper, 9, C.line);
-    drawImg(doc, cert(c[0]), x + 10, y0 + 10, cw - 20, ih - 12, 4);
-    doc.font('uiSB').fontSize(9.5).fillColor(C.ink).text(c[1], x, y0 + ih + 4, { width: cw, align: 'center' });
-    doc.font('body').fontSize(8).fillColor(C.mute).text(c[2], x, y0 + ih + 17, { width: cw, align: 'center' });
+    panel(doc, x, y0, cw, ih + 38, C.paper, 9, C.line);
+    drawImg(doc, cert(c[0]), x + 12, y0 + 12, cw - 24, ih - 12, 4);
+    doc.font('uiSB').fontSize(10).fillColor(C.ink).text(c[1], x, y0 + ih + 8, { width: cw, align: 'center' });
+    doc.font('body').fontSize(8).fillColor(C.mute).text(c[2], x, y0 + ih + 22, { width: cw, align: 'center' });
   });
-  y = y0 + ih + 34 + 16;
+  y = y0 + ih + 38 + 20;
 
-  eyebrow(doc, 'Warranty & Assurance', M, y, C.gold); y += 16;
+  eyebrow(doc, 'Warranty & Assurance', M, y, C.gold); y += 18;
   const rows = [
     ['Solar Modules', 'Tier-1, mono PERC / TOPCon', '25-year linear · 12-year product'],
     ['Inverters', 'Smart string / central', '5–10 years (extendable)'],
@@ -1064,16 +1108,16 @@ function qualityPage(doc) {
     ['Plant Performance', 'Guaranteed generation', 'As per PPA / contract terms'],
   ];
   const c0 = M, c1 = M + 150, c2 = M + 320;
-  panel(doc, M, y, w, 22, C.emer, 5);
+  panel(doc, M, y, w, 26, C.emer, 5);
   doc.font('uiSB').fontSize(8).fillColor('#fff');
-  doc.text('COMPONENT', c0 + 12, y + 7); doc.text('SPECIFICATION', c1, y + 7); doc.text('WARRANTY', c2, y + 7);
-  y += 22;
+  doc.text('COMPONENT', c0 + 12, y + 9); doc.text('SPECIFICATION', c1, y + 9); doc.text('WARRANTY', c2, y + 9);
+  y += 26;
   rows.forEach((r, i) => {
-    const rh = 30;
+    const rh = 36;
     if (i % 2) doc.save().rect(M, y, w, rh).fill(C.mint).restore();
-    doc.font('uiSB').fontSize(9.5).fillColor(C.ink).text(r[0], c0 + 12, y + 9, { width: 140 });
-    doc.font('body').fontSize(9.3).fillColor(C.body).text(r[1], c1, y + 9, { width: 165 });
-    doc.font('uiM').fontSize(9.3).fillColor(C.emer).text(r[2], c2, y + 9, { width: W - M - c2 - 10 });
+    doc.font('uiSB').fontSize(9.8).fillColor(C.ink).text(r[0], c0 + 12, y + 12, { width: 140 });
+    doc.font('body').fontSize(9.6).fillColor(C.body).text(r[1], c1, y + 12, { width: 165 });
+    doc.font('uiM').fontSize(9.6).fillColor(C.emer).text(r[2], c2, y + 12, { width: W - M - c2 - 10 });
     doc.moveTo(M, y + rh).lineTo(W - M, y + rh).lineWidth(0.5).strokeColor(C.line).stroke();
     y += rh;
   });
@@ -1097,13 +1141,15 @@ function faqPage(doc) {
     ['What maintenance does a solar plant need?', 'Very little — periodic module cleaning and inverter checks. Our O&M packages cover preventive & corrective maintenance, monitoring and rapid fault resolution.'],
     ['Why choose Ingenieria over others?', 'A 100% veteran-led, triple-ISO team with a portfolio from 10 kWp rooftops to the 300 MW SECI park — and the discipline to deliver every one on time.'],
   ];
-  const cw = (w - 20) / 2, rowH = 92;
+  const cw = (w - 24) / 2, rowH = 116;
   faqs.forEach((f, i) => {
     const col = i % 2, row = Math.floor(i / 2);
-    const x = M + col * (cw + 20), yy = y + row * rowH;
-    doc.font('uiB').fontSize(10.5).fillColor(C.emer).text('Q', x, yy);
-    doc.font('uiSB').fontSize(10.5).fillColor(C.ink).text(f[0], x + 16, yy, { width: cw - 16 });
-    doc.font('body').fontSize(9.4).fillColor(C.body).text(f[1], x + 16, doc.y + 2, { width: cw - 16, lineGap: 2.6 });
+    const x = M + col * (cw + 24), yy = y + row * rowH;
+    doc.save().roundedRect(x - 12, yy - 10, cw + 24, rowH - 8, 9).fill(i % 2 ? C.mint : C.paper).restore();
+    if (!(i % 2)) doc.roundedRect(x - 12, yy - 10, cw + 24, rowH - 8, 9).lineWidth(0.8).strokeColor(C.line).stroke();
+    doc.font('uiB').fontSize(11).fillColor(C.gold).text('Q', x, yy);
+    doc.font('uiSB').fontSize(10.8).fillColor(C.ink).text(f[0], x + 18, yy, { width: cw - 18 });
+    doc.font('body').fontSize(9.6).fillColor(C.body).text(f[1], x + 18, doc.y + 3, { width: cw - 18, lineGap: 2.8 });
   });
 }
 
@@ -1119,26 +1165,27 @@ function thankYouPage(doc) {
   veil.stop(0, C.emerD, 1).stop(1, C.emerD, 0.55);
   doc.rect(0, H - 220, W, 220).fill(veil);
 
-  logo(doc, W / 2 - 55, 92, 110, true);
-  doc.font('script').fontSize(58).fillColor('#ffffff').text('Thank You', 0, 210, { width: W, align: 'center' });
-  triTick(doc, W / 2 - 45, 292, 90);
+  logo(doc, W / 2 - 62, 84, 124, false);
+  doc.font('script').fontSize(58).fillColor('#ffffff').text('Thank You', 0, 214, { width: W, align: 'center' });
+  triTick(doc, W / 2 - 45, 296, 90);
   doc.font('bodyI').fontSize(14).fillColor('#dcf3e7')
-     .text('We would be honoured to power your future.', 0, 312, { width: W, align: 'center' });
+     .text('We would be honoured to power your future.', 0, 316, { width: W, align: 'center' });
 
-  const cw = 380, cx = W / 2 - cw / 2, cy = 372;
-  panel(doc, cx, cy, cw, 128, '#ffffff', 12);
+  // dark "cold" contact card — emerald, gold-edged (no white)
+  const cw = 400, cx = W / 2 - cw / 2, cy = 376;
+  panel(doc, cx, cy, cw, 136, '#0b3a2b', 12, '#1f6b4f');
   doc.rect(cx, cy, cw, 4).fill(C.gold);
-  doc.font('uiSB').fontSize(9).fillColor(C.gold).text('START YOUR SOLAR PROJECT', cx, cy + 20, { width: cw, align: 'center', characterSpacing: 1.5 });
-  doc.font('H').fontSize(22).fillColor(C.ink).text('Arrays Ingenieria Pvt. Ltd.', cx, cy + 36, { width: cw, align: 'center' });
-  doc.font('body').fontSize(10).fillColor(C.body)
-     .text('Veteran-Led  ·  ISO 9001 · 14001 · 45001  ·  Pan-India', cx, cy + 66, { width: cw, align: 'center' });
-  doc.font('uiM').fontSize(11).fillColor(C.emer)
-     .text('arraysingenieria@gmail.com', cx, cy + 86, { width: cw, align: 'center' });
-  doc.font('ui').fontSize(9).fillColor(C.mute)
-     .text('www.arraysingenieria.com', cx, cy + 102, { width: cw, align: 'center' });
+  doc.font('uiSB').fontSize(9).fillColor(C.goldB).text('START YOUR SOLAR PROJECT', cx, cy + 22, { width: cw, align: 'center', characterSpacing: 1.6 });
+  doc.font('H').fontSize(24).fillColor('#ffffff').text('Arrays Ingenieria Pvt. Ltd.', cx, cy + 38, { width: cw, align: 'center' });
+  doc.font('body').fontSize(10).fillColor('#cfe9df')
+     .text('Ex-Servicemen Led  ·  ISO 9001 · 14001 · 45001  ·  Pan-India', cx, cy + 72, { width: cw, align: 'center' });
+  doc.font('uiSB').fontSize(11.5).fillColor(C.goldB)
+     .text('arraysingenieria@gmail.com', cx, cy + 92, { width: cw, align: 'center' });
+  doc.font('ui').fontSize(9).fillColor('#a7cfc0')
+     .text('www.arraysingenieria.com', cx, cy + 110, { width: cw, align: 'center' });
 
   doc.font('bodyI').fontSize(11).fillColor('#a7cfc0')
-     .text('Developing Green Energy for the Nation', 0, H - 60, { width: W, align: 'center' });
+     .text('Developing Green Energy for the Nation', 0, H - 58, { width: W, align: 'center' });
 }
 
 // =============================================================================
