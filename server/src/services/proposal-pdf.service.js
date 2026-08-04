@@ -986,43 +986,82 @@ function netMeteringPage(doc, data) {
   chrome(doc, 'Net Metering');
   const W = doc.page.width, w = W - 2 * M;
   heading(doc, 'Section 13 · Clarifying Your Doubts', 'Net Metering Explained');
-  para(doc, 'Net metering lets your solar plant feed surplus power back into the grid. A bi-directional meter records both the units you import and the units you export — and you are billed only on the net. It is the mechanism that turns your roof into a virtual battery.', M, doc.y, w, { size: 10.6 });
-  let y = doc.y + 16;
+  para(doc, 'Net metering lets your solar plant feed surplus power back into the grid. A bi-directional meter records both the units you import and the units you export — and you are billed only on the net. It is the mechanism that turns your roof into a virtual battery.', M, doc.y, w, { size: 10.4 });
+  let y = doc.y + 12;
 
-  // simple flow diagram
-  const dY = y, dH = 150;
+  // ---- illustrated energy-flow diagram ----
+  const dY = y, dH = 196;
   panel(doc, M, dY, w, dH, C.mint, 9, C.line);
+  const P = (f) => M + w * f;
+  const midY = dY + 104;
+  const GREY = '#8a9a92';
+  // arrow helper
+  const arrow = (x1, y1, x2, y2, col, lw = 2.4) => {
+    const ang = Math.atan2(y2 - y1, x2 - x1), hl = 7;
+    doc.save().moveTo(x1, y1).lineTo(x2, y2).lineWidth(lw).strokeColor(col).stroke();
+    doc.moveTo(x2, y2)
+       .lineTo(x2 - hl * Math.cos(ang - 0.5), y2 - hl * Math.sin(ang - 0.5))
+       .lineTo(x2 - hl * Math.cos(ang + 0.5), y2 - hl * Math.sin(ang + 0.5))
+       .closePath().fill(col);
+    doc.restore();
+  };
+  // custom node glyphs
+  const drawMeter = (cx, cy) => {
+    doc.save();
+    doc.circle(cx, cy - 3, 8).lineWidth(1.2).strokeColor(C.emer).stroke();
+    doc.moveTo(cx, cy - 3).lineTo(cx + 4, cy - 8).lineWidth(1.2).strokeColor(C.emer).stroke();
+    for (let k = -1; k <= 1; k++) doc.circle(cx + k * 5, cy + 10, 1.6).fill(C.emer);
+    doc.restore();
+  };
+  const drawPole = (cx, cy) => {
+    doc.save().lineWidth(2.2).strokeColor(C.ink);
+    doc.moveTo(cx, cy - 26).lineTo(cx, cy + 30).stroke();
+    doc.moveTo(cx - 15, cy - 20).lineTo(cx + 15, cy - 20).stroke();
+    doc.moveTo(cx - 15, cy - 10).lineTo(cx + 15, cy - 10).stroke();
+    doc.circle(cx - 12, cy - 22, 1.8).fill(C.ink); doc.circle(cx + 12, cy - 22, 1.8).fill(C.ink);
+    doc.restore();
+  };
   const nodes = [
-    ['sun', 'Solar Array', 0.10],
-    ['bolt', 'Inverter', 0.32],
-    ['grid', 'Net Meter', 0.55],
-    ['home', 'Your Load', 0.78],
+    { f: 0.10, icon: 'panel', label: 'Solar Panels', sub: 'Sunlight → DC', n: 1 },
+    { f: 0.30, icon: 'bolt', label: 'Inverter', sub: 'DC → AC', n: 2 },
+    { f: 0.50, icon: 'home', label: 'Home / Business', sub: 'Energy used', n: 3 },
+    { f: 0.70, icon: 'meter', label: 'Bi-directional Meter', sub: 'Import & export', n: 4 },
   ];
-  const midY = dY + 64;
-  nodes.forEach((nd, i) => {
-    const cx = M + w * nd[2];
-    doc.circle(cx, midY, 24).fill(C.paper); doc.circle(cx, midY, 24).lineWidth(1).strokeColor(C.emer).stroke();
-    icon(doc, nd[0], cx, midY, 12, C.emer);
-    doc.font('uiSB').fontSize(9.5).fillColor(C.ink).text(nd[1], cx - 45, midY + 34, { width: 90, align: 'center' });
-    if (i < nodes.length - 1) {
-      const nx = M + w * nodes[i + 1][2];
-      doc.moveTo(cx + 26, midY).lineTo(nx - 30, midY).lineWidth(1.4).strokeColor(C.gold).stroke();
-      doc.moveTo(nx - 28, midY).lineTo(nx - 35, midY - 4).lineTo(nx - 35, midY + 4).fill(C.gold);
-    }
+  // forward gold arrows between the four circle nodes
+  for (let i = 0; i < nodes.length - 1; i++) arrow(P(nodes[i].f) + 26, midY, P(nodes[i + 1].f) - 28, midY, C.gold);
+  // sun above the panels + ray arrow into them
+  icon(doc, 'sun', P(0.10), dY + 34, 13, C.goldB);
+  arrow(P(0.10) + 8, dY + 46, P(0.10) + 2, midY - 26, C.goldB, 2);
+  // nodes
+  nodes.forEach((nd) => {
+    const cx = P(nd.f);
+    doc.circle(cx, midY, 24).fill(C.paper); doc.circle(cx, midY, 24).lineWidth(1.3).strokeColor(C.emer).stroke();
+    if (nd.icon === 'meter') drawMeter(cx, midY); else icon(doc, nd.icon, cx, midY, 12, C.emer);
+    doc.circle(cx - 20, midY - 20, 9).fill(C.gold);
+    doc.font('uiB').fontSize(9).fillColor('#fff').text(String(nd.n), cx - 24.5, midY - 25, { width: 9, align: 'center' });
+    doc.font('uiSB').fontSize(8.5).fillColor(C.ink).text(nd.label, cx - 48, midY + 32, { width: 96, align: 'center' });
+    doc.font('ui').fontSize(7).fillColor(C.mute).text(nd.sub, cx - 48, midY + 44, { width: 96, align: 'center' });
   });
-  const mx = M + w * 0.55;
-  doc.moveTo(mx, midY - 26).lineTo(mx, dY + 22).lineWidth(1.4).strokeColor(C.emer).dash(3, { space: 2 }).stroke().undash();
-  doc.font('ui').fontSize(7.5).fillColor(C.emer).text('EXPORT ↑', mx + 8, dY + 18);
-  y = dY + dH + 18;
+  // grid pole at far right
+  const gx = P(0.90);
+  drawPole(gx, midY);
+  doc.font('uiSB').fontSize(8.5).fillColor(C.ink).text('Electrical Grid', gx - 48, midY + 32, { width: 96, align: 'center' });
+  // two-way flow between meter and grid
+  const mx = P(0.70), ax1 = mx + 26, ax2 = gx - 18;
+  arrow(ax1, midY - 9, ax2, midY - 9, C.emerM, 2.6);          // export (to grid)
+  arrow(ax2, midY + 9, ax1, midY + 9, GREY, 2.6);             // import (from grid)
+  doc.font('ui').fontSize(6.6).fillColor(C.emerM).text('EXCESS → GRID', mx + 20, midY - 26, { width: 110, characterSpacing: 0.3 });
+  doc.font('ui').fontSize(6.6).fillColor(GREY).text('GRID → HOME', mx + 20, midY + 16, { width: 110, characterSpacing: 0.3 });
+  y = dY + dH + 16;
 
   // three grid-type cards
   const modes = [
-    ['grid', 'On-Grid', 'Connected to the utility grid with net metering. No batteries — surplus is exported for credit. The most economical option; ideal where grid supply is reliable.', C.emer, 'ongrid'],
-    ['bolt', 'Off-Grid', 'Fully independent with battery storage. Powers you through outages and remote sites with no grid connection. Higher upfront cost, total energy autonomy.', C.gold, 'offgrid'],
+    ['grid', 'On-Grid', 'Connected to the utility grid with net metering. No batteries — surplus is exported for credit. The most economical option where grid supply is reliable.', C.emer, 'ongrid'],
+    ['bolt', 'Off-Grid', 'Fully independent with battery storage. Powers you through outages and remote sites with no grid connection. Higher upfront cost, total autonomy.', C.gold, 'offgrid'],
     ['shield', 'Hybrid', 'The best of both — grid-tied with battery backup. You export surplus for credit and still keep critical loads running during outages.', C.navy, 'hybrid'],
   ];
   const chosen = String(data.grid_type || '').toLowerCase().replace(/[^a-z]/g, '');
-  const cw = (w - 2 * 14) / 3, ch = 168;
+  const cw = (w - 2 * 14) / 3, ch = 150;
   modes.forEach((mo, i) => {
     const x = M + i * (cw + 14);
     const active = chosen && chosen.includes(mo[4].slice(0, 5));
