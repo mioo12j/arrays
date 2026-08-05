@@ -239,6 +239,27 @@ function icon(doc, kind, cx, cy, s, col) {
       L(cx - s * 0.3, cy, cx + s * 0.3, cy); L(cx - s * 0.3, cy + s * 0.35, cx + s * 0.1, cy + s * 0.35); break;
     case 'rupee':
       doc.font('uiB').fontSize(s * 1.6).fillColor(col).text('₹', cx - s * 0.55, cy - s * 0.9); break;
+    case 'battery':
+      doc.roundedRect(cx - s, cy - s * 0.66, 2 * s, s * 1.32, s * 0.14).stroke();
+      doc.rect(cx + s, cy - s * 0.26, s * 0.2, s * 0.52).fill();
+      doc.moveTo(cx + s * 0.2, cy - s * 0.42).lineTo(cx - s * 0.32, cy + s * 0.06).lineTo(cx - s * 0.02, cy + s * 0.06)
+         .lineTo(cx - s * 0.2, cy + s * 0.5).lineTo(cx + s * 0.34, cy - s * 0.04).lineTo(cx + s * 0.02, cy - s * 0.04).closePath().fill(); break;
+    case 'breaker':                                  // DCDB / ACDB distribution box
+      doc.roundedRect(cx - s, cy - s * 0.75, 2 * s, 1.5 * s, s * 0.12).stroke();
+      for (let k = -2; k <= 2; k++) { doc.rect(cx + k * s * 0.34 - s * 0.06, cy - s * 0.4, s * 0.12, s * 0.5).fill(); }
+      doc.rect(cx - s * 0.5, cy + s * 0.28, s, s * 0.14).fill(); break;
+    case 'meter':                                    // energy meter
+      doc.circle(cx, cy - s * 0.1, s * 0.62).stroke();
+      doc.moveTo(cx, cy - s * 0.1).lineTo(cx + s * 0.3, cy - s * 0.4).stroke();
+      for (let k = -1; k <= 1; k++) doc.circle(cx + k * s * 0.28, cy + s * 0.62, s * 0.1).fill(); break;
+    case 'pole':                                     // utility transmission tower
+      doc.moveTo(cx - s * 0.55, cy + s).lineTo(cx, cy - s).lineTo(cx + s * 0.55, cy + s).stroke();
+      doc.moveTo(cx - s * 0.4, cy - s * 0.3).lineTo(cx + s * 0.4, cy - s * 0.3).stroke();
+      doc.moveTo(cx - s * 0.28, cy + s * 0.2).lineTo(cx + s * 0.28, cy + s * 0.2).stroke();
+      doc.moveTo(cx - s * 0.33, cy + s).lineTo(cx + s * 0.33, cy - s * 0.55).moveTo(cx + s * 0.33, cy + s).lineTo(cx - s * 0.33, cy - s * 0.55).stroke(); break;
+    case 'generator':
+      doc.roundedRect(cx - s, cy - s * 0.5, 2 * s, s, s * 0.14).stroke();
+      doc.font('uiB').fontSize(s * 0.9).fillColor(col).text('G', cx - s * 0.3, cy - s * 0.5); break;
     case 'flag':
       L(cx - s * 0.6, cy - s, cx - s * 0.6, cy + s);
       doc.moveTo(cx - s * 0.6, cy - s).lineTo(cx + s * 0.7, cy - s * 0.6).lineTo(cx - s * 0.6, cy - s * 0.2).closePath().stroke(); break;
@@ -435,6 +456,7 @@ function tocPage(doc, extras = []) {
     ['Client Voices', 'In the words of those we’ve served'],
     ['Recognition & Media', 'Honoured from the nation’s highest offices'],
     ['Understanding Your Project', 'Your requirement, engineered'],
+    ['Your System Design', 'On-grid, off-grid or hybrid — built for you'],
     ['How Solar Works', 'From sunlight to savings'],
     ['Net Metering Explained', 'On-grid, off-grid & hybrid'],
     ['Execution Methodology', 'Our disciplined delivery process'],
@@ -986,12 +1008,120 @@ function understandPage(doc, data) {
 }
 
 // =============================================================================
+//  SYSTEM DESIGN — dedicated page per grid type (on-grid / off-grid / hybrid)
+//  and segment (residential home vs commercial/industrial facility).
+// =============================================================================
+function systemDesignPage(doc, data) {
+  chrome(doc, 'System Design');
+  const W = doc.page.width, w = W - 2 * M;
+  const gt = String(data.grid_type || '').toLowerCase().replace(/[^a-z]/g, '');
+  const isOff = gt.includes('off');
+  const isHybrid = gt.includes('hyb');
+  const isOn = !isOff && !isHybrid;
+  const hasBattery = isOff || isHybrid || /^(y|t|1)/i.test(String(data.battery || '').trim());
+  const hasGrid = isOn || isHybrid;
+  const seg = String(data.project_type || '').toLowerCase();
+  const isFacility = seg.includes('comm') || seg.includes('indust') || seg.includes('factory') || seg.includes('gov') || seg.includes('psu');
+  const loadIcon = isFacility ? 'factory' : 'home';
+  const loadLabel = isFacility ? 'Your Facility' : 'Your Home';
+  const typeName = isOff ? 'Off-Grid' : isHybrid ? 'Hybrid' : 'On-Grid';
+
+  heading(doc, 'Section 12 · Your System', `Your ${typeName} Solar System`);
+  const introTxt = isOff
+    ? `A fully independent ${typeName.toLowerCase()} system for ${loadLabel.toLowerCase()} — solar by day, battery by night, with no reliance on the utility grid.`
+    : isHybrid
+      ? `The best of both worlds for ${loadLabel.toLowerCase()} — solar power, battery backup through outages, and a grid connection that credits every surplus unit you export.`
+      : `A grid-tied system for ${loadLabel.toLowerCase()} — clean daytime power with net metering, so surplus energy earns you credit and the grid tops you up seamlessly.`;
+  para(doc, introTxt, M, doc.y, w, { size: 10.4 });
+  let y = doc.y + 12;
+
+  // ---- architecture diagram ----
+  const dY = y, dH = 224;
+  panel(doc, M, dY, w, dH, C.mint, 9, C.line);
+  const busY = dY + 78;
+  const arr = (x1, y1, x2, y2, col = C.gold, lw = 2.2) => {
+    const a = Math.atan2(y2 - y1, x2 - x1), hl = 6;
+    doc.save().moveTo(x1, y1).lineTo(x2, y2).lineWidth(lw).strokeColor(col).stroke();
+    doc.moveTo(x2, y2).lineTo(x2 - hl * Math.cos(a - 0.5), y2 - hl * Math.sin(a - 0.5))
+       .lineTo(x2 - hl * Math.cos(a + 0.5), y2 - hl * Math.sin(a + 0.5)).closePath().fill(col);
+    doc.restore();
+  };
+  const bw = 50, bh = 42;
+  const box = (cx, label, ic, tint) => {
+    doc.save().roundedRect(cx - bw / 2, busY - bh / 2, bw, bh, 6).fill(C.paper).restore();
+    doc.roundedRect(cx - bw / 2, busY - bh / 2, bw, bh, 6).lineWidth(1.2).strokeColor(tint || C.emer).stroke();
+    icon(doc, ic, cx, busY, 11, tint || C.emer);
+    doc.font('uiSB').fontSize(8).fillColor(C.ink).text(label, cx - 44, busY + bh / 2 + 5, { width: 88, align: 'center' });
+  };
+  // station x-centres
+  const P = (f) => M + 26 + (w - 52) * f;
+  const stations = hasGrid
+    ? { solar: P(0), dcdb: P(0.20), inv: P(0.42), acdb: P(0.63), meter: P(0.82), grid: P(1) }
+    : { solar: P(0), dcdb: P(0.26), inv: P(0.52), acdb: P(0.80) };
+  // forward arrows along the bus
+  const order = hasGrid ? ['solar', 'dcdb', 'inv', 'acdb', 'meter', 'grid'] : ['solar', 'dcdb', 'inv', 'acdb'];
+  for (let i = 0; i < order.length - 1; i++) {
+    const from = stations[order[i]], to = stations[order[i + 1]];
+    const gap = (order[i] === 'solar' || order[i + 1] === 'grid') ? 22 : bw / 2 + 4;
+    arr(from + bw / 2 + 2, busY, to - gap, busY, i === order.length - 2 && hasGrid ? C.emerM : C.gold);
+  }
+  // sun over the solar panel
+  icon(doc, 'sun', stations.solar - 4, dY + 26, 11, C.goldB);
+  // stations
+  box(stations.solar, 'Solar Array', 'panel');
+  box(stations.dcdb, 'DCDB', 'breaker');
+  box(stations.inv, 'Inverter', 'bolt', C.gold);
+  box(stations.acdb, 'ACDB', 'breaker');
+  if (hasGrid) { box(stations.meter, 'Net Meter', 'meter'); icon(doc, 'pole', stations.grid, busY, 16, C.ink); doc.font('uiSB').fontSize(8).fillColor(C.ink).text('Utility Grid', stations.grid - 44, busY + bh / 2 + 5, { width: 88, align: 'center' }); }
+  // DC / AC current labels
+  doc.font('ui').fontSize(6.8).fillColor(C.mute).text('DC', (stations.dcdb + stations.inv) / 2 - 8, busY - 16, { width: 20, align: 'center' });
+  doc.font('ui').fontSize(6.8).fillColor(C.mute).text('AC', (stations.inv + stations.acdb) / 2 - 8, busY - 16, { width: 20, align: 'center' });
+  // battery below the DC bus (charge down / discharge up)
+  if (hasBattery) {
+    const bx = (stations.dcdb + stations.inv) / 2, by = dY + dH - 40;
+    arr(bx - 5, busY + bh / 2, bx - 5, by - 20, C.emerM, 1.8);
+    arr(bx + 5, by - 20, bx + 5, busY + bh / 2, C.gold, 1.8);
+    icon(doc, 'battery', bx, by, 14, C.emer);
+    doc.font('uiSB').fontSize(8).fillColor(C.ink).text('Battery Bank', bx - 44, by + 20, { width: 88, align: 'center' });
+  }
+  // load (home / facility) below the ACDB
+  const lx = stations.acdb, ly = dY + dH - 40;
+  arr(lx, busY + bh / 2, lx, ly - 18, C.emer, 1.8);
+  icon(doc, loadIcon, lx, ly, 15, C.ink);
+  doc.font('uiSB').fontSize(8).fillColor(C.ink).text(loadLabel, lx - 44, ly + 20, { width: 88, align: 'center' });
+  y = dY + dH + 16;
+
+  // ---- component explainer cards ----
+  const cards = [['panel', 'Solar Array', `${model(data).kwp} kWp of Tier-1 modules convert sunlight into clean DC power — the engine of your plant.`],
+                 ['bolt', `${typeName} Inverter`, isOff ? 'Converts DC to grid-quality AC and manages the battery for round-the-clock power.' : 'Converts DC to AC, syncs with the grid and intelligently routes power where it is needed.']];
+  if (hasBattery) cards.push(['battery', 'Battery Bank', 'Stores surplus daytime energy to power you at night and ride through grid outages.']);
+  if (hasGrid) cards.push(['meter', 'Net Meter & Grid', 'Exports your surplus for credit and draws top-up power when generation is low — billed only on the net.']);
+  else cards.push(['shield', 'Total Autonomy', 'No wires to the utility — your plant runs fully independent, day and night.']);
+  const n = cards.length, cw = (w - (n - 1) * 12) / n, ch = 140, y0 = y;
+  cards.forEach((c, i) => {
+    const x = M + i * (cw + 12);
+    panel(doc, x, y0, cw, ch, C.paper, 9, C.line);
+    doc.rect(x, y0, cw, 3).fill(i % 2 ? C.emer : C.gold);
+    iconChip(doc, c[0], x + cw / 2 - 18, y0 + 16, 36, C.mint2, C.emer);
+    doc.font('H').fontSize(14).fillColor(C.ink).text(c[1], x + 8, y0 + 58, { width: cw - 16, align: 'center' });
+    doc.font('body').fontSize(8.4).fillColor(C.body).text(c[2], x + 10, y0 + 78, { width: cw - 20, align: 'center', lineGap: 1.8 });
+  });
+  y = y0 + ch + 14;
+
+  // load / segment note
+  const loadNote = isFacility
+    ? 'Clean, reliable power for your machinery, HVAC, lighting and process loads — cutting your most expensive daytime tariff first.'
+    : 'Clean, reliable power for your air-conditioning, refrigeration, lighting and everyday appliances — with lower bills from day one.';
+  closingBand(doc, loadNote, { y: Math.min(y, 716), icon: loadIcon, dark: true });
+}
+
+// =============================================================================
 //  PAGE 14 — HOW SOLAR WORKS
 // =============================================================================
 function howItWorksPage(doc) {
   chrome(doc, 'How Solar Works');
   const W = doc.page.width, w = W - 2 * M;
-  heading(doc, 'Section 12', 'From Sunlight to Savings');
+  heading(doc, 'Section 13', 'From Sunlight to Savings');
   para(doc, 'A solar PV system converts free sunlight into clean electricity that powers your premises by day and earns you credit for any surplus. Here is how the energy flows.', M, doc.y, w, { size: 10.6 });
   let y = doc.y + 16;
 
@@ -1041,7 +1171,7 @@ function howItWorksPage(doc) {
 function netMeteringPage(doc, data) {
   chrome(doc, 'Net Metering');
   const W = doc.page.width, w = W - 2 * M;
-  heading(doc, 'Section 13 · Clarifying Your Doubts', 'Net Metering Explained');
+  heading(doc, 'Section 14 · Clarifying Your Doubts', 'Net Metering Explained');
   para(doc, 'Net metering lets your solar plant feed surplus power back into the grid. A bi-directional meter records both the units you import and the units you export — and you are billed only on the net. It is the mechanism that turns your roof into a virtual battery.', M, doc.y, w, { size: 10.4 });
   let y = doc.y + 12;
 
@@ -1145,7 +1275,7 @@ function netMeteringPage(doc, data) {
 function executionPage(doc) {
   chrome(doc, 'Execution');
   const W = doc.page.width, w = W - 2 * M;
-  heading(doc, 'Section 14 · How We Deliver', 'Execution Methodology');
+  heading(doc, 'Section 15 · How We Deliver', 'Execution Methodology');
   para(doc, 'Military logistics translated into renewable-energy delivery — a disciplined, six-stage process with accountability at every checkpoint.', M, doc.y, w, { size: 10.6 });
   let y = doc.y + 14;
   const steps = [
@@ -1184,7 +1314,7 @@ function executionPage(doc) {
 function savingsPage(doc, data) {
   chrome(doc, 'Savings & ROI');
   const W = doc.page.width, w = W - 2 * M;
-  heading(doc, 'Section 15 · The Numbers', 'Your Savings & Return');
+  heading(doc, 'Section 16 · The Numbers', 'Your Savings & Return');
   const m = model(data);
   para(doc, `Here is what a ${m.kwp} kWp plant means for you — the investment, the money it puts back in your pocket, and how quickly it pays for itself.`, M, doc.y, w, { size: 10.4 });
   let y = doc.y + 12;
@@ -1307,7 +1437,7 @@ function savingsPage(doc, data) {
 function environmentPage(doc, data) {
   chrome(doc, 'Environmental Impact');
   const W = doc.page.width, w = W - 2 * M;
-  heading(doc, 'Section 16 · Clean & Green', 'Your Environmental Impact');
+  heading(doc, 'Section 17 · Clean & Green', 'Your Environmental Impact');
   const m = model(data);
   para(doc, 'Every unit your plant generates is a unit of clean power the grid does not have to make from coal. Across 25 years, that adds up to a genuine contribution to a greener nation.', M, doc.y, w, { size: 10.4 });
   let y = doc.y + 14;
@@ -1367,7 +1497,7 @@ function environmentPage(doc, data) {
 function qualityPage(doc) {
   chrome(doc, 'Quality & Warranty');
   const W = doc.page.width, w = W - 2 * M;
-  heading(doc, 'Section 17 · Assurance', 'Quality, Safety & Warranty');
+  heading(doc, 'Section 18 · Assurance', 'Quality, Safety & Warranty');
   para(doc, 'Every plant is engineered to audited, triple-ISO standards using Tier-1 hardware — and backed by warranties that protect your investment for decades.', M, doc.y, w, { size: 10.6 });
   let y = doc.y + 14;
 
@@ -1413,7 +1543,7 @@ function qualityPage(doc) {
 function faqPage(doc) {
   chrome(doc, 'FAQ');
   const W = doc.page.width, w = W - 2 * M;
-  heading(doc, 'Section 18 · Your Questions, Answered', 'Frequently Asked Questions');
+  heading(doc, 'Section 19 · Your Questions, Answered', 'Frequently Asked Questions');
   let y = doc.y + 4;
   const faqs = [
     ['Will rooftop solar damage my roof?', 'No. We use leak-proof, structurally engineered mounting and conduct a full structural and shadow analysis before installation to protect your roof’s integrity.'],
@@ -1509,6 +1639,7 @@ export function renderProposal(doc, data = {}, opts = {}) {
     (d) => testimonialsPage(d),
     (d) => recognitionPage(d),
     (d) => understandPage(d, data),
+    (d) => systemDesignPage(d, data),
     (d) => howItWorksPage(d),
     (d) => netMeteringPage(d, data),
     (d) => executionPage(d),
