@@ -133,6 +133,24 @@ function panel(doc, x, y, w, h, fill, r = 9, stroke) {
   doc.restore();
 }
 
+// A full-width closing statement band — fills the foot of a page and reads as
+// an intentional pull-quote. `y` should be near the page bottom (~700–724).
+function closingBand(doc, text, opts = {}) {
+  const W = doc.page.width, w = W - 2 * M;
+  const dark = !!opts.dark;
+  const h = opts.h || 58;
+  const y = Math.min(opts.y ?? 716, doc.page.height - 30 - h - 6);
+  panel(doc, M, y, w, h, dark ? C.emerD : C.mint, 9, dark ? null : C.line);
+  doc.rect(M, y, 4, h).fill(C.gold);
+  let tx = M + 22;
+  if (opts.icon) { iconChip(doc, opts.icon, M + 16, y + (h - 34) / 2, 34, dark ? '#0b3a2b' : C.mint2, dark ? C.goldB : C.emer); tx = M + 64; }
+  const tw = W - M - tx - 18;
+  doc.font('bodyI').fontSize(opts.size || 11.5).fillColor(dark ? '#ffffff' : C.emer);
+  const th = doc.heightOfString(text, { width: tw, lineGap: 2.5 });
+  doc.text(text, tx, y + (h - th) / 2, { width: tw, lineGap: 2.5 });
+  return y + h;
+}
+
 // ---- page chrome ------------------------------------------------------------
 function chrome(doc, tag) {
   const W = doc.page.width, H = doc.page.height;
@@ -750,11 +768,12 @@ function clientsPage(doc) {
   const tx = M + iw + 24, twq = w - iw - 24;
   eyebrow(doc, 'Landmark Project', tx, y + 4, C.gold);
   doc.font('H').fontSize(21).fillColor(C.ink).text('Super Smelters — 1,980 kWp', tx, y + 18);
-  doc.font('ui').fontSize(8.5).fillColor(C.mute).text('ASANSOL, WEST BENGAL  ·  WITH TATA POWER SOLAR', tx, y + 44, { characterSpacing: 0.8 });
-  doc.font('bodyI').fontSize(12.5).fillColor(C.body)
+  doc.font('ui').fontSize(8).fillColor(C.mute).text('ASANSOL, W.B.  ·  WITH TATA POWER SOLAR', tx, y + 46, { characterSpacing: 0.6 });
+  doc.font('bodyI').fontSize(12).fillColor(C.body)
      .text('“Technical expertise, professionalism and timely delivery — with thorough inspections and meticulous attention to detail throughout.”',
-           tx, y + 64, { width: twq, lineGap: 3.4 });
-  doc.font('uiSB').fontSize(9).fillColor(C.emer).text('Inaugurated & featured in Dainik Bhaskar', tx, y + ph - 16);
+           tx, y + 62, { width: twq, lineGap: 3.2 });
+  doc.font('uiSB').fontSize(9).fillColor(C.emer).text('Inaugurated & featured in Dainik Bhaskar', tx, y + ph - 14);
+  closingBand(doc, 'From utility-scale parks to tea estates — India’s most trusted names return to Ingenieria, project after project.', { y: 720, icon: 'medal' });
 }
 
 // =============================================================================
@@ -1013,6 +1032,7 @@ function howItWorksPage(doc) {
     doc.font('body').fontSize(10.4).fillColor(C.body).text(b[1], bx + 40, by + 7, { width: bw - 46, lineGap: 2 });
     by += 42;
   });
+  closingBand(doc, 'From sunlight to savings — clean, dependable power you can count on, day after day, for 25 years and beyond.', { y: 716, icon: 'sun' });
 }
 
 // =============================================================================
@@ -1155,6 +1175,7 @@ function executionPage(doc) {
     drawImg(doc, photo(p[0]), x, y, iw, 116, 8);
     doc.font('uiSB').fontSize(8).fillColor(C.emer).text(p[1].toUpperCase(), x, y + 122, { width: iw, align: 'center', characterSpacing: 0.5 });
   });
+  closingBand(doc, 'Mobilised like a military operation — planned to the last detail, executed with discipline, and handed over on time.', { y: 716, icon: 'shield' });
 }
 
 // =============================================================================
@@ -1311,29 +1332,31 @@ function environmentPage(doc, data) {
     ['factory', Math.round(m.coalLife).toLocaleString('en-IN') + ' t', 'Coal', 'never mined or burned for your power'],
     ['home', m.homesPowered.toLocaleString('en-IN'), 'Homes', 'worth of clean electricity, each year'],
   ];
-  const cwid = (w - 3 * 14) / 4, chh = 150, y0 = y;
+  const cwid = (w - 3 * 14) / 4, chh = 178, y0 = y;
   cards.forEach((c, i) => {
     const x = M + i * (cwid + 14);
     panel(doc, x, y0, cwid, chh, C.mint, 10, C.line);
     doc.rect(x, y0, cwid, 3).fill(C.emer);
     // icon medallion
-    doc.circle(x + cwid / 2, y0 + 38, 22).fill(C.mint2);
-    icon(doc, c[0], x + cwid / 2, y0 + 38, 13, C.emer);
-    doc.font('uiB').fontSize(21).fillColor(C.ink).text(c[1], x + 8, y0 + 70, { width: cwid - 16, align: 'center' });
-    doc.font('uiSB').fontSize(10).fillColor(C.emer).text(c[2], x + 8, y0 + 96, { width: cwid - 16, align: 'center' });
-    doc.font('body').fontSize(8.4).fillColor(C.mute).text(c[3], x + 12, y0 + 112, { width: cwid - 24, align: 'center', lineGap: 1.5 });
+    doc.circle(x + cwid / 2, y0 + 44, 26).fill(C.mint2);
+    icon(doc, c[0], x + cwid / 2, y0 + 44, 15, C.emer);
+    doc.font('uiB').fontSize(22).fillColor(C.ink).text(c[1], x + 8, y0 + 84, { width: cwid - 16, align: 'center' });
+    doc.font('uiSB').fontSize(10.5).fillColor(C.emer).text(c[2], x + 8, y0 + 114, { width: cwid - 16, align: 'center' });
+    doc.font('body').fontSize(8.6).fillColor(C.mute).text(c[3], x + 12, y0 + 132, { width: cwid - 24, align: 'center', lineGap: 1.5 });
   });
-  y = y0 + chh + 16;
+  y = y0 + chh + 18;
 
-  // little forest strip + statement
-  panel(doc, M, y, w, 78, C.mint2, 10, C.line);
+  // forest strip + statement
+  const fh = 118;
+  panel(doc, M, y, w, fh, C.mint2, 10, C.line);
   doc.save();
-  for (let i = 0; i < 22; i++) icon(doc, 'tree', M + 22 + i * ((w - 44) / 21), y + 30, 11 + (i % 3) * 2, C.emerM);
+  for (let i = 0; i < 24; i++) icon(doc, 'tree', M + 20 + i * ((w - 40) / 23), y + 36, 13 + (i % 3) * 3, C.emerM);
   doc.restore();
-  doc.font('bodyI').fontSize(10.5).fillColor(C.emer)
+  doc.moveTo(M + 24, y + 62).lineTo(M + w - 24, y + 62).lineWidth(0.5).strokeColor('#bfe7d6').stroke();
+  doc.font('bodyI').fontSize(11).fillColor(C.emer)
      .text('Going solar with Arrays Ingenieria is not just a smart investment — it is a lasting act of nation-building. Cleaner air, lower carbon, and energy independence for generations to come.',
-           M + 20, y + 46, { width: w - 40, align: 'center' });
-  y += 78 + 8;
+           M + 34, y + 74, { width: w - 68, align: 'center', lineGap: 2.5 });
+  y += fh + 8;
   doc.font('bodyI').fontSize(7.6).fillColor(C.mute)
      .text('Environmental equivalences use a 0.82 kg CO₂/kWh Indian grid emission factor, ~22 kg/tree/yr sequestration and 0.4 kg coal/kWh. Indicative figures for illustration.', M, y, { width: w, lineGap: 1.5 });
 }
@@ -1381,6 +1404,7 @@ function qualityPage(doc) {
     doc.moveTo(M, y + rh).lineTo(W - M, y + rh).lineWidth(0.5).strokeColor(C.line).stroke();
     y += rh;
   });
+  closingBand(doc, 'Built to audited, triple-ISO standards with Tier-1 hardware — quality you can measure, and warranties you can trust.', { y: 716, icon: 'medal' });
 }
 
 // =============================================================================
@@ -1411,6 +1435,7 @@ function faqPage(doc) {
     doc.font('uiSB').fontSize(10.8).fillColor(C.ink).text(f[0], x + 18, yy, { width: cw - 18 });
     doc.font('body').fontSize(9.6).fillColor(C.body).text(f[1], x + 18, doc.y + 3, { width: cw - 18, lineGap: 2.8 });
   });
+  closingBand(doc, 'Still have a question? Our veteran-led team is a phone call away — we would be glad to walk you through every detail.', { y: 716, icon: 'people', dark: true });
 }
 
 // =============================================================================
