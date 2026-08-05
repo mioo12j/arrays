@@ -224,6 +224,15 @@ function icon(doc, kind, cx, cy, s, col) {
     case 'flag':
       L(cx - s * 0.6, cy - s, cx - s * 0.6, cy + s);
       doc.moveTo(cx - s * 0.6, cy - s).lineTo(cx + s * 0.7, cy - s * 0.6).lineTo(cx - s * 0.6, cy - s * 0.2).closePath().stroke(); break;
+    case 'tree':
+      doc.moveTo(cx, cy - s).lineTo(cx - s * 0.62, cy).lineTo(cx + s * 0.62, cy).closePath().fill();
+      doc.moveTo(cx, cy - s * 0.5).lineTo(cx - s * 0.85, cy + s * 0.55).lineTo(cx + s * 0.85, cy + s * 0.55).closePath().fill();
+      doc.rect(cx - s * 0.13, cy + s * 0.45, s * 0.26, s * 0.5).fill(); break;
+    case 'car':
+      doc.roundedRect(cx - s, cy - s * 0.15, 2 * s, s * 0.62, s * 0.16).fill();
+      doc.moveTo(cx - s * 0.5, cy - s * 0.12).lineTo(cx - s * 0.28, cy - s * 0.62).lineTo(cx + s * 0.4, cy - s * 0.62).lineTo(cx + s * 0.6, cy - s * 0.12).closePath().fill();
+      doc.save().fillColor('#ffffff').circle(cx - s * 0.55, cy + s * 0.5, s * 0.24).fill().circle(cx + s * 0.55, cy + s * 0.5, s * 0.24).fill().restore();
+      doc.circle(cx - s * 0.55, cy + s * 0.5, s * 0.13).fill(); doc.circle(cx + s * 0.55, cy + s * 0.5, s * 0.13).fill(); break;
     default:
       doc.circle(cx, cy, s * 0.6).stroke();
   }
@@ -248,28 +257,54 @@ function inrShort(n) {
   return '₹' + n.toLocaleString('en-IN');
 }
 
-// derive a financial model from whatever the questionnaire gave us
+// Government subsidy — explicit amount if given, else PM Surya Ghar for homes.
+function subsidyFor(data, kwp, capex) {
+  const s = String(data.subsidy ?? '').toLowerCase().trim();
+  if (s === 'no' || s === 'none' || s === '0') return 0;
+  const explicit = num(data.subsidy_amount ?? (/^\s*[₹0-9]/.test(String(data.subsidy)) ? data.subsidy : NaN), NaN);
+  if (!isNaN(explicit) && explicit > 0) return Math.min(explicit, capex);
+  const seg = String(data.project_type || '').toLowerCase();
+  if (seg.includes('resid')) {                    // PM Surya Ghar (residential)
+    if (kwp <= 2) return 30000 * kwp;
+    if (kwp <= 3) return 60000 + 18000 * (kwp - 2);
+    return 78000;
+  }
+  return 0;
+}
+
+// derive a full financial + environmental model from the questionnaire data
 function model(data) {
   const kwp = num(data.capacity_kwp || data.system_kwp || data.capacity_kw || data.capacity, 0) || 100;
   const tariff = num(data.tariff, 0) || 8.5;
-  const yieldPerKwp = 1500;                       // kWh/kWp/yr (India avg)
-  const gen1 = kwp * yieldPerKwp;                 // year-1 units
+  const yieldPerKwp = 1500;                        // kWh/kWp/yr (India avg)
+  const gen1 = kwp * yieldPerKwp;                  // year-1 units
   const costPerKwp = num(data.cost_per_kwp, 0) || 48000;
-  const capex = kwp * costPerKwp;
-  const save1 = gen1 * tariff;
-  // 25-yr cumulative: 3.5% tariff escalation, 0.6%/yr degradation
-  let cum = 0, esc = 1, deg = 1;
+  // Prefer the real quotation figures when present, so proposal & quotation agree.
+  const capexReal = num(data.total_amount ?? data.net_cost, 0);
+  const capex = capexReal > 0 ? capexReal : kwp * costPerKwp;
+  const subsidy = num(data.subsidy_amount, 0) || subsidyFor(data, kwp, capex);
+  const netInvest = num(data.net_cost, 0) || Math.max(capex - subsidy, 0);
+  const save1 = num(data.annual_savings, 0) || gen1 * tariff;
+  // 25-yr cumulative savings & lifetime generation (3.5% escalation, 0.6%/yr degradation)
+  let cum = 0, esc = 1, deg = 1, genLife = 0;
   const series = [];
   for (let yr = 1; yr <= 25; yr++) {
-    const s = gen1 * deg * tariff * esc;
-    cum += s; series.push(cum);
+    cum += save1 * deg * esc; series.push(cum);
+    genLife += gen1 * deg;
     esc *= 1.035; deg *= 0.994;
   }
-  const payback = capex / save1;
-  const co2 = gen1 * 0.82 / 1000;                 // tonnes/yr
+  const payback = num(data.payback_years, 0) || netInvest / save1;
+  const co2yr = gen1 * 0.82 / 1000;                // tonnes/yr (0.82 kg/kWh grid factor)
+  const co2Life = genLife * 0.82 / 1000;
   return {
-    kwp, tariff, gen1, capex, save1, cum25: cum, series,
-    paybackYrs: payback, co2yr: co2, trees: Math.round(co2 * 45), co2_25: co2 * 25,
+    kwp, tariff, gen1, genLife, costPerKwp, capex, subsidy, netInvest, save1, cum25: cum, series,
+    monthlySave: save1 / 12, paybackYrs: payback, roiX: cum / (netInvest || 1),
+    co2yr, co2Life, co2_25: co2Life,
+    treesYr: Math.round(co2yr * 1000 / 22),        // trees absorbing that CO₂ each year (~22 kg/tree/yr)
+    treesLife: Math.round(co2Life * 1000 / (22 * 25)), // trees each sequestering over a 25-yr life
+    carsYr: Math.max(1, Math.round(co2yr / 4.6)),  // cars off the road for a year (4.6 t/car/yr)
+    coalLife: genLife * 0.4 / 1000,                // tonnes of coal not burned (0.4 kg/kWh)
+    homesPowered: Math.max(1, Math.round(gen1 / 1200)), // homes @ ~100 units/month
     dailyUnits: Math.round(gen1 / 365),
   };
 }
@@ -385,7 +420,8 @@ function tocPage(doc, extras = []) {
     ['How Solar Works', 'From sunlight to savings'],
     ['Net Metering Explained', 'On-grid, off-grid & hybrid'],
     ['Execution Methodology', 'Our disciplined delivery process'],
-    ['Savings & ROI Analysis', 'The numbers behind your investment'],
+    ['Your Savings & Return', 'Investment, payback & 25-year savings'],
+    ['Environmental Impact', 'CO₂ avoided & a greener nation'],
     ['Quality, Safety & Warranty', 'Triple-ISO systems, Tier-1 hardware'],
     ['Your Questions, Answered', 'Frequently asked questions'],
   ];
@@ -1127,74 +1163,179 @@ function executionPage(doc) {
 function savingsPage(doc, data) {
   chrome(doc, 'Savings & ROI');
   const W = doc.page.width, w = W - 2 * M;
-  heading(doc, 'Section 15 · The Numbers', 'Savings & ROI Analysis');
+  heading(doc, 'Section 15 · The Numbers', 'Your Savings & Return');
   const m = model(data);
-  let y = doc.y + 2;
+  para(doc, `Here is what a ${m.kwp} kWp plant means for you — the investment, the money it puts back in your pocket, and how quickly it pays for itself.`, M, doc.y, w, { size: 10.4 });
+  let y = doc.y + 12;
 
   // top KPI cards
   const kpis = [
-    ['System Size', (m.kwp) + ' kWp', C.emer],
-    ['Annual Generation', Math.round(m.gen1).toLocaleString('en-IN') + ' kWh', C.navy],
-    ['Year-1 Savings', inrShort(m.save1), C.gold],
+    ['Net Investment', inrShort(m.netInvest), C.navy],
+    ['Monthly Savings', inrShort(m.monthlySave), C.gold],
     ['Payback Period', m.paybackYrs.toFixed(1) + ' yrs', C.emerM],
+    ['25-Yr Return', m.roiX.toFixed(1) + '×', C.emer],
   ];
-  const cw = (w - 3 * 12) / 4, ch = 60;
+  const cw = (w - 3 * 12) / 4, ch = 62;
   kpis.forEach((k, i) => {
     const x = M + i * (cw + 12);
     panel(doc, x, y, cw, ch, C.mint, 9, C.line);
     doc.rect(x, y, 4, ch).fill(k[2]);
-    doc.font('ui').fontSize(7.5).fillColor(C.mute).text(String(k[0]).toUpperCase(), x + 14, y + 11, { characterSpacing: 0.6 });
-    doc.font('uiB').fontSize(15).fillColor(C.ink).text(k[1], x + 14, y + 27);
+    doc.font('ui').fontSize(7.3).fillColor(C.mute).text(String(k[0]).toUpperCase(), x + 14, y + 11, { characterSpacing: 0.6 });
+    doc.font('uiB').fontSize(17).fillColor(C.ink).text(k[1], x + 14, y + 26);
   });
-  y += ch + 18;
+  y += ch + 16;
 
-  // 25-year cumulative savings chart
-  eyebrow(doc, '25-Year Cumulative Savings', M, y, C.gold); y += 16;
-  const chX = M, chY = y, chW = w, chH = 150;
-  panel(doc, chX, chY, chW, chH, C.paper, 9, C.line);
-  const padL = 54, padB = 24, padT = 14, padR = 14;
-  const plotX = chX + padL, plotY = chY + padT, plotW = chW - padL - padR, plotH = chH - padT - padB;
+  // ---- left: investment breakdown | right: 25-yr chart ----
+  const colGap = 16, leftW = w * 0.40, rightW = w - leftW - colGap;
+  const blockH = 192, lx = M, rx = M + leftW + colGap;
+
+  // investment breakdown panel
+  panel(doc, lx, y, leftW, blockH, C.paper, 9, C.line);
+  doc.font('uiSB').fontSize(8).fillColor(C.gold).text('INVESTMENT', lx + 16, y + 14, { characterSpacing: 1 });
+  const inv = [
+    ['System Cost', m.capex, C.mute],
+    ['Govt. Subsidy', -m.subsidy, C.emer],
+    ['Net Investment', m.netInvest, C.ink],
+  ];
+  let iy = y + 30;
+  inv.forEach((r, i) => {
+    const bold = i === inv.length - 1;
+    if (bold) doc.moveTo(lx + 16, iy - 3).lineTo(lx + leftW - 16, iy - 3).lineWidth(0.6).strokeColor(C.line).stroke();
+    doc.font(bold ? 'uiSB' : 'ui').fontSize(bold ? 10 : 9.2).fillColor(bold ? C.ink : C.body).text(r[0], lx + 16, iy + 2);
+    doc.font('uiB').fontSize(bold ? 12 : 9.6).fillColor(r[2])
+       .text((r[1] < 0 ? '– ' : '') + inrShort(Math.abs(r[1])), lx + 16, iy + (bold ? 0 : 1), { width: leftW - 32, align: 'right' });
+    iy += bold ? 26 : 22;
+  });
+  // annual generation + year-1 savings (stacked, right-aligned values)
+  iy += 8;
+  const statRow = (label, val, col) => {
+    doc.font('ui').fontSize(8).fillColor(C.mute).text(label, lx + 16, iy + 3);
+    doc.font('uiB').fontSize(12).fillColor(col).text(val, lx + 16, iy, { width: leftW - 32, align: 'right' });
+    iy += 22;
+  };
+  statRow('Annual Generation', Math.round(m.gen1).toLocaleString('en-IN') + ' kWh', C.emer);
+  statRow('Year-1 Savings', inrShort(m.save1), C.gold);
+  // payback highlight
+  const phy = y + blockH - 32;
+  doc.save().roundedRect(lx + 12, phy, leftW - 24, 24, 6).fill(C.mint2).restore();
+  doc.font('uiSB').fontSize(8).fillColor(C.emer)
+     .text('BREAK-EVEN IN ' + m.paybackYrs.toFixed(1) + ' YRS  ·  THEN 25+ YRS OF FREE POWER', lx + 12, phy + 8, { width: leftW - 24, align: 'center', characterSpacing: 0.3 });
+
+  // 25-year cumulative savings chart (right)
+  panel(doc, rx, y, rightW, blockH, C.paper, 9, C.line);
+  doc.font('uiSB').fontSize(8).fillColor(C.gold).text('25-YEAR CUMULATIVE SAVINGS', rx + 14, y + 12, { characterSpacing: 0.8 });
+  const padL = 46, padT = 30, padB = 20, padR = 14;
+  const plotX = rx + padL, plotY = y + padT, plotW = rightW - padL - padR, plotH = blockH - padT - padB;
   const maxV = m.series[m.series.length - 1];
   for (let g = 0; g <= 4; g++) {
     const gy = plotY + plotH - (plotH * g / 4);
     doc.moveTo(plotX, gy).lineTo(plotX + plotW, gy).lineWidth(0.5).strokeColor(C.line).stroke();
-    doc.font('ui').fontSize(7).fillColor(C.mute).text(inrShort(maxV * g / 4), chX + 6, gy - 4, { width: padL - 10, align: 'right' });
+    doc.font('ui').fontSize(6.6).fillColor(C.mute).text(inrShort(maxV * g / 4), rx + 4, gy - 4, { width: padL - 8, align: 'right' });
   }
   const pts = m.series.map((v, i) => [plotX + (plotW * i / 24), plotY + plotH - (plotH * v / maxV)]);
-  doc.save();
-  doc.moveTo(plotX, plotY + plotH);
+  doc.save(); doc.moveTo(plotX, plotY + plotH);
   pts.forEach((p) => doc.lineTo(p[0], p[1]));
   doc.lineTo(plotX + plotW, plotY + plotH).closePath();
   const grad = doc.linearGradient(0, plotY, 0, plotY + plotH);
-  grad.stop(0, C.emer, 0.55).stop(1, C.emer, 0.06);
+  grad.stop(0, C.emer, 0.5).stop(1, C.emer, 0.05);
   doc.fill(grad); doc.restore();
   doc.save().moveTo(pts[0][0], pts[0][1]);
   pts.forEach((p) => doc.lineTo(p[0], p[1]));
-  doc.lineWidth(1.6).strokeColor(C.emer).stroke(); doc.restore();
-  [1, 5, 10, 15, 20, 25].forEach((yr) => {
+  doc.lineWidth(1.8).strokeColor(C.emer).stroke(); doc.restore();
+  // payback marker
+  const pbX = plotX + (plotW * Math.min(m.paybackYrs, 25) / 25);
+  doc.save().moveTo(pbX, plotY).lineTo(pbX, plotY + plotH).lineWidth(0.8).dash(2, { space: 2 }).strokeColor(C.gold).stroke().undash().restore();
+  doc.font('ui').fontSize(6.4).fillColor(C.gold).text('PAYBACK', pbX + 2, plotY + 2);
+  [1, 10, 25].forEach((yr) => {
     const px = plotX + (plotW * (yr - 1) / 24);
-    doc.font('ui').fontSize(7).fillColor(C.mute).text('Yr ' + yr, px - 10, plotY + plotH + 8, { width: 20, align: 'center' });
+    doc.font('ui').fontSize(6.6).fillColor(C.mute).text('Yr ' + yr, px - 8, plotY + plotH + 6, { width: 24, align: 'center' });
   });
-  doc.font('ui').fontSize(7.5).fillColor(C.emer).text('25-YEAR TOTAL', plotX + plotW - 130, plotY + 6, { width: 126, align: 'right' });
-  doc.font('uiB').fontSize(17).fillColor(C.emer).text(inrShort(m.cum25), plotX + plotW - 130, plotY + 18, { width: 126, align: 'right' });
-  y = chY + chH + 16;
+  y += blockH + 16;
 
-  // environmental impact strip
-  panel(doc, M, y, w, 58, C.emer, 9);
-  const env = [[Math.round(m.co2_25).toLocaleString('en-IN') + ' t', 'CO₂ avoided (25 yr)'],
-               [(m.trees).toLocaleString('en-IN'), 'Trees planted equiv. /yr'],
-               [m.dailyUnits.toLocaleString('en-IN'), 'Units generated per day'],
-               ['90%', 'Typical bill offset']];
-  const ew = w / env.length;
-  env.forEach((e, i) => {
-    const cx = M + i * ew;
-    if (i) doc.moveTo(cx, y + 12).lineTo(cx, y + 46).lineWidth(0.6).strokeColor('#2f7a60').stroke();
-    doc.font('uiB').fontSize(16).fillColor('#fff').text(e[0], cx, y + 13, { width: ew, align: 'center' });
-    doc.font('ui').fontSize(7.3).fillColor('#bfe7d6').text(String(e[1]).toUpperCase(), cx, y + 38, { width: ew, align: 'center', characterSpacing: 0.5 });
+  // ---- 25 years: with vs without solar ----
+  eyebrow(doc, '25 Years — With Solar vs Without', M, y, C.gold); y += 16;
+  const cmpH = 96;
+  panel(doc, M, y, w, cmpH, C.paper, 9, C.line);
+  const barX = M + 150, barMaxW = w - 150 - 120, barMax = m.cum25;
+  const bar = (yy, label, sub, val, col) => {
+    doc.font('uiSB').fontSize(9).fillColor(C.ink).text(label, M + 16, yy + 2, { width: 128 });
+    doc.font('ui').fontSize(7.2).fillColor(C.mute).text(sub, M + 16, yy + 15, { width: 128 });
+    const bw = Math.max(8, barMaxW * (val / barMax));
+    doc.save().roundedRect(barX, yy, barMaxW, 20, 4).fill(C.mint).restore();
+    doc.save().roundedRect(barX, yy, bw, 20, 4).fill(col).restore();
+    doc.font('uiB').fontSize(11).fillColor(C.ink).text(inrShort(val), barX + barMaxW + 10, yy + 4, { width: 108, align: 'right' });
+  };
+  bar(y + 18, 'Without Solar', 'Paid to the DISCOM, 25 yrs', m.cum25, '#c99a3b');
+  bar(y + 54, 'With Solar', 'One-time net investment', m.netInvest, C.emer);
+  y += cmpH + 8;
+
+  // total-savings callout band
+  panel(doc, M, y, w, 42, C.emerD, 9);
+  doc.rect(M, y, 4, 42).fill(C.gold);
+  doc.font('body').fontSize(10.5).fillColor('#dcf3e7').text('You keep roughly', M + 20, y + 14, { continued: true })
+     .font('uiB').fontSize(12).fillColor('#ffffff').text('  ' + inr(m.cum25 - m.netInvest) + '  ', { continued: true })
+     .font('body').fillColor('#dcf3e7').text('over 25 years — a ' + m.roiX.toFixed(1) + '× return on your net investment.', { continued: false });
+  y += 42 + 8;
+  doc.font('bodyI').fontSize(7.4).fillColor(C.mute)
+     .text('Estimates use a 1,500 kWh/kWp annual yield, ₹' + m.tariff + '/unit tariff with 3.5% escalation and 0.6%/yr module degradation. Actual results vary with site, weather, consumption and DISCOM policy. Figures are indicative and not a financial guarantee.', M, y, { width: w, lineGap: 1.5 });
+}
+
+// =============================================================================
+//  ENVIRONMENTAL IMPACT — greenery, CO₂ & clean-energy graphics
+// =============================================================================
+function environmentPage(doc, data) {
+  chrome(doc, 'Environmental Impact');
+  const W = doc.page.width, w = W - 2 * M;
+  heading(doc, 'Section 16 · Clean & Green', 'Your Environmental Impact');
+  const m = model(data);
+  para(doc, 'Every unit your plant generates is a unit of clean power the grid does not have to make from coal. Across 25 years, that adds up to a genuine contribution to a greener nation.', M, doc.y, w, { size: 10.4 });
+  let y = doc.y + 14;
+
+  // hero CO2 band with a leaf motif
+  const bh = 92;
+  panel(doc, M, y, w, bh, C.emer, 10);
+  // faint leaves
+  doc.save().fillOpacity(0.10);
+  for (let i = 0; i < 7; i++) icon(doc, 'leaf', M + w - 40 - i * 34, y + 22 + (i % 2) * 30, 16, '#ffffff');
+  doc.restore();
+  doc.font('ui').fontSize(8).fillColor('#bfe7d6').text('CO₂ EMISSIONS AVOIDED OVER 25 YEARS', M + 24, y + 20, { characterSpacing: 1.2 });
+  doc.font('uiB').fontSize(40).fillColor('#ffffff').text(Math.round(m.co2Life).toLocaleString('en-IN') + ' tonnes', M + 22, y + 34);
+  doc.font('bodyI').fontSize(10).fillColor('#dcf3e7').text('≈ ' + Math.round(m.co2yr).toLocaleString('en-IN') + ' t every year of clean generation', M + 24, y + 74);
+  y += bh + 16;
+
+  // four equivalence cards with graphics
+  eyebrow(doc, 'What That Equals', M, y, C.gold); y += 16;
+  const cards = [
+    ['tree', m.treesLife.toLocaleString('en-IN'), 'Trees', 'working a lifetime to absorb the same CO₂'],
+    ['car', m.carsYr.toLocaleString('en-IN'), 'Cars', 'taken off the road, every single year'],
+    ['factory', Math.round(m.coalLife).toLocaleString('en-IN') + ' t', 'Coal', 'never mined or burned for your power'],
+    ['home', m.homesPowered.toLocaleString('en-IN'), 'Homes', 'worth of clean electricity, each year'],
+  ];
+  const cwid = (w - 3 * 14) / 4, chh = 150, y0 = y;
+  cards.forEach((c, i) => {
+    const x = M + i * (cwid + 14);
+    panel(doc, x, y0, cwid, chh, C.mint, 10, C.line);
+    doc.rect(x, y0, cwid, 3).fill(C.emer);
+    // icon medallion
+    doc.circle(x + cwid / 2, y0 + 38, 22).fill(C.mint2);
+    icon(doc, c[0], x + cwid / 2, y0 + 38, 13, C.emer);
+    doc.font('uiB').fontSize(21).fillColor(C.ink).text(c[1], x + 8, y0 + 70, { width: cwid - 16, align: 'center' });
+    doc.font('uiSB').fontSize(10).fillColor(C.emer).text(c[2], x + 8, y0 + 96, { width: cwid - 16, align: 'center' });
+    doc.font('body').fontSize(8.4).fillColor(C.mute).text(c[3], x + 12, y0 + 112, { width: cwid - 24, align: 'center', lineGap: 1.5 });
   });
-  y += 58 + 8;
-  doc.font('bodyI').fontSize(8).fillColor(C.mute)
-     .text('Estimates based on 1,500 kWh/kWp annual yield, 3.5% tariff escalation and 0.6%/yr degradation. Actual results vary with site, weather and DISCOM policy.', M, y, { width: w });
+  y = y0 + chh + 16;
+
+  // little forest strip + statement
+  panel(doc, M, y, w, 78, C.mint2, 10, C.line);
+  doc.save();
+  for (let i = 0; i < 22; i++) icon(doc, 'tree', M + 22 + i * ((w - 44) / 21), y + 30, 11 + (i % 3) * 2, C.emerM);
+  doc.restore();
+  doc.font('bodyI').fontSize(10.5).fillColor(C.emer)
+     .text('Going solar with Arrays Ingenieria is not just a smart investment — it is a lasting act of nation-building. Cleaner air, lower carbon, and energy independence for generations to come.',
+           M + 20, y + 46, { width: w - 40, align: 'center' });
+  y += 78 + 8;
+  doc.font('bodyI').fontSize(7.6).fillColor(C.mute)
+     .text('Environmental equivalences use a 0.82 kg CO₂/kWh Indian grid emission factor, ~22 kg/tree/yr sequestration and 0.4 kg coal/kWh. Indicative figures for illustration.', M, y, { width: w, lineGap: 1.5 });
 }
 
 // =============================================================================
@@ -1203,7 +1344,7 @@ function savingsPage(doc, data) {
 function qualityPage(doc) {
   chrome(doc, 'Quality & Warranty');
   const W = doc.page.width, w = W - 2 * M;
-  heading(doc, 'Section 16 · Assurance', 'Quality, Safety & Warranty');
+  heading(doc, 'Section 17 · Assurance', 'Quality, Safety & Warranty');
   para(doc, 'Every plant is engineered to audited, triple-ISO standards using Tier-1 hardware — and backed by warranties that protect your investment for decades.', M, doc.y, w, { size: 10.6 });
   let y = doc.y + 14;
 
@@ -1248,7 +1389,7 @@ function qualityPage(doc) {
 function faqPage(doc) {
   chrome(doc, 'FAQ');
   const W = doc.page.width, w = W - 2 * M;
-  heading(doc, 'Section 17 · Your Questions, Answered', 'Frequently Asked Questions');
+  heading(doc, 'Section 18 · Your Questions, Answered', 'Frequently Asked Questions');
   let y = doc.y + 4;
   const faqs = [
     ['Will rooftop solar damage my roof?', 'No. We use leak-proof, structurally engineered mounting and conduct a full structural and shadow analysis before installation to protect your roof’s integrity.'],
@@ -1304,7 +1445,10 @@ function thankYouPage(doc) {
      .text('www.arraysingenieria.com', cx, cy + 110, { width: cw, align: 'center' });
 
   doc.font('bodyI').fontSize(11).fillColor('#a7cfc0')
-     .text('Developing Green Energy for the Nation', 0, H - 58, { width: W, align: 'center' });
+     .text('Developing Green Energy for the Nation', 0, H - 66, { width: W, align: 'center' });
+  doc.font('ui').fontSize(7).fillColor('#7fae9b')
+     .text('This is a computer-generated document produced by the Arrays Ingenieria proposal system and is valid without a signature.',
+           0, H - 46, { width: W, align: 'center' });
 }
 
 // =============================================================================
@@ -1344,6 +1488,7 @@ export function renderProposal(doc, data = {}, opts = {}) {
     (d) => netMeteringPage(d, data),
     (d) => executionPage(d),
     (d) => savingsPage(d, data),
+    (d) => environmentPage(d, data),
     (d) => qualityPage(d),
     (d) => faqPage(d),
   ];

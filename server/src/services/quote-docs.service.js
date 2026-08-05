@@ -8,7 +8,7 @@
 import { KIT, registerFonts } from './proposal-pdf.service.js';
 
 const { C, M, chrome, heading, para, panel, eyebrow, triTick, drawImg, logo,
-        photo, V, num, inr, inrShort, addressLines, titleCaseCover } = KIT;
+        photo, V, num, inr, inrShort, addressLines, titleCaseCover, model } = KIT;
 
 // ---- shared helpers ---------------------------------------------------------
 function money(n) { return n || n === 0 ? '₹' + Math.round(n).toLocaleString('en-IN') : '—'; }
@@ -143,15 +143,13 @@ export function renderQuotation(doc, data = {}, opts = {}) {
      .text('All figures in Indian Rupees. This quotation is subject to the terms, validity and exclusions set out on the following pages.', M, y + 10, { width: w });
   y += 30;
 
-  // savings teaser band (full detail on page 2)
-  const tAnnual = num(data.annual_savings, 0) || (c.kwp ? c.kwp * 1500 * 8.5 : 0);
-  const tPayback = num(data.payback_years, 0) || (c.net && tAnnual ? c.net / tAnnual : 0);
-  const tLife = num(data.lifetime_savings, 0) || tAnnual * 22;
-  if (tAnnual) {
+  // savings teaser band (full detail on page 2) — shares the proposal's model
+  const mm = model(data);
+  if (mm.save1) {
     panel(doc, M, y, w, 70, C.emerD, 9);
     doc.rect(M, y, 4, 70).fill(C.gold);
     doc.font('uiSB').fontSize(8.5).fillColor(C.goldB).text('WHAT THIS INVESTMENT RETURNS', M + 20, y + 12, { characterSpacing: 1 });
-    const teas = [[inrShort(tAnnual), 'Saved / year'], [(tPayback ? tPayback.toFixed(1) : '—') + ' yrs', 'Payback'], [inrShort(tLife), 'Over 25 years'], ['25+ yrs', 'System life']];
+    const teas = [[inrShort(mm.save1), 'Saved / year'], [mm.paybackYrs.toFixed(1) + ' yrs', 'Payback'], [inrShort(mm.cum25), 'Over 25 years'], ['25+ yrs', 'System life']];
     const tw = (w - 40) / teas.length;
     teas.forEach((t, i) => {
       const x = M + 20 + i * tw;
@@ -185,16 +183,13 @@ export function renderQuotation(doc, data = {}, opts = {}) {
   });
   y += 96 + 22;
 
-  // savings snapshot
+  // savings snapshot — same model as the proposal, so figures agree
   eyebrow(doc, 'Your Return on Investment', M, y, C.gold); y += 18;
-  const annual = num(data.annual_savings, 0) || (c.kwp ? c.kwp * 1500 * 8.5 : 0);
-  const payback = num(data.payback_years, 0) || (c.net && annual ? c.net / annual : 0);
-  const lifetime = num(data.lifetime_savings, 0) || annual * 22;
   const roi = [
-    ['Annual Savings', inrShort(annual), C.emer],
-    ['Payback Period', (payback ? payback.toFixed(1) : '—') + ' yrs', C.gold],
-    ['25-Year Savings', inrShort(lifetime), C.emerM],
-    ['System Life', '25+ yrs', C.navy],
+    ['Annual Savings', inrShort(mm.save1), C.emer],
+    ['Payback Period', mm.paybackYrs.toFixed(1) + ' yrs', C.gold],
+    ['25-Year Savings', inrShort(mm.cum25), C.emerM],
+    ['Net Investment', inrShort(mm.netInvest), C.navy],
   ];
   const rw = (w - 3 * 12) / 4;
   roi.forEach((r, i) => {
@@ -266,13 +261,25 @@ export function renderQuotation(doc, data = {}, opts = {}) {
     'Statutory approvals fees, if any, are reimbursed at actuals.',
   ];
   y += 6;
-  panel(doc, M, y, w, 20 + exc.length * 16, C.mint, 9, C.line);
-  doc.rect(M, y, 4, 20 + exc.length * 16).fill(C.emer);
+  const excH = 20 + exc.length * 16;
+  panel(doc, M, y, w, excH, C.mint, 9, C.line);
+  doc.rect(M, y, 4, excH).fill(C.emer);
   doc.font('uiSB').fontSize(8.5).fillColor(C.emer).text('EXCLUSIONS', M + 18, y + 12, { characterSpacing: 1 });
   let ey = y + 28;
   exc.forEach((e) => { doc.font('body').fontSize(9).fillColor(C.body).text('•  ' + e, M + 18, ey, { width: w - 36 }); ey = doc.y + 3; });
+  autoGenNote(doc, y + excH + 12, 'quotation');
 
   return doc;
+}
+
+// A small closing notice for standalone transactional documents.
+function autoGenNote(doc, y, kind = 'document') {
+  const W = doc.page.width, w = W - 2 * M;
+  if (y > doc.page.height - 60) y = doc.page.height - 60;
+  doc.moveTo(M, y).lineTo(W - M, y).lineWidth(0.5).strokeColor(C.line).stroke();
+  doc.font('ui').fontSize(7).fillColor(C.mute)
+     .text(`This is a computer-generated ${kind} produced by the Arrays Ingenieria system and is valid without a physical signature. Figures are indicative and subject to the terms stated herein.`,
+           M, y + 6, { width: w, align: 'center', lineGap: 1.3 });
 }
 
 // =============================================================================
@@ -342,6 +349,7 @@ export function renderBOQ(doc, data = {}, opts = {}) {
 
   doc.font('bodyI').fontSize(8).fillColor(C.mute)
      .text('Quantities are indicative and finalised after the detailed site survey. Tier-1 makes as per approved vendor list. E&OE.', M, Math.min(y + 6, 792), { width: w });
+  autoGenNote(doc, Math.min(y + 24, doc.page.height - 54), 'bill of quantities');
   return doc;
 }
 
@@ -420,7 +428,9 @@ export function renderScope(doc, data = {}, opts = {}) {
     doc.rect(M, y, 4, Math.min(48, 790 - y)).fill(C.emer);
     doc.font('bodyI').fontSize(9.5).fillColor(C.body)
        .text('Anything not expressly listed under Arrays Ingenieria Scope is deemed to be in the Client Scope or chargeable at actuals. This division may be tailored to your project by mutual written agreement.', M + 18, y + 12, { width: w - 36, lineGap: 2.5 });
+    y += Math.min(48, 790 - y);
   }
+  autoGenNote(doc, Math.min(y + 16, doc.page.height - 54), 'scope of work');
   return doc;
 }
 
