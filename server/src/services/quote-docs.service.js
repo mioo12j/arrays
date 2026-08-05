@@ -120,10 +120,8 @@ export function renderQuotation(doc, data = {}, opts = {}) {
     if (!opt.fill && !opt.big) doc.moveTo(M, y + rh).lineTo(M + w, y + rh).lineWidth(0.5).strokeColor(C.line).stroke();
     y += rh;
   };
-  line('System Package (Supply + Installation)', c.subtotal);
-  if (c.contingency) line('Contingency', c.contingency);
-  if (c.margin) line('Overheads & Margin', c.margin);
-  line('Taxable Value', c.taxable);
+  // Client-facing: a single system price (never expose internal contingency/margin).
+  line('System Package — Supply, Installation & Commissioning', c.taxable);
   line(`GST${c.taxable ? ` (${Math.round((c.gst / c.taxable) * 100)}%)` : ''}`, c.gst);
   y += 4;
   line('Total Investment (incl. GST)', c.total, { big: true, fill: C.emer });
@@ -310,7 +308,12 @@ export function renderBOQ(doc, data = {}, opts = {}) {
   };
   y = headerRow(y);
 
-  const items = c.items.length ? c.items : [{ item: 'System package', qty: 1, unit: 'Lot', rate: c.subtotal, amount: c.subtotal }];
+  // Client-facing prices: fold internal contingency/overheads/margin into each
+  // component's rate so the line items themselves total the quoted price. We
+  // never print contingency or margin as separate lines to the client.
+  const rawItems = c.items.length ? c.items : null;
+  const factor = (rawItems && c.subtotal > 0) ? c.taxable / c.subtotal : 1;
+  const items = rawItems || [{ item: 'Complete Solar PV System — Supply, Installation & Commissioning', qty: 1, unit: 'Lot', rate: c.taxable, amount: c.taxable }];
   items.forEach((it, i) => {
     // measure description height
     doc.font('bodyM').fontSize(9.6);
@@ -318,12 +321,13 @@ export function renderBOQ(doc, data = {}, opts = {}) {
     const rh = Math.max(30, descH + 16);
     if (y + rh > 792) { doc.addPage(); chrome(doc, 'Bill of Quantities'); y = headerRow(100); }
     if (i % 2) doc.save().rect(M, y, w, rh).fill(C.mint).restore();
+    const dispRate = num(it.rate, 0) * factor, dispAmount = num(it.amount, 0) * factor;
     doc.font('uiSB').fontSize(9).fillColor(C.gold).text(String(i + 1), cNo, y + 9, { width: 24 });
     doc.font('bodyM').fontSize(9.6).fillColor(C.ink).text(String(it.item || '—'), cDesc, y + 8, { width: cUnit - cDesc - 10, lineGap: 1.5 });
     doc.font('ui').fontSize(9).fillColor(C.mute).text(V(it.unit, '—'), cUnit, y + 9, { width: 50 });
     doc.font('ui').fontSize(9).fillColor(C.body).text(num(it.qty, 0).toLocaleString('en-IN'), cQty, y + 9, { width: 56, align: 'right' });
-    doc.font('ui').fontSize(9).fillColor(C.body).text(money(num(it.rate, 0)), cRate, y + 9, { width: 56, align: 'right' });
-    doc.font('uiSB').fontSize(9.4).fillColor(C.ink).text(money(num(it.amount, 0)), cAmt - 90, y + 9, { width: 90, align: 'right' });
+    doc.font('ui').fontSize(9).fillColor(C.body).text(money(dispRate), cRate, y + 9, { width: 56, align: 'right' });
+    doc.font('uiSB').fontSize(9.4).fillColor(C.ink).text(money(dispAmount), cAmt - 90, y + 9, { width: 90, align: 'right' });
     doc.moveTo(M, y + rh).lineTo(M + w, y + rh).lineWidth(0.5).strokeColor(C.line).stroke();
     y += rh;
   });
@@ -340,11 +344,8 @@ export function renderBOQ(doc, data = {}, opts = {}) {
     y += rh + 4;
   };
   if (y + 120 > 792) { doc.addPage(); chrome(doc, 'Bill of Quantities'); y = 110; }
-  totRow('Sub-Total (Supply + Install)', c.subtotal);
-  if (c.contingency) totRow('Contingency', c.contingency);
-  if (c.margin) totRow('Overheads & Margin', c.margin);
-  totRow('Taxable Value', c.taxable);
-  totRow('GST', c.gst);
+  totRow('Sub-Total (before GST)', c.taxable);
+  totRow(`GST${c.taxable ? ` (${Math.round((c.gst / c.taxable) * 100)}%)` : ''}`, c.gst);
   totRow('Grand Total (incl. GST)', c.total, C.emer);
 
   doc.font('bodyI').fontSize(8).fillColor(C.mute)
