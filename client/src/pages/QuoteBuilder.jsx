@@ -515,7 +515,7 @@ export default function QuoteBuilder() {
                 </Field>
 
                 {/* Payment schedule */}
-                <div>
+                <div className="border-t border-slate-100 pt-4 dark:border-slate-800">
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Payment Schedule</span>
                     <div className="flex gap-3">
@@ -537,7 +537,7 @@ export default function QuoteBuilder() {
                 </div>
 
                 {/* Terms & Conditions (title + body) */}
-                <div>
+                <div className="border-t border-slate-100 pt-4 dark:border-slate-800">
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Terms &amp; Conditions</span>
                     <div className="flex gap-3">
@@ -560,7 +560,7 @@ export default function QuoteBuilder() {
                 </div>
 
                 {/* Scope of Work (Arrays + Client) + Exclusions */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between border-t border-slate-100 pt-4 dark:border-slate-800">
                   <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Scope of Work</span>
                   <button type="button" onClick={() => setPinputs((p) => ({ ...p, scope_ours: STD_SCOPE_OURS, scope_client: STD_SCOPE_CLIENT, exclusions: STD_EXCL }))} className="text-xs font-medium text-slate-500 hover:underline">Load standard</button>
                 </div>
@@ -573,7 +573,7 @@ export default function QuoteBuilder() {
                 </Field>
 
                 {/* Warranty & specification (Quality page) */}
-                <div>
+                <div className="border-t border-slate-100 pt-4 dark:border-slate-800">
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Warranty &amp; Specification</span>
                     <div className="flex gap-3">
