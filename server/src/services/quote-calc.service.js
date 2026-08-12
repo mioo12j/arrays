@@ -54,26 +54,43 @@ export function calculateQuote(input = {}) {
 
   const panelCount = wp > 0 ? Math.ceil(wp / r.panel_wattage) : 0;
 
-  const items = [
-    line('Solar PV Modules', panelCount, 'nos', r.panel_rate, panelCount * r.panel_rate,
-      `${r.panel_wattage} Wp modules`),
-    line('Inverters', kw, 'kW', r.inverter_rate_per_kw, kw * r.inverter_rate_per_kw, 'String/central inverters'),
-    line('Module Mounting Structure', kw, 'kW', r.structure_rate_per_kw, kw * r.structure_rate_per_kw,
-      type === 'ground_mount' ? 'Galvanized ground structure' : 'Rooftop structure'),
-    line('DC + AC Cabling', kw, 'kW', r.cable_rate_per_kw, kw * r.cable_rate_per_kw, 'Cables, conduits, terminations'),
-    line('Earthing & Lightning Arrestor', kw, 'kW', r.earthing_rate_per_kw, kw * r.earthing_rate_per_kw, 'Earthing pits + LA'),
-    line('Balance of System', kw, 'kW', r.bos_rate_per_kw, kw * r.bos_rate_per_kw, 'ACDB/DCDB, accessories'),
-    line('Civil Work', kw, 'kW', r.civil_rate_per_kw, kw * r.civil_rate_per_kw, `${labelType(type)} foundation/civil`),
-    line('Installation Labour', kw, 'kW', r.labour_rate_per_kw, kw * r.labour_rate_per_kw, 'Erection & commissioning'),
-    line('Transportation', kw, 'kW', r.transport_rate_per_kw, kw * r.transport_rate_per_kw, 'Logistics to site'),
-  ];
+  // Operator-defined custom line items take priority. Their amounts are the
+  // FINAL client-facing prices (already include the company's margin), so no
+  // hidden contingency/margin is added on top — the sum is the taxable value.
+  const custom = normalizeItems(input.custom_items, wp, r);
+  let items, subtotal, contingency_amount, cost_amount, margin_amount, taxable_amount;
 
-  const subtotal = round(items.reduce((s, i) => s + i.amount, 0));
-  const contingency_amount = round(subtotal * (r.contingency_pct / 100));
-  const cost_amount = round(subtotal + contingency_amount);
-  const margin_amount = round(cost_amount * (r.margin_pct / 100));
-  const taxable_amount = round(cost_amount + margin_amount);
-  const gst_amount = round(taxable_amount * (r.gst_pct / 100));
+  if (custom) {
+    items = custom;
+    taxable_amount = round(items.reduce((s, i) => s + i.amount, 0));
+    subtotal = taxable_amount;                    // sum of items == pre-GST price
+    contingency_amount = 0;
+    cost_amount = taxable_amount;
+    margin_amount = 0;
+  } else {
+    items = [
+      line('Solar PV Modules', panelCount, 'Nos', r.panel_rate, panelCount * r.panel_rate,
+        `${r.panel_wattage} Wp modules`),
+      line('Inverters', 1, 'Set', kw * r.inverter_rate_per_kw, kw * r.inverter_rate_per_kw, 'String/central inverters'),
+      line('Module Mounting Structure', 1, 'Lot', kw * r.structure_rate_per_kw, kw * r.structure_rate_per_kw,
+        type === 'ground_mount' ? 'Galvanized ground structure' : 'Rooftop structure'),
+      line('DC + AC Cabling', 1, 'Lot', kw * r.cable_rate_per_kw, kw * r.cable_rate_per_kw, 'Cables, conduits, terminations'),
+      line('Earthing & Lightning Arrestor', 1, 'Lot', kw * r.earthing_rate_per_kw, kw * r.earthing_rate_per_kw, 'Earthing pits + LA'),
+      line('Balance of System', 1, 'Lot', kw * r.bos_rate_per_kw, kw * r.bos_rate_per_kw, 'ACDB/DCDB, accessories'),
+      line('Civil Work', 1, 'Lot', kw * r.civil_rate_per_kw, kw * r.civil_rate_per_kw, `${labelType(type)} foundation/civil`),
+      line('Installation & Commissioning', 1, 'Lot', kw * r.labour_rate_per_kw, kw * r.labour_rate_per_kw, 'Erection & commissioning'),
+      line('Transportation', 1, 'Lot', kw * r.transport_rate_per_kw, kw * r.transport_rate_per_kw, 'Logistics to site'),
+    ].filter((i) => i.amount > 0);
+    subtotal = round(items.reduce((s, i) => s + i.amount, 0));
+    contingency_amount = round(subtotal * (r.contingency_pct / 100));
+    cost_amount = round(subtotal + contingency_amount);
+    margin_amount = round(cost_amount * (r.margin_pct / 100));
+    taxable_amount = round(cost_amount + margin_amount);
+  }
+
+  // GST: operator may set the rate, a fixed amount, or a CGST/SGST/IGST split.
+  const gst_pct = Number(input.gst_pct) || r.gst_pct;
+  const gst_amount = Number(input.gst_amount) > 0 ? round(input.gst_amount) : round(taxable_amount * (gst_pct / 100));
   const total_amount = round(taxable_amount + gst_amount);
   const per_watt = wp > 0 ? round(total_amount / wp) : 0;
 
@@ -113,6 +130,26 @@ export function calculateQuote(input = {}) {
 
 function line(item, qty, unit, rate, amount, note) {
   return { item, qty: round(qty), unit, rate: round(rate), amount: round(amount), note };
+}
+
+// Sanitize operator-supplied custom line items. Amount = explicit amount, else
+// qty × rate; a per-watt unit with no qty computes against the whole system's
+// wattage. Returns null when there are no usable rows (falls back to auto BOQ).
+function normalizeItems(list, wp, r) {
+  if (!Array.isArray(list)) return null;
+  const items = list.map((ci) => {
+    const desc = String(ci.description ?? ci.item ?? '').trim();
+    if (!desc) return null;
+    const unit = (String(ci.unit ?? 'Nos').trim()) || 'Nos';
+    const qty = Number(ci.qty) || 0;
+    const rate = Number(ci.rate) || 0;
+    let amount = (ci.amount !== undefined && ci.amount !== null && ci.amount !== '') ? Number(ci.amount) : NaN;
+    if (!Number.isFinite(amount)) {
+      amount = (/w(p|att)?$|\/\s*w/i.test(unit) && qty === 0) ? wp * rate : qty * rate;
+    }
+    return line(desc, qty, unit, rate, amount, String(ci.note ?? '').trim());
+  }).filter(Boolean);
+  return items.length ? items : null;
 }
 function labelType(t) {
   return ({ rooftop: 'Rooftop', ground_mount: 'Ground Mount', industrial: 'Industrial', commercial: 'Commercial' })[t] || 'Rooftop';

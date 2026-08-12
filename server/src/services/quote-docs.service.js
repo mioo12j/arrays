@@ -108,20 +108,25 @@ export function renderQuotation(doc, data = {}, opts = {}) {
   });
   y = Math.max(metaBottom, y + cH) + 18;
 
-  // commercial summary table
-  eyebrow(doc, 'Commercial Summary', M, y, C.gold); y += 18;
+  // commercial offer table
+  eyebrow(doc, 'Commercial Offer', M, y, C.gold); y += 18;
   const line = (label, val, opt = {}) => {
-    const rh = opt.big ? 40 : 26;
+    // row height grows with the (possibly multi-line) label
+    doc.font(opt.big ? 'uiSB' : 'ui').fontSize(opt.big ? 11 : 10);
+    const lh = doc.heightOfString(String(label), { width: w - 230 });
+    const rh = opt.big ? Math.max(40, lh + 22) : Math.max(26, lh + 14);
     if (opt.fill) panel(doc, M, y, w, rh, opt.fill, 6);
+    const tv = y + (rh - lh) / 2;                    // vertically centre the text
     doc.font(opt.big ? 'uiSB' : 'ui').fontSize(opt.big ? 11 : 10).fillColor(opt.big ? '#fff' : C.body)
-       .text(label, M + 16, y + (opt.big ? 15 : 8), { width: w - 220 });
+       .text(String(label), M + 16, tv, { width: w - 230 });
     doc.font(opt.big ? 'uiB' : 'uiSB').fontSize(opt.big ? 16 : 10.5).fillColor(opt.big ? '#fff' : (opt.accent || C.ink))
-       .text(money(val), M + w - 200, y + (opt.big ? 13 : 7), { width: 184, align: 'right' });
+       .text(money(val), M + w - 200, y + (rh - (opt.big ? 16 : 11)) / 2, { width: 184, align: 'right' });
     if (!opt.fill && !opt.big) doc.moveTo(M, y + rh).lineTo(M + w, y + rh).lineWidth(0.5).strokeColor(C.line).stroke();
     y += rh;
   };
   // Client-facing: a single system price (never expose internal contingency/margin).
-  line('System Package — Supply, Installation & Commissioning', c.taxable);
+  // The offer description is operator-defined.
+  line(data.commercial_scope || data.supply_description || 'Design, Engineering, Supply, Installation, Testing & Commissioning of Solar PV System', c.taxable);
   line(`GST${c.taxable ? ` (${Math.round((c.gst / c.taxable) * 100)}%)` : ''}`, c.gst);
   y += 4;
   line('Total Investment (incl. GST)', c.total, { big: true, fill: C.emer });
@@ -134,7 +139,7 @@ export function renderQuotation(doc, data = {}, opts = {}) {
     doc.rect(M, y, 4, 34).fill(C.gold);
     doc.font('uiSB').fontSize(9).fillColor(C.gold).text('EFFECTIVE PRICE', M + 18, y + 13, { characterSpacing: 0.6 });
     doc.font('uiSB').fontSize(10.5).fillColor(C.ink)
-       .text(`₹${c.perW.toFixed(2)} per Watt   ·   ${money(Math.round(c.total / c.kwp))} per kWp installed`, M + 130, y + 12);
+       .text(`₹ ${c.perW.toFixed(2)} per Watt  (inclusive of GST)`, M + 130, y + 12);
     y += 34;
   }
   doc.font('bodyI').fontSize(8).fillColor(C.mute)
@@ -233,7 +238,7 @@ export function renderQuotation(doc, data = {}, opts = {}) {
 
   // ---- PAGE 3 — terms & exclusions ----
   doc.addPage(); chrome(doc, 'Commercial Quotation');
-  heading(doc, 'The Fine Print', 'Terms & Conditions');
+  heading(doc, 'Please Read Carefully', 'Terms & Conditions');
   y = doc.y + 2;
   const terms = (data.terms && String(data.terms).trim()) ? String(data.terms).split(/\n+/) : [
     'Validity: This quotation is valid for 30 days from the date of issue, unless expressly extended in writing. Prices are firm for the validity period and exclusive of any subsequent escalation in module, inverter, steel or statutory-levy rates.',
@@ -349,7 +354,7 @@ export function renderBOQ(doc, data = {}, opts = {}) {
   totRow('Grand Total (incl. GST)', c.total, C.emer);
 
   doc.font('bodyI').fontSize(8).fillColor(C.mute)
-     .text('Quantities are indicative and finalised after the detailed site survey. Tier-1 makes as per approved vendor list. E&OE.', M, Math.min(y + 6, 792), { width: w });
+     .text('Quantities, makes and specifications are as per the requirement of the client. Errors & omissions excepted.', M, Math.min(y + 6, 792), { width: w });
   autoGenNote(doc, Math.min(y + 24, doc.page.height - 54), 'bill of quantities');
   return doc;
 }

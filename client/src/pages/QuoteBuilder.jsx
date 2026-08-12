@@ -62,6 +62,8 @@ export default function QuoteBuilder() {
   const [showProposal, setShowProposal] = useState(false);
   const [pinputs, setPinputs] = useState({});
   const [docMenu, setDocMenu] = useState(false);
+  const [useCustom, setUseCustom] = useState(false);
+  const [customItems, setCustomItems] = useState([]);
   const debounceRef = useRef(null);
   const docMenuRef = useRef(null);
 
@@ -88,24 +90,30 @@ export default function QuoteBuilder() {
       });
       setRates(data.inputs || {});
       setPinputs(data.proposal_inputs || {});
+      setUseCustom(!!data.proposal_inputs?._custom_boq);
+      setCustomItems((data.line_items || []).map((li) => ({
+        description: li.item, qty: li.qty, unit: li.unit, rate: li.rate, note: li.note,
+      })));
     }).catch((e) => toast.error(apiError(e))).finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   // Live calculation (debounced)
-  const recalc = useCallback((f, r) => {
+  const recalc = useCallback((f, r, ci) => {
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(async () => {
       try {
         const { data } = await api.post('/quotes/calculate', {
           ...r, capacity_kw: Number(f.capacity_kw || 0), project_type: f.project_type,
+          custom_items: ci && ci.length ? ci : undefined,
         });
         setCalc(data);
       } catch { /* ignore transient */ }
     }, 300);
   }, []);
 
-  useEffect(() => { recalc(form, rates); }, [form.capacity_kw, form.project_type, rates, recalc]);
+  useEffect(() => { recalc(form, rates, useCustom ? customItems : null); },
+    [form.capacity_kw, form.project_type, rates, useCustom, customItems, recalc]);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
   const setRate = (k) => (e) => setRates((r) => ({ ...r, [k]: e.target.value === '' ? undefined : Number(e.target.value) }));
@@ -120,8 +128,27 @@ export default function QuoteBuilder() {
     location: form.location, valid_until: form.valid_until || null,
     notes: form.notes, terms: form.terms, exclusions: form.exclusions,
     branch_id: form.branch_id || null,
-    proposal_inputs: { ...pinputs, project_type: form.project_type, capacity_kw: Number(form.capacity_kw || 0) },
+    custom_items: useCustom && customItems.length ? customItems : undefined,
+    proposal_inputs: {
+      ...pinputs, project_type: form.project_type, capacity_kw: Number(form.capacity_kw || 0),
+      _custom_boq: useCustom,
+    },
   });
+
+  // ---- custom BOQ line-item helpers ----
+  const BOQ_UNITS = ['Nos', 'Set', 'Lot', 'Wp', 'kWp', 'RM', 'Mtr', 'Sqm', 'LS'];
+  const updItem = (i, k, v) => setCustomItems((arr) => arr.map((it, j) => (j === i ? { ...it, [k]: v } : it)));
+  const addItem = () => setCustomItems((arr) => [...arr, { description: '', qty: 1, unit: 'Lot', rate: 0 }]);
+  const delItem = (i) => setCustomItems((arr) => arr.filter((_, j) => j !== i));
+  const toggleCustom = () => setUseCustom((on) => {
+    if (!on && customItems.length === 0 && c.line_items) {
+      setCustomItems(c.line_items.map((li) => ({ description: li.item, qty: li.qty, unit: li.unit, rate: li.rate, note: li.note })));
+    }
+    return !on;
+  });
+  const loadDefaults = () => {
+    if (c.line_items) setCustomItems(c.line_items.map((li) => ({ description: li.item, qty: li.qty, unit: li.unit, rate: li.rate, note: li.note })));
+  };
 
   const save = async () => {
     if (!form.capacity_kw || Number(form.capacity_kw) <= 0) return toast.error('Enter a valid system size');
@@ -332,6 +359,43 @@ export default function QuoteBuilder() {
           </Card>
 
           <Card>
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-slate-800 dark:text-slate-100">Bill of Quantities</h3>
+              <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                <input type="checkbox" checked={useCustom} onChange={toggleCustom} /> Custom items
+              </label>
+            </div>
+            {!useCustom ? (
+              <p className="mt-2 text-xs text-slate-400">Auto-generated from the rates and system size. Enable <b>Custom items</b> to set your own description, quantity, unit and rate per line.</p>
+            ) : (
+              <div className="mt-3 space-y-2">
+                <div className="flex gap-1.5 px-1 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+                  <span className="flex-[5]">Description</span><span className="flex-[1.4] text-right">Qty</span>
+                  <span className="flex-[1.6]">Unit</span><span className="flex-[2] text-right">Rate ₹</span><span className="w-4" />
+                </div>
+                {customItems.map((it, i) => (
+                  <div key={i} className="flex items-center gap-1.5">
+                    <input className="input flex-[5] !py-1.5 text-xs" placeholder="Item description" value={it.description || ''} onChange={(e) => updItem(i, 'description', e.target.value)} />
+                    <input className="input flex-[1.4] !py-1.5 text-right text-xs" type="number" value={it.qty ?? ''} onChange={(e) => updItem(i, 'qty', e.target.value)} />
+                    <select className="input flex-[1.6] !py-1.5 text-xs" value={it.unit || 'Lot'} onChange={(e) => updItem(i, 'unit', e.target.value)}>
+                      {BOQ_UNITS.map((u) => <option key={u} value={u}>{u}</option>)}
+                    </select>
+                    <input className="input flex-[2] !py-1.5 text-right text-xs" type="number" value={it.rate ?? ''} onChange={(e) => updItem(i, 'rate', e.target.value)} />
+                    <button type="button" onClick={() => delItem(i)} className="px-1 text-slate-400 hover:text-red-500" title="Remove">×</button>
+                  </div>
+                ))}
+                <div className="flex gap-2 pt-1">
+                  <button type="button" onClick={addItem} className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">+ Add item</button>
+                  <button type="button" onClick={loadDefaults} className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">Load standard items</button>
+                </div>
+                <p className="text-[11px] leading-relaxed text-slate-400">
+                  Unit <b>Wp</b> = ₹ per watt (rate × system watts, e.g. ₹42 → 25 kWp = ₹10.5 L). <b>Lot / Set / Nos</b> = amount is Qty × Rate. Amounts are client-facing (include your margin); GST is added on top.
+                </p>
+              </div>
+            )}
+          </Card>
+
+          <Card>
             <h3 className="mb-3 font-semibold text-slate-800 dark:text-slate-100">Proposal Text</h3>
             <div className="space-y-3">
               <Field label="Technical Scope / Notes"><textarea className="input min-h-[60px]" value={form.notes} onChange={set('notes')} /></Field>
@@ -372,7 +436,7 @@ export default function QuoteBuilder() {
               {[
                 ['Subtotal', c.subtotal], ['Contingency', c.contingency_amount],
                 ['Margin', c.margin_amount], ['Taxable Value', c.taxable_amount], ['GST', c.gst_amount],
-              ].map(([l, v]) => (
+              ].filter(([l, v]) => Number(v) > 0 || ['Subtotal', 'Taxable Value', 'GST'].includes(l)).map(([l, v]) => (
                 <div key={l} className="flex justify-between text-sm">
                   <span className="text-slate-500">{l}</span>
                   <span className="font-medium text-slate-700 dark:text-slate-200">{inr(v)}</span>
