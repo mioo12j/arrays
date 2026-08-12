@@ -10,6 +10,16 @@ import { KIT, registerFonts } from './proposal-pdf.service.js';
 const { C, M, chrome, heading, para, panel, eyebrow, triTick, drawImg, logo,
         photo, V, num, inr, inrShort, addressLines, titleCaseCover, model } = KIT;
 
+// Fixed company bank account (same for every quote) — printed in the PDF only,
+// not collected in the software. Fill account_no / ifsc with the real details.
+const DEFAULT_BANK = {
+  bank_name: 'HDFC Bank',
+  bank_branch: '',
+  account_name: 'Arrays Ingenieria Pvt. Ltd.',
+  account_no: 'XXXXXXXXXXXX',
+  ifsc: 'HDFCXXXXXXX',
+};
+
 // ---- shared helpers ---------------------------------------------------------
 function money(n) { return n || n === 0 ? '₹' + Math.round(n).toLocaleString('en-IN') : '—'; }
 
@@ -229,17 +239,7 @@ export function renderQuotation(doc, data = {}, opts = {}) {
     doc.font('body').fontSize(9).fillColor(C.body).text(s.against, M + 92, y + 25, { width: w - 108, lineGap: 1.6 });
     y += rh + 8;
   });
-  // proforma-invoice note
-  const piText = 'All payments are strictly against our Proforma Invoice (PI). The GST tax invoice is issued only after the corresponding payment is realised in our account. Materials remain our property until paid in full.';
-  doc.font('body').fontSize(9.2);
-  const piTextH = doc.heightOfString(piText, { width: w - 36, lineGap: 2 });
-  const piH = piTextH + 40;                          // eyebrow (24) + text + bottom pad
-  y = flowY(y, piH + 8);
-  panel(doc, M, y, w, piH, C.cream, 8);
-  doc.rect(M, y, 4, piH).fill(C.gold);
-  doc.font('uiSB').fontSize(8).fillColor(C.gold).text('PAYMENT AGAINST PROFORMA INVOICE', M + 18, y + 13, { characterSpacing: 0.8 });
-  doc.font('body').fontSize(9.2).fillColor(C.body).text(piText, M + 18, y + 26, { width: w - 36, lineGap: 2 });
-  y += piH + 18;
+  y += 6;   // the PI payment-method note is stated once, on the terms page
 
   // return on investment + disclaimer
   y = flowY(y, 120);
@@ -280,7 +280,7 @@ export function renderQuotation(doc, data = {}, opts = {}) {
   doc.addPage(); chrome(doc, 'Commercial Quotation');
   heading(doc, 'Please Read Carefully', 'Terms & Conditions');
   y = doc.y + 2;
-  const terms = normalizeTerms(data.terms) || defaultTerms(data);
+  const terms = normalizeTerms(data.terms) || defaultTerms();
   terms.forEach((t) => {
     doc.font('body').fontSize(9.2);
     const bodyH = doc.heightOfString(t.body, { width: w - 24, lineGap: 2.6 });
@@ -292,7 +292,15 @@ export function renderQuotation(doc, data = {}, opts = {}) {
     y = doc.y + 9;
   });
 
-  // company GST + bank + delay-payment details (exclusions now sit with scope)
+  // signature — the terms are part of the commercial offer
+  y = flowY(y + 8, 64);
+  const sw = (w - 20) / 2;
+  doc.font('script').fontSize(18).fillColor(C.gold).text('For Arrays Ingenieria Pvt. Ltd.', M, y + 26);
+  doc.moveTo(M + w - sw + 10, y + 34).lineTo(M + w - 20, y + 34).lineWidth(0.8).strokeColor(C.ink).stroke();
+  doc.font('ui').fontSize(8).fillColor(C.mute).text('Authorised Signatory & Company Seal', M + w - sw + 10, y + 40);
+  y += 60;
+
+  // GST (from office) + fixed bank details + payment method
   y = companyBankBlock(doc, data, y, flowY);
   autoGenNote(doc, Math.min(y + 8, doc.page.height - 54), 'quotation');
 
@@ -300,16 +308,15 @@ export function renderQuotation(doc, data = {}, opts = {}) {
 }
 
 // Default, PI-centric terms (used until the operator supplies their own).
-function defaultTerms(data) {
-  const delay = data.delay_interest || '18% per annum';
+function defaultTerms() {
+  // Payment terms, delay-interest, scope and warranty details are stated in their
+  // own sections (Payment Schedule, Bank details, Scope of Work, Warranty), so
+  // they are deliberately NOT repeated here to avoid contradiction.
   return [
-    { title: 'Payment', body: 'All payments shall be made strictly against the Proforma Invoice (PI) issued by us. The GST tax invoice is raised only after the corresponding payment is realised in our account. Materials remain our property until payment is received in full.' },
-    { title: 'Delay in Payment', body: `Payments delayed beyond the due date attract interest at ${delay}, and may lead to suspension of works and revision of the delivery schedule.` },
     { title: 'GST & Taxes', body: 'GST is charged extra at prevailing rates as applicable on the date of invoicing, over and above the quoted value.' },
-    { title: 'Module & Inverter Warranty', body: 'Solar modules and inverters carry the warranty of the respective manufacturer / brand; the performance warranty applicable is that of the modules supplied. Modules and inverter are supplied as per the requirement of the client.' },
-    { title: 'Workmanship Warranty', body: 'Our installation carries a workmanship warranty as mutually agreed, subject to normal use and the manufacturer’s terms.' },
+    { title: 'Warranty', body: 'Solar modules and inverter carry the respective manufacturer / brand warranty and are supplied as per the requirement of the client.' },
     { title: 'Delivery & Timeline', body: 'Delivery and commissioning commence from receipt of the advance, a technically clear order and continuous unobstructed access to a ready site.' },
-    { title: 'Client Scope', body: 'The client shall provide secure site access, a shadow-free installation area, construction power & water, safe covered storage, and statutory space for inverters and metering.' },
+    { title: 'Insurance', body: 'Transit and erection-all-risk cover, where required, is arranged at actuals. The client shall insure the plant after handover.' },
     { title: 'Force Majeure', body: 'Neither party shall be liable for delay or non-performance due to events beyond reasonable control — weather, strikes, regulatory change, grid unavailability or acts of God.' },
     { title: 'Jurisdiction & Confidentiality', body: 'This quotation is confidential, remains our property, and any dispute is subject to the jurisdiction of the courts at our registered office.' },
   ];
@@ -399,10 +406,10 @@ function companyBankBlock(doc, data, y, flowY) {
   doc.rect(bx, y, colW, 3).fill(C.emer);
   doc.font('uiSB').fontSize(8).fillColor(C.emer).text('BANK DETAILS FOR PAYMENT', bx + 14, y + 12, { characterSpacing: 0.8 });
   const bankRows = [
-    ['Bank / Branch', [data.bank_name, data.bank_branch].filter(Boolean).join(', ') || '—'],
-    ['Account Name', data.bank_account_name || 'Arrays Ingenieria Pvt. Ltd.'],
-    ['Account No.', data.bank_account_no || '—'],
-    ['IFSC', data.bank_ifsc || '—'],
+    ['Bank / Branch', [DEFAULT_BANK.bank_name, DEFAULT_BANK.bank_branch].filter(Boolean).join(', ') || '—'],
+    ['Account Name', DEFAULT_BANK.account_name],
+    ['Account No.', DEFAULT_BANK.account_no || '—'],
+    ['IFSC', DEFAULT_BANK.ifsc || '—'],
   ];
   let by = y + 28;
   bankRows.forEach((r) => {
@@ -411,10 +418,14 @@ function companyBankBlock(doc, data, y, flowY) {
     by = doc.y + 4;
   });
   y += bh + 10;
-  // delay-payment note
-  doc.font('bodyI').fontSize(8.4).fillColor(C.mute)
-     .text(`Delay in payment beyond the agreed due date attracts interest at ${data.delay_interest || '18% per annum'}. All payments strictly against Proforma Invoice.`, M, y, { width: w, lineGap: 1.5 });
-  return doc.y + 6;
+  // payment-method note — the key commercial condition
+  const pmH = 40;
+  panel(doc, M, y, w, pmH, C.cream, 8);
+  doc.rect(M, y, 4, pmH).fill(C.gold);
+  doc.font('uiSB').fontSize(8).fillColor(C.gold).text('PAYMENT METHOD', M + 16, y + 10, { characterSpacing: 0.8 });
+  doc.font('body').fontSize(9).fillColor(C.body)
+     .text(`Payment is credited only against our Proforma Invoice. No GST tax invoice is issued until the payment is received in our account. Delay beyond the due date attracts interest at ${data.delay_interest || '18% per annum'}.`, M + 16, y + 22, { width: w - 32, lineGap: 1.5 });
+  return y + pmH + 6;
 }
 
 // A small closing notice for standalone transactional documents.

@@ -39,12 +39,15 @@ const STD_SCHEDULE = [
   { pct: '5%', stage: 'On Installation', against: 'On completion of mechanical installation at site' },
   { pct: '5%', stage: 'On Commissioning', against: 'On successful testing, commissioning & handover' },
 ];
+// Payment, scope and warranty have their own sections, so they are not repeated
+// here (avoids duplication/contradiction in the PDF).
 const STD_TERMS = [
-  { title: 'Payment', body: 'All payments strictly against the Proforma Invoice (PI). The GST tax invoice is raised only after payment is realised in our account. Materials remain our property until paid in full.' },
-  { title: 'Delay in Payment', body: 'Payments delayed beyond the due date attract interest at 18% per annum and may lead to suspension of works.' },
-  { title: 'GST & Taxes', body: 'GST is charged extra at prevailing rates as applicable on the date of invoicing.' },
-  { title: 'Module & Inverter Warranty', body: 'Modules and inverter carry the respective manufacturer warranty and are supplied as per the requirement of the client.' },
+  { title: 'GST & Taxes', body: 'GST is charged extra at prevailing rates as applicable on the date of invoicing, over and above the quoted value.' },
+  { title: 'Warranty', body: 'Solar modules and inverter carry the respective manufacturer / brand warranty and are supplied as per the requirement of the client.' },
   { title: 'Delivery & Timeline', body: 'Delivery and commissioning commence from receipt of the advance, a technically clear order and continuous unobstructed site access.' },
+  { title: 'Insurance', body: 'Transit and erection-all-risk cover, where required, is arranged at actuals. The client shall insure the plant after handover.' },
+  { title: 'Force Majeure', body: 'Neither party shall be liable for delay or non-performance due to events beyond reasonable control.' },
+  { title: 'Jurisdiction & Confidentiality', body: 'This quotation is confidential, remains our property, and any dispute is subject to the jurisdiction of the courts at our registered office.' },
 ];
 const STD_SCOPE_OURS = 'Design, engineering, drawings & SLD\nSupply of modules, inverter & BOS as per client requirement\nMounting structure, DC/AC cabling, earthing & lightning protection\nInstallation, testing & commissioning\nDISCOM liaison & net-metering application\nDatasheets, test certificates & O&M orientation';
 const STD_SCOPE_CLIENT = 'Clear, secure, shadow-free site with structural adequacy\nConstruction power & water and safe storage at site\nSanctioned load details, latest electricity bill & KYC\nDISCOM deposits, feasibility & statutory fees (at actuals)\nTimely release of payments as per the agreed schedule';
@@ -591,19 +594,7 @@ export default function QuoteBuilder() {
                   </div>
                 </div>
 
-                {/* Bank details — GSTIN comes from the selected office */}
-                <div>
-                  <div className="mb-1 text-sm font-semibold text-slate-700 dark:text-slate-200">Bank Details (last page)</div>
-                  <p className="mb-2 text-xs text-slate-400">GSTIN is taken automatically from the office selected above. Paste your bank details below.</p>
-                  <div className="grid grid-cols-2 gap-3">
-                    <Field label="Delay-payment interest"><input className="input text-xs" value={pinputs.delay_interest || ''} onChange={setPI('delay_interest')} placeholder="18% per annum" /></Field>
-                    <Field label="Bank Name"><input className="input text-xs" value={pinputs.bank_name || ''} onChange={setPI('bank_name')} /></Field>
-                    <Field label="Bank Branch"><input className="input text-xs" value={pinputs.bank_branch || ''} onChange={setPI('bank_branch')} /></Field>
-                    <Field label="Account Name"><input className="input text-xs" value={pinputs.bank_account_name || ''} onChange={setPI('bank_account_name')} /></Field>
-                    <Field label="Account No."><input className="input text-xs" value={pinputs.bank_account_no || ''} onChange={setPI('bank_account_no')} /></Field>
-                    <Field label="IFSC"><input className="input text-xs" value={pinputs.bank_ifsc || ''} onChange={setPI('bank_ifsc')} /></Field>
-                  </div>
-                </div>
+                <p className="rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-400 dark:bg-slate-800/60">GSTIN is taken from the selected office. The company bank account &amp; payment-method note are fixed in the PDF (not entered here).</p>
               </div>
             )}
           </Card>

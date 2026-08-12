@@ -6,7 +6,7 @@ import { denyWriteForAdmin } from '../middleware/rbac.js';
 import { audit } from '../middleware/audit.js';
 import { calculateQuote } from '../services/quote-calc.service.js';
 import { streamQuotePdf } from '../services/quote-pdf.service.js';
-import { renderProposal, renderThankYou, renderTechnical, renderFaq, PROPOSAL_BRAND, registerFonts } from '../services/proposal-pdf.service.js';
+import { renderProposal, renderThankYou, renderFaq, PROPOSAL_BRAND, registerFonts } from '../services/proposal-pdf.service.js';
 import { renderQuotation, renderBOQ, renderScope } from '../services/quote-docs.service.js';
 import PDFDocument from 'pdfkit';
 import * as branding from '../services/gst/brandingService.js';
@@ -284,7 +284,6 @@ function streamParts(res, q, data, parts) {
   // Technical → FAQ → Thank-You close the pack (in that order) when the
   // proposal is included, so the FAQ is the last content page before the end.
   if (hasProposal) {
-    doc.addPage(); renderTechnical(doc, data, { shared: true });
     doc.addPage(); renderFaq(doc, data, { shared: true });
     doc.addPage(); renderThankYou(doc, data, { shared: true });
   }
