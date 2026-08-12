@@ -463,7 +463,7 @@ function tocPage(doc, extras = []) {
     ['Your Savings & Return', 'Investment, payback & 25-year savings'],
     ['Environmental Impact', 'CO₂ avoided & a greener nation'],
     ['Quality, Safety & Warranty', 'Triple-ISO systems, Tier-1 hardware'],
-    ['Your Questions, Answered', 'Frequently asked questions'],
+    // Technical Specifications & FAQ are appended via `extras` (they close the pack)
   ];
   // append the extra documents actually included in this download
   const items = base.concat(extras.map((e) => [e.label, e.sub]))
@@ -957,16 +957,23 @@ function understandPage(doc, data) {
     ['Net Metering', tc(data.net_metering)],
     ['Battery Backup', tc(data.battery)],
   ];
-  const cw = (w - 18) / 2, rh = 38;
-  rows.forEach((r, ci) => {
-    const col = ci % 2, row = Math.floor(ci / 2);
-    const x = M + col * (cw + 18), yy = y + row * rh;
-    panel(doc, x, yy, cw, rh - 8, C.mint, 6);
-    doc.rect(x, yy, 3, rh - 8).fill(C.emer);
-    doc.font('ui').fontSize(8).fillColor(C.mute).text(String(r[0]).toUpperCase(), x + 14, yy + 6, { characterSpacing: 0.8 });
-    doc.font('uiSB').fontSize(10.5).fillColor(C.ink).text(V(r[1]), x + 14, yy + 17, { width: cw - 24 });
-  });
-  y += Math.ceil(rows.length / 2) * rh + 16;
+  // 2-column key/value cards — each row grows to fit the taller of its two cells
+  const cw = (w - 18) / 2, vgap = 8;
+  const cellH = (val) => { doc.font('uiSB').fontSize(10.5); return Math.max(30, doc.heightOfString(V(val), { width: cw - 26, lineGap: 1.5 }) + 24); };
+  for (let i = 0; i < rows.length; i += 2) {
+    const pair = [rows[i], rows[i + 1]];
+    const h = Math.max(cellH(pair[0] && pair[0][1]), pair[1] ? cellH(pair[1][1]) : 0);
+    pair.forEach((r, col) => {
+      if (!r) return;
+      const x = M + col * (cw + 18);
+      panel(doc, x, y, cw, h, C.mint, 6);
+      doc.rect(x, y, 3, h).fill(C.emer);
+      doc.font('ui').fontSize(8).fillColor(C.mute).text(String(r[0]).toUpperCase(), x + 14, y + 7, { characterSpacing: 0.8 });
+      doc.font('uiSB').fontSize(10.5).fillColor(C.ink).text(V(r[1]), x + 14, y + 18, { width: cw - 26, lineGap: 1.5 });
+    });
+    y += h + vgap;
+  }
+  y += 8;
 
   // customised narrative — personalised to segment, grid type and battery
   const seg = String(data.project_type || '').toLowerCase();
@@ -1494,7 +1501,7 @@ function environmentPage(doc, data) {
 // =============================================================================
 //  PAGE 18 — QUALITY, SAFETY & WARRANTY
 // =============================================================================
-function qualityPage(doc) {
+function qualityPage(doc, data = {}) {
   chrome(doc, 'Quality & Warranty');
   const W = doc.page.width, w = W - 2 * M;
   heading(doc, 'Section 18 · Assurance', 'Quality, Safety & Warranty');
@@ -1513,39 +1520,47 @@ function qualityPage(doc) {
   y = y0 + ih + 38 + 20;
 
   eyebrow(doc, 'Warranty & Assurance', M, y, C.gold); y += 18;
-  const rows = [
-    ['Solar Modules', 'Tier-1, mono PERC / TOPCon', '25-year linear · 12-year product'],
-    ['Inverters', 'Smart string / central', '5–10 years (extendable)'],
-    ['Mounting Structure', 'Hot-dip galvanised / GI', '10–15 years vs. corrosion'],
-    ['Workmanship (EPC)', 'Ingenieria installation', '5-year comprehensive'],
-    ['Plant Performance', 'Guaranteed generation', 'As per PPA / contract terms'],
-  ];
+  const rows = (Array.isArray(data.warranty_rows) && data.warranty_rows.length)
+    ? data.warranty_rows.map((r) => (Array.isArray(r) ? r : [r.component || r.item || '', r.spec || r.specification || '', r.warranty || ''])).filter((r) => r[0])
+    : [
+      ['Solar Modules', 'As per the requirement of the client', 'As per module manufacturer’s product & performance warranty'],
+      ['Inverters', 'As per the requirement of the client', 'As per inverter manufacturer’s warranty'],
+      ['Mounting Structure', 'Hot-dip galvanised / GI', 'Against corrosion, as per make'],
+      ['Workmanship (EPC)', 'Ingenieria installation', 'As mutually agreed'],
+    ];
   const c0 = M, c1 = M + 150, c2 = M + 320;
   panel(doc, M, y, w, 26, C.emer, 5);
   doc.font('uiSB').fontSize(8).fillColor('#fff');
   doc.text('COMPONENT', c0 + 12, y + 9); doc.text('SPECIFICATION', c1, y + 9); doc.text('WARRANTY', c2, y + 9);
   y += 26;
   rows.forEach((r, i) => {
-    const rh = 36;
+    // row height grows with the tallest of specification / warranty text
+    doc.font('body').fontSize(9.6);
+    const hSpec = doc.heightOfString(String(r[1] || ''), { width: c2 - c1 - 12, lineGap: 1.5 });
+    const hWar = doc.heightOfString(String(r[2] || ''), { width: W - M - c2 - 12, lineGap: 1.5 });
+    const rh = Math.max(34, Math.max(hSpec, hWar) + 18);
     if (i % 2) doc.save().rect(M, y, w, rh).fill(C.mint).restore();
-    doc.font('uiSB').fontSize(9.8).fillColor(C.ink).text(r[0], c0 + 12, y + 12, { width: 140 });
-    doc.font('body').fontSize(9.6).fillColor(C.body).text(r[1], c1, y + 12, { width: 165 });
-    doc.font('uiM').fontSize(9.6).fillColor(C.emer).text(r[2], c2, y + 12, { width: W - M - c2 - 10 });
+    doc.font('uiSB').fontSize(9.8).fillColor(C.ink).text(String(r[0]), c0 + 12, y + 11, { width: 138 });
+    doc.font('body').fontSize(9.6).fillColor(C.body).text(String(r[1] || ''), c1, y + 11, { width: c2 - c1 - 12, lineGap: 1.5 });
+    doc.font('uiM').fontSize(9.6).fillColor(C.emer).text(String(r[2] || ''), c2, y + 11, { width: W - M - c2 - 12, lineGap: 1.5 });
     doc.moveTo(M, y + rh).lineTo(W - M, y + rh).lineWidth(0.5).strokeColor(C.line).stroke();
     y += rh;
   });
-  closingBand(doc, 'Built to audited, triple-ISO standards with Tier-1 hardware — quality you can measure, and warranties you can trust.', { y: 716, icon: 'medal' });
+  const bandY = Math.min(Math.max(y + 20, 640), 716);
+  closingBand(doc, 'Built to audited, triple-ISO standards with hardware supplied as per your requirement — quality you can measure, and warranties you can trust.', { y: bandY, icon: 'medal' });
 }
 
 // =============================================================================
 //  PAGE 19 — FAQ
 // =============================================================================
-function faqPage(doc) {
+function faqPage(doc, data = {}) {
   chrome(doc, 'FAQ');
   const W = doc.page.width, w = W - 2 * M;
-  heading(doc, 'Section 19 · Your Questions, Answered', 'Frequently Asked Questions');
+  heading(doc, 'Before You Decide', 'Frequently Asked Questions');
   let y = doc.y + 4;
-  const faqs = [
+  const faqs = (Array.isArray(data.faqs) && data.faqs.length)
+    ? data.faqs.map((f) => (Array.isArray(f) ? f : [f.q || f.question || '', f.a || f.answer || ''])).filter((f) => f[0]).slice(0, 8)
+    : [
     ['Will rooftop solar damage my roof?', 'No. We use leak-proof, structurally engineered mounting and conduct a full structural and shadow analysis before installation to protect your roof’s integrity.'],
     ['How much can I actually save?', 'Most clients offset 70–90% of their electricity bill and reach payback in 3–5 years, then enjoy decades of near-free daytime power.'],
     ['What happens on cloudy days or at night?', 'On-grid systems draw seamlessly from the grid when generation is low; net metering credits your daytime surplus. Hybrid systems add battery backup for outages.'],
@@ -1607,6 +1622,69 @@ function thankYouPage(doc) {
 }
 
 // =============================================================================
+//  TECHNICAL SPECIFICATIONS (component datasheet parameters)
+// =============================================================================
+function normalizeSpecs(list) {
+  if (!Array.isArray(list)) return null;
+  const a = list.map((r) => (Array.isArray(r)
+    ? [String(r[0] || '').trim(), String(r[1] || '').trim()]
+    : [String(r.label || r.k || r.parameter || '').trim(), String(r.value || r.v || '').trim()]))
+    .filter((r) => r[0]);
+  return a.length ? a : null;
+}
+
+function technicalPage(doc, data = {}) {
+  chrome(doc, 'Technical');
+  const W = doc.page.width, w = W - 2 * M;
+  heading(doc, 'Component Datasheets', 'Technical Specifications');
+  para(doc, 'Indicative technical parameters of the proposed major components. Final makes, models and datasheets are supplied as per the requirement of the client.', M, doc.y, w, { size: 10.4 });
+  let y = doc.y + 14;
+  const kwp = model(data).kwp;
+  const wattage = num(data.panel_wattage, 0) || num((data.inputs || {}).panel_wattage, 0) || 545;
+  const moduleRows = normalizeSpecs(data.module_specs) || [
+    ['Make / Model', V(data.module_brand, 'As per approved make')],
+    ['Wattage (Wp)', wattage + ' Wp'],
+    ['Technology', 'Mono PERC / latest equivalent'],
+    ['Module Efficiency', 'As per approved datasheet'],
+    ['Voc / Vmp', 'As per approved datasheet'],
+    ['Isc / Imp', 'As per approved datasheet'],
+    ['Dimensions / Weight', 'As per approved datasheet'],
+    ['Product Warranty', 'As per manufacturer'],
+    ['Performance Warranty', 'As per manufacturer'],
+    ['Certifications', 'BIS / IEC certified'],
+  ];
+  const inverterRows = normalizeSpecs(data.inverter_specs) || [
+    ['Make / Model', V(data.inverter_brand, 'As per approved make')],
+    ['Rated Capacity', 'Suitable for ' + kwp + ' kWp DC (as per design)'],
+    ['Type', '3-Phase Grid-Connected String Inverter'],
+    ['No. of MPPTs', 'As per approved datasheet'],
+    ['Max DC Voltage', 'As per approved datasheet'],
+    ['Euro / Peak Efficiency', 'As per approved datasheet'],
+    ['Warranty', 'As per manufacturer (extendable)'],
+  ];
+  const bottom = doc.page.height - 46;
+  const flowY = (yy, need) => (yy + need > bottom ? (doc.addPage(), chrome(doc, 'Technical'), 110) : yy);
+  const specTable = (title, rows, yy) => {
+    yy = flowY(yy, 44);
+    eyebrow(doc, title, M, yy, C.gold); yy += 16;
+    rows.forEach((r, i) => {
+      doc.font('body').fontSize(9.6);
+      const vh = doc.heightOfString(String(r[1] || ''), { width: w - 208, lineGap: 1.5 });
+      const rh = Math.max(26, vh + 14);
+      yy = flowY(yy, rh);
+      if (i % 2) doc.save().rect(M, yy, w, rh).fill(C.mint).restore();
+      doc.font('uiSB').fontSize(9.2).fillColor(C.ink).text(String(r[0]), M + 12, yy + 8, { width: 178 });
+      doc.font('body').fontSize(9.6).fillColor(C.body).text(String(r[1] || ''), M + 196, yy + 8, { width: w - 208, lineGap: 1.5 });
+      doc.moveTo(M, yy + rh).lineTo(M + w, yy + rh).lineWidth(0.5).strokeColor(C.line).stroke();
+      yy += rh;
+    });
+    return yy + 18;
+  };
+  y = specTable('Solar PV Module', moduleRows, y);
+  y = specTable('Inverter', inverterRows, y);
+}
+
+// =============================================================================
 //  ORCHESTRATION
 // =============================================================================
 // Descriptions for the documents that may follow the proposal, for the
@@ -1623,7 +1701,11 @@ export function renderProposal(doc, data = {}, opts = {}) {
     doc.page.margins.bottom = 0;
     doc.on('pageAdded', () => { doc.page.margins.bottom = 0; });
   }
+  // Contents lists the selected downstream docs, then the Technical & FAQ
+  // annexures that always close a proposal-inclusive package.
   const extras = (opts.parts || []).map((p) => EXTRA_TOC[p]).filter(Boolean);
+  extras.push({ label: 'Technical Specifications', sub: 'Module & inverter datasheet parameters' });
+  extras.push({ label: 'Your Questions, Answered', sub: 'Frequently asked questions' });
 
   const pages = [
     (d) => coverPage(d, data),
@@ -1645,11 +1727,28 @@ export function renderProposal(doc, data = {}, opts = {}) {
     (d) => executionPage(d),
     (d) => savingsPage(d, data),
     (d) => environmentPage(d, data),
-    (d) => qualityPage(d),
-    (d) => faqPage(d),
+    (d) => qualityPage(d, data),
   ];
-  if (!opts.skipThankYou) pages.push((d) => thankYouPage(d));
+  // FAQ + Technical + Thank-You are appended by the caller (streamParts) so they
+  // land at the very end of the whole package. Standalone renders add them here.
+  if (!opts.shared) {
+    pages.push((d) => technicalPage(d, data));
+    pages.push((d) => faqPage(d, data));
+    if (!opts.skipThankYou) pages.push((d) => thankYouPage(d));
+  }
   pages.forEach((fn, i) => { if (i) doc.addPage(); fn(doc); });
+  return doc;
+}
+
+// Annexure closers, exported so a combined package places them at the very end.
+export function renderTechnical(doc, data = {}, opts = {}) {
+  if (!opts.shared) { registerFonts(doc); doc.page.margins.bottom = 0; doc.on('pageAdded', () => { doc.page.margins.bottom = 0; }); }
+  technicalPage(doc, data);
+  return doc;
+}
+export function renderFaq(doc, data = {}, opts = {}) {
+  if (!opts.shared) { registerFonts(doc); doc.page.margins.bottom = 0; doc.on('pageAdded', () => { doc.page.margins.bottom = 0; }); }
+  faqPage(doc, data);
   return doc;
 }
 
