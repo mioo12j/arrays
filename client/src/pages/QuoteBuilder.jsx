@@ -155,8 +155,11 @@ export default function QuoteBuilder() {
     return !on;
   });
   const loadDefaults = () => {
+    if (customItems.length && !window.confirm('Load the standard BOQ? This will replace all the custom line items you have entered.')) return;
     if (c.line_items) setCustomItems(c.line_items.map((li) => ({ description: li.item, qty: li.qty, unit: li.unit, rate: li.rate, note: li.note })));
   };
+  const watts = Number(form.capacity_kw || 0) * 1000;
+  const itemAmount = (it) => (String(it.unit).toLowerCase() === 'wp' && !(Number(it.qty) > 0) ? watts * Number(it.rate || 0) : Number(it.qty || 0) * Number(it.rate || 0));
 
   const save = async () => {
     if (!form.capacity_kw || Number(form.capacity_kw) <= 0) return toast.error('Enter a valid system size');
@@ -213,13 +216,12 @@ export default function QuoteBuilder() {
                 {docMenu && (
                   <div className="absolute right-0 z-20 mt-1 w-64 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-800">
                     {[
-                      { label: 'Complete Package', sub: 'Proposal + Quotation + BOQ + Scope', path: `/quotes/${id}/document.pdf`, star: true },
+                      { label: 'Complete Package', sub: 'Proposal + Quotation + BOQ', path: `/quotes/${id}/document.pdf`, star: true },
                       { label: 'Proposal (Brochure)', sub: 'Premium sales document', path: `/quotes/${id}/proposal.pdf` },
-                      { label: 'Commercial Quotation', sub: 'Priced offer & terms', path: `/quotes/${id}/quotation.pdf` },
+                      { label: 'Commercial Quotation', sub: 'Priced offer, scope & terms', path: `/quotes/${id}/quotation.pdf` },
                       { label: 'Bill of Quantities', sub: 'Component-level breakdown', path: `/quotes/${id}/boq.pdf` },
-                      { label: 'Scope of Work', sub: 'Our scope vs client scope', path: `/quotes/${id}/scope.pdf` },
                       { label: 'Proposal + Quotation', sub: 'Sales + pricing', path: `/quotes/${id}/document.pdf?parts=proposal,quotation` },
-                      { label: 'Quotation + BOQ + Scope', sub: 'Full commercial set', path: `/quotes/${id}/document.pdf?parts=quotation,boq,scope` },
+                      { label: 'Quotation + BOQ', sub: 'Full commercial set', path: `/quotes/${id}/document.pdf?parts=quotation,boq` },
                       { label: 'Technical Quote (legacy)', sub: 'Original annexure PDF', path: `/quotes/${id}/pdf` },
                     ].map((d) => (
                       <button
@@ -402,17 +404,18 @@ export default function QuoteBuilder() {
             ) : (
               <div className="mt-3 space-y-2">
                 <div className="flex gap-1.5 px-1 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
-                  <span className="flex-[5]">Description</span><span className="flex-[1.4] text-right">Qty</span>
-                  <span className="flex-[1.6]">Unit</span><span className="flex-[2] text-right">Rate ₹</span><span className="w-4" />
+                  <span className="flex-[4.5]">Description</span><span className="flex-[1.3] text-right">Qty</span>
+                  <span className="flex-[1.5]">Unit</span><span className="flex-[1.8] text-right">Rate ₹</span><span className="flex-[1.8] text-right">Amount</span><span className="w-4" />
                 </div>
                 {customItems.map((it, i) => (
                   <div key={i} className="flex items-center gap-1.5">
-                    <input className="input flex-[5] !py-1.5 text-xs" placeholder="Item description" value={it.description || ''} onChange={(e) => updItem(i, 'description', e.target.value)} />
-                    <input className="input flex-[1.4] !py-1.5 text-right text-xs" type="number" value={it.qty ?? ''} onChange={(e) => updItem(i, 'qty', e.target.value)} />
-                    <select className="input flex-[1.6] !py-1.5 text-xs" value={it.unit || 'Lot'} onChange={(e) => updItem(i, 'unit', e.target.value)}>
+                    <input className="input flex-[4.5] !py-1.5 text-xs" placeholder="Item description" value={it.description || ''} onChange={(e) => updItem(i, 'description', e.target.value)} />
+                    <input className="input flex-[1.3] !py-1.5 text-right text-xs" type="number" value={it.qty ?? ''} onChange={(e) => updItem(i, 'qty', e.target.value)} />
+                    <select className="input flex-[1.5] !py-1.5 text-xs" value={it.unit || 'Lot'} onChange={(e) => updItem(i, 'unit', e.target.value)}>
                       {BOQ_UNITS.map((u) => <option key={u} value={u}>{u}</option>)}
                     </select>
-                    <input className="input flex-[2] !py-1.5 text-right text-xs" type="number" value={it.rate ?? ''} onChange={(e) => updItem(i, 'rate', e.target.value)} />
+                    <input className="input flex-[1.8] !py-1.5 text-right text-xs" type="number" value={it.rate ?? ''} onChange={(e) => updItem(i, 'rate', e.target.value)} />
+                    <span className="flex-[1.8] text-right text-xs font-medium text-slate-600 dark:text-slate-300">{inr(itemAmount(it))}</span>
                     <button type="button" onClick={() => delItem(i)} className="px-1 text-slate-400 hover:text-red-500" title="Remove">×</button>
                   </div>
                 ))}

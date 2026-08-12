@@ -230,8 +230,10 @@ router.get(
 //  Any combination can be downloaded as ONE PDF via /document.pdf?parts=...
 //  All render in the same Arrays Ingenieria identity.
 // -----------------------------------------------------------------------------
-const DOC_ORDER = ['proposal', 'quotation', 'boq', 'scope'];
-const DOC_LABEL = { proposal: 'Proposal', quotation: 'Quotation', boq: 'BOQ', scope: 'Scope' };
+// Scope of Work is now rendered inside the Commercial Quotation, so it is no
+// longer a standalone part of the package.
+const DOC_ORDER = ['proposal', 'quotation', 'boq'];
+const DOC_LABEL = { proposal: 'Proposal', quotation: 'Quotation', boq: 'BOQ' };
 
 async function loadQuoteData(id) {
   const { rows } = await query(
@@ -281,7 +283,7 @@ router.get(
   '/:id/document.pdf',
   asyncHandler(async (req, res) => {
     const { q, data } = await loadQuoteData(req.params.id);
-    const requested = String(req.query.parts || 'proposal,quotation,boq,scope')
+    const requested = String(req.query.parts || 'proposal,quotation,boq')
       .toLowerCase().split(',').map((s) => s.trim());
     const parts = DOC_ORDER.filter((p) => requested.includes(p));
     if (!parts.length) throw new ApiError(400, 'No valid parts requested (proposal, quotation, boq, scope)');

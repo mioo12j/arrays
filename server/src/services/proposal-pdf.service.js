@@ -1693,9 +1693,8 @@ function technicalPage(doc, data = {}) {
 // Descriptions for the documents that may follow the proposal, for the
 // dynamic Contents page.
 const EXTRA_TOC = {
-  quotation: { label: 'Commercial Quotation', sub: 'Priced offer, payment terms & conditions' },
+  quotation: { label: 'Commercial Quotation', sub: 'Priced offer, scope, payment terms & conditions' },
   boq: { label: 'Bill of Quantities', sub: 'Component-level scope & pricing' },
-  scope: { label: 'Scope of Work', sub: 'Responsibilities — ours and yours' },
 };
 
 export function renderProposal(doc, data = {}, opts = {}) {

@@ -255,30 +255,8 @@ export function renderQuotation(doc, data = {}, opts = {}) {
      .text(`Indicative only — calculated at ₹${mm.tariff}/unit with ~${Math.round(mm.gen1).toLocaleString('en-IN')} units/year (3.5% tariff escalation, 0.6%/yr degradation). Not a guarantee; actual savings vary with consumption, weather, tariff revisions and DISCOM policy.`, M, y, { width: w, lineGap: 1.5 });
   y = doc.y + 14;
 
-  // scope of supply & services — operator list, else default inclusions
-  const supply = asList(data.scope_supply);
-  y = flowY(y, 60);
-  eyebrow(doc, 'Scope of Supply & Services', M, y, C.gold); y += 16;
-  if (supply) {
-    supply.forEach((it) => {
-      doc.font('body').fontSize(9.4);
-      const h = Math.max(18, doc.heightOfString(it, { width: w - 44, lineGap: 2 }) + 8);
-      y = flowY(y, h);
-      doc.save().roundedRect(M, y + 1, 14, 14, 3).fill(C.mint2).restore();
-      doc.save().lineWidth(1.5).strokeColor(C.emer).moveTo(M + 3.5, y + 8).lineTo(M + 6.5, y + 11).lineTo(M + 11, y + 4.5).stroke().restore();
-      doc.font('body').fontSize(9.4).fillColor(C.body).text(it, M + 24, y, { width: w - 44, lineGap: 2 });
-      y = doc.y + 6;
-    });
-  } else {
-    const incl = 'Detailed engineering, drawings & SLD · Solar PV modules & inverter as per client requirement · Module mounting structure · DC/AC cabling, connectors & earthing · Lightning protection · Installation, testing & commissioning · Transportation to site · Datasheets, test certificates & O&M orientation.';
-    doc.font('body').fontSize(9.6);
-    const ih = doc.heightOfString(incl, { width: w - 36, lineGap: 3 }) + 22;
-    y = flowY(y, ih);
-    panel(doc, M, y, w, ih, C.mint, 9, C.line);
-    doc.font('body').fontSize(9.6).fillColor(C.body).text(incl, M + 18, y + 12, { width: w - 36, lineGap: 3 });
-    y += ih + 6;
-  }
-  y += 12;
+  // scope of work (Arrays + client) — the only place scope appears
+  y = scopeAndExclusions(doc, data, y, flowY);
 
   // acceptance
   y = flowY(y, 100);
@@ -306,23 +284,7 @@ export function renderQuotation(doc, data = {}, opts = {}) {
     y = doc.y + 9;
   });
 
-  // exclusions
-  const exc = asList(data.exclusions) || [
-    'Anything not expressly listed under our Scope of Work is deemed to be in the client’s scope and is chargeable at actuals.',
-    'DISCOM deposits, metering charges, feasibility and any statutory / approval fees are at actuals.',
-    'Any civil, structural or electrical work beyond the demarcated installation area.',
-  ];
-  doc.font('body').fontSize(9);
-  const excBody = 30 + exc.reduce((s, e) => s + doc.heightOfString('•  ' + e, { width: w - 36 }) + 4, 0);
-  y = flowY(y + 6, excBody);
-  panel(doc, M, y, w, excBody, C.mint, 9, C.line);
-  doc.rect(M, y, 4, excBody).fill(C.emer);
-  doc.font('uiSB').fontSize(8.5).fillColor(C.emer).text('EXCLUSIONS', M + 18, y + 12, { characterSpacing: 1 });
-  let ey = y + 28;
-  exc.forEach((e) => { doc.font('body').fontSize(9).fillColor(C.body).text('•  ' + e, M + 18, ey, { width: w - 36 }); ey = doc.y + 4; });
-  y += excBody + 16;
-
-  // company GST + bank + delay-payment details
+  // company GST + bank + delay-payment details (exclusions now sit with scope)
   y = companyBankBlock(doc, data, y, flowY);
   autoGenNote(doc, Math.min(y + 8, doc.page.height - 54), 'quotation');
 
@@ -343,6 +305,63 @@ function defaultTerms(data) {
     { title: 'Force Majeure', body: 'Neither party shall be liable for delay or non-performance due to events beyond reasonable control — weather, strikes, regulatory change, grid unavailability or acts of God.' },
     { title: 'Jurisdiction & Confidentiality', body: 'This quotation is confidential, remains our property, and any dispute is subject to the jurisdiction of the courts at our registered office.' },
   ];
+}
+
+// Scope of Work (Arrays + client) followed by Exclusions — rendered inside the
+// Commercial Quotation. This is the only place scope appears.
+function scopeAndExclusions(doc, data, y, flowY) {
+  const W = doc.page.width, w = W - 2 * M;
+  const ours = asList(data.scope_ours) || [
+    'Design, engineering, drawings & single-line diagram (SLD)',
+    'Supply of solar modules, inverter & balance-of-system as per client requirement',
+    'Module mounting structure, DC/AC cabling, earthing & lightning protection',
+    'Installation, testing & commissioning',
+    'DISCOM liaison & net-metering application',
+    'Datasheets, test certificates & O&M orientation',
+  ];
+  const clientScope = asList(data.scope_client) || [
+    'Clear, secure, shadow-free site with structural adequacy',
+    'Construction power & water and safe storage at site',
+    'Sanctioned load details, latest electricity bill & KYC',
+    'DISCOM deposits, feasibility & statutory fees (at actuals)',
+    'Timely release of payments as per the agreed schedule',
+  ];
+  const colW = (w - 16) / 2;
+  const measure = (list) => { let h = 42; list.forEach((t) => { doc.font('body').fontSize(9); h += Math.max(18, doc.heightOfString(t, { width: colW - 52, lineGap: 1.8 }) + 10); }); return h; };
+  const scopeH = Math.max(measure(ours), measure(clientScope));
+  y = flowY(y, scopeH + 40);
+  eyebrow(doc, 'Scope of Work', M, y, C.gold); y += 16;
+  const col = (x, title, list, accent, chip) => {
+    panel(doc, x, y, colW, scopeH, C.paper, 10, C.line);
+    doc.save().roundedRect(x, y, colW, 30, 10).fill(accent).restore();
+    doc.rect(x, y + 20, colW, 10).fill(accent);
+    doc.font('uiSB').fontSize(10).fillColor('#ffffff').text(title, x + 14, y + 9, { width: colW - 28 });
+    let yy = y + 40;
+    list.forEach((t) => {
+      doc.save().roundedRect(x + 12, yy, 14, 14, 4).fill(chip).restore();
+      doc.save().lineWidth(1.5).strokeColor(accent).moveTo(x + 15.5, yy + 7).lineTo(x + 18.5, yy + 10).lineTo(x + 23, yy + 3.5).stroke().restore();
+      const h = doc.font('body').fontSize(9).heightOfString(t, { width: colW - 52, lineGap: 1.8 });
+      doc.font('body').fontSize(9).fillColor(C.body).text(t, x + 34, yy, { width: colW - 52, lineGap: 1.8 });
+      yy += Math.max(18, h + 10);
+    });
+  };
+  col(M, 'Arrays Ingenieria Scope', ours, C.emer, C.mint2);
+  col(M + colW + 16, 'Client Scope', clientScope, C.gold, C.cream);
+  y += scopeH + 14;
+
+  const exc = asList(data.exclusions) || [
+    'Anything not expressly listed under our Scope of Work, or agreed by us in writing, is deemed to be in the client’s scope and is chargeable at actuals.',
+    'DISCOM deposits, metering charges, feasibility and any statutory / approval fees are at actuals.',
+  ];
+  doc.font('body').fontSize(9);
+  const excBody = 30 + exc.reduce((s, e) => s + Math.max(14, doc.heightOfString('•  ' + e, { width: w - 36 })) + 4, 0);
+  y = flowY(y, excBody);
+  panel(doc, M, y, w, excBody, C.mint, 9, C.line);
+  doc.rect(M, y, 4, excBody).fill(C.emer);
+  doc.font('uiSB').fontSize(8.5).fillColor(C.emer).text('EXCLUSIONS', M + 18, y + 12, { characterSpacing: 1 });
+  let ey = y + 28;
+  exc.forEach((e) => { doc.font('body').fontSize(9).fillColor(C.body).text('•  ' + e, M + 18, ey, { width: w - 36 }); ey = doc.y + 4; });
+  return y + excBody + 12;
 }
 
 // GST / bank / delay-payment block on the last quotation page.
