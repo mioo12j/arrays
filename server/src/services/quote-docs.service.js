@@ -13,6 +13,37 @@ const { C, M, chrome, heading, para, panel, eyebrow, triTick, drawImg, logo,
 // ---- shared helpers ---------------------------------------------------------
 function money(n) { return n || n === 0 ? '₹' + Math.round(n).toLocaleString('en-IN') : '—'; }
 
+// Split "Title: body" into parts; no colon => body only.
+function parseTitleBody(s) {
+  const str = String(s).trim();
+  const m = str.match(/^([^:\n]{2,44}):\s*([\s\S]+)$/);
+  return m ? { title: m[1].trim(), body: m[2].trim() } : { title: '', body: str };
+}
+// Accept structured [{title,body}], ["Title: body"], or a newline string.
+function normalizeTerms(t) {
+  if (Array.isArray(t)) {
+    const a = t.map((x) => (typeof x === 'string' ? parseTitleBody(x)
+      : { title: String(x.title || '').trim(), body: String(x.body || x.text || x.description || '').trim() }))
+      .filter((x) => x.body || x.title);
+    return a.length ? a : null;
+  }
+  if (t && String(t).trim()) {
+    const a = String(t).split(/\n{1,}/).map((l) => l.trim()).filter(Boolean).map(parseTitleBody);
+    return a.length ? a : null;
+  }
+  return null;
+}
+// Payment milestones: [{pct,stage,against}] in any common key spelling.
+function normalizeSchedule(s) {
+  if (!Array.isArray(s) || !s.length) return null;
+  const a = s.map((p) => ({
+    pct: String(p.pct ?? p.percent ?? p.percentage ?? '').replace(/%*$/, '') + '%',
+    stage: String(p.stage ?? p.label ?? p.milestone ?? '').trim(),
+    against: String(p.against ?? p.note ?? p.description ?? '').trim(),
+  })).filter((p) => p.stage || p.against);
+  return a.length ? a : null;
+}
+
 // pull a readable module / inverter description out of the BOQ line items
 function hardware(items) {
   const find = (re) => (items.find((i) => re.test(String(i.item))) || {}).item;
@@ -161,32 +192,47 @@ export function renderQuotation(doc, data = {}, opts = {}) {
     });
   }
 
-  // ---- PAGE 2 — payment, savings, acceptance ----
+  // page-flow guard — starts a fresh page (with chrome) when a block won't fit
+  const bottom = doc.page.height - 46;
+  const flowY = (yy, need) => (yy + need > bottom ? (doc.addPage(), chrome(doc, 'Commercial Quotation'), 110) : yy);
+
+  // ---- PAGE 2 — payment schedule, returns, acceptance ----
   doc.addPage(); chrome(doc, 'Commercial Quotation');
   heading(doc, 'Terms of Business', 'Payment & Returns');
   y = doc.y + 2;
 
-  // payment schedule — from the software if provided, else a sensible default
+  // payment schedule — operator-defined milestones (any number)
   eyebrow(doc, 'Payment Schedule', M, y, C.gold); y += 18;
-  const pay = (Array.isArray(data.payment_schedule) && data.payment_schedule.length)
-    ? data.payment_schedule.slice(0, 3).map((p) => [String(p.pct || p.percent || ''), p.label || p.stage || '', p.note || p.against || ''])
-    : [
-      ['30%', 'Advance', 'On order confirmation & mobilisation'],
-      ['60%', 'On Supply', 'Against delivery of modules, inverters & BOS at site'],
-      ['10%', 'On Commissioning', 'After successful grid synchronisation & handover'],
-    ];
-  const pw = (w - 2 * 14) / 3;
-  pay.forEach((p, i) => {
-    const x = M + i * (pw + 14);
-    panel(doc, x, y, pw, 96, C.mint, 9, C.line);
-    doc.rect(x, y, pw, 3).fill(i === 0 ? C.gold : C.emer);
-    doc.font('uiB').fontSize(26).fillColor(C.emer).text(p[0], x + 16, y + 16);
-    doc.font('uiSB').fontSize(11).fillColor(C.ink).text(p[1], x + 16, y + 54);
-    doc.font('body').fontSize(8.6).fillColor(C.mute).text(p[2], x + 16, y + 70, { width: pw - 32, lineGap: 1.5 });
+  const sched = normalizeSchedule(data.payment_schedule) || [
+    { pct: '30%', stage: 'Advance', against: 'Along with the confirmed Purchase Order' },
+    { pct: '60%', stage: 'On Material Readiness', against: 'Against readiness of modules, inverter & balance-of-system for dispatch (prior to delivery)' },
+    { pct: '5%', stage: 'On Installation', against: 'On completion of mechanical installation at site' },
+    { pct: '5%', stage: 'On Commissioning', against: 'On successful testing, commissioning & handover' },
+  ];
+  sched.forEach((s) => {
+    doc.font('body').fontSize(9);
+    const bodyH = doc.heightOfString(s.against || '', { width: w - 120, lineGap: 1.6 });
+    const rh = Math.max(42, bodyH + 30);
+    y = flowY(y, rh + 8);
+    panel(doc, M, y, w, rh, C.mint, 8, C.line);
+    doc.rect(M, y, 4, rh).fill(C.gold);
+    doc.font('uiB').fontSize(19).fillColor(C.emer).text(s.pct, M + 16, y + (rh - 19) / 2, { width: 66 });
+    doc.font('uiSB').fontSize(10.5).fillColor(C.ink).text(s.stage, M + 92, y + 10, { width: w - 108 });
+    doc.font('body').fontSize(9).fillColor(C.body).text(s.against, M + 92, y + 25, { width: w - 108, lineGap: 1.6 });
+    y += rh + 8;
   });
-  y += 96 + 22;
+  // proforma-invoice note
+  y = flowY(y, 52);
+  doc.font('body').fontSize(9.2);
+  const piH = Math.max(42, doc.heightOfString('All payments are strictly against our Proforma Invoice (PI). The GST tax invoice is issued only after the corresponding payment is realised in our account. Materials remain our property until paid in full.', { width: w - 40, lineGap: 2 }) + 22);
+  panel(doc, M, y, w, piH, C.cream, 8);
+  doc.rect(M, y, 4, piH).fill(C.gold);
+  doc.font('uiSB').fontSize(8).fillColor(C.gold).text('PAYMENT AGAINST PROFORMA INVOICE', M + 18, y + 12, { characterSpacing: 0.8 });
+  doc.font('body').fontSize(9.2).fillColor(C.body).text('All payments are strictly against our Proforma Invoice (PI). The GST tax invoice is issued only after the corresponding payment is realised in our account. Materials remain our property until paid in full.', M + 18, y + 24, { width: w - 40, lineGap: 2 });
+  y += piH + 18;
 
-  // savings snapshot — same model as the proposal, so figures agree
+  // return on investment + disclaimer
+  y = flowY(y, 120);
   eyebrow(doc, 'Your Return on Investment', M, y, C.gold); y += 18;
   const roi = [
     ['Annual Savings', inrShort(mm.save1), C.emer],
@@ -202,32 +248,38 @@ export function renderQuotation(doc, data = {}, opts = {}) {
     doc.font('ui').fontSize(7.3).fillColor(C.mute).text(String(r[0]).toUpperCase(), x + 14, y + 12, { characterSpacing: 0.5 });
     doc.font('uiB').fontSize(15).fillColor(C.ink).text(r[1], x + 14, y + 27);
   });
-  y += 62 + 20;
+  y += 62 + 8;
+  doc.font('bodyI').fontSize(7.6).fillColor(C.mute)
+     .text(`Indicative only — calculated at ₹${mm.tariff}/unit with ~${Math.round(mm.gen1).toLocaleString('en-IN')} units/year (3.5% tariff escalation, 0.6%/yr degradation). Not a guarantee; actual savings vary with consumption, weather, tariff revisions and DISCOM policy.`, M, y, { width: w, lineGap: 1.5 });
+  y = doc.y + 14;
 
-  // makes & suppliers (from the BOQ line items where available)
-  const hw2 = hardware(c.items);
-  const sup = [['Solar Modules', hw2.module], ['Inverter', hw2.inverter], ['Mounting', hw2.structure]].filter((s) => s[1]);
-  if (sup.length) {
-    eyebrow(doc, 'Makes & Suppliers', M, y, C.gold); y += 16;
-    const sw = (w - 2 * 12) / 3;
-    sup.forEach((s, i) => {
-      const x = M + i * (sw + 12);
-      panel(doc, x, y, sw, 46, C.paper, 8, C.line);
-      doc.rect(x, y, 4, 46).fill(C.emer);
-      doc.font('ui').fontSize(7).fillColor(C.mute).text(String(s[0]).toUpperCase(), x + 12, y + 9, { characterSpacing: 0.6 });
-      doc.font('uiSB').fontSize(8.8).fillColor(C.ink).text(s[1], x + 12, y + 20, { width: sw - 20, height: 22 });
+  // scope of supply & services — operator list, else default inclusions
+  const supply = asList(data.scope_supply);
+  y = flowY(y, 60);
+  eyebrow(doc, 'Scope of Supply & Services', M, y, C.gold); y += 16;
+  if (supply) {
+    supply.forEach((it) => {
+      doc.font('body').fontSize(9.4);
+      const h = Math.max(18, doc.heightOfString(it, { width: w - 44, lineGap: 2 }) + 8);
+      y = flowY(y, h);
+      doc.save().roundedRect(M, y + 1, 14, 14, 3).fill(C.mint2).restore();
+      doc.save().lineWidth(1.5).strokeColor(C.emer).moveTo(M + 3.5, y + 8).lineTo(M + 6.5, y + 11).lineTo(M + 11, y + 4.5).stroke().restore();
+      doc.font('body').fontSize(9.4).fillColor(C.body).text(it, M + 24, y, { width: w - 44, lineGap: 2 });
+      y = doc.y + 6;
     });
-    y += 46 + 18;
+  } else {
+    const incl = 'Detailed engineering, drawings & SLD · Solar PV modules & inverter as per client requirement · Module mounting structure · DC/AC cabling, connectors & earthing · Lightning protection · Installation, testing & commissioning · Transportation to site · Datasheets, test certificates & O&M orientation.';
+    doc.font('body').fontSize(9.6);
+    const ih = doc.heightOfString(incl, { width: w - 36, lineGap: 3 }) + 22;
+    y = flowY(y, ih);
+    panel(doc, M, y, w, ih, C.mint, 9, C.line);
+    doc.font('body').fontSize(9.6).fillColor(C.body).text(incl, M + 18, y + 12, { width: w - 36, lineGap: 3 });
+    y += ih + 6;
   }
-
-  // inclusions band
-  panel(doc, M, y, w, 82, C.mint, 9, C.line);
-  doc.font('uiSB').fontSize(8.5).fillColor(C.emer).text('SCOPE INCLUDES', M + 18, y + 14, { characterSpacing: 1 });
-  const incl = 'Detailed engineering & drawings · Tier-1 modules & inverters · GI mounting structure · DC/AC cabling & earthing · Piling / civil foundations · Net-meter liaison & DISCOM approvals · Testing, commissioning & grid synchronisation · Handover documentation & O&M orientation.';
-  doc.font('body').fontSize(9.4).fillColor(C.body).text(incl, M + 18, y + 30, { width: w - 36, lineGap: 3 });
-  y += 82 + 16;
+  y += 12;
 
   // acceptance
+  y = flowY(y, 100);
   const half = (w - 24) / 2;
   panel(doc, M, y, w, 96, C.paper, 9, C.line);
   doc.font('uiSB').fontSize(8.5).fillColor(C.gold).text('ACCEPTANCE', M + 18, y + 14, { characterSpacing: 1 });
@@ -236,43 +288,105 @@ export function renderQuotation(doc, data = {}, opts = {}) {
   doc.font('ui').fontSize(8).fillColor(C.mute).text('Authorised Signature & Company Seal', M + w - half + 10, y + 66);
   doc.font('script').fontSize(18).fillColor(C.gold).text('For Arrays Ingenieria Pvt. Ltd.', M + 18, y + 58);
 
-  // ---- PAGE 3 — terms & exclusions ----
+  // ---- PAGE 3 — terms, exclusions, company & bank details ----
   doc.addPage(); chrome(doc, 'Commercial Quotation');
   heading(doc, 'Please Read Carefully', 'Terms & Conditions');
   y = doc.y + 2;
-  const terms = (data.terms && String(data.terms).trim()) ? String(data.terms).split(/\n+/) : [
-    'Validity: This quotation is valid for 30 days from the date of issue, unless expressly extended in writing. Prices are firm for the validity period and exclusive of any subsequent escalation in module, inverter, steel or statutory-levy rates.',
-    'Taxes: GST and any other applicable statutory taxes, cess or duties are charged at prevailing rates as on the date of invoicing, over and above the quoted value.',
-    'Payment: As per the Payment Schedule overleaf. Materials remain the property of Arrays Ingenieria until payment is received in full. Delayed payments attract interest at 18% p.a.',
-    'Timelines: Delivery and commissioning schedules commence from the receipt of advance, a technically clear order, and continuous unobstructed access to a ready site.',
-    'Client scope: The client shall provide clear and secure site access, a shadow-free installation area, grid/DG power and water for construction, safe covered storage for materials, and statutory space for inverters and metering.',
-    'Civil & electrical: Any civil works, foundations, transformer, HT/LT lines, DG synchronisation or DISCOM infrastructure beyond the stated scope are chargeable at actuals unless expressly included in the BOQ.',
-    'Warranties: Solar modules carry a 25-year linear performance warranty and 12-year product warranty; inverters 5–10 years as per OEM; workmanship 5 years — each subject to the respective manufacturer’s and our standard warranty terms.',
-    'Insurance & safety: Works are executed to ISO 45001 safety standards. Transit and erection-all-risk cover, where required, is arranged at actuals. The client shall insure the plant post-handover.',
-    'Net metering & approvals: DISCOM liaison and net-metering application are undertaken by us; however, sanction timelines, feasibility and any deposits/charges levied by the DISCOM are beyond our control and billed at actuals.',
-    'Force majeure: Neither party shall be liable for delay or non-performance due to events beyond reasonable control — weather, strikes, regulatory change, grid unavailability, or acts of God.',
-    'Jurisdiction & confidentiality: This quotation is confidential, remains the property of Arrays Ingenieria Pvt. Ltd., and any dispute is subject to the jurisdiction of the courts at our registered office.',
-  ];
+  const terms = normalizeTerms(data.terms) || defaultTerms(data);
   terms.forEach((t) => {
+    doc.font('body').fontSize(9.2);
+    const bodyH = doc.heightOfString(t.body, { width: w - 24, lineGap: 2.6 });
+    const need = (t.title ? 15 : 0) + bodyH + 12;
+    y = flowY(y, need);
     doc.circle(M + 4, y + 6, 2.4).fill(C.gold);
-    y = para(doc, t, M + 18, y, w - 20, { size: 9.2, lineGap: 2.6 }) + 7;
+    if (t.title) { doc.font('uiSB').fontSize(9.8).fillColor(C.ink).text(t.title, M + 18, y, { width: w - 24 }); y = doc.y + 2; }
+    doc.font('body').fontSize(9.2).fillColor(C.body).text(t.body, M + 18, y, { width: w - 24, lineGap: 2.6 });
+    y = doc.y + 9;
   });
 
-  const exc = (data.exclusions && String(data.exclusions).trim()) ? String(data.exclusions).split(/\n+/) : [
-    'Approach roads, boundary walls and land development beyond the demarcated area.',
-    'DISCOM deposit, metering charges and any HT infrastructure unless stated.',
-    'Statutory approvals fees, if any, are reimbursed at actuals.',
+  // exclusions
+  const exc = asList(data.exclusions) || [
+    'Anything not expressly listed under our Scope of Work is deemed to be in the client’s scope and is chargeable at actuals.',
+    'DISCOM deposits, metering charges, feasibility and any statutory / approval fees are at actuals.',
+    'Any civil, structural or electrical work beyond the demarcated installation area.',
   ];
-  y += 6;
-  const excH = 20 + exc.length * 16;
-  panel(doc, M, y, w, excH, C.mint, 9, C.line);
-  doc.rect(M, y, 4, excH).fill(C.emer);
+  doc.font('body').fontSize(9);
+  const excBody = 30 + exc.reduce((s, e) => s + doc.heightOfString('•  ' + e, { width: w - 36 }) + 4, 0);
+  y = flowY(y + 6, excBody);
+  panel(doc, M, y, w, excBody, C.mint, 9, C.line);
+  doc.rect(M, y, 4, excBody).fill(C.emer);
   doc.font('uiSB').fontSize(8.5).fillColor(C.emer).text('EXCLUSIONS', M + 18, y + 12, { characterSpacing: 1 });
   let ey = y + 28;
-  exc.forEach((e) => { doc.font('body').fontSize(9).fillColor(C.body).text('•  ' + e, M + 18, ey, { width: w - 36 }); ey = doc.y + 3; });
-  autoGenNote(doc, y + excH + 12, 'quotation');
+  exc.forEach((e) => { doc.font('body').fontSize(9).fillColor(C.body).text('•  ' + e, M + 18, ey, { width: w - 36 }); ey = doc.y + 4; });
+  y += excBody + 16;
+
+  // company GST + bank + delay-payment details
+  y = companyBankBlock(doc, data, y, flowY);
+  autoGenNote(doc, Math.min(y + 8, doc.page.height - 54), 'quotation');
 
   return doc;
+}
+
+// Default, PI-centric terms (used until the operator supplies their own).
+function defaultTerms(data) {
+  const delay = data.delay_interest || '18% per annum';
+  return [
+    { title: 'Payment', body: 'All payments shall be made strictly against the Proforma Invoice (PI) issued by us. The GST tax invoice is raised only after the corresponding payment is realised in our account. Materials remain our property until payment is received in full.' },
+    { title: 'Delay in Payment', body: `Payments delayed beyond the due date attract interest at ${delay}, and may lead to suspension of works and revision of the delivery schedule.` },
+    { title: 'GST & Taxes', body: 'GST is charged extra at prevailing rates as applicable on the date of invoicing, over and above the quoted value.' },
+    { title: 'Module & Inverter Warranty', body: 'Solar modules and inverters carry the warranty of the respective manufacturer / brand; the performance warranty applicable is that of the modules supplied. Modules and inverter are supplied as per the requirement of the client.' },
+    { title: 'Workmanship Warranty', body: 'Our installation carries a workmanship warranty as mutually agreed, subject to normal use and the manufacturer’s terms.' },
+    { title: 'Delivery & Timeline', body: 'Delivery and commissioning commence from receipt of the advance, a technically clear order and continuous unobstructed access to a ready site.' },
+    { title: 'Client Scope', body: 'The client shall provide secure site access, a shadow-free installation area, construction power & water, safe covered storage, and statutory space for inverters and metering.' },
+    { title: 'Force Majeure', body: 'Neither party shall be liable for delay or non-performance due to events beyond reasonable control — weather, strikes, regulatory change, grid unavailability or acts of God.' },
+    { title: 'Jurisdiction & Confidentiality', body: 'This quotation is confidential, remains our property, and any dispute is subject to the jurisdiction of the courts at our registered office.' },
+  ];
+}
+
+// GST / bank / delay-payment block on the last quotation page.
+function companyBankBlock(doc, data, y, flowY) {
+  const W = doc.page.width, w = W - 2 * M;
+  y = flowY(y, 128);
+  eyebrow(doc, 'Payment & Company Details', M, y, C.gold); y += 16;
+  const colW = (w - 16) / 2, bh = 108;
+  // left — company / GST
+  panel(doc, M, y, colW, bh, C.paper, 9, C.line);
+  doc.rect(M, y, colW, 3).fill(C.gold);
+  doc.font('uiSB').fontSize(8).fillColor(C.emer).text('SUPPLIER', M + 14, y + 12, { characterSpacing: 0.8 });
+  const supplierRows = [
+    ['Company', 'Arrays Ingenieria Pvt. Ltd.'],
+    ['GSTIN', data.company_gstin || '—'],
+    ['PAN', data.company_pan || '—'],
+    ['Registered Office', data.company_address || 'Arrays Ingenieria Pvt. Ltd.'],
+  ];
+  let ly = y + 28;
+  supplierRows.forEach((r) => {
+    doc.font('ui').fontSize(7.2).fillColor(C.mute).text(String(r[0]).toUpperCase(), M + 14, ly, { characterSpacing: 0.5 });
+    doc.font('uiSB').fontSize(9).fillColor(C.ink).text(String(r[1]), M + 14, ly + 9, { width: colW - 28 });
+    ly = doc.y + 4;
+  });
+  // right — bank
+  const bx = M + colW + 16;
+  panel(doc, bx, y, colW, bh, C.paper, 9, C.line);
+  doc.rect(bx, y, colW, 3).fill(C.emer);
+  doc.font('uiSB').fontSize(8).fillColor(C.emer).text('BANK DETAILS FOR PAYMENT', bx + 14, y + 12, { characterSpacing: 0.8 });
+  const bankRows = [
+    ['Bank / Branch', [data.bank_name, data.bank_branch].filter(Boolean).join(', ') || '—'],
+    ['Account Name', data.bank_account_name || 'Arrays Ingenieria Pvt. Ltd.'],
+    ['Account No.', data.bank_account_no || '—'],
+    ['IFSC', data.bank_ifsc || '—'],
+  ];
+  let by = y + 28;
+  bankRows.forEach((r) => {
+    doc.font('ui').fontSize(7.2).fillColor(C.mute).text(String(r[0]).toUpperCase(), bx + 14, by, { characterSpacing: 0.5 });
+    doc.font('uiSB').fontSize(9).fillColor(C.ink).text(String(r[1]), bx + 14, by + 9, { width: colW - 28 });
+    by = doc.y + 4;
+  });
+  y += bh + 10;
+  // delay-payment note
+  doc.font('bodyI').fontSize(8.4).fillColor(C.mute)
+     .text(`Delay in payment beyond the agreed due date attracts interest at ${data.delay_interest || '18% per annum'}. All payments strictly against Proforma Invoice.`, M, y, { width: w, lineGap: 1.5 });
+  return doc.y + 6;
 }
 
 // A small closing notice for standalone transactional documents.

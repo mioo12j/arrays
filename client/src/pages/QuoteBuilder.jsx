@@ -64,6 +64,7 @@ export default function QuoteBuilder() {
   const [docMenu, setDocMenu] = useState(false);
   const [useCustom, setUseCustom] = useState(false);
   const [customItems, setCustomItems] = useState([]);
+  const [showTerms, setShowTerms] = useState(false);
   const debounceRef = useRef(null);
   const docMenuRef = useRef(null);
 
@@ -118,6 +119,12 @@ export default function QuoteBuilder() {
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
   const setRate = (k) => (e) => setRates((r) => ({ ...r, [k]: e.target.value === '' ? undefined : Number(e.target.value) }));
   const setPI = (k) => (e) => setPinputs((p) => ({ ...p, [k]: e.target.value === '' ? undefined : e.target.value }));
+
+  // repeatable-row helpers for structured proposal_inputs (schedule, terms…)
+  const piArr = (k) => (Array.isArray(pinputs[k]) ? pinputs[k] : []);
+  const addRow = (k, blank) => setPinputs((p) => ({ ...p, [k]: [...(Array.isArray(p[k]) ? p[k] : []), blank] }));
+  const updRow = (k, i, f, v) => setPinputs((p) => ({ ...p, [k]: (p[k] || []).map((r, j) => (j === i ? { ...r, [f]: v } : r)) }));
+  const delRow = (k, i) => setPinputs((p) => ({ ...p, [k]: (p[k] || []).filter((_, j) => j !== i) }));
 
   const payload = () => ({
     ...rates,
@@ -399,9 +406,87 @@ export default function QuoteBuilder() {
             <h3 className="mb-3 font-semibold text-slate-800 dark:text-slate-100">Proposal Text</h3>
             <div className="space-y-3">
               <Field label="Technical Scope / Notes"><textarea className="input min-h-[60px]" value={form.notes} onChange={set('notes')} /></Field>
-              <Field label="Commercial Terms (blank = standard)"><textarea className="input min-h-[50px]" value={form.terms} onChange={set('terms')} /></Field>
-              <Field label="Exclusions (blank = standard)"><textarea className="input min-h-[50px]" value={form.exclusions} onChange={set('exclusions')} /></Field>
             </div>
+          </Card>
+
+          <Card>
+            <button className="flex w-full items-center justify-between font-semibold text-slate-800 dark:text-slate-100" onClick={() => setShowTerms((s) => !s)}>
+              <span>Commercial Terms & Company</span>
+              <ChevronDown size={18} className={`transition ${showTerms ? 'rotate-180' : ''}`} />
+            </button>
+            {showTerms && (
+              <div className="mt-4 space-y-5">
+                <Field label="Commercial Offer description (blank = standard)">
+                  <input className="input" value={pinputs.commercial_scope || ''} onChange={setPI('commercial_scope')} placeholder="Design, Engineering, Supply, Installation, Testing & Commissioning of …" />
+                </Field>
+
+                {/* Payment schedule */}
+                <div>
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Payment Schedule</span>
+                    <button type="button" onClick={() => addRow('payment_schedule', { pct: '', stage: '', against: '' })} className="text-xs font-medium text-brand-600 hover:underline">+ Add milestone</button>
+                  </div>
+                  {piArr('payment_schedule').length === 0 && <p className="text-xs text-slate-400">Blank = standard 30% adv · 60% material readiness · 5% installation · 5% commissioning.</p>}
+                  <div className="space-y-2">
+                    {piArr('payment_schedule').map((r, i) => (
+                      <div key={i} className="flex items-start gap-1.5">
+                        <input className="input w-16 !py-1.5 text-xs" value={r.pct || ''} onChange={(e) => updRow('payment_schedule', i, 'pct', e.target.value)} placeholder="30%" />
+                        <input className="input flex-[2] !py-1.5 text-xs" value={r.stage || ''} onChange={(e) => updRow('payment_schedule', i, 'stage', e.target.value)} placeholder="Stage" />
+                        <input className="input flex-[3] !py-1.5 text-xs" value={r.against || ''} onChange={(e) => updRow('payment_schedule', i, 'against', e.target.value)} placeholder="Against / note" />
+                        <button type="button" onClick={() => delRow('payment_schedule', i)} className="px-1 text-slate-400 hover:text-red-500">×</button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Terms & Conditions (title + body) */}
+                <div>
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Terms &amp; Conditions</span>
+                    <button type="button" onClick={() => addRow('terms', { title: '', body: '' })} className="text-xs font-medium text-brand-600 hover:underline">+ Add term</button>
+                  </div>
+                  {piArr('terms').length === 0 && <p className="text-xs text-slate-400">Blank = standard PI-based terms. Add your own as Title + description.</p>}
+                  <div className="space-y-2">
+                    {piArr('terms').map((r, i) => (
+                      <div key={i} className="rounded-lg border border-slate-200 p-2 dark:border-slate-700">
+                        <div className="flex items-center gap-1.5">
+                          <input className="input flex-1 !py-1.5 text-xs font-medium" value={r.title || ''} onChange={(e) => updRow('terms', i, 'title', e.target.value)} placeholder="Title (e.g. Payment)" />
+                          <button type="button" onClick={() => delRow('terms', i)} className="px-1 text-slate-400 hover:text-red-500">×</button>
+                        </div>
+                        <textarea className="input mt-1.5 min-h-[44px] text-xs" value={r.body || ''} onChange={(e) => updRow('terms', i, 'body', e.target.value)} placeholder="Description — e.g. All payments strictly against Proforma Invoice; tax invoice after payment received." />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <Field label="Exclusions (one per line, blank = standard)">
+                  <textarea className="input min-h-[50px] text-xs" value={pinputs.exclusions || ''} onChange={setPI('exclusions')} placeholder={'Anything not expressly listed under our scope is client scope, at actuals.\nDISCOM deposits & statutory fees at actuals.'} />
+                </Field>
+                <Field label="Scope of Supply & Services (one per line, blank = standard)">
+                  <textarea className="input min-h-[60px] text-xs" value={pinputs.scope_supply || ''} onChange={setPI('scope_supply')} placeholder={'545 Wp Solar PV Modules – 46 Nos.\nSuitable String Inverter\nModule Mounting Structure…'} />
+                </Field>
+                <div className="grid grid-cols-2 gap-3">
+                  <Field label="Our Scope of Work (one per line)"><textarea className="input min-h-[60px] text-xs" value={pinputs.scope_ours || ''} onChange={setPI('scope_ours')} /></Field>
+                  <Field label="Client Scope (one per line)"><textarea className="input min-h-[60px] text-xs" value={pinputs.scope_client || ''} onChange={setPI('scope_client')} /></Field>
+                </div>
+
+                {/* Company & bank details */}
+                <div>
+                  <div className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Company &amp; Bank Details (last page)</div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Field label="GSTIN"><input className="input text-xs" value={pinputs.company_gstin || ''} onChange={setPI('company_gstin')} /></Field>
+                    <Field label="PAN"><input className="input text-xs" value={pinputs.company_pan || ''} onChange={setPI('company_pan')} /></Field>
+                    <Field label="Registered Address"><input className="input text-xs" value={pinputs.company_address || ''} onChange={setPI('company_address')} /></Field>
+                    <Field label="Delay-payment interest"><input className="input text-xs" value={pinputs.delay_interest || ''} onChange={setPI('delay_interest')} placeholder="18% per annum" /></Field>
+                    <Field label="Bank Name"><input className="input text-xs" value={pinputs.bank_name || ''} onChange={setPI('bank_name')} /></Field>
+                    <Field label="Bank Branch"><input className="input text-xs" value={pinputs.bank_branch || ''} onChange={setPI('bank_branch')} /></Field>
+                    <Field label="Account Name"><input className="input text-xs" value={pinputs.bank_account_name || ''} onChange={setPI('bank_account_name')} /></Field>
+                    <Field label="Account No."><input className="input text-xs" value={pinputs.bank_account_no || ''} onChange={setPI('bank_account_no')} /></Field>
+                    <Field label="IFSC"><input className="input text-xs" value={pinputs.bank_ifsc || ''} onChange={setPI('bank_ifsc')} /></Field>
+                  </div>
+                </div>
+              </div>
+            )}
           </Card>
         </div>
 
