@@ -13,6 +13,14 @@ const { C, M, chrome, heading, para, panel, eyebrow, triTick, drawImg, logo,
 // ---- shared helpers ---------------------------------------------------------
 function money(n) { return n || n === 0 ? '₹' + Math.round(n).toLocaleString('en-IN') : '—'; }
 
+// GST split — inter-state = single IGST line; else CGST + SGST (half each).
+function gstRows(c, data) {
+  const pct = c.taxable ? Math.round((c.gst / c.taxable) * 10000) / 100 : 0;
+  if (String(data.gst_split || '').toLowerCase() === 'igst') return [[`IGST (${pct}%)`, c.gst]];
+  const half = c.gst / 2, hpct = Math.round(pct / 2 * 100) / 100;
+  return [[`CGST (${hpct}%)`, half], [`SGST (${hpct}%)`, half]];
+}
+
 // Split "Title: body" into parts; no colon => body only.
 function parseTitleBody(s) {
   const str = String(s).trim();
@@ -158,7 +166,7 @@ export function renderQuotation(doc, data = {}, opts = {}) {
   // Client-facing: a single system price (never expose internal contingency/margin).
   // The offer description is operator-defined.
   line(data.commercial_scope || data.supply_description || 'Design, Engineering, Supply, Installation, Testing & Commissioning of Solar PV System', c.taxable);
-  line(`GST${c.taxable ? ` (${Math.round((c.gst / c.taxable) * 100)}%)` : ''}`, c.gst);
+  gstRows(c, data).forEach(([l, v]) => line(l, v));
   y += 4;
   line('Total Investment (incl. GST)', c.total, { big: true, fill: C.emer });
   y += 6;
@@ -375,10 +383,9 @@ function companyBankBlock(doc, data, y, flowY) {
   doc.rect(M, y, colW, 3).fill(C.gold);
   doc.font('uiSB').fontSize(8).fillColor(C.emer).text('SUPPLIER', M + 14, y + 12, { characterSpacing: 0.8 });
   const supplierRows = [
-    ['Company', 'Arrays Ingenieria Pvt. Ltd.'],
+    ['Company', data.company_name || 'Arrays Ingenieria Pvt. Ltd.'],
     ['GSTIN', data.company_gstin || '—'],
-    ['PAN', data.company_pan || '—'],
-    ['Registered Office', data.company_address || 'Arrays Ingenieria Pvt. Ltd.'],
+    ['Office', [data.office_name, data.office_place].filter(Boolean).join(' · ') || '—'],
   ];
   let ly = y + 28;
   supplierRows.forEach((r) => {
@@ -485,7 +492,7 @@ export function renderBOQ(doc, data = {}, opts = {}) {
   };
   if (y + 120 > 792) { doc.addPage(); chrome(doc, 'Bill of Quantities'); y = 110; }
   totRow('Sub-Total (before GST)', c.taxable);
-  totRow(`GST${c.taxable ? ` (${Math.round((c.gst / c.taxable) * 100)}%)` : ''}`, c.gst);
+  gstRows(c, data).forEach(([l, v]) => totRow(l, v));
   totRow('Grand Total (incl. GST)', c.total, C.emer);
 
   doc.font('bodyI').fontSize(8).fillColor(C.mute)

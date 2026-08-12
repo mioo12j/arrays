@@ -364,15 +364,16 @@ function coverPage(doc, data) {
   doc.rect(0, 0, W, ph).fill(g);
   // thin gold rule top
   doc.rect(0, 0, W, 4).fill(C.gold);
-  // logo (original colour) top-left
-  logo(doc, M - 10, 34, 104, false);
+  // logo on a soft white plate so the colour mark stays crisp over the photo
+  doc.save().roundedRect(M - 14, 28, 116, 104, 14).fillOpacity(0.94).fill('#ffffff').restore();
+  logo(doc, M - 8, 34, 104, false);
   // credential pill — lighter panel for contrast on the photo
   const tc = 'EX-SERVICEMEN LED   ·   ISO 9001 · 14001 · 45001   ·   SINCE 2018';
   doc.font('uiSB').fontSize(8.5);
   const tcW = doc.widthOfString(tc, { characterSpacing: 1.4 }) + 34;
-  doc.save().roundedRect(M, 150, tcW, 24, 12).fillOpacity(0.16).fill('#ffffff').restore();
-  doc.save().roundedRect(M, 150, tcW, 24, 12).lineWidth(0.8).strokeOpacity(0.5).strokeColor(C.goldB).stroke().restore();
-  doc.font('uiSB').fontSize(8.5).fillColor('#ffffff').text(tc, M + 17, 158, { characterSpacing: 1.4, lineBreak: false });
+  doc.save().roundedRect(M, 150, tcW, 24, 12).fillOpacity(0.9).fill(C.emerD).restore();
+  doc.save().roundedRect(M, 150, tcW, 24, 12).lineWidth(0.8).strokeColor(C.goldB).stroke().restore();
+  doc.font('uiSB').fontSize(8.5).fillColor(C.goldB).text(tc, M + 17, 158, { characterSpacing: 1.4, lineBreak: false });
 
   // title block on the dark lower band — raised so the meta card never
   // collides with the headline, even with a 5-line address

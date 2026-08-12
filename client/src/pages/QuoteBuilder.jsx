@@ -32,6 +32,30 @@ const RATE_FIELDS = [
   ['subsidy_amount', 'Subsidy override (₹)'],
 ];
 
+// Standard defaults the operator can load and then edit (mirror the PDF defaults).
+const STD_SCHEDULE = [
+  { pct: '30%', stage: 'Advance', against: 'Along with the confirmed Purchase Order' },
+  { pct: '60%', stage: 'On Material Readiness', against: 'Against readiness of modules, inverter & BOS for dispatch (prior to delivery)' },
+  { pct: '5%', stage: 'On Installation', against: 'On completion of mechanical installation at site' },
+  { pct: '5%', stage: 'On Commissioning', against: 'On successful testing, commissioning & handover' },
+];
+const STD_TERMS = [
+  { title: 'Payment', body: 'All payments strictly against the Proforma Invoice (PI). The GST tax invoice is raised only after payment is realised in our account. Materials remain our property until paid in full.' },
+  { title: 'Delay in Payment', body: 'Payments delayed beyond the due date attract interest at 18% per annum and may lead to suspension of works.' },
+  { title: 'GST & Taxes', body: 'GST is charged extra at prevailing rates as applicable on the date of invoicing.' },
+  { title: 'Module & Inverter Warranty', body: 'Modules and inverter carry the respective manufacturer warranty and are supplied as per the requirement of the client.' },
+  { title: 'Delivery & Timeline', body: 'Delivery and commissioning commence from receipt of the advance, a technically clear order and continuous unobstructed site access.' },
+];
+const STD_SCOPE_OURS = 'Design, engineering, drawings & SLD\nSupply of modules, inverter & BOS as per client requirement\nMounting structure, DC/AC cabling, earthing & lightning protection\nInstallation, testing & commissioning\nDISCOM liaison & net-metering application\nDatasheets, test certificates & O&M orientation';
+const STD_SCOPE_CLIENT = 'Clear, secure, shadow-free site with structural adequacy\nConstruction power & water and safe storage at site\nSanctioned load details, latest electricity bill & KYC\nDISCOM deposits, feasibility & statutory fees (at actuals)\nTimely release of payments as per the agreed schedule';
+const STD_EXCL = 'Anything not expressly listed under our scope, or agreed by us in writing, is client scope and chargeable at actuals.\nDISCOM deposits, metering charges and any statutory / approval fees are at actuals.';
+const STD_WARRANTY = [
+  { component: 'Solar Modules', spec: 'As per client requirement', warranty: 'As per manufacturer’s product & performance warranty' },
+  { component: 'Inverter', spec: 'As per client requirement', warranty: 'As per manufacturer’s warranty' },
+  { component: 'Mounting Structure', spec: 'Hot-dip galvanised / GI', warranty: 'Against corrosion, as per make' },
+  { component: 'Workmanship (EPC)', spec: 'Ingenieria installation', warranty: 'As mutually agreed' },
+];
+
 const blankForm = {
   client_id: '', client_name: '', project_name: '', site_name: '',
   project_type: 'residential', capacity_kw: '5',
@@ -88,6 +112,7 @@ export default function QuoteBuilder() {
         ...(data.inputs || {}),
         panel_rate_basis: data.proposal_inputs?.panel_rate_basis || 'module',
         transport_included: data.proposal_inputs?.transport_included !== false,
+        custom_extras: Array.isArray(data.proposal_inputs?.custom_extras) ? data.proposal_inputs.custom_extras : [],
       });
       setPinputs(data.proposal_inputs || {});
       setUseCustom(!!data.proposal_inputs?._custom_boq);
@@ -140,8 +165,16 @@ export default function QuoteBuilder() {
       _custom_boq: useCustom,
       panel_rate_basis: rates.panel_rate_basis || 'module',
       transport_included: rates.transport_included !== false,
+      custom_extras: Array.isArray(rates.custom_extras) ? rates.custom_extras : [],
     },
   });
+
+  // extra-work rows live in `rates.custom_extras` (flow to the calc via recalc)
+  const extras = Array.isArray(rates.custom_extras) ? rates.custom_extras : [];
+  const setExtras = (arr) => setRates((r) => ({ ...r, custom_extras: arr }));
+  const addExtra = () => setExtras([...extras, { name: '', basis: 'watt', qty: 1, unit: 'Lot', rate: 0 }]);
+  const updExtra = (i, k, v) => setExtras(extras.map((r, j) => (j === i ? { ...r, [k]: v } : r)));
+  const delExtra = (i) => setExtras(extras.filter((_, j) => j !== i));
 
   // ---- custom BOQ line-item helpers ----
   const BOQ_UNITS = ['Nos', 'Set', 'Lot', 'Wp', 'kWp', 'RM', 'Mtr', 'Sqm', 'LS'];
@@ -387,6 +420,28 @@ export default function QuoteBuilder() {
                     </Field>
                   ))}
                 </div>
+                <div>
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Extra Work (optional)</span>
+                    <button type="button" onClick={addExtra} className="text-xs font-medium text-brand-600 hover:underline">+ Add extra work</button>
+                  </div>
+                  {extras.length === 0 && <p className="text-xs text-slate-400">e.g. step-up transformer, DG synchronisation, HT works — added to the BOQ.</p>}
+                  <div className="space-y-2">
+                    {extras.map((r, i) => (
+                      <div key={i} className="flex items-center gap-1.5">
+                        <input className="input flex-[4] !py-1.5 text-xs" placeholder="Extra work name" value={r.name || ''} onChange={(e) => updExtra(i, 'name', e.target.value)} />
+                        <select className="input flex-[2] !py-1.5 text-xs" value={r.basis || 'watt'} onChange={(e) => updExtra(i, 'basis', e.target.value)}>
+                          <option value="watt">Per watt</option>
+                          <option value="module">Per module</option>
+                          <option value="unit">Lump / unit</option>
+                        </select>
+                        {r.basis === 'unit' && <input className="input w-14 !py-1.5 text-right text-xs" type="number" placeholder="Qty" value={r.qty ?? ''} onChange={(e) => updExtra(i, 'qty', e.target.value)} />}
+                        <input className="input flex-[1.6] !py-1.5 text-right text-xs" type="number" placeholder="Rate ₹" value={r.rate ?? ''} onChange={(e) => updExtra(i, 'rate', e.target.value)} />
+                        <button type="button" onClick={() => delExtra(i)} className="px-1 text-slate-400 hover:text-red-500">×</button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
                 <p className="text-[11px] leading-relaxed text-slate-400">All work rates are ₹ <b>per watt</b> — e.g. ₹4/W on 25 kWp = ₹1,00,000. Modules bill per Nos; other work as a lump (Set/Lot). No hidden margin — your rates are the client price.</p>
               </div>
             )}
@@ -448,13 +503,24 @@ export default function QuoteBuilder() {
                   <input className="input" value={pinputs.commercial_scope || ''} onChange={setPI('commercial_scope')} placeholder="Design, Engineering, Supply, Installation, Testing & Commissioning of …" />
                 </Field>
 
+                {/* GST treatment */}
+                <Field label="GST Treatment">
+                  <select className="input" value={pinputs.gst_split || 'cgst_sgst'} onChange={setPI('gst_split')}>
+                    <option value="cgst_sgst">Intra-state — CGST + SGST</option>
+                    <option value="igst">Inter-state — IGST</option>
+                  </select>
+                </Field>
+
                 {/* Payment schedule */}
                 <div>
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Payment Schedule</span>
-                    <button type="button" onClick={() => addRow('payment_schedule', { pct: '', stage: '', against: '' })} className="text-xs font-medium text-brand-600 hover:underline">+ Add milestone</button>
+                    <div className="flex gap-3">
+                      <button type="button" onClick={() => setPinputs((p) => ({ ...p, payment_schedule: STD_SCHEDULE }))} className="text-xs font-medium text-slate-500 hover:underline">Load standard</button>
+                      <button type="button" onClick={() => addRow('payment_schedule', { pct: '', stage: '', against: '' })} className="text-xs font-medium text-brand-600 hover:underline">+ Add milestone</button>
+                    </div>
                   </div>
-                  {piArr('payment_schedule').length === 0 && <p className="text-xs text-slate-400">Blank = standard 30% adv · 60% material readiness · 5% installation · 5% commissioning.</p>}
+                  {piArr('payment_schedule').length === 0 && <p className="text-xs text-slate-400">Blank = standard 30% adv · 60% material readiness · 5% installation · 5% commissioning. Click <b>Load standard</b> to edit it.</p>}
                   <div className="space-y-2">
                     {piArr('payment_schedule').map((r, i) => (
                       <div key={i} className="flex items-start gap-1.5">
@@ -471,9 +537,12 @@ export default function QuoteBuilder() {
                 <div>
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Terms &amp; Conditions</span>
-                    <button type="button" onClick={() => addRow('terms', { title: '', body: '' })} className="text-xs font-medium text-brand-600 hover:underline">+ Add term</button>
+                    <div className="flex gap-3">
+                      <button type="button" onClick={() => setPinputs((p) => ({ ...p, terms: STD_TERMS }))} className="text-xs font-medium text-slate-500 hover:underline">Load standard</button>
+                      <button type="button" onClick={() => addRow('terms', { title: '', body: '' })} className="text-xs font-medium text-brand-600 hover:underline">+ Add term</button>
+                    </div>
                   </div>
-                  {piArr('terms').length === 0 && <p className="text-xs text-slate-400">Blank = standard PI-based terms. Add your own as Title + description.</p>}
+                  {piArr('terms').length === 0 && <p className="text-xs text-slate-400">Blank = standard PI-based terms. Click <b>Load standard</b> to edit them, or add your own as Title + description.</p>}
                   <div className="space-y-2">
                     {piArr('terms').map((r, i) => (
                       <div key={i} className="rounded-lg border border-slate-200 p-2 dark:border-slate-700">
@@ -487,24 +556,46 @@ export default function QuoteBuilder() {
                   </div>
                 </div>
 
-                <Field label="Exclusions (one per line, blank = standard)">
-                  <textarea className="input min-h-[50px] text-xs" value={pinputs.exclusions || ''} onChange={setPI('exclusions')} placeholder={'Anything not expressly listed under our scope is client scope, at actuals.\nDISCOM deposits & statutory fees at actuals.'} />
-                </Field>
-                <Field label="Scope of Supply & Services (one per line, blank = standard)">
-                  <textarea className="input min-h-[60px] text-xs" value={pinputs.scope_supply || ''} onChange={setPI('scope_supply')} placeholder={'545 Wp Solar PV Modules – 46 Nos.\nSuitable String Inverter\nModule Mounting Structure…'} />
-                </Field>
+                {/* Scope of Work (Arrays + Client) + Exclusions */}
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Scope of Work</span>
+                  <button type="button" onClick={() => setPinputs((p) => ({ ...p, scope_ours: STD_SCOPE_OURS, scope_client: STD_SCOPE_CLIENT, exclusions: STD_EXCL }))} className="text-xs font-medium text-slate-500 hover:underline">Load standard</button>
+                </div>
                 <div className="grid grid-cols-2 gap-3">
-                  <Field label="Our Scope of Work (one per line)"><textarea className="input min-h-[60px] text-xs" value={pinputs.scope_ours || ''} onChange={setPI('scope_ours')} /></Field>
-                  <Field label="Client Scope (one per line)"><textarea className="input min-h-[60px] text-xs" value={pinputs.scope_client || ''} onChange={setPI('scope_client')} /></Field>
+                  <Field label="Our Scope (one per line)"><textarea className="input min-h-[80px] text-xs" value={pinputs.scope_ours || ''} onChange={setPI('scope_ours')} placeholder={'Design, engineering & SLD\nSupply & installation…'} /></Field>
+                  <Field label="Client Scope (one per line)"><textarea className="input min-h-[80px] text-xs" value={pinputs.scope_client || ''} onChange={setPI('scope_client')} placeholder={'Site access, power & water…'} /></Field>
+                </div>
+                <Field label="Exclusions (one per line, blank = standard)">
+                  <textarea className="input min-h-[50px] text-xs" value={pinputs.exclusions || ''} onChange={setPI('exclusions')} placeholder={STD_EXCL} />
+                </Field>
+
+                {/* Warranty & specification (Quality page) */}
+                <div>
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Warranty &amp; Specification</span>
+                    <div className="flex gap-3">
+                      <button type="button" onClick={() => setPinputs((p) => ({ ...p, warranty_rows: STD_WARRANTY }))} className="text-xs font-medium text-slate-500 hover:underline">Load standard</button>
+                      <button type="button" onClick={() => addRow('warranty_rows', { component: '', spec: '', warranty: '' })} className="text-xs font-medium text-brand-600 hover:underline">+ Add row</button>
+                    </div>
+                  </div>
+                  {piArr('warranty_rows').length === 0 && <p className="text-xs text-slate-400">Blank = standard (as per manufacturer). Click <b>Load standard</b> to edit.</p>}
+                  <div className="space-y-2">
+                    {piArr('warranty_rows').map((r, i) => (
+                      <div key={i} className="flex items-center gap-1.5">
+                        <input className="input flex-[2] !py-1.5 text-xs" placeholder="Component" value={r.component || ''} onChange={(e) => updRow('warranty_rows', i, 'component', e.target.value)} />
+                        <input className="input flex-[3] !py-1.5 text-xs" placeholder="Specification" value={r.spec || ''} onChange={(e) => updRow('warranty_rows', i, 'spec', e.target.value)} />
+                        <input className="input flex-[3] !py-1.5 text-xs" placeholder="Warranty" value={r.warranty || ''} onChange={(e) => updRow('warranty_rows', i, 'warranty', e.target.value)} />
+                        <button type="button" onClick={() => delRow('warranty_rows', i)} className="px-1 text-slate-400 hover:text-red-500">×</button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
-                {/* Company & bank details */}
+                {/* Bank details — GSTIN comes from the selected office */}
                 <div>
-                  <div className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Company &amp; Bank Details (last page)</div>
+                  <div className="mb-1 text-sm font-semibold text-slate-700 dark:text-slate-200">Bank Details (last page)</div>
+                  <p className="mb-2 text-xs text-slate-400">GSTIN is taken automatically from the office selected above. Paste your bank details below.</p>
                   <div className="grid grid-cols-2 gap-3">
-                    <Field label="GSTIN"><input className="input text-xs" value={pinputs.company_gstin || ''} onChange={setPI('company_gstin')} /></Field>
-                    <Field label="PAN"><input className="input text-xs" value={pinputs.company_pan || ''} onChange={setPI('company_pan')} /></Field>
-                    <Field label="Registered Address"><input className="input text-xs" value={pinputs.company_address || ''} onChange={setPI('company_address')} /></Field>
                     <Field label="Delay-payment interest"><input className="input text-xs" value={pinputs.delay_interest || ''} onChange={setPI('delay_interest')} placeholder="18% per annum" /></Field>
                     <Field label="Bank Name"><input className="input text-xs" value={pinputs.bank_name || ''} onChange={setPI('bank_name')} /></Field>
                     <Field label="Bank Branch"><input className="input text-xs" value={pinputs.bank_branch || ''} onChange={setPI('bank_branch')} /></Field>

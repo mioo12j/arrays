@@ -237,14 +237,27 @@ const DOC_LABEL = { proposal: 'Proposal', quotation: 'Quotation', boq: 'BOQ' };
 
 async function loadQuoteData(id) {
   const { rows } = await query(
-    'SELECT q.*, c.name AS client_full_name FROM quotes q LEFT JOIN clients c ON c.id=q.client_id WHERE q.id=$1',
+    `SELECT q.*, c.name AS client_full_name,
+            b.gstin AS branch_gstin, b.legal_name AS branch_legal, b.trade_name AS branch_trade,
+            b.name AS branch_name, b.place AS branch_place, b.state_code AS branch_state_code
+     FROM quotes q
+     LEFT JOIN clients c ON c.id=q.client_id
+     LEFT JOIN gst_branches b ON b.id=q.branch_id
+     WHERE q.id=$1`,
     [id]
   );
   if (!rows[0]) throw new ApiError(404, 'Quote not found');
   const q = rows[0];
-  // Merge the rate inputs (tariff, yield, wattage…) then proposal_inputs so the
-  // PDF can read the operator's own tariff/generation and brand fields.
-  return { q, data: { ...(q.inputs || {}), ...q, ...(q.proposal_inputs || {}), client_name: q.client_name || q.client_full_name } };
+  // GST identity comes from the selected office/branch.
+  const office = {
+    company_gstin: q.branch_gstin || null,
+    company_name: q.branch_legal || q.branch_trade || 'Arrays Ingenieria Pvt. Ltd.',
+    office_place: q.branch_place || null,
+    office_name: q.branch_name || null,
+  };
+  // Merge rate inputs (tariff, yield, wattage…), the quote, then proposal_inputs
+  // so the PDF can read the operator's own tariff/generation/brand fields.
+  return { q, data: { ...(q.inputs || {}), ...q, ...(q.proposal_inputs || {}), ...office, client_name: q.client_name || q.client_full_name } };
 }
 
 function streamParts(res, q, data, parts) {
