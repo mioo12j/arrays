@@ -1599,25 +1599,12 @@ function thankYouPage(doc) {
   veil.stop(0, C.emerD, 1).stop(1, C.emerD, 0.55);
   doc.rect(0, H - 220, W, 220).fill(veil);
 
-  // full-width ribbon with a light-blue solar-panel pattern + the logo on it
-  const ribY = 74, ribH = 118;
-  doc.rect(0, ribY, W, ribH).fill('#d6e6f7');
-  doc.save();
-  const sq = 20, gp = 5;
-  for (let yy = ribY + 8; yy < ribY + ribH - 8; yy += sq + gp) {
-    for (let xx = 8; xx < W - 8; xx += sq + gp) {
-      doc.roundedRect(xx, yy, sq, sq, 3).fillOpacity(0.55).fill('#9dc0e8');
-    }
-  }
-  doc.restore();
-  doc.rect(0, ribY, W, 3).fill(C.gold);
-  doc.rect(0, ribY + ribH - 3, W, 3).fill(C.gold);
-  // white plate + colour logo centred on the ribbon
-  doc.save().roundedRect(W / 2 - 68, ribY + 12, 136, ribH - 24, 12).fillOpacity(0.96).fill('#ffffff').restore();
-  logo(doc, W / 2 - 56, ribY + 15, 112, false);
+  // logo on a clean white plate (same treatment as the cover)
+  doc.save().roundedRect(W / 2 - 70, 84, 140, 104, 14).fillOpacity(0.96).fill('#ffffff').restore();
+  logo(doc, W / 2 - 58, 90, 116, false);
 
-  doc.font('script').fontSize(58).fillColor('#ffffff').text('Thank You', 0, 226, { width: W, align: 'center' });
-  triTick(doc, W / 2 - 45, 306, 90);
+  doc.font('script').fontSize(58).fillColor('#ffffff').text('Thank You', 0, 220, { width: W, align: 'center' });
+  triTick(doc, W / 2 - 45, 302, 90);
   doc.font('bodyI').fontSize(14).fillColor('#dcf3e7')
      .text('We would be honoured to power your future.', 0, 326, { width: W, align: 'center' });
 

@@ -298,7 +298,7 @@ export function renderQuotation(doc, data = {}, opts = {}) {
   doc.font('script').fontSize(18).fillColor(C.gold).text('For Arrays Ingenieria Pvt. Ltd.', M, y + 26);
   doc.moveTo(M + w - sw + 10, y + 34).lineTo(M + w - 20, y + 34).lineWidth(0.8).strokeColor(C.ink).stroke();
   doc.font('ui').fontSize(8).fillColor(C.mute).text('Authorised Signatory & Company Seal', M + w - sw + 10, y + 40);
-  y += 60;
+  y += 74;
 
   // GST (from office) + fixed bank details + payment method
   y = companyBankBlock(doc, data, y, flowY);
@@ -382,9 +382,9 @@ function scopeAndExclusions(doc, data, y, flowY) {
 // GST / bank / delay-payment block on the last quotation page.
 function companyBankBlock(doc, data, y, flowY) {
   const W = doc.page.width, w = W - 2 * M;
-  y = flowY(y, 128);
+  y = flowY(y, 210);
   eyebrow(doc, 'Payment & Company Details', M, y, C.gold); y += 16;
-  const colW = (w - 16) / 2, bh = 108;
+  const colW = (w - 16) / 2, bh = 130;
   // left — company / GST
   panel(doc, M, y, colW, bh, C.paper, 9, C.line);
   doc.rect(M, y, colW, 3).fill(C.gold);
