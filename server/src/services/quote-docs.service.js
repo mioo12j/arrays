@@ -418,13 +418,14 @@ function companyBankBlock(doc, data, y, flowY) {
     by = doc.y + 4;
   });
   y += bh + 10;
-  // payment-method note — the key commercial condition
-  const pmH = 40;
+  // payment-method note — the key commercial condition (box grows to fit)
+  const pmText = `Payment is credited only against our Proforma Invoice. No GST tax invoice is issued until the payment is received in our account. Delay beyond the due date attracts interest at ${data.delay_interest || '18% per annum'}.`;
+  doc.font('body').fontSize(9);
+  const pmH = doc.heightOfString(pmText, { width: w - 32, lineGap: 1.5 }) + 34;
   panel(doc, M, y, w, pmH, C.cream, 8);
   doc.rect(M, y, 4, pmH).fill(C.gold);
-  doc.font('uiSB').fontSize(8).fillColor(C.gold).text('PAYMENT METHOD', M + 16, y + 10, { characterSpacing: 0.8 });
-  doc.font('body').fontSize(9).fillColor(C.body)
-     .text(`Payment is credited only against our Proforma Invoice. No GST tax invoice is issued until the payment is received in our account. Delay beyond the due date attracts interest at ${data.delay_interest || '18% per annum'}.`, M + 16, y + 22, { width: w - 32, lineGap: 1.5 });
+  doc.font('uiSB').fontSize(8).fillColor(C.gold).text('PAYMENT METHOD', M + 16, y + 11, { characterSpacing: 0.8 });
+  doc.font('body').fontSize(9).fillColor(C.body).text(pmText, M + 16, y + 23, { width: w - 32, lineGap: 1.5 });
   return y + pmH + 6;
 }
 

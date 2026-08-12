@@ -364,8 +364,8 @@ function coverPage(doc, data) {
   doc.rect(0, 0, W, ph).fill(g);
   // thin gold rule top
   doc.rect(0, 0, W, 4).fill(C.gold);
-  // logo on a soft white plate so the colour mark stays crisp over the photo
-  doc.save().roundedRect(M - 14, 28, 116, 104, 14).fillOpacity(0.94).fill('#ffffff').restore();
+  // logo on a soft white plate large enough to contain the square mark
+  doc.save().roundedRect(M - 14, 28, 120, 120, 14).fillOpacity(0.94).fill('#ffffff').restore();
   logo(doc, M - 8, 34, 104, false);
   // credential pill — lighter panel for contrast on the photo
   const tc = 'EX-SERVICEMEN LED   ·   ISO 9001 · 14001 · 45001   ·   SINCE 2018';
@@ -1599,9 +1599,9 @@ function thankYouPage(doc) {
   veil.stop(0, C.emerD, 1).stop(1, C.emerD, 0.55);
   doc.rect(0, H - 220, W, 220).fill(veil);
 
-  // logo on a clean white plate (same treatment as the cover)
-  doc.save().roundedRect(W / 2 - 70, 84, 140, 104, 14).fillOpacity(0.96).fill('#ffffff').restore();
-  logo(doc, W / 2 - 58, 90, 116, false);
+  // logo on a clean white plate large enough to fully contain the square mark
+  doc.save().roundedRect(W / 2 - 68, 82, 136, 130, 16).fillOpacity(0.96).fill('#ffffff').restore();
+  logo(doc, W / 2 - 52, 90, 104, false);
 
   doc.font('script').fontSize(58).fillColor('#ffffff').text('Thank You', 0, 220, { width: W, align: 'center' });
   triTick(doc, W / 2 - 45, 302, 90);
