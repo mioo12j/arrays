@@ -222,13 +222,15 @@ export function renderQuotation(doc, data = {}, opts = {}) {
     y += rh + 8;
   });
   // proforma-invoice note
-  y = flowY(y, 52);
+  const piText = 'All payments are strictly against our Proforma Invoice (PI). The GST tax invoice is issued only after the corresponding payment is realised in our account. Materials remain our property until paid in full.';
   doc.font('body').fontSize(9.2);
-  const piH = Math.max(42, doc.heightOfString('All payments are strictly against our Proforma Invoice (PI). The GST tax invoice is issued only after the corresponding payment is realised in our account. Materials remain our property until paid in full.', { width: w - 40, lineGap: 2 }) + 22);
+  const piTextH = doc.heightOfString(piText, { width: w - 36, lineGap: 2 });
+  const piH = piTextH + 40;                          // eyebrow (24) + text + bottom pad
+  y = flowY(y, piH + 8);
   panel(doc, M, y, w, piH, C.cream, 8);
   doc.rect(M, y, 4, piH).fill(C.gold);
-  doc.font('uiSB').fontSize(8).fillColor(C.gold).text('PAYMENT AGAINST PROFORMA INVOICE', M + 18, y + 12, { characterSpacing: 0.8 });
-  doc.font('body').fontSize(9.2).fillColor(C.body).text('All payments are strictly against our Proforma Invoice (PI). The GST tax invoice is issued only after the corresponding payment is realised in our account. Materials remain our property until paid in full.', M + 18, y + 24, { width: w - 40, lineGap: 2 });
+  doc.font('uiSB').fontSize(8).fillColor(C.gold).text('PAYMENT AGAINST PROFORMA INVOICE', M + 18, y + 13, { characterSpacing: 0.8 });
+  doc.font('body').fontSize(9.2).fillColor(C.body).text(piText, M + 18, y + 26, { width: w - 36, lineGap: 2 });
   y += piH + 18;
 
   // return on investment + disclaimer

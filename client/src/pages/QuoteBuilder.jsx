@@ -441,7 +441,7 @@ export default function QuoteBuilder() {
             </button>
             {showTerms && (
               <div className="mt-4 space-y-5">
-                <Field label="Commercial Offer description (blank = standard)">
+                <Field label="Name of Work (blank = standard)">
                   <input className="input" value={pinputs.commercial_scope || ''} onChange={setPI('commercial_scope')} placeholder="Design, Engineering, Supply, Installation, Testing & Commissioning of …" />
                 </Field>
 

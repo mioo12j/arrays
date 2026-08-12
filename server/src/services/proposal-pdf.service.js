@@ -553,14 +553,14 @@ function leadershipPage(doc, data = {}) {
   y = doc.y + 8;
   // personalised first paragraph built from the questionnaire data
   const sysWords = [grid, seg].filter(Boolean).join(' ');
-  let p1 = `Thank you for the opportunity to earn your trust. It is a privilege to place our engineering — and our discipline — at the service of ${name || 'your organisation'}`;
+  let p1 = `Thank you for the opportunity to earn your trust. It is a privilege to place our engineering and our discipline at the service of ${name || 'your organisation'}`;
   if (kwp) p1 += `, and to design the ${kwp} kWp ${sysWords || 'grid-connected solar'} power plant`;
   else p1 += ', and to design the solar power plant';
   if (loc) p1 += ` proposed at ${loc}`;
-  p1 += '. For us, every project of this kind is not merely a contract — it is a national mission carried forward by soldiers who have spent their lives in service of this country.';
+  p1 += '. For us, every project of this kind is not merely a contract; it is a national mission carried forward by soldiers who have spent their lives in service of this country.';
   const letter = [
     p1,
-    'We founded this company in 2018 on a simple conviction: that the discipline, precision and accountability of the armed forces are exactly what India’s clean-energy transition demands. Every plant we build — from a rooftop on a factory shed to the 300 MW SECI solar park — is delivered with that same zero-compromise standard.',
+    'We founded this company in 2018 on a simple conviction: that the discipline, precision and accountability of the armed forces are exactly what India’s clean-energy transition demands. Every plant we build, from a rooftop on a factory shed to utility-scale solar parks, is delivered with that same zero-compromise standard.',
     'This document is our commitment to you in writing. Within it you will find not only competitive economics, but the engineering rigour, the quality systems and the long-term partnership that have earned us the trust of Tata Power, Tata Steel, Tata Motors, Bharat Petroleum and many more.',
     'We would be honoured to power your future.',
   ];
@@ -575,7 +575,7 @@ function leadershipPage(doc, data = {}) {
   doc.rect(M, bandY, 4, bandH).fill(C.gold);
   doc.font('H').fontSize(46).fillColor(C.gold).text('“', M + 16, bandY + 2);
   doc.font('bodyI').fontSize(13.5).fillColor('#ffffff')
-     .text('Where engineering meets resilience — and every megawatt is a mission accomplished.',
+     .text('Where engineering meets resilience, and every megawatt is a mission accomplished.',
            M + 52, bandY + 22, { width: w - 80 });
 }
 
@@ -661,7 +661,7 @@ function whyPage(doc) {
   const cards = [
     ['medal', '100% Veteran-Led', 'Founded and operated entirely by decorated former military officers — strategic planning, decisive action, zero-compromise execution on every site.'],
     ['shield', 'Triple-ISO Certified', 'ISO 9001, 14001 & 45001 for quality, environmental and occupational-safety management — audited systems, not slogans.'],
-    ['grid', 'Proven Scale', 'From 10 kWp rooftops to the 300 MW SECI solar park — any size, any terrain, delivered to specification.'],
+    ['grid', 'Proven Scale', 'From 10 kWp rooftops to utility-scale solar parks — any size, any terrain, delivered to specification.'],
     ['flag', 'Pan-India Reach', 'Dedicated crews mobilised across the length and breadth of the nation, from Assam’s tea estates to Karnataka’s solar parks.'],
     ['tools', 'In-House Engineering', 'Feasibility, geo-technical survey, design, piling, civil and electrical — a single accountable team, start to finish.'],
     ['clock', 'On-Time, Every Time', 'Military logistics translated into renewable delivery: 100% on-time commissioning across our portfolio.'],
@@ -740,7 +740,7 @@ function industriesPage(doc) {
     ['bolt', 'Industrial', 'Factories, smelters & manufacturing units — large rooftop and ground-mount systems built at scale.'],
     ['shield', 'Institutional', 'Schools, hospitals & campuses — compliant, dependable solar that funds itself over time.'],
     ['leaf', 'Agriculture & Tea', 'Ground-mount plants for estates & agri-loads — proven across Assam’s tea gardens.'],
-    ['flag', 'Government & PSU', 'Utility-scale & PSU projects (SECI, Tata Power EPC) executed exactly to specification.'],
+    ['flag', 'Government & PSU', 'Utility-scale & PSU projects (Tata Power EPC and government tenders) executed exactly to specification.'],
   ];
   const cw = (w - 16) / 2, ch = 104, y0 = y;
   inds.forEach((c, i) => {
@@ -762,25 +762,27 @@ function industriesPage(doc) {
 // =============================================================================
 //  PAGE 9 — TRUSTED BY (client wall + milestone)
 // =============================================================================
-function clientsPage(doc) {
+function clientsPage(doc, data = {}) {
   chrome(doc, 'Our Clients');
   const W = doc.page.width, w = W - 2 * M;
   heading(doc, 'Section 07', 'Trusted by India’s Leaders');
   para(doc, 'From utility giants to tea estates, India’s most demanding industrial houses rely on Ingenieria for solar delivered to specification.', M, doc.y, w, { size: 10.6 });
   let y = doc.y + 14;
-  const clients = [
-    ['TATA POWER', 'SOLAR EPC'], ['TATA STEEL', 'NOAMUNDI'], ['TATA MOTORS', 'JAMSHEDPUR'],
-    ['SECI', '300 MW PARK'], ['BHARAT', 'PETROLEUM'], ['SUPER', 'SMELTERS'],
-    ['DCM', 'HISAR'], ['JAY SHREE', 'TEA · BIRLA'], ['AMALGAMATED', 'PLANTATIONS'],
-  ];
+  const clients = (Array.isArray(data.clients) && data.clients.length ? data.clients.map((c) => (Array.isArray(c) ? c : [c.name || '', c.sub || ''])) : [
+    ['Tata Power', 'Solar EPC'], ['Tata Steel', 'Noamundi'], ['Tata Motors', 'Jamshedpur'],
+    ['Bharat Petroleum', 'RCC Rooftop'], ['Super Smelters', 'Asansol'], ['DCM', 'Hisar'],
+    ['Jay Shree Tea', 'Birla · Assam'], ['Balaji Action', 'Sitarganj'], ['APPL', 'Assam Tea'],
+  ]).filter((c) => c[0]).slice(0, 9);
   const cols = 3, gap = 16, tw = (w - (cols - 1) * gap) / cols, th = 78, y0 = y;
   clients.forEach((c, i) => {
     const col = i % cols, row = Math.floor(i / cols);
     const x = M + col * (tw + gap), yy = y0 + row * (th + gap);
     panel(doc, x, yy, tw, th, C.paper, 8, C.line);
     doc.rect(x, yy, tw, 3).fill(C.gold);
-    doc.font('uiB').fontSize(14).fillColor(C.emer).text(c[0], x, yy + 24, { width: tw, align: 'center', characterSpacing: 0.5 });
-    doc.font('ui').fontSize(7.5).fillColor(C.mute).text(c[1], x, yy + 46, { width: tw, align: 'center', characterSpacing: 1.5 });
+    let fs = 14; doc.font('uiB');
+    while (fs > 9 && doc.fontSize(fs).widthOfString(String(c[0]), { characterSpacing: 0.4 }) > tw - 18) fs -= 0.5;
+    doc.font('uiB').fontSize(fs).fillColor(C.emer).text(String(c[0]), x, yy + 26, { width: tw, align: 'center', characterSpacing: 0.4 });
+    doc.font('ui').fontSize(7.5).fillColor(C.mute).text(String(c[1]).toUpperCase(), x, yy + 48, { width: tw, align: 'center', characterSpacing: 1.2 });
   });
   y = y0 + 3 * (th + gap) + 12;
 
@@ -957,7 +959,7 @@ function understandPage(doc, data) {
     ['Structure', tc(data.structure_type)],
     ['Net Metering', tc(data.net_metering)],
     ['Battery Backup', tc(data.battery)],
-  ];
+  ].filter((r) => r[1] != null && String(r[1]).trim() !== '');   // no empty "—" boxes
   // 2-column key/value cards — each row grows to fit the taller of its two cells
   const cw = (w - 18) / 2, vgap = 8;
   const cellH = (val) => { doc.font('uiSB').fontSize(10.5); return Math.max(30, doc.heightOfString(V(val), { width: cw - 26, lineGap: 1.5 }) + 24); };
@@ -1717,7 +1719,7 @@ export function renderProposal(doc, data = {}, opts = {}) {
     (d) => whyPage(d),
     (d) => servicesPage(d),
     (d) => industriesPage(d),
-    (d) => clientsPage(d),
+    (d) => clientsPage(d, data),
     (d) => trackRecordPage(d),
     (d) => testimonialsPage(d),
     (d) => recognitionPage(d),
