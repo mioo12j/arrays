@@ -18,22 +18,17 @@ const PROJECT_TYPES = [
   { v: 'utility', l: 'Utility-Scale' },
 ];
 
+// All work rates are ₹ PER WATT (₹/W). e.g. ₹4/W on a 25 kWp system = ₹4 × 25,000.
 const RATE_FIELDS = [
   ['panel_wattage', 'Panel Wattage (Wp)'],
-  ['panel_rate', 'Panel Rate (₹/module)'],
-  ['inverter_rate_per_kw', 'Inverter (₹/kW)'],
-  ['structure_rate_per_kw', 'Structure (₹/kW)'],
-  ['cable_rate_per_kw', 'Cabling (₹/kW)'],
-  ['earthing_rate_per_kw', 'Earthing (₹/kW)'],
-  ['bos_rate_per_kw', 'Balance of System (₹/kW)'],
-  ['civil_rate_per_kw', 'Civil (₹/kW)'],
-  ['labour_rate_per_kw', 'Labour (₹/kW)'],
-  ['transport_rate_per_kw', 'Transport (₹/kW)'],
-  ['contingency_pct', 'Contingency (%)'],
-  ['margin_pct', 'Margin (%)'],
+  ['inverter_rate', 'Inverter (₹/W)'],
+  ['structure_rate', 'Structure (₹/W)'],
+  ['bos_rate', 'Cabling + Earthing + BOS (₹/W)'],
+  ['civil_rate', 'Civil (₹/W)'],
+  ['labour_rate', 'Installation & Commissioning (₹/W)'],
   ['gst_pct', 'GST (%)'],
-  ['tariff_per_kwh', 'Grid Tariff (₹/kWh)'],
-  ['generation_per_kw_year', 'Generation (kWh/kW/yr)'],
+  ['tariff_per_kwh', 'Grid Tariff (₹/unit)'],
+  ['generation_per_kw_year', 'Annual Yield (kWh/kW/yr)'],
   ['subsidy_amount', 'Subsidy override (₹)'],
 ];
 
@@ -89,7 +84,11 @@ export default function QuoteBuilder() {
         notes: data.notes || '', terms: data.terms || '', exclusions: data.exclusions || '',
         branch_id: data.branch_id || '',
       });
-      setRates(data.inputs || {});
+      setRates({
+        ...(data.inputs || {}),
+        panel_rate_basis: data.proposal_inputs?.panel_rate_basis || 'module',
+        transport_included: data.proposal_inputs?.transport_included !== false,
+      });
       setPinputs(data.proposal_inputs || {});
       setUseCustom(!!data.proposal_inputs?._custom_boq);
       setCustomItems((data.line_items || []).map((li) => ({
@@ -139,6 +138,8 @@ export default function QuoteBuilder() {
     proposal_inputs: {
       ...pinputs, project_type: form.project_type, capacity_kw: Number(form.capacity_kw || 0),
       _custom_boq: useCustom,
+      panel_rate_basis: rates.panel_rate_basis || 'module',
+      transport_included: rates.transport_included !== false,
     },
   });
 
@@ -355,12 +356,36 @@ export default function QuoteBuilder() {
               <ChevronDown size={18} className={`transition ${showRates ? 'rotate-180' : ''}`} />
             </button>
             {showRates && (
-              <div className="mt-4 grid grid-cols-2 gap-3">
-                {RATE_FIELDS.map(([k, label]) => (
-                  <Field key={k} label={label}>
-                    <input className="input" type="number" value={rates[k] ?? (c.inputs ? c.inputs[k] : '')} onChange={setRate(k)} placeholder={c.inputs ? String(c.inputs[k]) : ''} />
+              <div className="mt-4 space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <Field label="Panel Rate Basis">
+                    <select className="input" value={rates.panel_rate_basis || 'module'} onChange={(e) => setRates((r) => ({ ...r, panel_rate_basis: e.target.value }))}>
+                      <option value="module">Per module (₹/panel)</option>
+                      <option value="watt">Per watt (₹/W)</option>
+                    </select>
                   </Field>
-                ))}
+                  {rates.panel_rate_basis === 'watt'
+                    ? <Field label="Panel Rate (₹/W)"><input className="input" type="number" value={rates.panel_rate_per_watt ?? ''} onChange={setRate('panel_rate_per_watt')} placeholder="22" /></Field>
+                    : <Field label="Panel Rate (₹/module)"><input className="input" type="number" value={rates.panel_rate ?? ''} onChange={setRate('panel_rate')} placeholder="11990" /></Field>}
+                  <Field label="Extra Modules (%)"><input className="input" type="number" value={rates.extra_module_pct ?? ''} onChange={setRate('extra_module_pct')} placeholder="0" /></Field>
+                  <Field label="Transportation">
+                    <select className="input" value={rates.transport_included === false ? 'no' : 'yes'} onChange={(e) => setRates((r) => ({ ...r, transport_included: e.target.value === 'yes' }))}>
+                      <option value="yes">Included in price</option>
+                      <option value="no">Charged extra</option>
+                    </select>
+                  </Field>
+                  {rates.transport_included === false && (
+                    <Field label="Transport (₹/W)"><input className="input" type="number" value={rates.transport_rate ?? ''} onChange={setRate('transport_rate')} placeholder="0.5" /></Field>
+                  )}
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  {RATE_FIELDS.map(([k, label]) => (
+                    <Field key={k} label={label}>
+                      <input className="input" type="number" value={rates[k] ?? (c.inputs ? c.inputs[k] : '')} onChange={setRate(k)} placeholder={c.inputs ? String(c.inputs[k]) : ''} />
+                    </Field>
+                  ))}
+                </div>
+                <p className="text-[11px] leading-relaxed text-slate-400">All work rates are ₹ <b>per watt</b> — e.g. ₹4/W on 25 kWp = ₹1,00,000. Modules bill per Nos; other work as a lump (Set/Lot). No hidden margin — your rates are the client price.</p>
               </div>
             )}
           </Card>

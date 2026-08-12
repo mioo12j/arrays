@@ -7,35 +7,38 @@
 
 // Default rates (INR). Tuned per project type; every value is overridable
 // through the `inputs` payload so estimates reflect real procurement prices.
+// All work rates are ₹ PER WATT (₹/Wp). e.g. ₹4/W civil on a 25 kWp system
+// = ₹4 × 25,000 W. Operator rates are the final client price (they already
+// include the company's margin) — no hidden margin/contingency is added.
 const DEFAULTS = {
   panel_wattage: 545,            // Wp per module
-  panel_rate: 11990,             // ₹ per module (~22/Wp)
-  inverter_rate_per_kw: 4200,    // ₹ per kW
-  structure_rate_per_kw: 3500,   // ₹ per kW
-  cable_rate_per_kw: 1800,       // ₹ per kW (AC+DC)
-  earthing_rate_per_kw: 650,     // ₹ per kW (earthing + LA)
-  civil_rate_per_kw: 0,          // set per project type below
-  labour_rate_per_kw: 2500,      // ₹ per kW (installation)
-  bos_rate_per_kw: 1200,         // balance of system / accessories
-  transport_rate_per_kw: 500,    // ₹ per kW
-  contingency_pct: 3,            // % of subtotal
-  margin_pct: 15,                // markup % on cost
-  gst_pct: 13.8,                 // blended GST on solar (illustrative)
+  panel_rate: 11990,             // ₹ per module (when panel basis = module)
+  panel_rate_per_watt: 22,       // ₹/W  (when panel basis = watt)
+  extra_module_pct: 0,           // % extra modules on client demand
+  inverter_rate: 4.2,            // ₹/W
+  structure_rate: 3.5,           // ₹/W
+  bos_rate: 4,                   // ₹/W  — combined cabling + earthing + balance of system
+  civil_rate: 0,                 // ₹/W  (set per project type below)
+  labour_rate: 2.5,              // ₹/W  — installation, testing & commissioning
+  transport_rate: 0.5,           // ₹/W  (only when transport is not included)
+  contingency_pct: 0,            // optional markup — off by default
+  margin_pct: 0,                 // optional markup — off by default
+  gst_pct: 13.8,                 // blended GST on solar
   tariff_per_kwh: 8,             // grid tariff offset (₹/kWh) for savings calc
   generation_per_kw_year: 1500,  // kWh per kW per year (~17% CUF)
   subsidy_amount: 0,             // manual override for non-residential
 };
 
-// Project-type specific civil work intensity (₹ per kW).
+// Project-type specific civil work intensity (₹ per watt).
 const CIVIL_BY_TYPE = {
-  residential: 500,
-  rooftop: 600,
-  commercial: 900,
-  institutional: 900,
-  government: 1000,
-  industrial: 1500,
-  ground_mount: 3200,
-  utility: 3200,
+  residential: 0.5,
+  rooftop: 0.6,
+  commercial: 0.9,
+  institutional: 0.9,
+  government: 1.0,
+  industrial: 1.5,
+  ground_mount: 3.2,
+  utility: 3.2,
 };
 
 // PM Surya Ghar residential subsidy (capped ₹78,000).
@@ -50,51 +53,48 @@ export function calculateQuote(input = {}) {
   const kw = Number(input.capacity_kw || 0);
   const wp = kw * 1000;
   const type = input.project_type || 'rooftop';
-  if (!r.civil_rate_per_kw) r.civil_rate_per_kw = CIVIL_BY_TYPE[type] ?? CIVIL_BY_TYPE.rooftop;
+  if (!r.civil_rate) r.civil_rate = CIVIL_BY_TYPE[type] ?? CIVIL_BY_TYPE.rooftop;
+  const panelBasis = String(input.panel_rate_basis || 'module') === 'watt' ? 'watt' : 'module';
+  const transportIncluded = !(input.transport_included === false || String(input.transport_included).toLowerCase() === 'false' || String(input.transport_included).toLowerCase() === 'no');
 
-  const panelCount = wp > 0 ? Math.ceil(wp / r.panel_wattage) : 0;
+  const extraPct = Number(r.extra_module_pct) || 0;
+  const panelCount = wp > 0 ? Math.ceil((wp * (1 + extraPct / 100)) / r.panel_wattage) : 0;
 
   // Operator-defined custom line items take priority. Their amounts are the
-  // FINAL client-facing prices (already include the company's margin), so no
-  // hidden contingency/margin is added on top — the sum is the taxable value.
+  // FINAL client-facing prices (already include margin) — the sum is taxable.
   const custom = normalizeItems(input.custom_items, wp, r);
-  let items, subtotal, contingency_amount, cost_amount, margin_amount, taxable_amount;
+  let items, subtotal, taxable_amount;
+  const contingency_amount = 0, margin_amount = 0;
 
   if (custom) {
     items = custom;
-    taxable_amount = round(items.reduce((s, i) => s + i.amount, 0));
-    subtotal = taxable_amount;                    // sum of items == pre-GST price
-    contingency_amount = 0;
-    cost_amount = taxable_amount;
-    margin_amount = 0;
   } else {
+    // per-watt work rates → a whole-of-work billing (1 Lot / Set), modules by Nos
+    const panelUnitRate = panelBasis === 'watt' ? round(r.panel_rate_per_watt * r.panel_wattage) : round(r.panel_rate);
+    const lot = (name, ratePerW, unit, note) => line(name, 1, unit, round(wp * ratePerW), round(wp * ratePerW), note);
     items = [
-      line('Solar PV Modules', panelCount, 'Nos', r.panel_rate, panelCount * r.panel_rate,
-        `${r.panel_wattage} Wp modules`),
-      line('Inverters', 1, 'Set', kw * r.inverter_rate_per_kw, kw * r.inverter_rate_per_kw, 'String/central inverters'),
-      line('Module Mounting Structure', 1, 'Lot', kw * r.structure_rate_per_kw, kw * r.structure_rate_per_kw,
-        type === 'ground_mount' ? 'Galvanized ground structure' : 'Rooftop structure'),
-      line('DC + AC Cabling', 1, 'Lot', kw * r.cable_rate_per_kw, kw * r.cable_rate_per_kw, 'Cables, conduits, terminations'),
-      line('Earthing & Lightning Arrestor', 1, 'Lot', kw * r.earthing_rate_per_kw, kw * r.earthing_rate_per_kw, 'Earthing pits + LA'),
-      line('Balance of System', 1, 'Lot', kw * r.bos_rate_per_kw, kw * r.bos_rate_per_kw, 'ACDB/DCDB, accessories'),
-      line('Civil Work', 1, 'Lot', kw * r.civil_rate_per_kw, kw * r.civil_rate_per_kw, `${labelType(type)} foundation/civil`),
-      line('Installation & Commissioning', 1, 'Lot', kw * r.labour_rate_per_kw, kw * r.labour_rate_per_kw, 'Erection & commissioning'),
-      line('Transportation', 1, 'Lot', kw * r.transport_rate_per_kw, kw * r.transport_rate_per_kw, 'Logistics to site'),
+      line('Solar PV Modules', panelCount, 'Nos', panelUnitRate, round(panelCount * panelUnitRate),
+        `${r.panel_wattage} Wp${extraPct ? ` · incl. ${extraPct}% extra` : ''}`),
+      lot('Inverter', r.inverter_rate, 'Set', 'String / central inverter'),
+      lot('Module Mounting Structure', r.structure_rate, 'Lot', type === 'ground_mount' ? 'Galvanised ground structure' : 'Rooftop structure'),
+      lot('Cabling, Earthing & Balance of System', r.bos_rate, 'Lot', 'DC/AC cables, earthing, LA, ACDB/DCDB'),
+      lot('Civil Work', r.civil_rate, 'Lot', `${labelType(type)} civil / foundation`),
+      lot('Installation, Testing & Commissioning', r.labour_rate, 'Lot', 'Erection, testing & commissioning'),
+      ...(transportIncluded ? [] : [lot('Transportation', r.transport_rate, 'Lot', 'Logistics to site')]),
+      ...normalizeExtras(input.custom_extras, wp, panelCount),
     ].filter((i) => i.amount > 0);
-    subtotal = round(items.reduce((s, i) => s + i.amount, 0));
-    contingency_amount = round(subtotal * (r.contingency_pct / 100));
-    cost_amount = round(subtotal + contingency_amount);
-    margin_amount = round(cost_amount * (r.margin_pct / 100));
-    taxable_amount = round(cost_amount + margin_amount);
   }
+  subtotal = round(items.reduce((s, i) => s + i.amount, 0));
+  taxable_amount = subtotal;                        // no hidden margin — rates are final
+  const cost_amount = taxable_amount;
 
-  // GST: operator may set the rate, a fixed amount, or a CGST/SGST/IGST split.
+  // GST: operator may set the rate or a fixed amount (breakdown handled in UI/PDF)
   const gst_pct = Number(input.gst_pct) || r.gst_pct;
   const gst_amount = Number(input.gst_amount) > 0 ? round(input.gst_amount) : round(taxable_amount * (gst_pct / 100));
   const total_amount = round(taxable_amount + gst_amount);
   const per_watt = wp > 0 ? round(total_amount / wp) : 0;
 
-  // Subsidy + return-on-investment
+  // Subsidy + return-on-investment (savings use the operator's tariff & yield)
   const subsidy_amount = type === 'residential'
     ? residentialSubsidy(kw)
     : round(r.subsidy_amount || 0);
@@ -150,6 +150,25 @@ function normalizeItems(list, wp, r) {
     return line(desc, qty, unit, rate, amount, String(ci.note ?? '').trim());
   }).filter(Boolean);
   return items.length ? items : null;
+}
+
+// Extra/optional works added on top of the auto BOQ (e.g. transformer, DG sync).
+// basis: 'watt' → rate × system watts; 'module' → rate × module count; else qty × rate.
+function normalizeExtras(list, wp, panelCount) {
+  if (!Array.isArray(list)) return [];
+  return list.map((x) => {
+    const name = String(x.name ?? x.description ?? '').trim();
+    if (!name) return null;
+    const unit = (String(x.unit ?? 'Lot').trim()) || 'Lot';
+    const basis = String(x.basis ?? '').toLowerCase();
+    const qty = Number(x.qty) || 1;
+    const rate = Number(x.rate) || 0;
+    let amount;
+    if (basis === 'watt') amount = wp * rate;
+    else if (basis === 'module') amount = panelCount * rate;
+    else amount = qty * rate;
+    return line(name, qty, unit, rate, round(amount), String(x.note ?? '').trim());
+  }).filter(Boolean);
 }
 function labelType(t) {
   return ({ rooftop: 'Rooftop', ground_mount: 'Ground Mount', industrial: 'Industrial', commercial: 'Commercial' })[t] || 'Rooftop';

@@ -240,7 +240,9 @@ async function loadQuoteData(id) {
   );
   if (!rows[0]) throw new ApiError(404, 'Quote not found');
   const q = rows[0];
-  return { q, data: { ...q, ...(q.proposal_inputs || {}), client_name: q.client_name || q.client_full_name } };
+  // Merge the rate inputs (tariff, yield, wattage…) then proposal_inputs so the
+  // PDF can read the operator's own tariff/generation and brand fields.
+  return { q, data: { ...(q.inputs || {}), ...q, ...(q.proposal_inputs || {}), client_name: q.client_name || q.client_full_name } };
 }
 
 function streamParts(res, q, data, parts) {

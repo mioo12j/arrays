@@ -313,9 +313,10 @@ function subsidyFor(data, kwp, capex) {
 
 // derive a full financial + environmental model from the questionnaire data
 function model(data) {
+  const inp = data.inputs || {};
   const kwp = num(data.capacity_kwp || data.system_kwp || data.capacity_kw || data.capacity, 0) || 100;
-  const tariff = num(data.tariff, 0) || 8.5;
-  const yieldPerKwp = 1500;                        // kWh/kWp/yr (India avg)
+  const tariff = num(data.tariff ?? data.tariff_per_kwh ?? inp.tariff_per_kwh, 0) || 8.5;
+  const yieldPerKwp = num(data.generation_per_kw_year ?? inp.generation_per_kw_year, 0) || 1500;  // kWh/kWp/yr
   const gen1 = kwp * yieldPerKwp;                  // year-1 units
   const costPerKwp = num(data.cost_per_kwp, 0) || 48000;
   // Prefer the real quotation figures when present, so proposal & quotation agree.
