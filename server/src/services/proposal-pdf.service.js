@@ -718,7 +718,7 @@ function servicesPage(doc) {
   y = y0 + 2 * (ch + 16) + 10;
   // photo strip with captions
   const iw = (w - 2 * 12) / 3;
-  const caps = [['proj-seci', 'Piling Works'], ['proj-tml', 'Tata Motors · EPC'], ['proj-earthing', 'Earthing & Safety']];
+  const caps = [['proj-seci', 'Piling Works'], ['proj-dcm-hisar', 'Ground-Mount Solar · EPC'], ['proj-earthing', 'Earthing & Safety']];
   caps.forEach((p, i) => {
     const x = M + i * (iw + 12);
     drawImg(doc, photo(p[0]), x, y, iw, 132, 8);

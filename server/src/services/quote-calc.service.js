@@ -61,11 +61,11 @@ export function calculateQuote(input = {}) {
   const panelCount = wp > 0 ? Math.ceil((wp * (1 + extraPct / 100)) / r.panel_wattage) : 0;
 
   // Operator-defined custom line items take priority. Their amounts are the
-  // FINAL client-facing prices (already include margin) — the sum is taxable.
+  // operator's COST (same as the auto per-watt rates) — the margin below is
+  // added on top and later distributed across the item rates.
   const custom = normalizeItems(input.custom_items, wp, r);
   let items, subtotal, taxable_amount, margin_amount = 0;
   const contingency_amount = 0;
-  const isCustom = !!custom;
 
   if (custom) {
     items = custom;
@@ -86,10 +86,11 @@ export function calculateQuote(input = {}) {
     ].filter((i) => i.amount > 0);
   }
   subtotal = round(items.reduce((s, i) => s + i.amount, 0));
-  // Custom items are already the final price; for the rate-based BOQ the operator's
-  // margin is added on top and later distributed across the item rates (never shown
-  // as a line to the client).
-  if (!isCustom) margin_amount = round(subtotal * (Number(r.margin_pct) || 0) / 100);
+  // The operator's margin is always added on top of the cost sub-total — for both
+  // the auto per-watt BOQ and operator-entered custom items — and later distributed
+  // across the item rates (never shown as a separate line to the client). Set the
+  // margin to 0 when the entered amounts already include it.
+  margin_amount = round(subtotal * (Number(r.margin_pct) || 0) / 100);
   taxable_amount = round(subtotal + margin_amount);
   const cost_amount = subtotal;
 
