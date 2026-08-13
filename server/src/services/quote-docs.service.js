@@ -266,15 +266,16 @@ export function renderQuotation(doc, data = {}, opts = {}) {
   // scope of work (Arrays + client) — the only place scope appears
   y = scopeAndExclusions(doc, data, y, flowY);
 
-  // acceptance
+  // acceptance — signed by the CLIENT to accept the offer, scope & terms
   y = flowY(y, 100);
   const half = (w - 24) / 2;
+  const clientNm = data.client_name || data.client_full_name || data.customer_name || 'the Client';
   panel(doc, M, y, w, 96, C.paper, 9, C.line);
-  doc.font('uiSB').fontSize(8.5).fillColor(C.gold).text('ACCEPTANCE', M + 18, y + 14, { characterSpacing: 1 });
-  doc.font('body').fontSize(9.4).fillColor(C.body).text('Kindly sign and return a copy of this quotation to confirm your acceptance and initiate the project.', M + 18, y + 28, { width: half - 20 });
-  doc.moveTo(M + w - half + 10, y + 60).lineTo(M + w - 20, y + 60).lineWidth(0.8).strokeColor(C.ink).stroke();
-  doc.font('ui').fontSize(8).fillColor(C.mute).text('Authorised Signature & Company Seal', M + w - half + 10, y + 66);
-  doc.font('script').fontSize(18).fillColor(C.gold).text('For Arrays Ingenieria Pvt. Ltd.', M + 18, y + 58);
+  doc.font('uiSB').fontSize(8.5).fillColor(C.gold).text('ACCEPTANCE BY THE CLIENT', M + 18, y + 14, { characterSpacing: 1 });
+  doc.font('body').fontSize(9.4).fillColor(C.body).text(`We have read and accept the scope, pricing and terms set out in this quotation. Kindly sign, stamp and return a copy to confirm the order.`, M + 18, y + 28, { width: half - 12 });
+  doc.font('bodyI').fontSize(9.5).fillColor(C.ink).text(`For ${clientNm}`, M + w - half + 10, y + 24, { width: half - 20 });
+  doc.moveTo(M + w - half + 10, y + 62).lineTo(M + w - 20, y + 62).lineWidth(0.8).strokeColor(C.ink).stroke();
+  doc.font('ui').fontSize(8).fillColor(C.mute).text('Authorised Signatory, Date & Company Seal', M + w - half + 10, y + 68);
 
   // ---- PAGE 3 — terms, exclusions, company & bank details ----
   doc.addPage(); chrome(doc, 'Commercial Quotation');
@@ -292,13 +293,15 @@ export function renderQuotation(doc, data = {}, opts = {}) {
     y = doc.y + 9;
   });
 
-  // signature — the terms are part of the commercial offer
-  y = flowY(y + 8, 64);
+  // client acceptance signature — the client signs to accept these terms
+  y = flowY(y + 10, 70);
   const sw = (w - 20) / 2;
-  doc.font('script').fontSize(18).fillColor(C.gold).text('For Arrays Ingenieria Pvt. Ltd.', M, y + 26);
-  doc.moveTo(M + w - sw + 10, y + 34).lineTo(M + w - 20, y + 34).lineWidth(0.8).strokeColor(C.ink).stroke();
-  doc.font('ui').fontSize(8).fillColor(C.mute).text('Authorised Signatory & Company Seal', M + w - sw + 10, y + 40);
-  y += 74;
+  const clientNm2 = data.client_name || data.client_full_name || data.customer_name || 'the Client';
+  doc.font('uiSB').fontSize(8.5).fillColor(C.gold).text('ACCEPTED BY THE CLIENT', M, y, { characterSpacing: 0.8 });
+  doc.font('bodyI').fontSize(10.5).fillColor(C.ink).text(`For ${clientNm2}`, M, y + 14);
+  doc.moveTo(M + w - sw + 10, y + 40).lineTo(M + w - 20, y + 40).lineWidth(0.8).strokeColor(C.ink).stroke();
+  doc.font('ui').fontSize(8).fillColor(C.mute).text('Authorised Signatory, Date & Company Seal', M + w - sw + 10, y + 46);
+  y += 76;
 
   // GST (from office) + fixed bank details + payment method
   y = companyBankBlock(doc, data, y, flowY);

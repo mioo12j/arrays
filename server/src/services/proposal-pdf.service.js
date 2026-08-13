@@ -1594,10 +1594,14 @@ function thankYouPage(doc) {
   const W = doc.page.width, H = doc.page.height;
   bleed(doc, C.emerD);
   doc.rect(0, 0, W, 4).fill(C.gold);
-  drawImg(doc, photo('hero-solar-farm'), 0, H - 220, W, 220);
-  const veil = doc.linearGradient(0, H - 220, 0, H);
-  veil.stop(0, C.emerD, 1).stop(1, C.emerD, 0.55);
-  doc.rect(0, H - 220, W, 220).fill(veil);
+  // faint solar-farm photo that sinks smoothly into the emerald — no hard edge:
+  // the veil is fully opaque emerald at the top of the band (so the photo's top
+  // edge is invisible) and only softly reveals the photo toward the very bottom.
+  const bandH = 300;
+  drawImg(doc, photo('hero-solar-farm'), 0, H - bandH, W, bandH);
+  const veil = doc.linearGradient(0, H - bandH, 0, H);
+  veil.stop(0, C.emerD, 1).stop(0.5, C.emerD, 1).stop(0.8, C.emerD, 0.82).stop(1, C.emerD, 0.68);
+  doc.rect(0, H - bandH, W, bandH).fill(veil);
 
   // logo on a clean white plate large enough to fully contain the square mark
   doc.save().roundedRect(W / 2 - 68, 82, 136, 130, 16).fillOpacity(0.96).fill('#ffffff').restore();
