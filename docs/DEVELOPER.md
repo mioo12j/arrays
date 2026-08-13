@@ -1,5 +1,10 @@
 # Developer Documentation
 
+> **Start with [DEVELOPER-HANDBOOK.md](DEVELOPER-HANDBOOK.md).** It is the complete,
+> current reference for the whole ERP — business context, every module, the database,
+> the PDF engine, the runbook and the gotchas. This file is older and GST-focused;
+> where the two disagree, the handbook is newer.
+
 ## Project structure
 
 ```

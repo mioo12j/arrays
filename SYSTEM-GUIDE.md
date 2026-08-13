@@ -2,6 +2,8 @@
 
 _Last updated: 2026-08-01. This document explains **what every part of the software does and how it works**, in plain language, so anyone (not just a programmer) can understand the machine. A companion file, **FUNCTIONAL-ISSUES.md**, lists the logic bugs found in this same audit._
 
+> **Developers / AI assistants:** read **[docs/DEVELOPER-HANDBOOK.md](docs/DEVELOPER-HANDBOOK.md)** instead — it is the deep technical reference (architecture, every module and file, database, PDF engine, runbook, gotchas, glossary). This guide stays as the plain-language overview.
+
 ---
 
 ## 1. The big picture
