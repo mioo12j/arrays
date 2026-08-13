@@ -21,8 +21,8 @@ const DEFAULTS = {
   civil_rate: 0,                 // ₹/W  (set per project type below)
   labour_rate: 2.5,              // ₹/W  — installation, testing & commissioning
   transport_rate: 0.5,           // ₹/W  (only when transport is not included)
-  contingency_pct: 0,            // optional markup — off by default
-  margin_pct: 0,                 // optional markup — off by default
+  contingency_pct: 0,            // optional — off by default
+  margin_pct: 15,                // operator markup on cost; distributed across BOQ item rates
   gst_pct: 13.8,                 // blended GST on solar
   tariff_per_kwh: 8,             // grid tariff offset (₹/kWh) for savings calc
   generation_per_kw_year: 1500,  // kWh per kW per year (~17% CUF)
@@ -63,8 +63,9 @@ export function calculateQuote(input = {}) {
   // Operator-defined custom line items take priority. Their amounts are the
   // FINAL client-facing prices (already include margin) — the sum is taxable.
   const custom = normalizeItems(input.custom_items, wp, r);
-  let items, subtotal, taxable_amount;
-  const contingency_amount = 0, margin_amount = 0;
+  let items, subtotal, taxable_amount, margin_amount = 0;
+  const contingency_amount = 0;
+  const isCustom = !!custom;
 
   if (custom) {
     items = custom;
@@ -85,8 +86,12 @@ export function calculateQuote(input = {}) {
     ].filter((i) => i.amount > 0);
   }
   subtotal = round(items.reduce((s, i) => s + i.amount, 0));
-  taxable_amount = subtotal;                        // no hidden margin — rates are final
-  const cost_amount = taxable_amount;
+  // Custom items are already the final price; for the rate-based BOQ the operator's
+  // margin is added on top and later distributed across the item rates (never shown
+  // as a line to the client).
+  if (!isCustom) margin_amount = round(subtotal * (Number(r.margin_pct) || 0) / 100);
+  taxable_amount = round(subtotal + margin_amount);
+  const cost_amount = subtotal;
 
   // GST: operator may set the rate or a fixed amount (breakdown handled in UI/PDF)
   const gst_pct = Number(input.gst_pct) || r.gst_pct;

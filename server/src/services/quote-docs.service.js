@@ -23,6 +23,29 @@ const DEFAULT_BANK = {
 // ---- shared helpers ---------------------------------------------------------
 function money(n) { return n || n === 0 ? '₹' + Math.round(n).toLocaleString('en-IN') : '—'; }
 
+// Distribute the operator's margin across BOQ items: 40% civil, 40% installation
+// & commissioning, 20% the rest — normalised over whichever buckets are present.
+function distributeMargin(items, margin) {
+  const alloc = new Map(items.map((i) => [i, 0]));
+  if (!(margin > 0) || !items.length) return alloc;
+  const isCivil = (i) => /civil/i.test(i.item);
+  const isInstall = (i) => !isCivil(i) && /install|commission/i.test(i.item);
+  const civil = items.filter(isCivil);
+  const install = items.filter(isInstall);
+  const rest = items.filter((i) => !isCivil(i) && !isInstall(i));
+  let pC = civil.length ? 0.4 : 0, pI = install.length ? 0.4 : 0, pR = rest.length ? 0.2 : 0;
+  const tot = pC + pI + pR;
+  if (tot <= 0) { items.forEach((i) => alloc.set(i, margin / items.length)); return alloc; }
+  pC /= tot; pI /= tot; pR /= tot;
+  const give = (list, amt) => {
+    if (!list.length || amt <= 0) return;
+    const s = list.reduce((a, i) => a + i.amount, 0);
+    list.forEach((i) => alloc.set(i, alloc.get(i) + amt * (s > 0 ? i.amount / s : 1 / list.length)));
+  };
+  give(civil, margin * pC); give(install, margin * pI); give(rest, margin * pR);
+  return alloc;
+}
+
 // GST split — inter-state = single IGST line; else CGST + SGST (half each).
 function gstRows(c, data) {
   const pct = c.taxable ? Math.round((c.gst / c.taxable) * 10000) / 100 : 0;
@@ -139,21 +162,25 @@ export function renderQuotation(doc, data = {}, opts = {}) {
   // system config card
   const scX = M + colW + 22;
   const titleCase = (s) => String(s).replace(/\b\w/g, (m) => m.toUpperCase());
+  // operator-entered system configuration; DC capacity only shows if provided
+  const dcCap = num(data.dc_capacity, 0);
   const cfg = [
-    ['Solar Modules', hw.module || 'Tier-1 Mono-PERC / TOPCon'],
-    ['Inverter', hw.inverter || 'On-grid string / central inverter'],
-    ['Mounting', hw.structure || 'Hot-dip galvanised GI structure'],
-    ['System Type', data.grid_type ? titleCase(data.grid_type) : (data.project_type ? titleCase(data.project_type) : 'On-Grid, Net-Metered')],
-    ['Configuration', c.kwp ? c.kwp + ' kWp Grid-Connected Solar PV' : 'Grid-Connected Solar PV'],
-  ];
-  const cRowH = 30, cH = cfg.length * cRowH + 34;
+    ['Solar Module', data.module_config || '545 Wp Mono PERC / latest equivalent technology'],
+    ['Inverter', data.inverter_config || 'Three-phase grid-connected string inverter (as per design)'],
+    ...(dcCap > 0 ? [['DC Capacity', dcCap + ' kWp']] : []),
+    ['Mounting (MMS)', data.mms_config || data.structure_type || 'Aluminium / GI structure suitable for rooftop'],
+    ['System', data.system_config || 'Grid-connected rooftop solar system'],
+  ].filter((r) => r[1]);
+  const cfgRowH = (r) => { doc.font('bodyM').fontSize(9.4); return Math.max(30, doc.heightOfString(String(r[1]), { width: colW - 32, lineGap: 1.5 }) + 20); };
+  const cH = 34 + cfg.reduce((s, r) => s + cfgRowH(r), 0);
   panel(doc, scX, y, colW, cH, C.paper, 9, C.line);
   doc.rect(scX, y, colW, 3).fill(C.emer);
   doc.font('uiSB').fontSize(8.5).fillColor(C.emer).text('SYSTEM CONFIGURATION', scX + 16, y + 14, { characterSpacing: 1 });
-  cfg.forEach((r, i) => {
-    const yy = y + 34 + i * cRowH;
-    doc.font('ui').fontSize(7.5).fillColor(C.mute).text(String(r[0]).toUpperCase(), scX + 16, yy, { characterSpacing: 0.6 });
-    doc.font('bodyM').fontSize(9.4).fillColor(C.ink).text(V(r[1]), scX + 16, yy + 10, { width: colW - 32 });
+  let scy = y + 34;
+  cfg.forEach((r) => {
+    doc.font('ui').fontSize(7.5).fillColor(C.mute).text(String(r[0]).toUpperCase(), scX + 16, scy, { characterSpacing: 0.6 });
+    doc.font('bodyM').fontSize(9.4).fillColor(C.ink).text(String(r[1]), scX + 16, scy + 10, { width: colW - 32, lineGap: 1.5 });
+    scy += cfgRowH(r);
   });
   y = Math.max(metaBottom, y + cH) + 18;
 
@@ -266,18 +293,20 @@ export function renderQuotation(doc, data = {}, opts = {}) {
   // scope of work (Arrays + client) — the only place scope appears
   y = scopeAndExclusions(doc, data, y, flowY);
 
-  // acceptance — signed by the CLIENT to accept the offer, scope & terms
-  y = flowY(y, 100);
-  const half = (w - 24) / 2;
-  const clientNm = data.client_name || data.client_full_name || data.customer_name || 'the Client';
-  panel(doc, M, y, w, 96, C.paper, 9, C.line);
-  doc.font('uiSB').fontSize(8.5).fillColor(C.gold).text('ACCEPTANCE BY THE CLIENT', M + 18, y + 14, { characterSpacing: 1 });
-  doc.font('body').fontSize(9.4).fillColor(C.body).text(`We have read and accept the scope, pricing and terms set out in this quotation. Kindly sign, stamp and return a copy to confirm the order.`, M + 18, y + 28, { width: half - 12 });
-  doc.font('bodyI').fontSize(9.5).fillColor(C.ink).text(`For ${clientNm}`, M + w - half + 10, y + 24, { width: half - 20 });
-  doc.moveTo(M + w - half + 10, y + 62).lineTo(M + w - 20, y + 62).lineWidth(0.8).strokeColor(C.ink).stroke();
-  doc.font('ui').fontSize(8).fillColor(C.mute).text('Authorised Signatory, Date & Company Seal', M + w - half + 10, y + 68);
+  // extra technical requirements / notes (operator-entered), after exclusions
+  if (data.notes && String(data.notes).trim()) {
+    y = flowY(y + 4, 70);
+    eyebrow(doc, 'Extra Technical Requirements / Notes', M, y, C.gold); y += 16;
+    doc.font('body').fontSize(9.4);
+    const nH = doc.heightOfString(String(data.notes), { width: w - 36, lineGap: 2.6 }) + 22;
+    y = flowY(y, nH);
+    panel(doc, M, y, w, nH, C.mint, 9, C.line);
+    doc.rect(M, y, 4, nH).fill(C.emer);
+    doc.font('body').fontSize(9.4).fillColor(C.body).text(String(data.notes), M + 16, y + 12, { width: w - 36, lineGap: 2.6 });
+    y += nH + 8;
+  }
 
-  // ---- PAGE 3 — terms, exclusions, company & bank details ----
+  // ---- PAGE 3 — terms, then payment/bank details, then client acceptance ----
   doc.addPage(); chrome(doc, 'Commercial Quotation');
   heading(doc, 'Please Read Carefully', 'Terms & Conditions');
   y = doc.y + 2;
@@ -293,18 +322,20 @@ export function renderQuotation(doc, data = {}, opts = {}) {
     y = doc.y + 9;
   });
 
-  // client acceptance signature — the client signs to accept these terms
-  y = flowY(y + 10, 70);
+  // payment & company details + payment method — right after the terms
+  y = companyBankBlock(doc, data, y, flowY);
+
+  // client acceptance signature — at the very bottom
+  y = flowY(y + 12, 74);
   const sw = (w - 20) / 2;
   const clientNm2 = data.client_name || data.client_full_name || data.customer_name || 'the Client';
   doc.font('uiSB').fontSize(8.5).fillColor(C.gold).text('ACCEPTED BY THE CLIENT', M, y, { characterSpacing: 0.8 });
-  doc.font('bodyI').fontSize(10.5).fillColor(C.ink).text(`For ${clientNm2}`, M, y + 14);
-  doc.moveTo(M + w - sw + 10, y + 40).lineTo(M + w - 20, y + 40).lineWidth(0.8).strokeColor(C.ink).stroke();
-  doc.font('ui').fontSize(8).fillColor(C.mute).text('Authorised Signatory, Date & Company Seal', M + w - sw + 10, y + 46);
-  y += 76;
+  doc.font('body').fontSize(9).fillColor(C.body).text('We have read and accept the scope, pricing and terms set out in this quotation.', M, y + 13, { width: sw - 10 });
+  doc.font('bodyI').fontSize(10.5).fillColor(C.ink).text(`For ${clientNm2}`, M + w - sw + 10, y + 10);
+  doc.moveTo(M + w - sw + 10, y + 44).lineTo(M + w - 20, y + 44).lineWidth(0.8).strokeColor(C.ink).stroke();
+  doc.font('ui').fontSize(8).fillColor(C.mute).text('Authorised Signatory, Date & Company Seal', M + w - sw + 10, y + 50);
+  y += 80;
 
-  // GST (from office) + fixed bank details + payment method
-  y = companyBankBlock(doc, data, y, flowY);
   autoGenNote(doc, Math.min(y + 8, doc.page.height - 54), 'quotation');
 
   return doc;
@@ -470,12 +501,13 @@ export function renderBOQ(doc, data = {}, opts = {}) {
   };
   y = headerRow(y);
 
-  // Client-facing prices: fold internal contingency/overheads/margin into each
-  // component's rate so the line items themselves total the quoted price. We
-  // never print contingency or margin as separate lines to the client.
+  // Client-facing prices: distribute the operator's margin into each item's rate
+  // (never shown as a line) — 40% to civil, 40% to installation & commissioning,
+  // 20% across the rest, with graceful fallback when a category is absent.
   const rawItems = c.items.length ? c.items : null;
-  const factor = (rawItems && c.subtotal > 0) ? c.taxable / c.subtotal : 1;
   const items = rawItems || [{ item: 'Complete Solar PV System — Supply, Installation & Commissioning', qty: 1, unit: 'Lot', rate: c.taxable, amount: c.taxable }];
+  const margin = rawItems ? Math.max(0, (c.taxable || 0) - (c.subtotal || 0)) : 0;
+  const alloc = distributeMargin(items, margin);
   items.forEach((it, i) => {
     // measure description height
     doc.font('bodyM').fontSize(9.6);
@@ -483,7 +515,9 @@ export function renderBOQ(doc, data = {}, opts = {}) {
     const rh = Math.max(30, descH + 16);
     if (y + rh > 792) { doc.addPage(); chrome(doc, 'Bill of Quantities'); y = headerRow(100); }
     if (i % 2) doc.save().rect(M, y, w, rh).fill(C.mint).restore();
-    const dispRate = num(it.rate, 0) * factor, dispAmount = num(it.amount, 0) * factor;
+    const qtyD = num(it.qty, 0) || 1;
+    const dispAmount = num(it.amount, 0) + (alloc.get(it) || 0);
+    const dispRate = dispAmount / qtyD;
     doc.font('uiSB').fontSize(9).fillColor(C.gold).text(String(i + 1), cNo, y + 9, { width: 24 });
     doc.font('bodyM').fontSize(9.6).fillColor(C.ink).text(String(it.item || '—'), cDesc, y + 8, { width: cUnit - cDesc - 10, lineGap: 1.5 });
     doc.font('ui').fontSize(9).fillColor(C.mute).text(V(it.unit, '—'), cUnit, y + 9, { width: 50 });

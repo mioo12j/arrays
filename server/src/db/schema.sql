@@ -606,6 +606,9 @@ ALTER TABLE quotes ADD COLUMN IF NOT EXISTS net_cost NUMERIC(16,2) DEFAULT 0;
 ALTER TABLE quotes ADD COLUMN IF NOT EXISTS annual_savings NUMERIC(16,2) DEFAULT 0;
 ALTER TABLE quotes ADD COLUMN IF NOT EXISTS payback_years NUMERIC(8,2) DEFAULT 0;
 ALTER TABLE quotes ADD COLUMN IF NOT EXISTS lifetime_savings NUMERIC(16,2) DEFAULT 0;
+-- Soft delete: keep the row (restorable from Trash) instead of hard-deleting
+ALTER TABLE quotes ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
+CREATE INDEX IF NOT EXISTS idx_quotes_deleted ON quotes(deleted_at);
 DROP TRIGGER IF EXISTS trg_quotes_updated ON quotes;
 CREATE TRIGGER trg_quotes_updated BEFORE UPDATE ON quotes
   FOR EACH ROW EXECUTE FUNCTION set_updated_at();

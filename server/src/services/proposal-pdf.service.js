@@ -596,7 +596,7 @@ function aboutPage(doc) {
     '"Ingeniería" means engineering in Spanish — a fitting symbol of our commitment to precision and discipline. Founded in 2018 and run entirely by former military personnel, Arrays Ingenieria designs and delivers ground-mount and rooftop solar power plants across India, along with pile foundations, civil works, grid commissioning and long-term O&M.',
     M, y, bw, { size: 10.8, lineGap: 3.8 });
   y = para(doc,
-    'From a single rooftop to a 300 MW utility-scale solar park, we approach every project with the same focus on excellence, safety and sustainability — earning the trust of India’s biggest industrial names.',
+    'From a single rooftop to utility-scale solar parks, we approach every project with the same focus on excellence, safety and sustainability — earning the trust of India’s biggest industrial names.',
     M, y + 8, bw, { size: 10.8, lineGap: 3.8 });
 
   y = Math.max(y, 175 + 168) + 24;
@@ -718,7 +718,7 @@ function servicesPage(doc) {
   y = y0 + 2 * (ch + 16) + 10;
   // photo strip with captions
   const iw = (w - 2 * 12) / 3;
-  const caps = [['proj-seci', 'SECI · Piling'], ['proj-tml', 'Tata Motors · EPC'], ['proj-earthing', 'Earthing & Safety']];
+  const caps = [['proj-seci', 'Piling Works'], ['proj-tml', 'Tata Motors · EPC'], ['proj-earthing', 'Earthing & Safety']];
   caps.forEach((p, i) => {
     const x = M + i * (iw + 12);
     drawImg(doc, photo(p[0]), x, y, iw, 132, 8);
@@ -811,8 +811,7 @@ function trackRecordPage(doc) {
   heading(doc, 'Section 08 · Portfolio', 'A Track Record, Delivered');
   let y = doc.y + 2;
   const rows = [
-    ['SECI', 'Pile Foundation — Solar Park', 'Koppal, Karnataka', '300 MW'],
-    ['YIAPL', 'Solar Park · Civil & Fencing', 'Uttar Pradesh', '14.36 MW'],
+    ['YIAPL', 'Civil & Tensile Works', 'Uttar Pradesh', '14.36 MW'],
     ['DCM', 'Ground-Mount', 'Hisar, Haryana', '10 MW'],
     ['Tata Motors', 'Piling & Civil', 'Jamshedpur, Jharkhand', '5.5 MW'],
     ['Super Smelters', 'Industrial Rooftop', 'Asansol, West Bengal', '1,980 kWp'],
@@ -841,7 +840,7 @@ function trackRecordPage(doc) {
   y += 14;
   // photo strip with captions
   const iw = (w - 3 * 12) / 4;
-  const ps = [['proj-dcm-hisar', 'DCM · 10 MW'], ['proj-jayshree', 'Jayshree · 1 MW'], ['proj-manjushree', 'Manjushree · 500 kWp'], ['proj-yiapl', 'YIAPL · 14.36 MW']];
+  const ps = [['proj-dcm-hisar', 'DCM · 10 MW'], ['proj-jayshree', 'Jayshree · 1 MW'], ['proj-manjushree', 'Manjushree · 500 kWp'], ['proj-yiapl', 'YIAPL · Civil Works']];
   ps.forEach((p, i) => {
     const x = M + i * (iw + 12);
     drawImg(doc, photo(p[0]), x, y, iw, 104, 8);
@@ -862,7 +861,7 @@ function testimonialsPage(doc) {
     ['Technical expertise, professionalism and timely delivery — with thorough inspections and meticulous attention to detail.', 'Super Smelters Ltd.', 'Asansol · 1,980 kWp', C.sky],
     ['Statutory compliance, cleanliness and flawless workmanship that exceeded expectations. A reliable partner we rely on.', 'Tata Motors', 'Jamshedpur · 5.5 MW', C.navy],
     ['Their professionalism in installation and commissioning was praiseworthy — a competent, dependable partner start to finish.', 'Bharat Petroleum', 'Gurugram · RCC Rooftop', C.grn],
-    ['Pile-foundation works were executed to exacting standards and on schedule, even under demanding ground conditions.', 'Tata Power Solar (EPC)', 'SECI · 300 MW', C.sky],
+    ['Pile-foundation works were executed to exacting standards and on schedule, even under demanding ground conditions.', 'Tata Power Solar (EPC)', 'Ground-Mount · EPC', C.sky],
     ['From design to grid synchronisation, every milestone was met with discipline and transparency. The veteran-led team inspires confidence.', 'DCM', 'Hisar · 10 MW', C.gold],
   ];
   const cw = (w - 16) / 2, ch = 166, y0 = y;
@@ -956,7 +955,6 @@ function understandPage(doc, data) {
     ['Grid Type', tc(data.grid_type)],
     ['Proposed Capacity', m.kwp ? m.kwp + ' kWp' : null],
     ['Est. Monthly Bill', data.monthly_bill ? inr(num(data.monthly_bill)) : null],
-    ['Module / Inverter', [V(data.module_brand, ''), V(data.inverter_brand, '')].filter(Boolean).join(' · ') || null],
     ['Structure', tc(data.structure_type)],
     ['Net Metering', tc(data.net_metering)],
     ['Battery Backup', tc(data.battery)],
@@ -995,7 +993,7 @@ function understandPage(doc, data) {
   else if (seg.includes('comm'))
     narr = `For your commercial premises, this ${kwpTxt} system is designed to slash your operating-hour tariff, converting unused roof or land into a clean-power asset with compelling economics from year one.`;
   else if (seg.includes('gov') || seg.includes('psu'))
-    narr = `For your institutional / PSU requirement, we deliver this ${kwpTxt} plant exactly to tender specification, backed by our SECI and Tata Power EPC track record.`;
+    narr = `For your institutional / PSU requirement, we deliver this ${kwpTxt} plant exactly to tender specification, backed by our Tata Power EPC and PSU project track record.`;
   else
     narr = `We begin with a feasibility study and geo-technical survey, then engineer this ${kwpTxt} system precisely to your load and available roof or land — for maximum lifetime generation, safety and return.`;
   // 2) grid-type sentence
@@ -1572,7 +1570,7 @@ function faqPage(doc, data = {}) {
     ['What subsidy am I eligible for?', 'Residential consumers qualify for the PM Surya Ghar subsidy; commercial & industrial clients benefit from accelerated depreciation. We help you claim what applies.'],
     ['How long does installation take?', 'A typical rooftop is commissioned in 3–6 weeks; larger ground-mount plants follow a project schedule shared upfront and tracked with military discipline.'],
     ['What maintenance does a solar plant need?', 'Very little — periodic module cleaning and inverter checks. Our O&M packages cover preventive & corrective maintenance, monitoring and rapid fault resolution.'],
-    ['Why choose Ingenieria over others?', 'A 100% veteran-led, triple-ISO team with a portfolio from 10 kWp rooftops to the 300 MW SECI park — and the discipline to deliver every one on time.'],
+    ['Why choose Ingenieria over others?', 'A 100% veteran-led, triple-ISO team with a portfolio from 10 kWp rooftops to utility-scale solar parks — and the discipline to deliver every one on time.'],
   ];
   const cw = (w - 24) / 2, rowH = 116;
   faqs.forEach((f, i) => {

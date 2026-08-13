@@ -36,16 +36,18 @@ router.post(
 router.get(
   '/',
   asyncHandler(async (req, res) => {
-    const { search, status } = req.query;
+    const { search, status, trash } = req.query;
     const clauses = [];
     const p = [];
+    // Trash view lists soft-deleted quotes; the normal list hides them.
+    clauses.push(trash === '1' || trash === 'true' ? 'q.deleted_at IS NOT NULL' : 'q.deleted_at IS NULL');
     if (search) { p.push(`%${search}%`); clauses.push(`(q.quote_number ILIKE $${p.length} OR q.client_name ILIKE $${p.length})`); }
     if (status) { p.push(status); clauses.push(`q.status=$${p.length}`); }
     const where = clauses.length ? `WHERE ${clauses.join(' AND ')}` : '';
     const { rows } = await query(
       `SELECT q.id, q.quote_number, q.version, q.status, q.client_name, q.project_type,
               q.capacity_kw, q.total_amount, q.margin_amount, q.cost_amount, q.per_watt,
-              q.issue_date, q.valid_until, c.name AS client_full_name
+              q.issue_date, q.valid_until, q.deleted_at, c.name AS client_full_name
        FROM quotes q LEFT JOIN clients c ON c.id=q.client_id
        ${where} ORDER BY q.created_at DESC LIMIT 500`,
       p
@@ -321,12 +323,33 @@ router.get('/:id/scope.pdf', asyncHandler(async (req, res) => {
   streamParts(res, q, data, ['scope']);
 }));
 
+// Soft delete — moves the quote to Trash (restorable). Pass ?purge=1 to delete
+// permanently (only allowed for quotes already in the Trash).
 router.delete(
   '/:id',
   asyncHandler(async (req, res) => {
-    await query('DELETE FROM quotes WHERE id=$1', [req.params.id]);
-    await audit(req, { action: 'delete', entity: 'quotes', entityId: req.params.id });
+    const purge = req.query.purge === '1' || req.query.purge === 'true';
+    if (purge) {
+      await query('DELETE FROM quotes WHERE id=$1 AND deleted_at IS NOT NULL', [req.params.id]);
+      await audit(req, { action: 'purge', entity: 'quotes', entityId: req.params.id });
+    } else {
+      await query('UPDATE quotes SET deleted_at=now() WHERE id=$1', [req.params.id]);
+      await audit(req, { action: 'delete', entity: 'quotes', entityId: req.params.id });
+    }
     res.json({ ok: true });
+  })
+);
+
+// Restore a soft-deleted quote from the Trash.
+router.post(
+  '/:id/restore',
+  asyncHandler(async (req, res) => {
+    const { rows } = await query(
+      'UPDATE quotes SET deleted_at=NULL WHERE id=$1 RETURNING *', [req.params.id]
+    );
+    if (!rows[0]) throw new ApiError(404, 'Quote not found');
+    await audit(req, { action: 'restore', entity: 'quotes', entityId: req.params.id });
+    res.json(rows[0]);
   })
 );
 

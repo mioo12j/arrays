@@ -26,6 +26,7 @@ const RATE_FIELDS = [
   ['bos_rate', 'Cabling + Earthing + BOS (₹/W)'],
   ['civil_rate', 'Civil (₹/W)'],
   ['labour_rate', 'Installation & Commissioning (₹/W)'],
+  ['margin_pct', 'My Margin (%)'],
   ['gst_pct', 'GST (%)'],
   ['tariff_per_kwh', 'Grid Tariff (₹/unit)'],
   ['generation_per_kw_year', 'Annual Yield (kWh/kW/yr)'],
@@ -367,9 +368,6 @@ export default function QuoteBuilder() {
                 <Field label="State"><input className="input" value={pinputs.state || ''} onChange={setPI('state')} /></Field>
                 <Field label="DISCOM"><input className="input" value={pinputs.discom || ''} onChange={setPI('discom')} placeholder="e.g. WBSEDCL" /></Field>
                 <Field label="Monthly Bill (₹)"><input className="input" type="number" value={pinputs.monthly_bill || ''} onChange={setPI('monthly_bill')} /></Field>
-                <Field label="Structure Type"><input className="input" value={pinputs.structure_type || ''} onChange={setPI('structure_type')} placeholder="e.g. GI, elevated" /></Field>
-                <Field label="Module Brand"><input className="input" value={pinputs.module_brand || ''} onChange={setPI('module_brand')} /></Field>
-                <Field label="Inverter Brand"><input className="input" value={pinputs.inverter_brand || ''} onChange={setPI('inverter_brand')} /></Field>
                 <Field label="Warranty"><input className="input" value={pinputs.warranty || ''} onChange={setPI('warranty')} placeholder="e.g. 25 yr modules" /></Field>
                 <Field label="AMC / O&M"><input className="input" value={pinputs.amc || ''} onChange={setPI('amc')} placeholder="e.g. 5 yr" /></Field>
                 <Field label="Timeline"><input className="input" value={pinputs.timeline || ''} onChange={setPI('timeline')} placeholder="e.g. 6–8 weeks" /></Field>
@@ -502,6 +500,17 @@ export default function QuoteBuilder() {
             </button>
             {showTerms && (
               <div className="mt-4 space-y-5">
+                <div>
+                  <div className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-200">System Configuration <span className="text-xs font-normal text-slate-400">— shown on the quotation</span></div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Field label="Solar Module"><input className="input text-xs" value={pinputs.module_config || ''} onChange={setPI('module_config')} placeholder="545 Wp Mono PERC / latest equivalent" /></Field>
+                    <Field label="Inverter"><input className="input text-xs" value={pinputs.inverter_config || ''} onChange={setPI('inverter_config')} placeholder="3-phase grid-tie string inverter (as per design)" /></Field>
+                    <Field label="Mounting (MMS)"><input className="input text-xs" value={pinputs.mms_config || ''} onChange={setPI('mms_config')} placeholder="Aluminium / GI structure suitable for rooftop" /></Field>
+                    <Field label="System"><input className="input text-xs" value={pinputs.system_config || ''} onChange={setPI('system_config')} placeholder="Grid-connected rooftop solar system" /></Field>
+                    <Field label="Total DC Capacity (kWp)"><input className="input text-xs" type="number" value={pinputs.dc_capacity || ''} onChange={setPI('dc_capacity')} placeholder="optional · usually > AC" /></Field>
+                  </div>
+                </div>
+
                 <Field label="Name of Work (blank = standard)">
                   <input className="input" value={pinputs.commercial_scope || ''} onChange={setPI('commercial_scope')} placeholder="Design, Engineering, Supply, Installation, Testing & Commissioning of …" />
                 </Field>
@@ -671,6 +680,22 @@ export default function QuoteBuilder() {
                     <div className="mt-1 text-base font-bold text-brand-600 dark:text-brand-300">{v}</div>
                   </div>
                 ))}
+              </div>
+            </Card>
+          )}
+
+          {/* Operator-only: your margin (never shown to the client) */}
+          {Number(c.margin_amount) > 0 && (
+            <Card className="mt-4 border border-amber-200 bg-amber-50/50 dark:border-amber-900/40 dark:bg-amber-900/10">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-[11px] font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-300">My Margin</div>
+                  <div className="text-xs text-slate-500">Internal only — distributed into the BOQ rates, never shown to the client.</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-xl font-bold text-amber-700 dark:text-amber-300">{inr(c.margin_amount || 0)}</div>
+                  <div className="text-xs text-slate-400">on cost {inr(c.subtotal || 0)}</div>
+                </div>
               </div>
             </Card>
           )}
