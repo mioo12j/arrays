@@ -145,7 +145,10 @@ export default function QuoteBuilder() {
     [form.capacity_kw, form.project_type, rates, useCustom, customItems, recalc]);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
-  const setRate = (k) => (e) => setRates((r) => ({ ...r, [k]: e.target.value === '' ? undefined : Number(e.target.value) }));
+  // Keep the raw string while typing so decimals like "0.5" or "4.2" can be
+  // entered freely (Number() would strip a trailing ".", forcing the spinner).
+  // The server coerces every rate via Number() in its clean() step.
+  const setRate = (k) => (e) => setRates((r) => ({ ...r, [k]: e.target.value === '' ? undefined : e.target.value }));
   const setPI = (k) => (e) => setPinputs((p) => ({ ...p, [k]: e.target.value === '' ? undefined : e.target.value }));
 
   // repeatable-row helpers for structured proposal_inputs (schedule, terms…)
@@ -401,9 +404,9 @@ export default function QuoteBuilder() {
                     </select>
                   </Field>
                   {rates.panel_rate_basis === 'watt'
-                    ? <Field label="Panel Rate (₹/W)"><input className="input" type="number" value={rates.panel_rate_per_watt ?? ''} onChange={setRate('panel_rate_per_watt')} placeholder="22" /></Field>
-                    : <Field label="Panel Rate (₹/module)"><input className="input" type="number" value={rates.panel_rate ?? ''} onChange={setRate('panel_rate')} placeholder="11990" /></Field>}
-                  <Field label="Extra Modules (%)"><input className="input" type="number" value={rates.extra_module_pct ?? ''} onChange={setRate('extra_module_pct')} placeholder="0" /></Field>
+                    ? <Field label="Panel Rate (₹/W)"><input className="input" type="text" inputMode="decimal" value={rates.panel_rate_per_watt ?? ''} onChange={setRate('panel_rate_per_watt')} placeholder="22" /></Field>
+                    : <Field label="Panel Rate (₹/module)"><input className="input" type="text" inputMode="decimal" value={rates.panel_rate ?? ''} onChange={setRate('panel_rate')} placeholder="11990" /></Field>}
+                  <Field label="Extra Modules (%)"><input className="input" type="text" inputMode="decimal" value={rates.extra_module_pct ?? ''} onChange={setRate('extra_module_pct')} placeholder="0" /></Field>
                   <Field label="Transportation">
                     <select className="input" value={rates.transport_included === false ? 'no' : 'yes'} onChange={(e) => setRates((r) => ({ ...r, transport_included: e.target.value === 'yes' }))}>
                       <option value="yes">Included in price</option>
@@ -411,13 +414,13 @@ export default function QuoteBuilder() {
                     </select>
                   </Field>
                   {rates.transport_included === false && (
-                    <Field label="Transport (₹/W)"><input className="input" type="number" value={rates.transport_rate ?? ''} onChange={setRate('transport_rate')} placeholder="0.5" /></Field>
+                    <Field label="Transport (₹/W)"><input className="input" type="text" inputMode="decimal" value={rates.transport_rate ?? ''} onChange={setRate('transport_rate')} placeholder="0.5" /></Field>
                   )}
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   {RATE_FIELDS.map(([k, label]) => (
                     <Field key={k} label={label}>
-                      <input className="input" type="number" value={rates[k] ?? (c.inputs ? c.inputs[k] : '')} onChange={setRate(k)} placeholder={c.inputs ? String(c.inputs[k]) : ''} />
+                      <input className="input" type="text" inputMode="decimal" value={rates[k] ?? (c.inputs ? c.inputs[k] : '')} onChange={setRate(k)} placeholder={c.inputs ? String(c.inputs[k]) : ''} />
                     </Field>
                   ))}
                 </div>
@@ -437,13 +440,13 @@ export default function QuoteBuilder() {
                           <option value="unit">Lump / unit</option>
                         </select>
                         {r.basis === 'unit' && <input className="input w-14 !py-1.5 text-right text-xs" type="number" placeholder="Qty" value={r.qty ?? ''} onChange={(e) => updExtra(i, 'qty', e.target.value)} />}
-                        <input className="input flex-[1.6] !py-1.5 text-right text-xs" type="number" placeholder="Rate ₹" value={r.rate ?? ''} onChange={(e) => updExtra(i, 'rate', e.target.value)} />
+                        <input className="input flex-[1.6] !py-1.5 text-right text-xs" type="text" inputMode="decimal" placeholder="Rate ₹" value={r.rate ?? ''} onChange={(e) => updExtra(i, 'rate', e.target.value)} />
                         <button type="button" onClick={() => delExtra(i)} className="px-1 text-slate-400 hover:text-red-500">×</button>
                       </div>
                     ))}
                   </div>
                 </div>
-                <p className="text-[11px] leading-relaxed text-slate-400">All work rates are ₹ <b>per watt</b> — e.g. ₹4/W on 25 kWp = ₹1,00,000. Modules bill per Nos; other work as a lump (Set/Lot). No hidden margin — your rates are the client price.</p>
+                <p className="text-[11px] leading-relaxed text-slate-400">All work rates are ₹ <b>per watt</b> — e.g. ₹4/W on 25 kWp = ₹1,00,000. Modules bill per Nos; other work as a lump (Set/Lot). These are your <b>cost</b> rates — your margin below is added on top and folded into the BOQ item rates.</p>
               </div>
             )}
           </Card>
@@ -470,7 +473,7 @@ export default function QuoteBuilder() {
                     <select className="input flex-[1.5] !py-1.5 text-xs" value={it.unit || 'Lot'} onChange={(e) => updItem(i, 'unit', e.target.value)}>
                       {BOQ_UNITS.map((u) => <option key={u} value={u}>{u}</option>)}
                     </select>
-                    <input className="input flex-[1.8] !py-1.5 text-right text-xs" type="number" value={it.rate ?? ''} onChange={(e) => updItem(i, 'rate', e.target.value)} />
+                    <input className="input flex-[1.8] !py-1.5 text-right text-xs" type="text" inputMode="decimal" value={it.rate ?? ''} onChange={(e) => updItem(i, 'rate', e.target.value)} />
                     <span className="flex-[1.8] text-right text-xs font-medium text-slate-600 dark:text-slate-300">{inr(itemAmount(it))}</span>
                     <button type="button" onClick={() => delItem(i)} className="px-1 text-slate-400 hover:text-red-500" title="Remove">×</button>
                   </div>

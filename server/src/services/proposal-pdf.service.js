@@ -921,8 +921,8 @@ function recognitionPage(doc) {
   eyebrow(doc, 'In the Newspapers', M, y, C.gold); y += 18;
   const clips = [
     ['news-bhaskar-tcpl', 'Dainik Bhaskar', '319 kWp rooftop solar for TCPL Greenery Agro (Tata Consumer), Vaishali.'],
-    ['news-supersmelters-inaug', 'Regional Press', '1,980 kWp solar plant inaugurated at Super Smelters, with Tata Power Solar.'],
-    ['news-supersmelters-rooftop', 'Jamuria Edition', '1,980 kWp rooftop solar power plant commissioned at Super Smelters, Asansol.'],
+    ['news-supersmelters-inaug', 'Dainik Bhaskar', '1,980 kWp solar plant inaugurated at Super Smelters, with Tata Power Solar.'],
+    ['news-supersmelters-rooftop', 'Dainik Jagran', '1,980 kWp rooftop solar power plant commissioned at Super Smelters, Asansol.'],
   ];
   const nw = (w - 2 * 14) / 3;
   clips.forEach((c, i) => {
@@ -1375,11 +1375,11 @@ function savingsPage(doc, data) {
   };
   statRow('Annual Generation', Math.round(m.gen1).toLocaleString('en-IN') + ' kWh', C.emer);
   statRow('Year-1 Savings', inrShort(m.save1), C.gold);
-  // payback highlight
-  const phy = y + blockH - 32;
-  doc.save().roundedRect(lx + 12, phy, leftW - 24, 24, 6).fill(C.mint2).restore();
-  doc.font('uiSB').fontSize(8).fillColor(C.emer)
-     .text('BREAK-EVEN IN ' + m.paybackYrs.toFixed(1) + ' YRS  ·  THEN 25+ YRS OF FREE POWER', lx + 12, phy + 8, { width: leftW - 24, align: 'center', characterSpacing: 0.3 });
+  // payback highlight — two-line pill, sized to hold the full caption
+  const phH = 34, phy = y + blockH - phH - 6;
+  doc.save().roundedRect(lx + 12, phy, leftW - 24, phH, 6).fill(C.mint2).restore();
+  doc.font('uiSB').fontSize(7.6).fillColor(C.emer)
+     .text('BREAK-EVEN IN ' + m.paybackYrs.toFixed(1) + ' YRS  ·  THEN 25+ YRS OF FREE POWER', lx + 14, phy + 8, { width: leftW - 28, align: 'center', characterSpacing: 0.3, lineGap: 2 });
 
   // 25-year cumulative savings chart (right)
   panel(doc, rx, y, rightW, blockH, C.paper, 9, C.line);
@@ -1416,14 +1416,15 @@ function savingsPage(doc, data) {
   eyebrow(doc, '25 Years — With Solar vs Without', M, y, C.gold); y += 16;
   const cmpH = 96;
   panel(doc, M, y, w, cmpH, C.paper, 9, C.line);
-  const barX = M + 150, barMaxW = w - 150 - 120, barMax = m.cum25;
+  const barX = M + 150, barMaxW = w - 150 - 130, barMax = m.cum25;
   const bar = (yy, label, sub, val, col) => {
     doc.font('uiSB').fontSize(9).fillColor(C.ink).text(label, M + 16, yy + 2, { width: 128 });
     doc.font('ui').fontSize(7.2).fillColor(C.mute).text(sub, M + 16, yy + 15, { width: 128 });
     const bw = Math.max(8, barMaxW * (val / barMax));
     doc.save().roundedRect(barX, yy, barMaxW, 20, 4).fill(C.mint).restore();
     doc.save().roundedRect(barX, yy, bw, 20, 4).fill(col).restore();
-    doc.font('uiB').fontSize(11).fillColor(C.ink).text(inrShort(val), barX + barMaxW + 10, yy + 4, { width: 108, align: 'right' });
+    // keep the value clear of the panel's right outline (16px inner padding)
+    doc.font('uiB').fontSize(11).fillColor(C.ink).text(inrShort(val), M + w - 120, yy + 4, { width: 104, align: 'right' });
   };
   bar(y + 18, 'Without Solar', 'Paid to the DISCOM, 25 yrs', m.cum25, '#c99a3b');
   bar(y + 54, 'With Solar', 'One-time net investment', m.netInvest, C.emer);
