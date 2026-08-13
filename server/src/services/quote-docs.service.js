@@ -13,11 +13,11 @@ const { C, M, chrome, heading, para, panel, eyebrow, triTick, drawImg, logo,
 // Fixed company bank account (same for every quote) — printed in the PDF only,
 // not collected in the software. Fill account_no / ifsc with the real details.
 const DEFAULT_BANK = {
-  bank_name: 'HDFC Bank',
-  bank_branch: '',
-  account_name: 'Arrays Ingenieria Pvt. Ltd.',
-  account_no: 'XXXXXXXXXXXX',
-  ifsc: 'HDFCXXXXXXX',
+  bank_name: 'IDBI Bank',
+  bank_branch: 'Greater Noida, Gautam Buddha Nagar',
+  account_name: 'ARRAYS INGENIERIA PRIVATE LIMITED',
+  account_no: '0875102000012290',
+  ifsc: 'IBKL0000875',
 };
 
 // ---- shared helpers ---------------------------------------------------------
