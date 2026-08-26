@@ -832,9 +832,11 @@ export default function QuoteBuilder() {
                         <div className="flex flex-wrap gap-1">
                           {RATE_CATS.map(([k, label]) => {
                             const on = cats.includes(k);
+                            // a category may be used on only one line — disable it elsewhere
+                            const taken = !on && customItems.some((o, j) => j !== i && (Array.isArray(o.categories) ? o.categories : (o.category ? [o.category] : [])).includes(k));
                             return (
-                              <label key={k} className={`flex cursor-pointer items-center gap-1 rounded-md border px-1.5 py-1 text-[11px] ${on ? 'border-brand-400 bg-brand-50 text-brand-700 dark:border-brand-500 dark:bg-brand-900/30 dark:text-brand-300' : 'border-slate-200 text-slate-500 dark:border-slate-700'}`}>
-                                <input type="checkbox" className="h-3 w-3" checked={on} onChange={() => toggleCat(i, k)} />{label}
+                              <label key={k} title={taken ? 'Already used in another line' : ''} className={`flex items-center gap-1 rounded-md border px-1.5 py-1 text-[11px] ${taken ? 'cursor-not-allowed border-slate-100 text-slate-300 dark:border-slate-800 dark:text-slate-600' : on ? 'cursor-pointer border-brand-400 bg-brand-50 text-brand-700 dark:border-brand-500 dark:bg-brand-900/30 dark:text-brand-300' : 'cursor-pointer border-slate-200 text-slate-500 dark:border-slate-700'}`}>
+                                <input type="checkbox" className="h-3 w-3" checked={on} disabled={taken} onChange={() => toggleCat(i, k)} />{label}
                               </label>
                             );
                           })}
