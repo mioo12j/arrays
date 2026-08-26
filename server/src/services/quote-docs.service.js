@@ -178,7 +178,7 @@ export function renderQuotation(doc, data = {}, opts = {}) {
     ['Mounting (MMS)', data.mms_config || data.structure_type || 'Aluminium / GI structure suitable for rooftop'],
     ['System', data.system_config || 'Grid-connected rooftop solar system'],
     // Always stated up-front so scope is unambiguous (default: not included)
-    ['Net Metering', data.net_metering === 'included' ? 'Included' : 'Not included — separate licensing & DISCOM charges'],
+    ['Net Metering', data.net_metering === 'included' ? 'Included' : 'Not included'],
     ['Battery Backup', data.battery_backup === 'included' ? 'Included' : 'Not included'],
   ].filter((r) => r[1]);
   const cfgRowH = (r) => { doc.font('bodyM').fontSize(9.4); return Math.max(30, doc.heightOfString(String(r[1]), { width: colW - 32, lineGap: 1.5 }) + 20); };
