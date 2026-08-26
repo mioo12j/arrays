@@ -582,7 +582,7 @@ tariff_per_kwh 8        generation_per_kw_year 1500   subsidy_amount 0
 
 **Two BOQ paths, identical margin behaviour:**
 - **Auto BOQ** — items from per-watt rates: Solar PV Modules (Nos), Inverter (Set), Module Mounting Structure, Cabling/Earthing/BOS, Civil Work, Installation Testing & Commissioning, optional Transportation, plus `custom_extras` (basis `watt` / `module` / unit).
-- **Custom items** — operator types description/qty/unit/rate.
+- **Custom items** — operator types description/qty/unit/rate. These are a **frozen snapshot**: editing a rate assumption afterwards does **not** change an existing custom row (the row is the final client price). The builder keeps a live `autoRef` (a second `/calculate` with no `custom_items`) and, via `assumedFor(desc)`, shows an ⓘ hover on each row with that item's cost **as per the current assumed rates** — reference only, it never overwrites the typed price. "Load standard items" pulls the current assumptions into the rows.
 
 **The margin rule (business-critical):**
 

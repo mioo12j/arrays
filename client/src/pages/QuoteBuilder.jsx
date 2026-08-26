@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, Save, FileDown, CheckCircle2, GitBranch, FolderPlus, ChevronDown, Undo2 } from 'lucide-react';
+import { ArrowLeft, Loader2, Save, FileDown, CheckCircle2, GitBranch, FolderPlus, ChevronDown, Undo2, Info } from 'lucide-react';
 import { api, apiError, download } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
 import { useToast } from '../components/ui/Toast.jsx';
@@ -87,8 +87,10 @@ export default function QuoteBuilder() {
   const [docMenu, setDocMenu] = useState(false);
   const [useCustom, setUseCustom] = useState(false);
   const [customItems, setCustomItems] = useState([]);
+  const [autoRef, setAutoRef] = useState([]);   // auto-BOQ from the current rate assumptions (reference for the hover)
   const [showTerms, setShowTerms] = useState(false);
   const debounceRef = useRef(null);
+  const autoRefTimer = useRef(null);
   const docMenuRef = useRef(null);
 
   // close the documents menu on outside click
@@ -143,6 +145,38 @@ export default function QuoteBuilder() {
 
   useEffect(() => { recalc(form, rates, useCustom ? customItems : null); },
     [form.capacity_kw, form.project_type, rates, useCustom, customItems, recalc]);
+
+  // Keep a live auto-BOQ (always from the rate assumptions, never the custom items)
+  // so each custom row can show, on hover, what its rate would be per the assumptions.
+  useEffect(() => {
+    if (!useCustom) return;
+    clearTimeout(autoRefTimer.current);
+    autoRefTimer.current = setTimeout(async () => {
+      try {
+        const { data } = await api.post('/quotes/calculate', {
+          ...rates, capacity_kw: Number(form.capacity_kw || 0), project_type: form.project_type,
+        });
+        setAutoRef(data.line_items || []);
+      } catch { /* ignore transient */ }
+    }, 300);
+    return () => clearTimeout(autoRefTimer.current);
+  }, [useCustom, form.capacity_kw, form.project_type, rates]);
+
+  // Match a custom BOQ description to the equivalent auto-BOQ item, so we can
+  // surface its "as per assumed rates" figure as a reference next to the row.
+  const assumedFor = (desc) => {
+    const s = String(desc || '').toLowerCase();
+    const cat = /panel|module|\bpv\b|mono|perc|topcon|wp/.test(s) ? /panel|module|pv/i
+      : /inverter/.test(s) ? /inverter/i
+      : /structure|mount|mms/.test(s) ? /structure|mount/i
+      : /cabl|earth|\bbos\b|balance/.test(s) ? /cabl|earth|bos|balance/i
+      : /civil|foundation|piling/.test(s) ? /civil/i
+      : /install|commission|testing/.test(s) ? /install|commission/i
+      : /transport|logistic|freight/.test(s) ? /transport|logistic/i
+      : null;
+    if (!cat) return null;
+    return autoRef.find((li) => cat.test(String(li.item))) || null;
+  };
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
   // Keep the raw string while typing so decimals like "0.5" or "4.2" can be
@@ -485,24 +519,36 @@ export default function QuoteBuilder() {
                   <span className="flex-[4.5]">Description</span><span className="flex-[1.3] text-right">Qty</span>
                   <span className="flex-[1.5]">Unit</span><span className="flex-[1.8] text-right">Rate ₹</span><span className="flex-[1.8] text-right">Amount</span><span className="w-4" />
                 </div>
-                {customItems.map((it, i) => (
+                {customItems.map((it, i) => {
+                  const a = assumedFor(it.description);
+                  const assumedTip = a
+                    ? `As per assumed rates: ₹${Number(a.rate).toLocaleString('en-IN')} / ${a.unit}  ·  ${inr(a.amount)} total${a.note ? '  ·  ' + a.note : ''}\n(your entered rate is the final price; this is only a cost reference)`
+                    : '';
+                  return (
                   <div key={i} className="flex items-center gap-1.5">
                     <input className="input flex-[4.5] !py-1.5 text-xs" placeholder="Item description" value={it.description || ''} onChange={(e) => updItem(i, 'description', e.target.value)} />
                     <input className="input flex-[1.3] !py-1.5 text-right text-xs" type="number" value={it.qty ?? ''} onChange={(e) => updItem(i, 'qty', e.target.value)} />
                     <select className="input flex-[1.5] !py-1.5 text-xs" value={it.unit || 'Lot'} onChange={(e) => updItem(i, 'unit', e.target.value)}>
                       {BOQ_UNITS.map((u) => <option key={u} value={u}>{u}</option>)}
                     </select>
-                    <input className="input flex-[1.8] !py-1.5 text-right text-xs" type="text" inputMode="decimal" value={it.rate ?? ''} onChange={(e) => updItem(i, 'rate', e.target.value)} />
-                    <span className="flex-[1.8] text-right text-xs font-medium text-slate-600 dark:text-slate-300">{inr(itemAmount(it))}</span>
+                    <div className="flex-[1.8] flex items-center gap-1">
+                      <input className="input w-full !py-1.5 text-right text-xs" type="text" inputMode="decimal" value={it.rate ?? ''} onChange={(e) => updItem(i, 'rate', e.target.value)} />
+                      {a
+                        ? <Info size={13} className="shrink-0 cursor-help text-slate-400 hover:text-brand-500" title={assumedTip} />
+                        : <span className="w-[13px] shrink-0" />}
+                    </div>
+                    <span className="flex-[1.8] text-right text-xs font-medium text-slate-600 dark:text-slate-300" title={assumedTip}>{inr(itemAmount(it))}</span>
                     <button type="button" onClick={() => delItem(i)} className="px-1 text-slate-400 hover:text-red-500" title="Remove">×</button>
                   </div>
-                ))}
+                  );
+                })}
                 <div className="flex gap-2 pt-1">
                   <button type="button" onClick={addItem} className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">+ Add item</button>
                   <button type="button" onClick={loadDefaults} className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">Load standard items</button>
                 </div>
                 <p className="text-[11px] leading-relaxed text-slate-400">
                   Unit <b>Wp</b> = ₹ per watt (rate × system watts, e.g. ₹42 → 25 kWp = ₹10.5 L). <b>Lot / Set / Nos</b> = amount is Qty × Rate. Amounts are client-facing (include your margin); GST is added on top.
+                  These custom rows are your own final prices — they do <b>not</b> change when you edit the rate assumptions. Hover the <Info size={11} className="inline align-text-bottom text-slate-400" /> beside a rate to see that item's cost <b>as per your current assumed rates</b> for reference.
                 </p>
               </div>
             )}
