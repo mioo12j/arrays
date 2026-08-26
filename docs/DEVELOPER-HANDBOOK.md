@@ -611,6 +611,7 @@ Also computed: PM Surya Ghar residential subsidy (`min(78000, 30000×min(kw,2) +
 | `POST /:id/revise` | Copy to a new version; source marked `revised` |
 | `POST /:id/approve` | `status='approved'`, records approver/time |
 | `POST /:id/convert` | Creates a **project**, marks `converted` |
+| `POST /:id/undo` | **Reverses approve/convert** → back to `draft`. Requires a `{ remark }` (why) recorded in the audit log. If it was converted, the auto-created project is soft-deleted to the Recovery Center — but only when it has no invoices/ledger/allocations yet; a project with activity is kept and merely unlinked |
 | `DELETE /:id` | **Soft delete** → `deleted_at` (Trash) |
 | `DELETE /:id?purge=1` | Permanent (only if already in Trash) |
 | `POST /:id/restore` | Un-delete |
@@ -725,7 +726,7 @@ Two locals drive everything:
 |---|---|
 | `chrome` + `heading('Priced Offer', 'Commercial Quotation')` | Standard page furniture |
 | **Meta card** (left, `metaCard()`) | Mint panel, gold left bar. Rows: Client, Address (multi-line — the row *and* the panel grow), Project, Capacity, Reference (quote number), Date, Valid Until (default "30 days from issue"). Empty rows are filtered out; hairline dividers between rows |
-| **System Configuration** (right) | Paper panel, emerald top rule. Rows: **Solar Module** (`data.module_config`, default "545 Wp Mono PERC / latest equivalent technology"), **Inverter** (`inverter_config`), **DC Capacity** — *only rendered when `dc_capacity > 0`*, **Mounting (MMS)**, **System**. `cfgRowH()` measures each value with `heightOfString` so the panel auto-sizes. **These are operator inputs — never brands** |
+| **System Configuration** (right) | Paper panel, emerald top rule. Rows: **Solar Module** (`data.module_config`, default "545 Wp Mono PERC / latest equivalent technology"), **Panel Type** (`data.panel_type` — DCR / Non-DCR, *rendered only when set*, expanded to a full sentence), **Inverter** (`inverter_config`), **DC Capacity** — *only when `dc_capacity > 0`*, **Mounting (MMS)**, **System**. `cfgRowH()` measures each value with `heightOfString` so the panel auto-sizes. **These are operator inputs — never brands** |
 | **Commercial Offer table** (`line()`) | Row height grows with the label; value right-aligned; `big` rows get a filled panel and white text. Order: single scope line at `c.taxable` → GST rows → **Total Investment (incl. GST)** (emerald) → optional subsidy + Net Investment (deep emerald) |
 | **Effective price** | Cream band: `₹ X.XX per Watt (inclusive of GST)` |
 | **Savings teaser** | Deep-emerald band, four figures from `model()`: saved/year, payback, 25-year, system life |

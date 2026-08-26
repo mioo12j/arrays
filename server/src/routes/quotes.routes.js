@@ -203,6 +203,58 @@ router.post(
   })
 );
 
+// Undo an approval / conversion — sends the quote back to 'draft' so it can be
+// edited again. A remark (why) is mandatory and recorded in the audit trail.
+// If the quote had been converted, the auto-created project is soft-deleted
+// (moved to the Recovery Center) — but only when it has no real activity yet;
+// a project that already carries invoices, ledger entries or allocations is
+// kept and simply unlinked, so nothing real is lost.
+router.post(
+  '/:id/undo',
+  asyncHandler(async (req, res) => {
+    const remark = String(req.body?.remark || '').trim();
+    if (!remark) throw new ApiError(400, 'Please add a remark explaining why you are undoing this.');
+    const out = await withTransaction(async (db) => {
+      const { rows: q } = await db.query('SELECT * FROM quotes WHERE id=$1', [req.params.id]);
+      if (!q[0]) throw new ApiError(404, 'Quote not found');
+      const quote = q[0];
+      if (!['approved', 'converted'].includes(quote.status)) {
+        throw new ApiError(400, 'Only an approved or converted quote can be undone.');
+      }
+      let projectRemoved = null, projectKept = null;
+      if (quote.project_id) {
+        const { rows: dep } = await db.query(
+          `SELECT
+             (SELECT COUNT(*) FROM invoices WHERE project_id=$1 AND is_deleted=FALSE)
+           + (SELECT COUNT(*) FROM ledger_entries WHERE project_id=$1)
+           + (SELECT COUNT(*) FROM outgoing_payment_allocations WHERE project_id=$1)
+           + (SELECT COUNT(*) FROM incoming_payment_allocations WHERE project_id=$1) AS n`,
+          [quote.project_id]
+        );
+        if (Number(dep[0].n) > 0) {
+          projectKept = quote.project_id;   // has activity — keep it, just unlink
+        } else {
+          await db.query(
+            'UPDATE projects SET is_deleted=TRUE, deleted_at=now(), deleted_by=$2 WHERE id=$1 AND is_deleted=FALSE',
+            [quote.project_id, req.user.id]
+          );
+          projectRemoved = quote.project_id;
+        }
+      }
+      const { rows } = await db.query(
+        `UPDATE quotes SET status='draft', approved_by=NULL, approved_at=NULL, project_id=NULL WHERE id=$1 RETURNING *`,
+        [quote.id]
+      );
+      return { quote: rows[0], prevStatus: quote.status, projectRemoved, projectKept };
+    });
+    await audit(req, {
+      action: 'update', entity: 'quotes', entityId: req.params.id,
+      changes: { undo: out.prevStatus, remark, projectRemoved: out.projectRemoved, projectKept: out.projectKept },
+    });
+    res.json(out);
+  })
+);
+
 router.get(
   '/:id/pdf',
   asyncHandler(async (req, res) => {

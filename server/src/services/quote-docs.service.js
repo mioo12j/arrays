@@ -166,6 +166,12 @@ export function renderQuotation(doc, data = {}, opts = {}) {
   const dcCap = num(data.dc_capacity, 0);
   const cfg = [
     ['Solar Module', data.module_config || '545 Wp Mono PERC / latest equivalent technology'],
+    // Panel type (DCR / Non-DCR) only shows when the operator has chosen one
+    ...(data.panel_type ? [['Panel Type', data.panel_type === 'DCR'
+      ? 'DCR — Domestic Content Requirement (India-made cells & modules)'
+      : data.panel_type === 'Non-DCR'
+        ? 'Non-DCR — imported cells / modules permitted'
+        : String(data.panel_type)]] : []),
     ['Inverter', data.inverter_config || 'Three-phase grid-connected string inverter (as per design)'],
     ...(dcCap > 0 ? [['DC Capacity', dcCap + ' kWp']] : []),
     ['Mounting (MMS)', data.mms_config || data.structure_type || 'Aluminium / GI structure suitable for rooftop'],

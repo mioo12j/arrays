@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, Save, FileDown, CheckCircle2, GitBranch, FolderPlus, ChevronDown } from 'lucide-react';
+import { ArrowLeft, Loader2, Save, FileDown, CheckCircle2, GitBranch, FolderPlus, ChevronDown, Undo2 } from 'lucide-react';
 import { api, apiError, download } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
 import { useToast } from '../components/ui/Toast.jsx';
@@ -227,6 +227,22 @@ export default function QuoteBuilder() {
     } catch (e) { toast.error(apiError(e)); }
   };
 
+  // Undo an approval / conversion — asks WHY, then reverts the quote to draft.
+  const undoApproval = async () => {
+    const remark = window.prompt('Undo this approval and send the quote back to draft?\n\nPlease say why (e.g. "client changed the scope"):');
+    if (remark === null) return;                       // cancelled
+    if (!remark.trim()) { toast.error('A remark is required to undo.'); return; }
+    try {
+      const { data } = await api.post(`/quotes/${id}/undo`, { remark: remark.trim() });
+      setQuote(data.quote);
+      toast.success(
+        data.projectRemoved ? 'Reverted to draft · linked project moved to Recovery Center'
+        : data.projectKept ? 'Reverted to draft · linked project had activity and was kept'
+        : 'Reverted to draft'
+      );
+    } catch (e) { toast.error(apiError(e)); }
+  };
+
   if (loading) return <Loading />;
   const c = calc || {};
 
@@ -278,6 +294,9 @@ export default function QuoteBuilder() {
               </div>
               {quote?.status !== 'approved' && quote?.status !== 'converted' && (
                 <button className="btn-ghost" onClick={() => doAction('approve', 'Quote approved')}><CheckCircle2 size={16} /> Approve</button>
+              )}
+              {(quote?.status === 'approved' || quote?.status === 'converted') && (
+                <button className="btn-ghost text-amber-600 hover:text-amber-700" onClick={undoApproval}><Undo2 size={16} /> Undo</button>
               )}
               <button className="btn-ghost" onClick={() => doAction('revise', 'New revision created')}><GitBranch size={16} /> Revise</button>
               {quote?.status !== 'converted' && (
@@ -507,6 +526,13 @@ export default function QuoteBuilder() {
                   <div className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-200">System Configuration <span className="text-xs font-normal text-slate-400">— shown on the quotation</span></div>
                   <div className="grid grid-cols-2 gap-3">
                     <Field label="Solar Module"><input className="input text-xs" value={pinputs.module_config || ''} onChange={setPI('module_config')} placeholder="545 Wp Mono PERC / latest equivalent" /></Field>
+                    <Field label="Panel Type">
+                      <select className="input text-xs" value={pinputs.panel_type || ''} onChange={setPI('panel_type')}>
+                        <option value="">Not specified</option>
+                        <option value="DCR">DCR (Domestic Content Requirement)</option>
+                        <option value="Non-DCR">Non-DCR (imported cells allowed)</option>
+                      </select>
+                    </Field>
                     <Field label="Inverter"><input className="input text-xs" value={pinputs.inverter_config || ''} onChange={setPI('inverter_config')} placeholder="3-phase grid-tie string inverter (as per design)" /></Field>
                     <Field label="Mounting (MMS)"><input className="input text-xs" value={pinputs.mms_config || ''} onChange={setPI('mms_config')} placeholder="Aluminium / GI structure suitable for rooftop" /></Field>
                     <Field label="System"><input className="input text-xs" value={pinputs.system_config || ''} onChange={setPI('system_config')} placeholder="Grid-connected rooftop solar system" /></Field>
