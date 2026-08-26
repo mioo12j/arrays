@@ -328,16 +328,30 @@ export function renderQuotation(doc, data = {}, opts = {}) {
   // payment & company details + payment method — right after the terms
   y = companyBankBlock(doc, data, y, flowY);
 
-  // client acceptance signature — at the very bottom
-  y = flowY(y + 12, 74);
-  const sw = (w - 20) / 2;
+  // client acceptance signature — generous room to sign, seal & fill details
+  y = flowY(y + 14, 150);
+  const sw = (w - 24) / 2;
   const clientNm2 = data.client_name || data.client_full_name || data.customer_name || 'the Client';
   doc.font('uiSB').fontSize(8.5).fillColor(C.gold).text('ACCEPTED BY THE CLIENT', M, y, { characterSpacing: 0.8 });
-  doc.font('body').fontSize(9).fillColor(C.body).text('We have read and accept the scope, pricing and terms set out in this quotation.', M, y + 13, { width: sw - 10 });
-  doc.font('bodyI').fontSize(10.5).fillColor(C.ink).text(`For ${clientNm2}`, M + w - sw + 10, y + 10);
-  doc.moveTo(M + w - sw + 10, y + 44).lineTo(M + w - 20, y + 44).lineWidth(0.8).strokeColor(C.ink).stroke();
-  doc.font('ui').fontSize(8).fillColor(C.mute).text('Authorised Signatory, Date & Company Seal', M + w - sw + 10, y + 50);
-  y += 80;
+  doc.font('body').fontSize(9).fillColor(C.body).text('We have read and accept the scope, pricing and terms set out in this quotation.', M, y + 14, { width: sw - 10 });
+  // right column — "For <client>", open space to sign & stamp, then labelled blanks
+  const sigX = M + w - sw, sigW = sw;
+  doc.font('bodyI').fontSize(10.5).fillColor(C.ink).text(`For ${clientNm2}`, sigX, y + 6);
+  const fieldLine = (lx, lw, yy, label) => {
+    doc.moveTo(lx, yy).lineTo(lx + lw, yy).lineWidth(0.6).strokeColor(C.line).stroke();
+    doc.font('ui').fontSize(7).fillColor(C.mute).text(String(label).toUpperCase(), lx, yy + 3, { characterSpacing: 0.5 });
+  };
+  // big blank band for the physical signature + company seal
+  const sigY = y + 76;
+  doc.moveTo(sigX, sigY).lineTo(sigX + sigW, sigY).lineWidth(0.8).strokeColor(C.ink).stroke();
+  doc.font('ui').fontSize(7.5).fillColor(C.mute).text('AUTHORISED SIGNATORY  ·  SIGN & COMPANY SEAL', sigX, sigY + 4, { characterSpacing: 0.4 });
+  // Name / Designation / Date blanks below the signature
+  const sigCol = (sigW - 12) / 2;
+  fieldLine(sigX, sigCol, sigY + 34, 'Name');
+  fieldLine(sigX + sigCol + 12, sigCol, sigY + 34, 'Designation');
+  fieldLine(sigX, sigCol, sigY + 60, 'Date');
+  fieldLine(sigX + sigCol + 12, sigCol, sigY + 60, 'Place');
+  y = sigY + 76;
 
   autoGenNote(doc, Math.min(y + 8, doc.page.height - 54), 'quotation');
 

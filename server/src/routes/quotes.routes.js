@@ -6,7 +6,7 @@ import { denyWriteForAdmin } from '../middleware/rbac.js';
 import { audit } from '../middleware/audit.js';
 import { calculateQuote } from '../services/quote-calc.service.js';
 import { streamQuotePdf } from '../services/quote-pdf.service.js';
-import { renderProposal, renderThankYou, renderFaq, PROPOSAL_BRAND, registerFonts } from '../services/proposal-pdf.service.js';
+import { renderProposal, renderThankYou, renderFaq, renderCover, PROPOSAL_BRAND, registerFonts } from '../services/proposal-pdf.service.js';
 import { renderQuotation, renderBOQ, renderScope } from '../services/quote-docs.service.js';
 import PDFDocument from 'pdfkit';
 import * as branding from '../services/gst/brandingService.js';
@@ -361,19 +361,24 @@ function streamParts(res, q, data, parts) {
 
   const hasProposal = parts.includes('proposal');
   const extras = parts.filter((p) => p !== 'proposal');   // listed in the Contents page
-  parts.forEach((p, i) => {
-    if (i) doc.addPage();
+
+  // Every pack opens with the branded cover. When the proposal is included it
+  // draws its own cover as its first page; otherwise we render a standalone one.
+  let started = false;
+  const nextPage = () => { if (started) doc.addPage(); started = true; };
+  if (!hasProposal) { renderCover(doc, data, { shared: true }); started = true; }
+
+  parts.forEach((p) => {
+    nextPage();
     if (p === 'proposal') renderProposal(doc, data, { shared: true, parts: extras, skipThankYou: true });
     else if (p === 'quotation') renderQuotation(doc, data, { shared: true });
     else if (p === 'boq') renderBOQ(doc, data, { shared: true });
     else if (p === 'scope') renderScope(doc, data, { shared: true });
   });
-  // Technical → FAQ → Thank-You close the pack (in that order) when the
-  // proposal is included, so the FAQ is the last content page before the end.
-  if (hasProposal) {
-    doc.addPage(); renderFaq(doc, data, { shared: true });
-    doc.addPage(); renderThankYou(doc, data, { shared: true });
-  }
+  // FAQ only when the proposal is included (it's part of the brochure); the
+  // Thank-You page always closes every pack.
+  if (hasProposal) { doc.addPage(); renderFaq(doc, data, { shared: true }); }
+  doc.addPage(); renderThankYou(doc, data, { shared: true });
   doc.end();
 }
 

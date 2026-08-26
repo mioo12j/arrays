@@ -1767,6 +1767,14 @@ export function renderThankYou(doc, data = {}, opts = {}) {
   return doc;
 }
 
+// The branded cover, exported so ANY document pack (quotation-only, BOQ-only…)
+// can open with the same front page. Renders on the current page.
+export function renderCover(doc, data = {}, opts = {}) {
+  if (!opts.shared) { registerFonts(doc); doc.page.margins.bottom = 0; doc.on('pageAdded', () => { doc.page.margins.bottom = 0; }); }
+  coverPage(doc, data);
+  return doc;
+}
+
 // Shared brand toolkit so the Quotation & BOQ documents render in the exact
 // same identity (fonts, palette, chrome, helpers) as the proposal book.
 export { registerFonts };
