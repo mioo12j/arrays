@@ -60,45 +60,47 @@ export function calculateQuote(input = {}) {
   const extraPct = Number(r.extra_module_pct) || 0;
   const panelCount = wp > 0 ? Math.ceil((wp * (1 + extraPct / 100)) / r.panel_wattage) : 0;
 
-  // Operator-defined custom line items take priority. Their amounts are the
-  // operator's COST (same as the auto per-watt rates) — the margin below is
-  // added on top and later distributed across the item rates.
-  const custom = normalizeItems(input.custom_items, wp, r);
-  let items, subtotal, taxable_amount, margin_amount = 0;
+  // ---- Bill of Quantities — everything here is BASIC cost (pre-GST) ----------
+  // Every line takes its COST rate from a rate-assumption CATEGORY the operator
+  // selects (panel / inverter / structure / bos / civil / labour / transport),
+  // so the BOQ and the rate assumptions are always linked — the system never
+  // guesses the rate from the free-text description. 'manual' = type the rate.
   const contingency_amount = 0;
+  const panelUnitRate = panelBasis === 'watt' ? round(r.panel_rate_per_watt * r.panel_wattage) : round(r.panel_rate);
+  const catRate = {
+    inverter: Number(r.inverter_rate) || 0,
+    structure: Number(r.structure_rate) || 0,
+    bos: Number(r.bos_rate) || 0,
+    civil: Number(r.civil_rate) || 0,
+    labour: Number(r.labour_rate) || 0,
+    transport: Number(r.transport_rate) || 0,
+  };
+  const ctx = { wp, panelCount, panelUnitRate, catRate, wattage: r.panel_wattage, extraPct };
 
-  if (custom) {
-    items = custom;
-  } else {
-    // per-watt work rates → a whole-of-work billing (1 Lot / Set), modules by Nos
-    const panelUnitRate = panelBasis === 'watt' ? round(r.panel_rate_per_watt * r.panel_wattage) : round(r.panel_rate);
-    const lot = (name, ratePerW, unit, note) => line(name, 1, unit, round(wp * ratePerW), round(wp * ratePerW), note);
-    items = [
-      line('Solar PV Modules', panelCount, 'Nos', panelUnitRate, round(panelCount * panelUnitRate),
-        `${r.panel_wattage} Wp${extraPct ? ` · incl. ${extraPct}% extra` : ''}`),
-      lot('Inverter', r.inverter_rate, 'Set', 'String / central inverter'),
-      lot('Module Mounting Structure', r.structure_rate, 'Lot', type === 'ground_mount' ? 'Galvanised ground structure' : 'Rooftop structure'),
-      lot('Cabling, Earthing & Balance of System', r.bos_rate, 'Lot', 'DC/AC cables, earthing, LA, ACDB/DCDB'),
-      lot('Civil Work', r.civil_rate, 'Lot', `${labelType(type)} civil / foundation`),
-      lot('Installation, Testing & Commissioning', r.labour_rate, 'Lot', 'Erection, testing & commissioning'),
-      ...(transportIncluded ? [] : [lot('Transportation', r.transport_rate, 'Lot', 'Logistics to site')]),
-      ...normalizeExtras(input.custom_extras, wp, panelCount),
-    ].filter((i) => i.amount > 0);
+  const hasCustom = Array.isArray(input.custom_items)
+    && input.custom_items.some((x) => String(x.description ?? x.item ?? '').trim());
+  const specs = hasCustom ? input.custom_items : defaultSpecs(type, transportIncluded);
+  const items = specs
+    .map((s) => costLine(s, ctx))
+    .filter((i) => i.item && (i.cost_amount > 0 || i.category === 'manual'));
+  for (const e of normalizeExtras(input.custom_extras, wp, panelCount)) {
+    items.push({ item: e.item, category: 'manual', qty: e.qty, unit: e.unit, cost_rate: e.rate, cost_amount: e.amount, note: e.note });
   }
-  subtotal = round(items.reduce((s, i) => s + i.amount, 0));
-  // The operator's margin is always added on top of the cost sub-total — for both
-  // the auto per-watt BOQ and operator-entered custom items — and later distributed
-  // across the item rates (never shown as a separate line to the client). Set the
-  // margin to 0 when the entered amounts already include it.
-  margin_amount = round(subtotal * (Number(r.margin_pct) || 0) / 100);
-  taxable_amount = round(subtotal + margin_amount);
+
+  const subtotal = round(items.reduce((s, i) => s + i.cost_amount, 0));         // BASIC actuals
+  let margin_amount = round(subtotal * (Number(r.margin_pct) || 0) / 100);
+  const margin_distribution = allocateMargin(items, margin_amount);            // folds margin into each line
+  const taxable_amount = round(items.reduce((s, i) => s + i.amount, 0));        // BASIC + margin
+  margin_amount = round(taxable_amount - subtotal);
   const cost_amount = subtotal;
 
-  // GST: operator may set the rate or a fixed amount (breakdown handled in UI/PDF)
+  // GST is added ON TOP of the basic taxable value — it is a pass-through to the
+  // government, so we quote / measure per-watt on the BASIC price, not on GST.
   const gst_pct = Number(input.gst_pct) || r.gst_pct;
   const gst_amount = Number(input.gst_amount) > 0 ? round(input.gst_amount) : round(taxable_amount * (gst_pct / 100));
   const total_amount = round(taxable_amount + gst_amount);
-  const per_watt = wp > 0 ? round(total_amount / wp) : 0;
+  const per_watt_basic = wp > 0 ? round(taxable_amount / wp) : 0;   // ₹/W on BASIC price (what we quote on)
+  const per_watt = wp > 0 ? round(total_amount / wp) : 0;           // ₹/W incl. GST
 
   // Subsidy + return-on-investment (savings use the operator's tariff & yield)
   const subsidy_amount = type === 'residential'
@@ -120,10 +122,12 @@ export function calculateQuote(input = {}) {
     contingency_amount,
     cost_amount,
     margin_amount,
+    margin_distribution,
     taxable_amount,
     gst_amount,
     total_amount,
     per_watt,
+    per_watt_basic,
     subsidy_amount,
     net_cost,
     annual_generation,
@@ -138,24 +142,96 @@ function line(item, qty, unit, rate, amount, note) {
   return { item, qty: round(qty), unit, rate: round(rate), amount: round(amount), note };
 }
 
-// Sanitize operator-supplied custom line items. Amount = explicit amount, else
-// qty × rate; a per-watt unit with no qty computes against the whole system's
-// wattage. Returns null when there are no usable rows (falls back to auto BOQ).
-function normalizeItems(list, wp, r) {
-  if (!Array.isArray(list)) return null;
-  const items = list.map((ci) => {
-    const desc = String(ci.description ?? ci.item ?? '').trim();
-    if (!desc) return null;
-    const unit = (String(ci.unit ?? 'Nos').trim()) || 'Nos';
-    const qty = Number(ci.qty) || 0;
-    const rate = Number(ci.rate) || 0;
-    let amount = (ci.amount !== undefined && ci.amount !== null && ci.amount !== '') ? Number(ci.amount) : NaN;
-    if (!Number.isFinite(amount)) {
-      amount = (/w(p|att)?$|\/\s*w/i.test(unit) && qty === 0) ? wp * rate : qty * rate;
-    }
-    return line(desc, qty, unit, rate, amount, String(ci.note ?? '').trim());
-  }).filter(Boolean);
-  return items.length ? items : null;
+// The default BOQ line specs (each tagged with the rate-assumption category it
+// draws its cost from). The operator can rename any description freely — the
+// category, not the text, decides the rate.
+export const RATE_CATEGORIES = [
+  { key: 'panel', label: 'Solar Modules', hint: '₹ per watt × wattage → per module' },
+  { key: 'inverter', label: 'Inverter', hint: '₹ per watt' },
+  { key: 'structure', label: 'Mounting Structure', hint: '₹ per watt' },
+  { key: 'bos', label: 'Cabling + Earthing + BOS', hint: '₹ per watt' },
+  { key: 'civil', label: 'Civil Work', hint: '₹ per watt' },
+  { key: 'labour', label: 'Installation & Commissioning', hint: '₹ per watt' },
+  { key: 'transport', label: 'Transportation', hint: '₹ per watt' },
+  { key: 'manual', label: 'Manual (type the rate)', hint: 'rate you type = basic cost' },
+];
+
+function defaultSpecs(type, transportIncluded) {
+  return [
+    { category: 'panel', description: 'Solar PV Modules' },
+    { category: 'inverter', description: 'Inverter', unit: 'Set' },
+    { category: 'structure', description: type === 'ground_mount' ? 'Mounting Structure (ground)' : 'Mounting Structure' },
+    { category: 'bos', description: 'Cabling, Earthing & Balance of System' },
+    { category: 'civil', description: 'Civil Work' },
+    { category: 'labour', description: 'Installation, Testing & Commissioning' },
+    ...(transportIncluded ? [] : [{ category: 'transport', description: 'Transportation' }]),
+  ];
+}
+
+// Turn one line spec into a BASIC-cost line. The rate comes from the selected
+// category (never from the description). 'manual' uses the typed rate as cost.
+function costLine(spec, ctx) {
+  const { wp, panelCount, panelUnitRate, catRate, wattage, extraPct } = ctx;
+  const cat = String(spec.category || '').toLowerCase();
+  const item = String(spec.description ?? spec.item ?? '').trim();
+  let qty = Number(spec.qty) || 0;
+  let unit = String(spec.unit || '').trim();
+  let note = String(spec.note || '').trim();
+  let cost_amount, cost_rate;
+  if (cat === 'panel') {
+    qty = qty > 0 ? qty : panelCount;
+    unit = unit || 'Nos';
+    cost_rate = panelUnitRate;
+    cost_amount = qty * panelUnitRate;
+    if (!note) note = `${wattage} Wp${extraPct ? ` · incl. ${extraPct}% extra` : ''}`;
+  } else if (cat in catRate) {
+    qty = qty > 0 ? qty : 1;
+    unit = unit || 'Lot';
+    cost_amount = wp * catRate[cat];
+    cost_rate = qty > 0 ? cost_amount / qty : cost_amount;
+  } else {
+    // manual — the typed rate is the basic cost (per unit, or per watt for a Wp unit)
+    qty = qty > 0 ? qty : 1;
+    unit = unit || 'Lot';
+    const rt = Number(spec.rate) || 0;
+    cost_amount = /w(p|att)?$/i.test(unit) ? wp * rt : qty * rt;
+    cost_rate = qty > 0 ? cost_amount / qty : cost_amount;
+  }
+  return { item, category: cat || 'manual', qty: round(qty), unit, cost_rate: round(cost_rate), cost_amount: round(cost_amount), note };
+}
+
+// Distribute the operator's margin across the lines (40% civil / 40% installation
+// & commissioning / 20% the rest, normalised over whichever buckets exist) and
+// fold it into each line's amount + rate. Mutates items; returns the split summary.
+function allocateMargin(items, margin) {
+  items.forEach((i) => { i.margin_amount = 0; });
+  const isCivil = (i) => i.category === 'civil' || /civil/i.test(i.item);
+  const isInstall = (i) => !isCivil(i) && (i.category === 'labour' || /install|commission/i.test(i.item));
+  const civil = items.filter(isCivil);
+  const install = items.filter(isInstall);
+  const rest = items.filter((i) => !isCivil(i) && !isInstall(i));
+  let pC = civil.length ? 0.4 : 0, pI = install.length ? 0.4 : 0, pR = rest.length ? 0.2 : 0;
+  const tot = pC + pI + pR;
+  if (margin > 0 && tot > 0) {
+    pC /= tot; pI /= tot; pR /= tot;
+    const give = (list, amt) => {
+      if (!list.length || amt <= 0) return;
+      const s = list.reduce((a, i) => a + i.cost_amount, 0);
+      list.forEach((i) => { i.margin_amount += amt * (s > 0 ? i.cost_amount / s : 1 / list.length); });
+    };
+    give(civil, margin * pC); give(install, margin * pI); give(rest, margin * pR);
+  }
+  items.forEach((i) => {
+    i.margin_amount = round(i.margin_amount);
+    i.amount = round(i.cost_amount + i.margin_amount);
+    i.rate = i.qty > 0 ? round(i.amount / i.qty) : i.amount;
+  });
+  const sum = (list) => round(list.reduce((a, i) => a + i.margin_amount, 0));
+  return [
+    { bucket: 'Civil Work', target_pct: 40, amount: sum(civil) },
+    { bucket: 'Installation & Commissioning', target_pct: 40, amount: sum(install) },
+    { bucket: 'Other items', target_pct: 20, amount: sum(rest) },
+  ].filter((b) => b.amount > 0);
 }
 
 // Extra/optional works added on top of the auto BOQ (e.g. transformer, DG sync).

@@ -107,8 +107,9 @@ function commercials(data) {
   const subsidy = num(data.subsidy_amount, 0);
   const net = num(data.net_cost, 0) || total - subsidy;
   const kwp = num(data.capacity_kw || data.capacity_kwp, 0);
-  const perW = num(data.per_watt, 0) || (kwp ? total / (kwp * 1000) : 0);
-  return { items, subtotal, contingency, margin, taxable, gst, total, subsidy, net, kwp, perW };
+  const perW = num(data.per_watt, 0) || (kwp ? total / (kwp * 1000) : 0);       // incl. GST
+  const perWBasic = num(data.per_watt_basic, 0) || (kwp ? taxable / (kwp * 1000) : 0); // basic (what we quote on)
+  return { items, subtotal, contingency, margin, taxable, gst, total, subsidy, net, kwp, perW, perWBasic };
 }
 
 function metaCard(doc, data, x, y, w) {
@@ -215,13 +216,17 @@ export function renderQuotation(doc, data = {}, opts = {}) {
   y += 6;
   if (c.subsidy) { line('Less: Government Subsidy', -c.subsidy, { accent: C.emer }); }
   if (c.subsidy) { line('Net Investment After Subsidy', c.net, { big: true, fill: C.emerD }); }
-  if (c.kwp && c.perW) {
+  if (c.kwp && c.perWBasic) {
     y += 8;
     panel(doc, M, y, w, 34, C.cream, 8);
     doc.rect(M, y, 4, 34).fill(C.gold);
     doc.font('uiSB').fontSize(9).fillColor(C.gold).text('EFFECTIVE PRICE', M + 18, y + 13, { characterSpacing: 0.6 });
+    // Basic price is what we quote on (GST is a pass-through to the government);
+    // the GST-inclusive figure is shown alongside for the client's reference.
     doc.font('uiSB').fontSize(10.5).fillColor(C.ink)
-       .text(`₹ ${c.perW.toFixed(2)} per Watt  (inclusive of GST)`, M + 130, y + 12);
+       .text(`₹ ${c.perWBasic.toFixed(2)} / Watt basic`, M + 130, y + 12);
+    doc.font('ui').fontSize(9).fillColor(C.mute)
+       .text(`(₹ ${c.perW.toFixed(2)} / Watt incl. GST)`, M + 260, y + 13);
     y += 34;
   }
   doc.font('bodyI').fontSize(8).fillColor(C.mute)
@@ -512,7 +517,12 @@ export function renderBOQ(doc, data = {}, opts = {}) {
   // 20% across the rest, with graceful fallback when a category is absent.
   const rawItems = c.items.length ? c.items : null;
   const items = rawItems || [{ item: 'Complete Solar PV System — Supply, Installation & Commissioning', qty: 1, unit: 'Lot', rate: c.taxable, amount: c.taxable }];
-  const margin = rawItems ? Math.max(0, (c.taxable || 0) - (c.subtotal || 0)) : 0;
+  // New calc engine already folds the margin into each line's amount/rate. Only
+  // old saved quotes (where the line amounts still sum to the pre-margin subtotal)
+  // need the margin distributed here — detect that and fall back gracefully.
+  const itemsSum = items.reduce((s, i) => s + num(i.amount, 0), 0);
+  const needMargin = rawItems && c.taxable > 0 && itemsSum < c.taxable - 1;
+  const margin = needMargin ? Math.max(0, (c.taxable || 0) - (c.subtotal || 0)) : 0;
   const alloc = distributeMargin(items, margin);
   items.forEach((it, i) => {
     // measure description height

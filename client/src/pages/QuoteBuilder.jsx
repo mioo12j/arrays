@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, Save, FileDown, CheckCircle2, GitBranch, FolderPlus, ChevronDown, Undo2, Trash2 } from 'lucide-react';
+import { ArrowLeft, Loader2, Save, FileDown, CheckCircle2, GitBranch, FolderPlus, ChevronDown, Undo2, Trash2, Calculator } from 'lucide-react';
 import { api, apiError, download } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
 import { useToast } from '../components/ui/Toast.jsx';
@@ -87,10 +87,9 @@ export default function QuoteBuilder() {
   const [docMenu, setDocMenu] = useState(false);
   const [useCustom, setUseCustom] = useState(false);
   const [customItems, setCustomItems] = useState([]);
-  const [autoRef, setAutoRef] = useState([]);   // auto-BOQ from the current rate assumptions (reference for the hover)
   const [showTerms, setShowTerms] = useState(false);
+  const [calc2, setCalc2] = useState({ w: 0, wp: 545 });   // little panel-rate calculator
   const debounceRef = useRef(null);
-  const autoRefTimer = useRef(null);
   const docMenuRef = useRef(null);
 
   // close the documents menu on outside click
@@ -123,7 +122,8 @@ export default function QuoteBuilder() {
       setPinputs(data.proposal_inputs || {});
       setUseCustom(!!data.proposal_inputs?._custom_boq);
       setCustomItems((data.line_items || []).map((li) => ({
-        description: li.item, qty: li.qty, unit: li.unit, rate: li.rate, note: li.note,
+        description: li.item, category: li.category || 'manual', qty: li.qty, unit: li.unit,
+        rate: (!li.category || li.category === 'manual') ? (li.cost_rate ?? li.rate) : undefined, note: li.note,
       })));
     }).catch((e) => toast.error(apiError(e))).finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -146,39 +146,14 @@ export default function QuoteBuilder() {
   useEffect(() => { recalc(form, rates, useCustom ? customItems : null); },
     [form.capacity_kw, form.project_type, rates, useCustom, customItems, recalc]);
 
-  // Keep a live auto-BOQ (always from the rate assumptions, never the custom items)
-  // so each custom row can show, on hover, what its rate would be per the assumptions.
-  useEffect(() => {
-    if (!useCustom) return;
-    clearTimeout(autoRefTimer.current);
-    autoRefTimer.current = setTimeout(async () => {
-      try {
-        const { data } = await api.post('/quotes/calculate', {
-          ...rates, capacity_kw: Number(form.capacity_kw || 0), project_type: form.project_type,
-        });
-        setAutoRef(data.line_items || []);
-      } catch { /* ignore transient */ }
-    }, 300);
-    return () => clearTimeout(autoRefTimer.current);
-  }, [useCustom, form.capacity_kw, form.project_type, rates]);
-
-  // Match a custom BOQ description to the equivalent auto-BOQ item, so we can
-  // surface its "as per assumed rates" figure as a reference next to the row.
-  const assumedFor = (desc) => {
-    const s = String(desc || '').toLowerCase();
-    // Order matters: more specific categories are tested first, because names
-    // like "Module Mounting Structure" contain "module" but are NOT the panels.
-    const cat = /structure|mount|mms/.test(s) ? /structure|mount/i
-      : /inverter/.test(s) ? /inverter/i
-      : /cabl|earth|\bbos\b|balance/.test(s) ? /cabl|earth|bos|balance/i
-      : /civil|foundation|piling/.test(s) ? /civil/i
-      : /install|commission|testing/.test(s) ? /install|commission/i
-      : /transport|logistic|freight/.test(s) ? /transport|logistic/i
-      : /panel|module|\bpv\b|mono|perc|topcon|\bwp\b/.test(s) ? /panel|module|pv/i
-      : null;
-    if (!cat) return null;
-    return autoRef.find((li) => cat.test(String(li.item))) || null;
-  };
+  // BOQ rate categories — each line draws its cost from the matching rate
+  // assumption (never guessed from the description text). Keep in sync with the
+  // server's RATE_CATEGORIES in quote-calc.service.js.
+  const RATE_CATS = [
+    ['panel', 'Solar Modules'], ['inverter', 'Inverter'], ['structure', 'Mounting Structure'],
+    ['bos', 'Cabling + Earthing + BOS'], ['civil', 'Civil Work'],
+    ['labour', 'Installation & Commissioning'], ['transport', 'Transport'], ['manual', 'Manual (type rate)'],
+  ];
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
   // Keep the raw string while typing so decimals like "0.5" or "4.2" can be
@@ -222,20 +197,52 @@ export default function QuoteBuilder() {
   // ---- custom BOQ line-item helpers ----
   const BOQ_UNITS = ['Nos', 'Set', 'Lot', 'Wp', 'kWp', 'RM', 'Mtr', 'Sqm', 'LS'];
   const updItem = (i, k, v) => setCustomItems((arr) => arr.map((it, j) => (j === i ? { ...it, [k]: v } : it)));
-  const addItem = () => setCustomItems((arr) => [...arr, { description: '', qty: 1, unit: 'Lot', rate: 0 }]);
+  const addItem = () => setCustomItems((arr) => [...arr, { description: '', category: 'manual', qty: 1, unit: 'Lot', rate: 0 }]);
   const delItem = (i) => setCustomItems((arr) => arr.filter((_, j) => j !== i));
   const toggleCustom = () => setUseCustom((on) => {
     if (!on && customItems.length === 0 && c.line_items) {
-      setCustomItems(c.line_items.map((li) => ({ description: li.item, qty: li.qty, unit: li.unit, rate: li.rate, note: li.note })));
+      setCustomItems(c.line_items.map((li) => ({ description: li.item, category: li.category || 'manual', qty: li.qty, unit: li.unit, rate: li.category === 'manual' ? li.cost_rate : undefined, note: li.note })));
     }
     return !on;
   });
   const loadDefaults = () => {
     if (customItems.length && !window.confirm('Load the standard BOQ? This will replace all the custom line items you have entered.')) return;
-    if (c.line_items) setCustomItems(c.line_items.map((li) => ({ description: li.item, qty: li.qty, unit: li.unit, rate: li.rate, note: li.note })));
+    if (c.line_items) setCustomItems(c.line_items.map((li) => ({ description: li.item, category: li.category || 'manual', qty: li.qty, unit: li.unit, rate: li.category === 'manual' ? li.cost_rate : undefined, note: li.note })));
   };
   const watts = Number(form.capacity_kw || 0) * 1000;
   const itemAmount = (it) => (String(it.unit).toLowerCase() === 'wp' && !(Number(it.qty) > 0) ? watts * Number(it.rate || 0) : Number(it.qty || 0) * Number(it.rate || 0));
+
+  // Compute each BOQ line client-side, mirroring the server engine, so the
+  // "assumed cost → +margin → final" columns update instantly. Keep the defaults
+  // and 40/40/20 split in sync with server/src/services/quote-calc.service.js.
+  const RATE_DEFAULTS = { panel_wattage: 545, panel_rate: 11990, panel_rate_per_watt: 22, extra_module_pct: 0, inverter_rate: 4.2, structure_rate: 3.5, bos_rate: 4, labour_rate: 2.5, transport_rate: 0.5, margin_pct: 15 };
+  const CIVIL_BY_TYPE = { residential: 0.5, rooftop: 0.6, commercial: 0.9, institutional: 0.9, government: 1.0, industrial: 1.5, ground_mount: 3.2, utility: 3.2 };
+  const boqRows = (() => {
+    const eff = (k) => (rates[k] !== undefined && rates[k] !== '' && !Number.isNaN(Number(rates[k])) ? Number(rates[k]) : RATE_DEFAULTS[k]);
+    const wattage = eff('panel_wattage') || 545;
+    const count = watts > 0 ? Math.ceil((watts * (1 + (eff('extra_module_pct') || 0) / 100)) / wattage) : 0;
+    const panelUnit = (rates.panel_rate_basis === 'watt') ? Math.round(eff('panel_rate_per_watt') * wattage) : eff('panel_rate');
+    const civil = rates.civil_rate !== undefined && rates.civil_rate !== '' ? Number(rates.civil_rate) : (CIVIL_BY_TYPE[form.project_type] ?? CIVIL_BY_TYPE.rooftop);
+    const catRate = { inverter: eff('inverter_rate'), structure: eff('structure_rate'), bos: eff('bos_rate'), civil, labour: eff('labour_rate'), transport: eff('transport_rate') };
+    const rows = customItems.map((it) => {
+      const cat = String(it.category || 'manual').toLowerCase();
+      let qty = Number(it.qty) || 0; const unit = it.unit || 'Lot'; let cost;
+      if (cat === 'panel') { qty = qty > 0 ? qty : count; cost = qty * panelUnit; }
+      else if (cat in catRate) { qty = qty > 0 ? qty : 1; cost = watts * (catRate[cat] || 0); }
+      else { qty = qty > 0 ? qty : 1; const rt = Number(it.rate) || 0; cost = /w(p|att)?$/i.test(unit) ? watts * rt : qty * rt; }
+      return { cat, qty, cost, margin: 0, it };
+    });
+    const subtotal = rows.reduce((s, r) => s + r.cost, 0);
+    const margin = subtotal * (eff('margin_pct') || 0) / 100;
+    const isCivil = (r) => r.cat === 'civil' || /civil/i.test(r.it.description || '');
+    const isInstall = (r) => !isCivil(r) && (r.cat === 'labour' || /install|commission/i.test(r.it.description || ''));
+    const civ = rows.filter(isCivil), ins = rows.filter(isInstall), rest = rows.filter((r) => !isCivil(r) && !isInstall(r));
+    let pC = civ.length ? 0.4 : 0, pI = ins.length ? 0.4 : 0, pR = rest.length ? 0.2 : 0; const tot = pC + pI + pR || 1; pC /= tot; pI /= tot; pR /= tot;
+    const give = (list, amt) => { if (!list.length || amt <= 0) return; const s = list.reduce((a, r) => a + r.cost, 0); list.forEach((r) => { r.margin += amt * (s > 0 ? r.cost / s : 1 / list.length); }); };
+    if (margin > 0) { give(civ, margin * pC); give(ins, margin * pI); give(rest, margin * pR); }
+    rows.forEach((r) => { r.amount = r.cost + r.margin; r.finalRate = r.qty > 0 ? r.amount / r.qty : r.amount; r.costRate = r.qty > 0 ? r.cost / r.qty : r.cost; });
+    return rows;
+  })();
 
   const save = async () => {
     if (!form.capacity_kw || Number(form.capacity_kw) <= 0) return toast.error('Enter a valid system size');
@@ -461,6 +468,18 @@ export default function QuoteBuilder() {
                   {rates.panel_rate_basis === 'watt'
                     ? <Field label="Panel Rate (₹/W)"><input className="input" type="text" inputMode="decimal" value={rates.panel_rate_per_watt ?? ''} onChange={setRate('panel_rate_per_watt')} placeholder="22" /></Field>
                     : <Field label="Panel Rate (₹/module)"><input className="input" type="text" inputMode="decimal" value={rates.panel_rate ?? ''} onChange={setRate('panel_rate')} placeholder="11990" /></Field>}
+                  {/* Panel-rate calculator: ₹/W × wattage → ₹/module */}
+                  <div className="col-span-2 rounded-lg border border-slate-200 bg-slate-50 p-2.5 dark:border-slate-700 dark:bg-slate-800/50">
+                    <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-500"><Calculator size={12} /> Panel Rate Calculator</div>
+                    <div className="flex flex-wrap items-end gap-2 text-xs">
+                      <label className="flex flex-col gap-0.5"><span className="text-slate-400">₹ / Watt</span><input className="input w-20 !py-1.5 text-right" type="text" inputMode="decimal" value={calc2.w} onChange={(e) => setCalc2((s) => ({ ...s, w: e.target.value }))} placeholder="17" /></label>
+                      <span className="pb-2 text-slate-400">×</span>
+                      <label className="flex flex-col gap-0.5"><span className="text-slate-400">Wattage (Wp)</span><input className="input w-20 !py-1.5 text-right" type="text" inputMode="decimal" value={calc2.wp} onChange={(e) => setCalc2((s) => ({ ...s, wp: e.target.value }))} placeholder="545" /></label>
+                      <span className="pb-2 text-slate-400">=</span>
+                      <div className="pb-0.5"><div className="text-slate-400">₹ / panel</div><div className="text-sm font-bold text-brand-600 dark:text-brand-300">{inr(Math.round((Number(calc2.w) || 0) * (Number(calc2.wp) || 0)))}</div></div>
+                      <button type="button" onClick={() => setRates((r) => ({ ...r, panel_rate_basis: 'watt', panel_rate_per_watt: calc2.w, panel_wattage: calc2.wp }))} className="ml-auto rounded-lg border border-slate-200 px-2 py-1.5 text-[11px] font-medium hover:bg-white dark:border-slate-600 dark:hover:bg-slate-700">Use as panel rate</button>
+                    </div>
+                  </div>
                   <Field label="Extra Modules (%)"><input className="input" type="text" inputMode="decimal" value={rates.extra_module_pct ?? ''} onChange={setRate('extra_module_pct')} placeholder="0" /></Field>
                   <Field label="Transportation">
                     <select className="input" value={rates.transport_included === false ? 'no' : 'yes'} onChange={(e) => setRates((r) => ({ ...r, transport_included: e.target.value === 'yes' }))}>
@@ -667,19 +686,31 @@ export default function QuoteBuilder() {
             </div>
             <div className="space-y-1.5 border-t border-slate-100 px-5 py-4 dark:border-slate-800">
               {[
-                ['Subtotal', c.subtotal], ['Contingency', c.contingency_amount],
-                ['Margin', c.margin_amount], ['Taxable Value', c.taxable_amount], ['GST', c.gst_amount],
-              ].filter(([l, v]) => Number(v) > 0 || ['Subtotal', 'Taxable Value', 'GST'].includes(l)).map(([l, v]) => (
+                ['Subtotal (basic actuals)', c.subtotal], ['Contingency', c.contingency_amount],
+                ['Margin', c.margin_amount],
+              ].filter(([l, v]) => Number(v) > 0 || l.startsWith('Subtotal')).map(([l, v]) => (
                 <div key={l} className="flex justify-between text-sm">
                   <span className="text-slate-500">{l}</span>
                   <span className="font-medium text-slate-700 dark:text-slate-200">{inr(v)}</span>
                 </div>
               ))}
+              {/* Taxable value = the BASIC price we quote & measure per-watt on */}
+              <div className="flex items-center justify-between border-t border-slate-100 pt-1.5 text-sm dark:border-slate-800">
+                <span className="font-medium text-slate-600 dark:text-slate-300">Taxable Value <span className="text-slate-400">(basic)</span></span>
+                <div className="text-right">
+                  <div className="font-semibold text-slate-800 dark:text-slate-100">{inr(c.taxable_amount)}</div>
+                  <div className="text-xs text-slate-400">{c.per_watt_basic ? `₹${c.per_watt_basic}/W basic` : ''}</div>
+                </div>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-slate-500">GST</span>
+                <span className="font-medium text-slate-700 dark:text-slate-200">{inr(c.gst_amount)}</span>
+              </div>
               <div className="mt-2 flex items-center justify-between rounded-xl bg-brand-600 px-4 py-3 text-white">
-                <span className="font-semibold">Grand Total</span>
+                <span className="font-semibold">Grand Total <span className="text-xs font-normal text-brand-100">incl. GST</span></span>
                 <div className="text-right">
                   <div className="text-lg font-bold">{inr(c.total_amount)}</div>
-                  <div className="text-xs text-brand-100">{c.per_watt ? `₹${c.per_watt}/W` : ''}</div>
+                  <div className="text-xs text-brand-100">{c.per_watt ? `₹${c.per_watt}/W incl GST` : ''}</div>
                 </div>
               </div>
               {Number(c.subsidy_amount) > 0 && (
@@ -723,9 +754,20 @@ export default function QuoteBuilder() {
                 </div>
                 <div className="text-right">
                   <div className="text-xl font-bold text-amber-700 dark:text-amber-300">{inr(c.margin_amount || 0)}</div>
-                  <div className="text-xs text-slate-400">on cost {inr(c.subtotal || 0)}</div>
+                  <div className="text-xs text-slate-400">{c.subtotal ? `${(c.margin_amount / c.subtotal * 100).toFixed(1)}% on cost ${inr(c.subtotal)}` : ''}</div>
                 </div>
               </div>
+              {Array.isArray(c.margin_distribution) && c.margin_distribution.length > 0 && (
+                <div className="mt-3 border-t border-amber-200/60 pt-2 dark:border-amber-900/40">
+                  <div className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-amber-700/80 dark:text-amber-300/80">How it's folded into the BOQ</div>
+                  {c.margin_distribution.map((d) => (
+                    <div key={d.bucket} className="flex justify-between text-xs">
+                      <span className="text-slate-500 dark:text-slate-400">{d.bucket} <span className="text-slate-400">· {d.target_pct}%</span></span>
+                      <span className="font-medium text-slate-600 dark:text-slate-300">{inr(d.amount)}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </Card>
           )}
         </div>
@@ -740,56 +782,60 @@ export default function QuoteBuilder() {
           </label>
         </div>
         {!useCustom ? (
-          <p className="mt-2 text-xs text-slate-400">Auto-generated from the rate assumptions and system size — the full breakdown is in the Live Estimate above. Enable <b>Custom items</b> to type your own description, quantity, unit and rate per line.</p>
+          <p className="mt-2 text-xs text-slate-400">Auto-generated from the rate assumptions and system size — the full breakdown is in the Live Estimate above. Enable <b>Custom items</b> to write your own descriptions and pick which rate assumption each line draws from.</p>
         ) : (
           <div className="mt-3 overflow-x-auto">
-            <table className="w-full min-w-[760px] text-sm">
+            <table className="w-full min-w-[900px] text-sm">
               <thead>
                 <tr className="text-left text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-                  <th className="w-8 pb-2 font-semibold">#</th>
-                  <th className="pb-2 font-semibold">Description</th>
-                  <th className="w-20 pb-2 text-right font-semibold">Qty</th>
-                  <th className="w-24 pb-2 pl-2 font-semibold">Unit</th>
-                  <th className="w-32 pb-2 pl-2 text-right font-semibold">Rate ₹</th>
-                  <th className="w-36 pb-2 pl-2 text-right font-semibold">Amount ₹</th>
-                  <th className="w-44 pb-2 pl-2 text-right font-semibold">As per assumed rates</th>
-                  <th className="w-10 pb-2" />
+                  <th className="w-7 pb-2 font-semibold">#</th>
+                  <th className="pb-2 font-semibold">Description <span className="normal-case text-slate-300">(shown on PDF)</span></th>
+                  <th className="w-44 pb-2 pl-2 font-semibold">Rate from</th>
+                  <th className="w-16 pb-2 pl-2 text-right font-semibold">Qty</th>
+                  <th className="w-20 pb-2 pl-2 font-semibold">Unit</th>
+                  <th className="w-28 pb-2 pl-2 text-right font-semibold">Rate (assumed)</th>
+                  <th className="w-24 pb-2 pl-2 text-right font-semibold">+ Margin</th>
+                  <th className="w-32 pb-2 pl-2 text-right font-semibold">Amount (basic)</th>
+                  <th className="w-9 pb-2" />
                 </tr>
               </thead>
               <tbody>
                 {customItems.map((it, i) => {
-                  const a = assumedFor(it.description);
+                  const r = boqRows[i] || {};
+                  const isManual = String(it.category || 'manual').toLowerCase() === 'manual';
                   return (
                     <tr key={i} className="border-t border-slate-100 dark:border-slate-800">
                       <td className="py-1.5 pr-1 text-slate-400">{i + 1}</td>
-                      <td className="py-1.5 pr-2"><input className="input w-full !py-2" placeholder="Item description" value={it.description || ''} onChange={(e) => updItem(i, 'description', e.target.value)} /></td>
-                      <td className="py-1.5 pl-2"><input className="input w-full !py-2 text-right" type="number" value={it.qty ?? ''} onChange={(e) => updItem(i, 'qty', e.target.value)} /></td>
-                      <td className="py-1.5 pl-2"><select className="input w-full !py-2" value={it.unit || 'Lot'} onChange={(e) => updItem(i, 'unit', e.target.value)}>{BOQ_UNITS.map((u) => <option key={u} value={u}>{u}</option>)}</select></td>
-                      <td className="py-1.5 pl-2"><input className="input w-full !py-2 text-right" type="text" inputMode="decimal" placeholder="0" value={it.rate ?? ''} onChange={(e) => updItem(i, 'rate', e.target.value)} /></td>
-                      <td className="py-1.5 pl-2 text-right font-semibold text-slate-800 dark:text-slate-100 whitespace-nowrap">{inr(itemAmount(it))}</td>
-                      <td className="py-1.5 pl-2 text-right whitespace-nowrap">
-                        {a ? (
-                          <div className="text-xs leading-tight">
-                            <div className="font-medium text-slate-500 dark:text-slate-400">{inr(a.amount)}</div>
-                            <div className="text-slate-400">{watts > 0 ? `≈ ₹${(a.amount / watts).toFixed(1)}/W` : `@ ₹${Number(a.rate).toLocaleString('en-IN')}`}</div>
-                          </div>
-                        ) : <span className="text-xs text-slate-300">—</span>}
+                      <td className="py-1.5 pr-2"><input className="input w-full !py-2" placeholder="e.g. DC/AC cabling, earthing, LA…" value={it.description || ''} onChange={(e) => updItem(i, 'description', e.target.value)} /></td>
+                      <td className="py-1.5 pl-2">
+                        <select className="input w-full !py-2" value={it.category || 'manual'} onChange={(e) => updItem(i, 'category', e.target.value)}>
+                          {RATE_CATS.map(([k, label]) => <option key={k} value={k}>{label}</option>)}
+                        </select>
                       </td>
+                      <td className="py-1.5 pl-2"><input className="input w-full !py-2 text-right" type="number" placeholder={r.qty ? String(r.qty) : ''} value={it.qty ?? ''} onChange={(e) => updItem(i, 'qty', e.target.value)} /></td>
+                      <td className="py-1.5 pl-2"><select className="input w-full !py-2" value={it.unit || 'Lot'} onChange={(e) => updItem(i, 'unit', e.target.value)}>{BOQ_UNITS.map((u) => <option key={u} value={u}>{u}</option>)}</select></td>
+                      <td className="py-1.5 pl-2 text-right whitespace-nowrap">
+                        {isManual
+                          ? <input className="input w-full !py-2 text-right" type="text" inputMode="decimal" placeholder="cost ₹" value={it.rate ?? ''} onChange={(e) => updItem(i, 'rate', e.target.value)} />
+                          : <span className="text-slate-500 dark:text-slate-400">{inr(r.cost)}</span>}
+                      </td>
+                      <td className="py-1.5 pl-2 text-right text-xs text-emerald-600 whitespace-nowrap">{r.margin ? '+' + inr(r.margin) : '—'}</td>
+                      <td className="py-1.5 pl-2 text-right font-semibold text-slate-800 dark:text-slate-100 whitespace-nowrap">{inr(r.amount)}</td>
                       <td className="py-1.5 text-right"><button type="button" onClick={() => delItem(i)} className="rounded-lg p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20" title="Remove item"><Trash2 size={15} /></button></td>
                     </tr>
                   );
                 })}
                 {!customItems.length && (
-                  <tr><td colSpan={8} className="py-6 text-center text-sm text-slate-400">No line items yet — click <b>Add item</b> or <b>Load standard items</b>.</td></tr>
+                  <tr><td colSpan={9} className="py-6 text-center text-sm text-slate-400">No line items yet — click <b>Add item</b> or <b>Load standard items</b>.</td></tr>
                 )}
               </tbody>
             </table>
             <div className="mt-3 flex flex-wrap gap-2">
               <button type="button" onClick={addItem} className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-medium hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">+ Add item</button>
-              <button type="button" onClick={loadDefaults} className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-medium hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">Load standard items (from assumed rates)</button>
+              <button type="button" onClick={loadDefaults} className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-medium hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">Load standard items</button>
             </div>
             <p className="mt-3 text-[11px] leading-relaxed text-slate-400">
-              <b>Amount</b> = Qty × Rate — or Rate × system watts when the unit is <b>Wp</b> (e.g. ₹42/W × 25 kWp = ₹10.5 L). These rows are your <b>final client prices</b> and do <b>not</b> change when you edit the rate assumptions. The grey <b>“as per assumed rates”</b> column shows what each line would cost at your current assumptions — a reference to compare against. GST is added on top.
+              Write any <b>Description</b> you like for the client — then pick <b>Rate from</b> so the system knows which rate assumption to cost it at (e.g. cabling + earthing + BOS = ₹4/W). <b>Rate (assumed)</b> is your actual cost; <b>+ Margin</b> is your markup folded in; <b>Amount</b> is the final <b>basic</b> price (GST is added afterward). Pick <b>Manual</b> to type a rate directly.
             </p>
           </div>
         )}
