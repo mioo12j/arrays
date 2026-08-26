@@ -158,46 +158,54 @@ export const RATE_CATEGORIES = [
 
 function defaultSpecs(type, transportIncluded) {
   return [
-    { category: 'panel', description: 'Solar PV Modules' },
-    { category: 'inverter', description: 'Inverter', unit: 'Set' },
-    { category: 'structure', description: type === 'ground_mount' ? 'Mounting Structure (ground)' : 'Mounting Structure' },
-    { category: 'bos', description: 'Cabling, Earthing & Balance of System' },
-    { category: 'civil', description: 'Civil Work' },
-    { category: 'labour', description: 'Installation, Testing & Commissioning' },
-    ...(transportIncluded ? [] : [{ category: 'transport', description: 'Transportation' }]),
+    { categories: ['panel'], description: 'Solar PV Modules' },
+    { categories: ['inverter'], description: 'Inverter', unit: 'Set' },
+    { categories: ['structure'], description: type === 'ground_mount' ? 'Mounting Structure (ground)' : 'Mounting Structure' },
+    { categories: ['bos'], description: 'Cabling, Earthing & Balance of System' },
+    { categories: ['civil'], description: 'Civil Work' },
+    { categories: ['labour'], description: 'Installation, Testing & Commissioning' },
+    ...(transportIncluded ? [] : [{ categories: ['transport'], description: 'Transportation' }]),
   ];
 }
 
 // Turn one line spec into a BASIC-cost line. The rate comes from the selected
-// category (never from the description). 'manual' uses the typed rate as cost.
+// categories (never from the description). A line may combine SEVERAL categories
+// (e.g. structure + cabling in one line); their per-watt rates add up. With no
+// category selected the line is 'manual' and uses the typed rate as cost.
 function costLine(spec, ctx) {
   const { wp, panelCount, panelUnitRate, catRate, wattage, extraPct } = ctx;
-  const cat = String(spec.category || '').toLowerCase();
   const item = String(spec.description ?? spec.item ?? '').trim();
+  // accept `categories: []` (new), or a single `category` (back-compat)
+  const raw = Array.isArray(spec.categories) && spec.categories.length
+    ? spec.categories
+    : (spec.category ? [spec.category] : []);
+  const cats = [...new Set(raw.map((c) => String(c).toLowerCase()))]
+    .filter((c) => c === 'panel' || c in catRate);       // drop unknown / 'manual'
   let qty = Number(spec.qty) || 0;
   let unit = String(spec.unit || '').trim();
   let note = String(spec.note || '').trim();
   let cost_amount, cost_rate;
-  if (cat === 'panel') {
-    qty = qty > 0 ? qty : panelCount;
-    unit = unit || 'Nos';
-    cost_rate = panelUnitRate;
-    cost_amount = qty * panelUnitRate;
-    if (!note) note = `${wattage} Wp${extraPct ? ` · incl. ${extraPct}% extra` : ''}`;
-  } else if (cat in catRate) {
-    qty = qty > 0 ? qty : 1;
-    unit = unit || 'Lot';
-    cost_amount = wp * catRate[cat];
-    cost_rate = qty > 0 ? cost_amount / qty : cost_amount;
-  } else {
+  if (!cats.length) {
     // manual — the typed rate is the basic cost (per unit, or per watt for a Wp unit)
     qty = qty > 0 ? qty : 1;
     unit = unit || 'Lot';
     const rt = Number(spec.rate) || 0;
     cost_amount = /w(p|att)?$/i.test(unit) ? wp * rt : qty * rt;
     cost_rate = qty > 0 ? cost_amount / qty : cost_amount;
+  } else {
+    const onlyPanel = cats.length === 1 && cats[0] === 'panel';
+    let panelPart = 0, wattPart = 0;
+    for (const c of cats) {
+      if (c === 'panel') panelPart += panelCount * panelUnitRate;
+      else wattPart += wp * catRate[c];
+    }
+    cost_amount = panelPart + wattPart;
+    if (onlyPanel) { qty = qty > 0 ? qty : panelCount; unit = unit || 'Nos'; if (!note) note = `${wattage} Wp${extraPct ? ` · incl. ${extraPct}% extra` : ''}`; }
+    else { qty = qty > 0 ? qty : 1; unit = unit || 'Lot'; }
+    cost_rate = qty > 0 ? cost_amount / qty : cost_amount;
   }
-  return { item, category: cat || 'manual', qty: round(qty), unit, cost_rate: round(cost_rate), cost_amount: round(cost_amount), note };
+  const categories = cats.length ? cats : ['manual'];
+  return { item, category: categories[0], categories, qty: round(qty), unit, cost_rate: round(cost_rate), cost_amount: round(cost_amount), note };
 }
 
 // Distribute the operator's margin across the lines (40% civil / 40% installation
@@ -205,8 +213,9 @@ function costLine(spec, ctx) {
 // fold it into each line's amount + rate. Mutates items; returns the split summary.
 function allocateMargin(items, margin) {
   items.forEach((i) => { i.margin_amount = 0; });
-  const isCivil = (i) => i.category === 'civil' || /civil/i.test(i.item);
-  const isInstall = (i) => !isCivil(i) && (i.category === 'labour' || /install|commission/i.test(i.item));
+  const has = (i, c) => (i.categories || [i.category]).includes(c);
+  const isCivil = (i) => has(i, 'civil') || /civil/i.test(i.item);
+  const isInstall = (i) => !isCivil(i) && (has(i, 'labour') || /install|commission/i.test(i.item));
   const civil = items.filter(isCivil);
   const install = items.filter(isInstall);
   const rest = items.filter((i) => !isCivil(i) && !isInstall(i));

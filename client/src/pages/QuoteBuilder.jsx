@@ -121,10 +121,7 @@ export default function QuoteBuilder() {
       });
       setPinputs(data.proposal_inputs || {});
       setUseCustom(!!data.proposal_inputs?._custom_boq);
-      setCustomItems((data.line_items || []).map((li) => ({
-        description: li.item, category: li.category || 'manual', qty: li.qty, unit: li.unit,
-        rate: (!li.category || li.category === 'manual') ? (li.cost_rate ?? li.rate) : undefined, note: li.note,
-      })));
+      setCustomItems((data.line_items || []).map(lineToItem));
     }).catch((e) => toast.error(apiError(e))).finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
@@ -150,9 +147,8 @@ export default function QuoteBuilder() {
   // assumption (never guessed from the description text). Keep in sync with the
   // server's RATE_CATEGORIES in quote-calc.service.js.
   const RATE_CATS = [
-    ['panel', 'Solar Modules'], ['inverter', 'Inverter'], ['structure', 'Mounting Structure'],
-    ['bos', 'Cabling + Earthing + BOS'], ['civil', 'Civil Work'],
-    ['labour', 'Installation & Commissioning'], ['transport', 'Transport'], ['manual', 'Manual (type rate)'],
+    ['panel', 'Modules'], ['inverter', 'Inverter'], ['structure', 'Structure'],
+    ['bos', 'Cabling + BOS'], ['civil', 'Civil'], ['labour', 'Install & Comm.'], ['transport', 'Transport'],
   ];
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
@@ -196,18 +192,28 @@ export default function QuoteBuilder() {
 
   // ---- custom BOQ line-item helpers ----
   const BOQ_UNITS = ['Nos', 'Set', 'Lot', 'Wp', 'kWp', 'RM', 'Mtr', 'Sqm', 'LS'];
+  // one calc line → one editable BOQ row (carries the selected rate categories)
+  function lineToItem(li) {
+    const cats = Array.isArray(li.categories) ? li.categories.filter((c) => c !== 'manual')
+      : (li.category && li.category !== 'manual' ? [li.category] : []);
+    return { description: li.item, categories: cats, qty: li.qty, unit: li.unit, rate: cats.length ? undefined : (li.cost_rate ?? li.rate), note: li.note };
+  }
   const updItem = (i, k, v) => setCustomItems((arr) => arr.map((it, j) => (j === i ? { ...it, [k]: v } : it)));
-  const addItem = () => setCustomItems((arr) => [...arr, { description: '', category: 'manual', qty: 1, unit: 'Lot', rate: 0 }]);
+  // toggle one rate category on/off for a line (multi-select)
+  const toggleCat = (i, key) => setCustomItems((arr) => arr.map((it, j) => {
+    if (j !== i) return it;
+    const cur = Array.isArray(it.categories) ? it.categories : (it.category ? [it.category] : []);
+    return { ...it, categories: cur.includes(key) ? cur.filter((c) => c !== key) : [...cur, key], category: undefined };
+  }));
+  const addItem = () => setCustomItems((arr) => [...arr, { description: '', categories: [], qty: 1, unit: 'Lot', rate: 0 }]);
   const delItem = (i) => setCustomItems((arr) => arr.filter((_, j) => j !== i));
   const toggleCustom = () => setUseCustom((on) => {
-    if (!on && customItems.length === 0 && c.line_items) {
-      setCustomItems(c.line_items.map((li) => ({ description: li.item, category: li.category || 'manual', qty: li.qty, unit: li.unit, rate: li.category === 'manual' ? li.cost_rate : undefined, note: li.note })));
-    }
+    if (!on && customItems.length === 0 && c.line_items) setCustomItems(c.line_items.map(lineToItem));
     return !on;
   });
   const loadDefaults = () => {
     if (customItems.length && !window.confirm('Load the standard BOQ? This will replace all the custom line items you have entered.')) return;
-    if (c.line_items) setCustomItems(c.line_items.map((li) => ({ description: li.item, category: li.category || 'manual', qty: li.qty, unit: li.unit, rate: li.category === 'manual' ? li.cost_rate : undefined, note: li.note })));
+    if (c.line_items) setCustomItems(c.line_items.map(lineToItem));
   };
   const watts = Number(form.capacity_kw || 0) * 1000;
   const itemAmount = (it) => (String(it.unit).toLowerCase() === 'wp' && !(Number(it.qty) > 0) ? watts * Number(it.rate || 0) : Number(it.qty || 0) * Number(it.rate || 0));
@@ -224,18 +230,32 @@ export default function QuoteBuilder() {
     const panelUnit = (rates.panel_rate_basis === 'watt') ? Math.round(eff('panel_rate_per_watt') * wattage) : eff('panel_rate');
     const civil = rates.civil_rate !== undefined && rates.civil_rate !== '' ? Number(rates.civil_rate) : (CIVIL_BY_TYPE[form.project_type] ?? CIVIL_BY_TYPE.rooftop);
     const catRate = { inverter: eff('inverter_rate'), structure: eff('structure_rate'), bos: eff('bos_rate'), civil, labour: eff('labour_rate'), transport: eff('transport_rate') };
+    const fmtW = watts.toLocaleString('en-IN');
     const rows = customItems.map((it) => {
-      const cat = String(it.category || 'manual').toLowerCase();
-      let qty = Number(it.qty) || 0; const unit = it.unit || 'Lot'; let cost;
-      if (cat === 'panel') { qty = qty > 0 ? qty : count; cost = qty * panelUnit; }
-      else if (cat in catRate) { qty = qty > 0 ? qty : 1; cost = watts * (catRate[cat] || 0); }
-      else { qty = qty > 0 ? qty : 1; const rt = Number(it.rate) || 0; cost = /w(p|att)?$/i.test(unit) ? watts * rt : qty * rt; }
-      return { cat, qty, cost, margin: 0, it };
+      const cats = (Array.isArray(it.categories) ? it.categories : (it.category ? [it.category] : []))
+        .map((c) => String(c).toLowerCase()).filter((c) => c === 'panel' || c in catRate);
+      let qty = Number(it.qty) || 0; const unit = it.unit || 'Lot'; let cost; let formula = '';
+      if (!cats.length) {
+        qty = qty > 0 ? qty : 1; const rt = Number(it.rate) || 0;
+        cost = /w(p|att)?$/i.test(unit) ? watts * rt : qty * rt;
+      } else {
+        const onlyPanel = cats.length === 1 && cats[0] === 'panel';
+        let panelPart = 0, wattSum = 0; const parts = [];
+        for (const c of cats) {
+          if (c === 'panel') { panelPart += count * panelUnit; parts.push(`${count} × ₹${panelUnit.toLocaleString('en-IN')}`); }
+          else wattSum += catRate[c] || 0;
+        }
+        cost = panelPart + watts * wattSum;
+        if (wattSum > 0) parts.push(`₹${(Math.round(wattSum * 100) / 100)}/W × ${fmtW}`);
+        formula = parts.join(' + ');
+        qty = qty > 0 ? qty : (onlyPanel ? count : 1);
+      }
+      return { cats, qty, cost, formula, margin: 0, it };
     });
     const subtotal = rows.reduce((s, r) => s + r.cost, 0);
     const margin = subtotal * (eff('margin_pct') || 0) / 100;
-    const isCivil = (r) => r.cat === 'civil' || /civil/i.test(r.it.description || '');
-    const isInstall = (r) => !isCivil(r) && (r.cat === 'labour' || /install|commission/i.test(r.it.description || ''));
+    const isCivil = (r) => r.cats.includes('civil') || /civil/i.test(r.it.description || '');
+    const isInstall = (r) => !isCivil(r) && (r.cats.includes('labour') || /install|commission/i.test(r.it.description || ''));
     const civ = rows.filter(isCivil), ins = rows.filter(isInstall), rest = rows.filter((r) => !isCivil(r) && !isInstall(r));
     let pC = civ.length ? 0.4 : 0, pI = ins.length ? 0.4 : 0, pR = rest.length ? 0.2 : 0; const tot = pC + pI + pR || 1; pC /= tot; pI /= tot; pR /= tot;
     const give = (list, amt) => { if (!list.length || amt <= 0) return; const s = list.reduce((a, r) => a + r.cost, 0); list.forEach((r) => { r.margin += amt * (s > 0 ? r.cost / s : 1 / list.length); }); };
@@ -785,15 +805,15 @@ export default function QuoteBuilder() {
           <p className="mt-2 text-xs text-slate-400">Auto-generated from the rate assumptions and system size — the full breakdown is in the Live Estimate above. Enable <b>Custom items</b> to write your own descriptions and pick which rate assumption each line draws from.</p>
         ) : (
           <div className="mt-3 overflow-x-auto">
-            <table className="w-full min-w-[900px] text-sm">
+            <table className="w-full min-w-[920px] text-sm">
               <thead>
-                <tr className="text-left text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                <tr className="text-left align-bottom text-[11px] font-semibold uppercase tracking-wide text-slate-400">
                   <th className="w-7 pb-2 font-semibold">#</th>
-                  <th className="pb-2 font-semibold">Description <span className="normal-case text-slate-300">(shown on PDF)</span></th>
-                  <th className="w-44 pb-2 pl-2 font-semibold">Rate from</th>
-                  <th className="w-16 pb-2 pl-2 text-right font-semibold">Qty</th>
+                  <th className="w-[26%] pb-2 font-semibold">Description <span className="normal-case text-slate-300">(on PDF)</span></th>
+                  <th className="w-[26%] pb-2 pl-2 font-semibold">Rate from <span className="normal-case text-slate-300">(tick one or more)</span></th>
+                  <th className="w-14 pb-2 pl-2 text-right font-semibold">Qty</th>
                   <th className="w-20 pb-2 pl-2 font-semibold">Unit</th>
-                  <th className="w-28 pb-2 pl-2 text-right font-semibold">Rate (assumed)</th>
+                  <th className="w-32 pb-2 pl-2 text-right font-semibold">Rate (assumed)</th>
                   <th className="w-24 pb-2 pl-2 text-right font-semibold">+ Margin</th>
                   <th className="w-32 pb-2 pl-2 text-right font-semibold">Amount (basic)</th>
                   <th className="w-9 pb-2" />
@@ -802,26 +822,34 @@ export default function QuoteBuilder() {
               <tbody>
                 {customItems.map((it, i) => {
                   const r = boqRows[i] || {};
-                  const isManual = String(it.category || 'manual').toLowerCase() === 'manual';
+                  const cats = Array.isArray(it.categories) ? it.categories : (it.category ? [it.category] : []);
+                  const isManual = cats.length === 0;
                   return (
-                    <tr key={i} className="border-t border-slate-100 dark:border-slate-800">
-                      <td className="py-1.5 pr-1 text-slate-400">{i + 1}</td>
-                      <td className="py-1.5 pr-2"><input className="input w-full !py-2" placeholder="e.g. DC/AC cabling, earthing, LA…" value={it.description || ''} onChange={(e) => updItem(i, 'description', e.target.value)} /></td>
-                      <td className="py-1.5 pl-2">
-                        <select className="input w-full !py-2" value={it.category || 'manual'} onChange={(e) => updItem(i, 'category', e.target.value)}>
-                          {RATE_CATS.map(([k, label]) => <option key={k} value={k}>{label}</option>)}
-                        </select>
+                    <tr key={i} className="border-t border-slate-100 align-top dark:border-slate-800">
+                      <td className="py-2 pr-1 text-slate-400">{i + 1}</td>
+                      <td className="py-2 pr-2"><textarea rows={2} className="input w-full resize-y !py-2 leading-snug" placeholder="e.g. DC/AC cabling, connectors, earthing, LA, panel protection cable…" value={it.description || ''} onChange={(e) => updItem(i, 'description', e.target.value)} /></td>
+                      <td className="py-2 pl-2">
+                        <div className="flex flex-wrap gap-1">
+                          {RATE_CATS.map(([k, label]) => {
+                            const on = cats.includes(k);
+                            return (
+                              <label key={k} className={`flex cursor-pointer items-center gap-1 rounded-md border px-1.5 py-1 text-[11px] ${on ? 'border-brand-400 bg-brand-50 text-brand-700 dark:border-brand-500 dark:bg-brand-900/30 dark:text-brand-300' : 'border-slate-200 text-slate-500 dark:border-slate-700'}`}>
+                                <input type="checkbox" className="h-3 w-3" checked={on} onChange={() => toggleCat(i, k)} />{label}
+                              </label>
+                            );
+                          })}
+                        </div>
                       </td>
-                      <td className="py-1.5 pl-2"><input className="input w-full !py-2 text-right" type="number" placeholder={r.qty ? String(r.qty) : ''} value={it.qty ?? ''} onChange={(e) => updItem(i, 'qty', e.target.value)} /></td>
-                      <td className="py-1.5 pl-2"><select className="input w-full !py-2" value={it.unit || 'Lot'} onChange={(e) => updItem(i, 'unit', e.target.value)}>{BOQ_UNITS.map((u) => <option key={u} value={u}>{u}</option>)}</select></td>
-                      <td className="py-1.5 pl-2 text-right whitespace-nowrap">
+                      <td className="py-2 pl-2"><input className="input w-full !py-2 text-right" type="number" placeholder={r.qty ? String(r.qty) : ''} value={it.qty ?? ''} onChange={(e) => updItem(i, 'qty', e.target.value)} /></td>
+                      <td className="py-2 pl-2"><select className="input w-full !py-2" value={it.unit || 'Lot'} onChange={(e) => updItem(i, 'unit', e.target.value)}>{BOQ_UNITS.map((u) => <option key={u} value={u}>{u}</option>)}</select></td>
+                      <td className="py-2 pl-2 text-right whitespace-nowrap">
                         {isManual
-                          ? <input className="input w-full !py-2 text-right" type="text" inputMode="decimal" placeholder="cost ₹" value={it.rate ?? ''} onChange={(e) => updItem(i, 'rate', e.target.value)} />
-                          : <span className="text-slate-500 dark:text-slate-400">{inr(r.cost)}</span>}
+                          ? <input className="input w-full !py-2 text-right" type="text" inputMode="decimal" placeholder="type cost ₹" value={it.rate ?? ''} onChange={(e) => updItem(i, 'rate', e.target.value)} />
+                          : <div><div className="font-medium text-slate-600 dark:text-slate-300">{inr(r.cost)}</div>{r.formula && <div className="text-[10px] leading-tight text-slate-400">{r.formula}</div>}</div>}
                       </td>
-                      <td className="py-1.5 pl-2 text-right text-xs text-emerald-600 whitespace-nowrap">{r.margin ? '+' + inr(r.margin) : '—'}</td>
-                      <td className="py-1.5 pl-2 text-right font-semibold text-slate-800 dark:text-slate-100 whitespace-nowrap">{inr(r.amount)}</td>
-                      <td className="py-1.5 text-right"><button type="button" onClick={() => delItem(i)} className="rounded-lg p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20" title="Remove item"><Trash2 size={15} /></button></td>
+                      <td className="py-2 pl-2 text-right text-xs text-emerald-600 whitespace-nowrap">{r.margin ? '+' + inr(r.margin) : '—'}</td>
+                      <td className="py-2 pl-2 text-right font-semibold text-slate-800 dark:text-slate-100 whitespace-nowrap">{inr(r.amount)}</td>
+                      <td className="py-2 text-right"><button type="button" onClick={() => delItem(i)} className="rounded-lg p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20" title="Remove item"><Trash2 size={15} /></button></td>
                     </tr>
                   );
                 })}
@@ -835,7 +863,7 @@ export default function QuoteBuilder() {
               <button type="button" onClick={loadDefaults} className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-medium hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">Load standard items</button>
             </div>
             <p className="mt-3 text-[11px] leading-relaxed text-slate-400">
-              Write any <b>Description</b> you like for the client — then pick <b>Rate from</b> so the system knows which rate assumption to cost it at (e.g. cabling + earthing + BOS = ₹4/W). <b>Rate (assumed)</b> is your actual cost; <b>+ Margin</b> is your markup folded in; <b>Amount</b> is the final <b>basic</b> price (GST is added afterward). Pick <b>Manual</b> to type a rate directly.
+              Write any <b>Description</b> for the client (it wraps to multiple lines), then <b>tick one or more</b> rate categories — their assumed rates add up (e.g. Structure ₹3.5/W + Cabling ₹4/W = ₹7.5/W × system watts). <b>Rate (assumed)</b> is your actual cost with the working shown; <b>+ Margin</b> is your markup folded in; <b>Amount</b> is the final <b>basic</b> price (GST added afterward). Tick nothing to <b>type a manual rate</b>.
             </p>
           </div>
         )}
