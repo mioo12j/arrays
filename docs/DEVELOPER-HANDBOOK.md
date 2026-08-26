@@ -3,7 +3,7 @@
 **Audience:** the next engineer or AI assistant who opens this repository with zero prior context.
 **Goal:** after reading this you should understand *what this software is, who uses it, what every single file does, how each subsystem works internally, and how to change it safely* — without reverse-engineering 29,000 lines first.
 
-**Companion docs:** `SYSTEM-GUIDE.md` (plain-language overview for non-programmers) · `FUNCTIONAL-ISSUES.md` (ranked known logic bugs) · `docs/ADMIN_GUIDE.md` · `docs/ERROR_CODES.md`.
+**Companion docs:** `SYSTEM-GUIDE.md` (plain-language overview for non-programmers) · `FUNCTIONAL-ISSUES.md` (ranked known logic bugs) · `docs/ADMIN_GUIDE.md` · `docs/ERROR_CODES.md` · **`docs/REBRANDING-GUIDE.md`** (turn this ERP into another company's — every place the name/logo/colours/bank live).
 Where any of those disagree with this file, **this file is newer** — but verify against the code before trusting either.
 
 ---
