@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Search, Trash2, RotateCcw, XCircle } from 'lucide-react';
+import { Plus, Search, Trash2, RotateCcw, XCircle, Copy } from 'lucide-react';
 import { useFetch } from '../lib/useFetch.js';
 import { api, apiError } from '../api/client.js';
 import { useToast } from '../components/ui/Toast.jsx';
@@ -34,6 +34,12 @@ export default function Quotes() {
     if (!window.confirm(`Permanently delete ${q.quote_number}? This cannot be undone.`)) return;
     setBusy(q.id);
     try { await api.delete(`/quotes/${q.id}?purge=1`); toast.success(`${q.quote_number} permanently deleted`); refetch(); }
+    catch (e) { toast.error(apiError(e)); } finally { setBusy(''); }
+  };
+
+  const duplicate = async (q) => {
+    setBusy(q.id);
+    try { const { data } = await api.post(`/quotes/${q.id}/duplicate`); toast.success(`Duplicated ${q.quote_number} → ${data.quote_number}`); navigate(`/quotes/${data.id}`); }
     catch (e) { toast.error(apiError(e)); } finally { setBusy(''); }
   };
 
@@ -107,9 +113,14 @@ export default function Quotes() {
                       </button>
                     </div>
                   ) : (
-                    <button className="btn-ghost !px-2 text-slate-400 hover:text-rose-600" disabled={busy === q.id} onClick={() => softDelete(q)} title="Move to Trash">
-                      <Trash2 size={15} />
-                    </button>
+                    <div className="flex justify-end gap-1">
+                      <button className="btn-ghost !px-2 text-slate-400 hover:text-brand-600" disabled={busy === q.id} onClick={() => duplicate(q)} title="Duplicate">
+                        <Copy size={15} />
+                      </button>
+                      <button className="btn-ghost !px-2 text-slate-400 hover:text-rose-600" disabled={busy === q.id} onClick={() => softDelete(q)} title="Move to Trash">
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
                   )}
                 </td>
               </>

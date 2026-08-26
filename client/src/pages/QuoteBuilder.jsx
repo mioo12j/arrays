@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, Save, FileDown, CheckCircle2, GitBranch, FolderPlus, ChevronDown, Undo2, Trash2, Calculator } from 'lucide-react';
+import { ArrowLeft, Loader2, Save, FileDown, CheckCircle2, GitBranch, FolderPlus, ChevronDown, Undo2, Trash2, Calculator, Copy } from 'lucide-react';
 import { api, apiError, download } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
 import { useToast } from '../components/ui/Toast.jsx';
@@ -311,7 +311,7 @@ export default function QuoteBuilder() {
       const { data } = await api.post(`/quotes/${id}/${verb}`);
       toast.success(label);
       if (verb === 'convert') navigate(`/projects/${data.project.id}`);
-      else if (verb === 'revise') navigate(`/quotes/${data.id}`);
+      else if (verb === 'revise' || verb === 'duplicate') navigate(`/quotes/${data.id}`);
       else setQuote(data);
     } catch (e) { toast.error(apiError(e)); }
   };
@@ -367,7 +367,6 @@ export default function QuoteBuilder() {
                       { label: 'Bill of Quantities', sub: 'Component-level breakdown', path: `/quotes/${id}/boq.pdf` },
                       { label: 'Proposal + Quotation', sub: 'Sales + pricing', path: `/quotes/${id}/document.pdf?parts=proposal,quotation` },
                       { label: 'Quotation + BOQ', sub: 'Full commercial set', path: `/quotes/${id}/document.pdf?parts=quotation,boq` },
-                      { label: 'Technical Quote (legacy)', sub: 'Original annexure PDF', path: `/quotes/${id}/pdf` },
                     ].map((d) => (
                       <button
                         key={d.label}
@@ -387,6 +386,7 @@ export default function QuoteBuilder() {
               {(quote?.status === 'approved' || quote?.status === 'converted') && (
                 <button className="btn-ghost text-amber-600 hover:text-amber-700" onClick={undoApproval}><Undo2 size={16} /> Undo</button>
               )}
+              <button className="btn-ghost" onClick={() => doAction('duplicate', 'Duplicated to a new quotation')}><Copy size={16} /> Duplicate</button>
               <button className="btn-ghost" onClick={() => doAction('revise', 'New revision created')}><GitBranch size={16} /> Revise</button>
               {quote?.status !== 'converted' && (
                 <button className="btn-ghost" onClick={() => doAction('convert', 'Converted to project')}><FolderPlus size={16} /> Convert</button>

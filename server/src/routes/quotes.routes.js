@@ -166,6 +166,39 @@ router.post(
   })
 );
 
+// Duplicate a quote into a brand-new, independent quotation (fresh number,
+// version 1, draft, not linked to the source or any project) — for quickly
+// making a similar quote and editing a few things. Carries everything over,
+// including proposal_inputs (system config, margin distribution, terms…).
+router.post(
+  '/:id/duplicate',
+  asyncHandler(async (req, res) => {
+    const dup = await withTransaction(async (db) => {
+      const { rows: e } = await db.query('SELECT id FROM quotes WHERE id=$1', [req.params.id]);
+      if (!e[0]) throw new ApiError(404, 'Quote not found');
+      const number = await nextQuoteNumber();
+      const { rows } = await db.query(
+        `INSERT INTO quotes
+          (quote_number, version, parent_id, status, client_id, client_name, project_id, project_name, site_name, project_type,
+           capacity_kw, location, issue_date, valid_until, inputs, proposal_inputs, line_items,
+           subtotal, contingency_amount, margin_amount, taxable_amount, gst_amount, total_amount,
+           cost_amount, per_watt, subsidy_amount, net_cost, annual_savings, payback_years, lifetime_savings,
+           notes, terms, exclusions, branch_id, created_by)
+         SELECT $1, 1, NULL, 'draft', client_id, client_name, NULL, project_name, site_name, project_type,
+           capacity_kw, location, CURRENT_DATE, valid_until, inputs, proposal_inputs, line_items,
+           subtotal, contingency_amount, margin_amount, taxable_amount, gst_amount, total_amount,
+           cost_amount, per_watt, subsidy_amount, net_cost, annual_savings, payback_years, lifetime_savings,
+           notes, terms, exclusions, branch_id, $2
+         FROM quotes WHERE id=$3 RETURNING *`,
+        [number, req.user.id, req.params.id]
+      );
+      return rows[0];
+    });
+    await audit(req, { action: 'create', entity: 'quotes', entityId: dup.id, changes: { duplicatedFrom: req.params.id } });
+    res.status(201).json(dup);
+  })
+);
+
 router.post(
   '/:id/approve',
   asyncHandler(async (req, res) => {
