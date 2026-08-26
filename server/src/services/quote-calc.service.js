@@ -89,7 +89,7 @@ export function calculateQuote(input = {}) {
 
   const subtotal = round(items.reduce((s, i) => s + i.cost_amount, 0));         // BASIC actuals
   let margin_amount = round(subtotal * (Number(r.margin_pct) || 0) / 100);
-  const margin_distribution = allocateMargin(items, margin_amount);            // folds margin into each line
+  const margin_distribution = allocateMargin(items, margin_amount, input.margin_dist); // folds margin into each line
   const taxable_amount = round(items.reduce((s, i) => s + i.amount, 0));        // BASIC + margin
   margin_amount = round(taxable_amount - subtotal);
   const cost_amount = subtotal;
@@ -208,39 +208,57 @@ function costLine(spec, ctx) {
   return { item, category: categories[0], categories, qty: round(qty), unit, cost_rate: round(cost_rate), cost_amount: round(cost_amount), note };
 }
 
-// Distribute the operator's margin across the lines (40% civil / 40% installation
-// & commissioning / 20% the rest, normalised over whichever buckets exist) and
-// fold it into each line's amount + rate. Mutates items; returns the split summary.
-function allocateMargin(items, margin) {
+// Operator-defined margin distribution. Each entry loads a share of the margin
+// onto lines of a chosen rate-category bucket (or 'other' = anything else). The
+// default matches the historic 40% civil / 40% installation / 20% rest.
+export const MARGIN_BUCKETS = [
+  { key: 'panel', label: 'Modules' }, { key: 'inverter', label: 'Inverter' },
+  { key: 'structure', label: 'Structure' }, { key: 'bos', label: 'Cabling + BOS' },
+  { key: 'civil', label: 'Civil Work' }, { key: 'labour', label: 'Installation & Commissioning' },
+  { key: 'transport', label: 'Transport' }, { key: 'other', label: 'Other items' },
+];
+const MARGIN_LABEL = Object.fromEntries(MARGIN_BUCKETS.map((b) => [b.key, b.label]));
+const DEFAULT_MARGIN_DIST = [{ key: 'civil', pct: 40 }, { key: 'labour', pct: 40 }, { key: 'other', pct: 20 }];
+
+function normalizeMarginDist(raw) {
+  if (!Array.isArray(raw)) return DEFAULT_MARGIN_DIST;
+  const clean = raw
+    .map((d) => ({ key: String(d.key || '').toLowerCase(), pct: Number(d.pct) || 0 }))
+    .filter((d) => (d.key === 'other' || MARGIN_LABEL[d.key]) && d.pct > 0);
+  return clean.length ? clean : DEFAULT_MARGIN_DIST;
+}
+
+// Fold the margin into each line's amount + rate, per the (configurable) split.
+// Each line is assigned to exactly ONE bucket (first matching in config order,
+// else 'other'); the full margin is always spread across whichever configured
+// buckets actually have lines. Mutates items; returns the realised split.
+function allocateMargin(items, margin, distRaw) {
   items.forEach((i) => { i.margin_amount = 0; });
-  const has = (i, c) => (i.categories || [i.category]).includes(c);
-  const isCivil = (i) => has(i, 'civil') || /civil/i.test(i.item);
-  const isInstall = (i) => !isCivil(i) && (has(i, 'labour') || /install|commission/i.test(i.item));
-  const civil = items.filter(isCivil);
-  const install = items.filter(isInstall);
-  const rest = items.filter((i) => !isCivil(i) && !isInstall(i));
-  let pC = civil.length ? 0.4 : 0, pI = install.length ? 0.4 : 0, pR = rest.length ? 0.2 : 0;
-  const tot = pC + pI + pR;
-  if (margin > 0 && tot > 0) {
-    pC /= tot; pI /= tot; pR /= tot;
-    const give = (list, amt) => {
-      if (!list.length || amt <= 0) return;
+  const cfg = normalizeMarginDist(distRaw);
+  const assign = (i) => {
+    const cats = i.categories || (i.category ? [i.category] : []);
+    for (const d of cfg) { if (d.key !== 'other' && cats.includes(d.key)) return d.key; }
+    return 'other';
+  };
+  const groups = {};
+  items.forEach((i) => { const b = assign(i); (groups[b] = groups[b] || []).push(i); });
+  const active = cfg.filter((d) => (groups[d.key] || []).length && d.pct > 0);
+  const totalPct = active.reduce((s, d) => s + d.pct, 0) || 1;
+  if (margin > 0) {
+    for (const d of active) {
+      const list = groups[d.key];
+      const amt = margin * (d.pct / totalPct);
       const s = list.reduce((a, i) => a + i.cost_amount, 0);
       list.forEach((i) => { i.margin_amount += amt * (s > 0 ? i.cost_amount / s : 1 / list.length); });
-    };
-    give(civil, margin * pC); give(install, margin * pI); give(rest, margin * pR);
+    }
   }
   items.forEach((i) => {
     i.margin_amount = round(i.margin_amount);
     i.amount = round(i.cost_amount + i.margin_amount);
     i.rate = i.qty > 0 ? round(i.amount / i.qty) : i.amount;
   });
-  const sum = (list) => round(list.reduce((a, i) => a + i.margin_amount, 0));
-  return [
-    { bucket: 'Civil Work', target_pct: 40, amount: sum(civil) },
-    { bucket: 'Installation & Commissioning', target_pct: 40, amount: sum(install) },
-    { bucket: 'Other items', target_pct: 20, amount: sum(rest) },
-  ].filter((b) => b.amount > 0);
+  const sum = (list) => round((list || []).reduce((a, i) => a + i.margin_amount, 0));
+  return active.map((d) => ({ key: d.key, bucket: MARGIN_LABEL[d.key] || d.key, target_pct: round(d.pct / totalPct * 100), amount: sum(groups[d.key]) }));
 }
 
 // Extra/optional works added on top of the auto BOQ (e.g. transformer, DG sync).

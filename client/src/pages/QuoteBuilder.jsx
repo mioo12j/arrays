@@ -89,6 +89,7 @@ export default function QuoteBuilder() {
   const [customItems, setCustomItems] = useState([]);
   const [showTerms, setShowTerms] = useState(false);
   const [calc2, setCalc2] = useState({ w: 0, wp: 545 });   // little panel-rate calculator
+  const [marginDist, setMarginDist] = useState([{ key: 'civil', pct: 40 }, { key: 'labour', pct: 40 }, { key: 'other', pct: 20 }]);
   const debounceRef = useRef(null);
   const docMenuRef = useRef(null);
 
@@ -120,6 +121,7 @@ export default function QuoteBuilder() {
         custom_extras: Array.isArray(data.proposal_inputs?.custom_extras) ? data.proposal_inputs.custom_extras : [],
       });
       setPinputs(data.proposal_inputs || {});
+      if (Array.isArray(data.proposal_inputs?.margin_dist) && data.proposal_inputs.margin_dist.length) setMarginDist(data.proposal_inputs.margin_dist);
       setUseCustom(!!data.proposal_inputs?._custom_boq);
       setCustomItems((data.line_items || []).map(lineToItem));
     }).catch((e) => toast.error(apiError(e))).finally(() => setLoading(false));
@@ -127,21 +129,22 @@ export default function QuoteBuilder() {
   }, [id]);
 
   // Live calculation (debounced)
-  const recalc = useCallback((f, r, ci) => {
+  const recalc = useCallback((f, r, ci, md) => {
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(async () => {
       try {
         const { data } = await api.post('/quotes/calculate', {
           ...r, capacity_kw: Number(f.capacity_kw || 0), project_type: f.project_type,
           custom_items: ci && ci.length ? ci : undefined,
+          margin_dist: Array.isArray(md) && md.length ? md : undefined,
         });
         setCalc(data);
       } catch { /* ignore transient */ }
     }, 300);
   }, []);
 
-  useEffect(() => { recalc(form, rates, useCustom ? customItems : null); },
-    [form.capacity_kw, form.project_type, rates, useCustom, customItems, recalc]);
+  useEffect(() => { recalc(form, rates, useCustom ? customItems : null, marginDist); },
+    [form.capacity_kw, form.project_type, rates, useCustom, customItems, marginDist, recalc]);
 
   // BOQ rate categories — each line draws its cost from the matching rate
   // assumption (never guessed from the description text). Keep in sync with the
@@ -174,12 +177,14 @@ export default function QuoteBuilder() {
     notes: form.notes, terms: form.terms, exclusions: form.exclusions,
     branch_id: form.branch_id || null,
     custom_items: useCustom && customItems.length ? customItems : undefined,
+    margin_dist: marginDist,
     proposal_inputs: {
       ...pinputs, project_type: form.project_type, capacity_kw: Number(form.capacity_kw || 0),
       _custom_boq: useCustom,
       panel_rate_basis: rates.panel_rate_basis || 'module',
       transport_included: rates.transport_included !== false,
       custom_extras: Array.isArray(rates.custom_extras) ? rates.custom_extras : [],
+      margin_dist: marginDist,
     },
   });
 
@@ -207,6 +212,11 @@ export default function QuoteBuilder() {
   }));
   const addItem = () => setCustomItems((arr) => [...arr, { description: '', categories: [], qty: 1, unit: 'Lot', rate: 0 }]);
   const delItem = (i) => setCustomItems((arr) => arr.filter((_, j) => j !== i));
+  // margin-distribution buckets (mirror server MARGIN_BUCKETS) + editing helpers
+  const MARGIN_BUCKETS = [['panel', 'Modules'], ['inverter', 'Inverter'], ['structure', 'Structure'], ['bos', 'Cabling + BOS'], ['civil', 'Civil'], ['labour', 'Install & Comm.'], ['transport', 'Transport'], ['other', 'Other items']];
+  const toggleMarginBucket = (key) => setMarginDist((arr) => arr.some((x) => x.key === key) ? arr.filter((x) => x.key !== key) : [...arr, { key, pct: 0 }]);
+  const setMarginBucketPct = (key, pct) => setMarginDist((arr) => arr.map((x) => (x.key === key ? { ...x, pct: Number(pct) || 0 } : x)));
+  const marginPctTotal = marginDist.reduce((s, d) => s + (Number(d.pct) || 0), 0);
   const toggleCustom = () => setUseCustom((on) => {
     if (!on && customItems.length === 0 && c.line_items) setCustomItems(c.line_items.map(lineToItem));
     return !on;
@@ -254,14 +264,30 @@ export default function QuoteBuilder() {
     });
     const subtotal = rows.reduce((s, r) => s + r.cost, 0);
     const margin = subtotal * (eff('margin_pct') || 0) / 100;
-    const isCivil = (r) => r.cats.includes('civil') || /civil/i.test(r.it.description || '');
-    const isInstall = (r) => !isCivil(r) && (r.cats.includes('labour') || /install|commission/i.test(r.it.description || ''));
-    const civ = rows.filter(isCivil), ins = rows.filter(isInstall), rest = rows.filter((r) => !isCivil(r) && !isInstall(r));
-    let pC = civ.length ? 0.4 : 0, pI = ins.length ? 0.4 : 0, pR = rest.length ? 0.2 : 0; const tot = pC + pI + pR || 1; pC /= tot; pI /= tot; pR /= tot;
-    const give = (list, amt) => { if (!list.length || amt <= 0) return; const s = list.reduce((a, r) => a + r.cost, 0); list.forEach((r) => { r.margin += amt * (s > 0 ? r.cost / s : 1 / list.length); }); };
-    if (margin > 0) { give(civ, margin * pC); give(ins, margin * pI); give(rest, margin * pR); }
+    // margin split — mirror the server's allocateMargin (configurable buckets)
+    const cfg = (Array.isArray(marginDist) ? marginDist : [])
+      .map((d) => ({ key: String(d.key || '').toLowerCase(), pct: Number(d.pct) || 0 }))
+      .filter((d) => d.pct > 0);
+    const useCfg = cfg.length ? cfg : [{ key: 'civil', pct: 40 }, { key: 'labour', pct: 40 }, { key: 'other', pct: 20 }];
+    const assign = (r) => { for (const d of useCfg) { if (d.key !== 'other' && r.cats.includes(d.key)) return d.key; } return 'other'; };
+    const groups = {}; rows.forEach((r) => { const b = assign(r); (groups[b] = groups[b] || []).push(r); });
+    const active = useCfg.filter((d) => (groups[d.key] || []).length && d.pct > 0);
+    const totalPct = active.reduce((s, d) => s + d.pct, 0) || 1;
+    if (margin > 0) {
+      for (const d of active) {
+        const list = groups[d.key]; const amt = margin * (d.pct / totalPct);
+        const s = list.reduce((a, r) => a + r.cost, 0);
+        list.forEach((r) => { r.margin += amt * (s > 0 ? r.cost / s : 1 / list.length); });
+      }
+    }
     rows.forEach((r) => { r.amount = r.cost + r.margin; r.finalRate = r.qty > 0 ? r.amount / r.qty : r.amount; r.costRate = r.qty > 0 ? r.cost / r.qty : r.cost; });
     return rows;
+  })();
+  // BOQ running totals (basic) — mirror the engine, shown under the table
+  const boqTotals = (() => {
+    const cost = boqRows.reduce((s, r) => s + r.cost, 0);
+    const margin = boqRows.reduce((s, r) => s + (r.margin || 0), 0);
+    return { cost, margin, taxable: cost + margin };
   })();
 
   const save = async () => {
@@ -517,6 +543,28 @@ export default function QuoteBuilder() {
                       <input className="input" type="text" inputMode="decimal" value={rates[k] ?? (c.inputs ? c.inputs[k] : '')} onChange={setRate(k)} placeholder={c.inputs ? String(c.inputs[k]) : ''} />
                     </Field>
                   ))}
+                </div>
+
+                {/* Margin distribution — where your margin % is loaded (tick + set share) */}
+                <div className="rounded-lg border border-amber-200 bg-amber-50/40 p-3 dark:border-amber-900/40 dark:bg-amber-900/10">
+                  <div className="mb-1 flex items-center justify-between">
+                    <span className="text-sm font-semibold text-amber-800 dark:text-amber-300">Margin distribution</span>
+                    <span className={`text-xs font-medium ${marginPctTotal === 100 ? 'text-emerald-600' : 'text-amber-600'}`}>{marginPctTotal}%{marginPctTotal !== 100 ? ' · normalised to 100%' : ''}</span>
+                  </div>
+                  <p className="mb-2 text-[11px] leading-relaxed text-slate-500">Tick where your <b>{rates.margin_pct ?? c.inputs?.margin_pct ?? 15}%</b> margin should be loaded and set each share. It is folded into those BOQ items only — never shown to the client. <b>Other items</b> = everything not ticked above.</p>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {MARGIN_BUCKETS.map(([key, label]) => {
+                      const on = marginDist.some((d) => d.key === key);
+                      const d = marginDist.find((x) => x.key === key);
+                      return (
+                        <div key={key} className={`flex items-center gap-1.5 rounded-md border px-2 py-1 ${on ? 'border-amber-300 bg-white dark:border-amber-700 dark:bg-slate-800' : 'border-slate-200 dark:border-slate-700'}`}>
+                          <input type="checkbox" className="h-3.5 w-3.5" checked={on} onChange={() => toggleMarginBucket(key)} />
+                          <span className="flex-1 text-xs text-slate-600 dark:text-slate-300">{label}</span>
+                          <input type="text" inputMode="decimal" disabled={!on} value={on ? (d.pct ?? '') : ''} onChange={(e) => setMarginBucketPct(key, e.target.value)} className="input w-12 !px-1.5 !py-1 text-right text-xs disabled:opacity-40" placeholder="%" />
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
                 <div>
                   <div className="mb-2 flex items-center justify-between">
@@ -856,6 +904,22 @@ export default function QuoteBuilder() {
                   <tr><td colSpan={9} className="py-6 text-center text-sm text-slate-400">No line items yet — click <b>Add item</b> or <b>Load standard items</b>.</td></tr>
                 )}
               </tbody>
+              {customItems.length > 0 && (
+                <tfoot className="border-t-2 border-slate-200 dark:border-slate-700">
+                  <tr className="text-sm">
+                    <td colSpan={5} className="py-2 pr-2 text-right font-medium text-slate-500">Subtotal — basic actuals</td>
+                    <td className="py-2 pl-2 text-right text-slate-600 dark:text-slate-300">{inr(boqTotals.cost)}</td>
+                    <td className="py-2 pl-2 text-right text-emerald-600">{boqTotals.margin ? '+' + inr(boqTotals.margin) : '—'}</td>
+                    <td className="py-2 pl-2 text-right font-medium text-slate-700 dark:text-slate-200">{inr(boqTotals.cost)}</td>
+                    <td />
+                  </tr>
+                  <tr className="text-sm">
+                    <td colSpan={7} className="py-2 pr-2 text-right font-semibold text-slate-700 dark:text-slate-200">Total (basic, before GST)</td>
+                    <td className="py-2 pl-2 text-right text-base font-bold text-brand-700 dark:text-brand-300">{inr(boqTotals.taxable)}</td>
+                    <td />
+                  </tr>
+                </tfoot>
+              )}
             </table>
             <div className="mt-3 flex flex-wrap gap-2">
               <button type="button" onClick={addItem} className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-medium hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">+ Add item</button>
