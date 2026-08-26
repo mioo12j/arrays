@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, Save, FileDown, CheckCircle2, GitBranch, FolderPlus, ChevronDown, Undo2, Info } from 'lucide-react';
+import { ArrowLeft, Loader2, Save, FileDown, CheckCircle2, GitBranch, FolderPlus, ChevronDown, Undo2, Trash2 } from 'lucide-react';
 import { api, apiError, download } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
 import { useToast } from '../components/ui/Toast.jsx';
@@ -166,13 +166,15 @@ export default function QuoteBuilder() {
   // surface its "as per assumed rates" figure as a reference next to the row.
   const assumedFor = (desc) => {
     const s = String(desc || '').toLowerCase();
-    const cat = /panel|module|\bpv\b|mono|perc|topcon|wp/.test(s) ? /panel|module|pv/i
+    // Order matters: more specific categories are tested first, because names
+    // like "Module Mounting Structure" contain "module" but are NOT the panels.
+    const cat = /structure|mount|mms/.test(s) ? /structure|mount/i
       : /inverter/.test(s) ? /inverter/i
-      : /structure|mount|mms/.test(s) ? /structure|mount/i
       : /cabl|earth|\bbos\b|balance/.test(s) ? /cabl|earth|bos|balance/i
       : /civil|foundation|piling/.test(s) ? /civil/i
       : /install|commission|testing/.test(s) ? /install|commission/i
       : /transport|logistic|freight/.test(s) ? /transport|logistic/i
+      : /panel|module|\bpv\b|mono|perc|topcon|\bwp\b/.test(s) ? /panel|module|pv/i
       : null;
     if (!cat) return null;
     return autoRef.find((li) => cat.test(String(li.item))) || null;
@@ -504,55 +506,7 @@ export default function QuoteBuilder() {
             )}
           </Card>
 
-          <Card>
-            <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-slate-800 dark:text-slate-100">Bill of Quantities</h3>
-              <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-                <input type="checkbox" checked={useCustom} onChange={toggleCustom} /> Custom items
-              </label>
-            </div>
-            {!useCustom ? (
-              <p className="mt-2 text-xs text-slate-400">Auto-generated from the rates and system size. Enable <b>Custom items</b> to set your own description, quantity, unit and rate per line.</p>
-            ) : (
-              <div className="mt-3 space-y-2">
-                <div className="flex gap-1.5 px-1 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
-                  <span className="flex-[4.5]">Description</span><span className="flex-[1.3] text-right">Qty</span>
-                  <span className="flex-[1.5]">Unit</span><span className="flex-[1.8] text-right">Rate ₹</span><span className="flex-[1.8] text-right">Amount</span><span className="w-4" />
-                </div>
-                {customItems.map((it, i) => {
-                  const a = assumedFor(it.description);
-                  const assumedTip = a
-                    ? `As per assumed rates: ₹${Number(a.rate).toLocaleString('en-IN')} / ${a.unit}  ·  ${inr(a.amount)} total${a.note ? '  ·  ' + a.note : ''}\n(your entered rate is the final price; this is only a cost reference)`
-                    : '';
-                  return (
-                  <div key={i} className="flex items-center gap-1.5">
-                    <input className="input flex-[4.5] !py-1.5 text-xs" placeholder="Item description" value={it.description || ''} onChange={(e) => updItem(i, 'description', e.target.value)} />
-                    <input className="input flex-[1.3] !py-1.5 text-right text-xs" type="number" value={it.qty ?? ''} onChange={(e) => updItem(i, 'qty', e.target.value)} />
-                    <select className="input flex-[1.5] !py-1.5 text-xs" value={it.unit || 'Lot'} onChange={(e) => updItem(i, 'unit', e.target.value)}>
-                      {BOQ_UNITS.map((u) => <option key={u} value={u}>{u}</option>)}
-                    </select>
-                    <div className="flex-[1.8] flex items-center gap-1">
-                      <input className="input w-full !py-1.5 text-right text-xs" type="text" inputMode="decimal" value={it.rate ?? ''} onChange={(e) => updItem(i, 'rate', e.target.value)} />
-                      {a
-                        ? <Info size={13} className="shrink-0 cursor-help text-slate-400 hover:text-brand-500" title={assumedTip} />
-                        : <span className="w-[13px] shrink-0" />}
-                    </div>
-                    <span className="flex-[1.8] text-right text-xs font-medium text-slate-600 dark:text-slate-300" title={assumedTip}>{inr(itemAmount(it))}</span>
-                    <button type="button" onClick={() => delItem(i)} className="px-1 text-slate-400 hover:text-red-500" title="Remove">×</button>
-                  </div>
-                  );
-                })}
-                <div className="flex gap-2 pt-1">
-                  <button type="button" onClick={addItem} className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">+ Add item</button>
-                  <button type="button" onClick={loadDefaults} className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">Load standard items</button>
-                </div>
-                <p className="text-[11px] leading-relaxed text-slate-400">
-                  Unit <b>Wp</b> = ₹ per watt (rate × system watts, e.g. ₹42 → 25 kWp = ₹10.5 L). <b>Lot / Set / Nos</b> = amount is Qty × Rate. Amounts are client-facing (include your margin); GST is added on top.
-                  These custom rows are your own final prices — they do <b>not</b> change when you edit the rate assumptions. Hover the <Info size={11} className="inline align-text-bottom text-slate-400" /> beside a rate to see that item's cost <b>as per your current assumed rates</b> for reference.
-                </p>
-              </div>
-            )}
-          </Card>
+          {/* Bill of Quantities is rendered full-width below the grid for readability */}
 
           <Card>
             <h3 className="mb-3 font-semibold text-slate-800 dark:text-slate-100">Proposal Text</h3>
@@ -776,6 +730,70 @@ export default function QuoteBuilder() {
           )}
         </div>
       </div>
+
+      {/* Bill of Quantities — full width so every amount is readable */}
+      <Card className="mt-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h3 className="font-semibold text-slate-800 dark:text-slate-100">Bill of Quantities</h3>
+          <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+            <input type="checkbox" checked={useCustom} onChange={toggleCustom} /> Custom items (type your own lines)
+          </label>
+        </div>
+        {!useCustom ? (
+          <p className="mt-2 text-xs text-slate-400">Auto-generated from the rate assumptions and system size — the full breakdown is in the Live Estimate above. Enable <b>Custom items</b> to type your own description, quantity, unit and rate per line.</p>
+        ) : (
+          <div className="mt-3 overflow-x-auto">
+            <table className="w-full min-w-[760px] text-sm">
+              <thead>
+                <tr className="text-left text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                  <th className="w-8 pb-2 font-semibold">#</th>
+                  <th className="pb-2 font-semibold">Description</th>
+                  <th className="w-20 pb-2 text-right font-semibold">Qty</th>
+                  <th className="w-24 pb-2 pl-2 font-semibold">Unit</th>
+                  <th className="w-32 pb-2 pl-2 text-right font-semibold">Rate ₹</th>
+                  <th className="w-36 pb-2 pl-2 text-right font-semibold">Amount ₹</th>
+                  <th className="w-44 pb-2 pl-2 text-right font-semibold">As per assumed rates</th>
+                  <th className="w-10 pb-2" />
+                </tr>
+              </thead>
+              <tbody>
+                {customItems.map((it, i) => {
+                  const a = assumedFor(it.description);
+                  return (
+                    <tr key={i} className="border-t border-slate-100 dark:border-slate-800">
+                      <td className="py-1.5 pr-1 text-slate-400">{i + 1}</td>
+                      <td className="py-1.5 pr-2"><input className="input w-full !py-2" placeholder="Item description" value={it.description || ''} onChange={(e) => updItem(i, 'description', e.target.value)} /></td>
+                      <td className="py-1.5 pl-2"><input className="input w-full !py-2 text-right" type="number" value={it.qty ?? ''} onChange={(e) => updItem(i, 'qty', e.target.value)} /></td>
+                      <td className="py-1.5 pl-2"><select className="input w-full !py-2" value={it.unit || 'Lot'} onChange={(e) => updItem(i, 'unit', e.target.value)}>{BOQ_UNITS.map((u) => <option key={u} value={u}>{u}</option>)}</select></td>
+                      <td className="py-1.5 pl-2"><input className="input w-full !py-2 text-right" type="text" inputMode="decimal" placeholder="0" value={it.rate ?? ''} onChange={(e) => updItem(i, 'rate', e.target.value)} /></td>
+                      <td className="py-1.5 pl-2 text-right font-semibold text-slate-800 dark:text-slate-100 whitespace-nowrap">{inr(itemAmount(it))}</td>
+                      <td className="py-1.5 pl-2 text-right whitespace-nowrap">
+                        {a ? (
+                          <div className="text-xs leading-tight">
+                            <div className="font-medium text-slate-500 dark:text-slate-400">{inr(a.amount)}</div>
+                            <div className="text-slate-400">{watts > 0 ? `≈ ₹${(a.amount / watts).toFixed(1)}/W` : `@ ₹${Number(a.rate).toLocaleString('en-IN')}`}</div>
+                          </div>
+                        ) : <span className="text-xs text-slate-300">—</span>}
+                      </td>
+                      <td className="py-1.5 text-right"><button type="button" onClick={() => delItem(i)} className="rounded-lg p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20" title="Remove item"><Trash2 size={15} /></button></td>
+                    </tr>
+                  );
+                })}
+                {!customItems.length && (
+                  <tr><td colSpan={8} className="py-6 text-center text-sm text-slate-400">No line items yet — click <b>Add item</b> or <b>Load standard items</b>.</td></tr>
+                )}
+              </tbody>
+            </table>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <button type="button" onClick={addItem} className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-medium hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">+ Add item</button>
+              <button type="button" onClick={loadDefaults} className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-medium hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">Load standard items (from assumed rates)</button>
+            </div>
+            <p className="mt-3 text-[11px] leading-relaxed text-slate-400">
+              <b>Amount</b> = Qty × Rate — or Rate × system watts when the unit is <b>Wp</b> (e.g. ₹42/W × 25 kWp = ₹10.5 L). These rows are your <b>final client prices</b> and do <b>not</b> change when you edit the rate assumptions. The grey <b>“as per assumed rates”</b> column shows what each line would cost at your current assumptions — a reference to compare against. GST is added on top.
+            </p>
+          </div>
+        )}
+      </Card>
     </div>
   );
 }
