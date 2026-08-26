@@ -617,6 +617,18 @@ export default function QuoteBuilder() {
                     <Field label="Mounting (MMS)"><input className="input text-xs" value={pinputs.mms_config || ''} onChange={setPI('mms_config')} placeholder="Aluminium / GI structure suitable for rooftop" /></Field>
                     <Field label="System"><input className="input text-xs" value={pinputs.system_config || ''} onChange={setPI('system_config')} placeholder="Grid-connected rooftop solar system" /></Field>
                     <Field label="Total DC Capacity (kWp)"><input className="input text-xs" type="number" value={pinputs.dc_capacity || ''} onChange={setPI('dc_capacity')} placeholder="optional · usually > AC" /></Field>
+                    <Field label="Net Metering">
+                      <select className="input text-xs" value={pinputs.net_metering || 'not_included'} onChange={setPI('net_metering')}>
+                        <option value="not_included">Not included</option>
+                        <option value="included">Included</option>
+                      </select>
+                    </Field>
+                    <Field label="Battery Backup">
+                      <select className="input text-xs" value={pinputs.battery_backup || 'not_included'} onChange={setPI('battery_backup')}>
+                        <option value="not_included">Not included</option>
+                        <option value="included">Included</option>
+                      </select>
+                    </Field>
                   </div>
                 </div>
 

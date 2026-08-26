@@ -177,6 +177,9 @@ export function renderQuotation(doc, data = {}, opts = {}) {
     ...(dcCap > 0 ? [['DC Capacity', dcCap + ' kWp']] : []),
     ['Mounting (MMS)', data.mms_config || data.structure_type || 'Aluminium / GI structure suitable for rooftop'],
     ['System', data.system_config || 'Grid-connected rooftop solar system'],
+    // Always stated up-front so scope is unambiguous (default: not included)
+    ['Net Metering', data.net_metering === 'included' ? 'Included' : 'Not included — separate licensing & DISCOM charges'],
+    ['Battery Backup', data.battery_backup === 'included' ? 'Included' : 'Not included'],
   ].filter((r) => r[1]);
   const cfgRowH = (r) => { doc.font('bodyM').fontSize(9.4); return Math.max(30, doc.heightOfString(String(r[1]), { width: colW - 32, lineGap: 1.5 }) + 20); };
   const cH = 34 + cfg.reduce((s, r) => s + cfgRowH(r), 0);
@@ -233,20 +236,9 @@ export function renderQuotation(doc, data = {}, opts = {}) {
      .text('All figures in Indian Rupees. This quotation is subject to the terms, validity and exclusions set out on the following pages.', M, y + 10, { width: w });
   y += 30;
 
-  // savings teaser band (full detail on page 2) — shares the proposal's model
-  const mm = model(data);
-  if (mm.save1) {
-    panel(doc, M, y, w, 70, C.emerD, 9);
-    doc.rect(M, y, 4, 70).fill(C.gold);
-    doc.font('uiSB').fontSize(8.5).fillColor(C.goldB).text('WHAT THIS INVESTMENT RETURNS', M + 20, y + 12, { characterSpacing: 1 });
-    const teas = [[inrShort(mm.save1), 'Saved / year'], [mm.paybackYrs.toFixed(1) + ' yrs', 'Payback'], [inrShort(mm.cum25), 'Over 25 years'], ['25+ yrs', 'System life']];
-    const tw = (w - 40) / teas.length;
-    teas.forEach((t, i) => {
-      const x = M + 20 + i * tw;
-      doc.font('uiB').fontSize(16).fillColor('#fff').text(t[0], x, y + 30, { width: tw - 10 });
-      doc.font('ui').fontSize(7.3).fillColor('#bfe7d6').text(String(t[1]).toUpperCase(), x, y + 51, { width: tw - 10, characterSpacing: 0.5 });
-    });
-  }
+  // The full return-on-investment detail lives on the "Payment & Returns" page;
+  // the proposal book also covers it — so it is deliberately NOT repeated here.
+  const mm = model(data);   // used by the Payment & Returns page below
 
   // page-flow guard — starts a fresh page (with chrome) when a block won't fit
   const bottom = doc.page.height - 46;
