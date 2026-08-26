@@ -548,13 +548,6 @@ export default function QuoteBuilder() {
           {/* Bill of Quantities is rendered full-width below the grid for readability */}
 
           <Card>
-            <h3 className="mb-3 font-semibold text-slate-800 dark:text-slate-100">Proposal Text</h3>
-            <div className="space-y-3">
-              <Field label="Technical Scope / Notes"><textarea className="input min-h-[60px]" value={form.notes} onChange={set('notes')} /></Field>
-            </div>
-          </Card>
-
-          <Card>
             <button className="flex w-full items-center justify-between font-semibold text-slate-800 dark:text-slate-100" onClick={() => setShowTerms((s) => !s)}>
               <span>Commercial Terms & Company</span>
               <ChevronDown size={18} className={`transition ${showTerms ? 'rotate-180' : ''}`} />
@@ -581,6 +574,10 @@ export default function QuoteBuilder() {
 
                 <Field label="Name of Work (blank = standard)">
                   <input className="input" value={pinputs.commercial_scope || ''} onChange={setPI('commercial_scope')} placeholder="Design, Engineering, Supply, Installation, Testing & Commissioning of …" />
+                </Field>
+
+                <Field label="Extra Technical Requirements / Notes (optional)">
+                  <textarea className="input min-h-[56px]" value={form.notes} onChange={set('notes')} placeholder="Any extra technical notes for the client — printed after the exclusions on the quotation. Leave blank to omit." />
                 </Field>
 
                 {/* GST treatment */}
@@ -805,13 +802,13 @@ export default function QuoteBuilder() {
           <p className="mt-2 text-xs text-slate-400">Auto-generated from the rate assumptions and system size — the full breakdown is in the Live Estimate above. Enable <b>Custom items</b> to write your own descriptions and pick which rate assumption each line draws from.</p>
         ) : (
           <div className="mt-3 overflow-x-auto">
-            <table className="w-full min-w-[920px] text-sm">
+            <table className="w-full min-w-[960px] text-sm">
               <thead>
                 <tr className="text-left align-bottom text-[11px] font-semibold uppercase tracking-wide text-slate-400">
                   <th className="w-7 pb-2 font-semibold">#</th>
-                  <th className="w-[26%] pb-2 font-semibold">Description <span className="normal-case text-slate-300">(on PDF)</span></th>
-                  <th className="w-[26%] pb-2 pl-2 font-semibold">Rate from <span className="normal-case text-slate-300">(tick one or more)</span></th>
-                  <th className="w-14 pb-2 pl-2 text-right font-semibold">Qty</th>
+                  <th className="w-[24%] pb-2 font-semibold">Description <span className="normal-case text-slate-300">(on PDF)</span></th>
+                  <th className="w-[24%] pb-2 pl-2 font-semibold">Rate from <span className="normal-case text-slate-300">(tick one or more)</span></th>
+                  <th className="w-24 pb-2 pl-2 text-right font-semibold">Qty</th>
                   <th className="w-20 pb-2 pl-2 font-semibold">Unit</th>
                   <th className="w-32 pb-2 pl-2 text-right font-semibold">Rate (assumed)</th>
                   <th className="w-24 pb-2 pl-2 text-right font-semibold">+ Margin</th>
@@ -842,7 +839,7 @@ export default function QuoteBuilder() {
                           })}
                         </div>
                       </td>
-                      <td className="py-2 pl-2"><input className="input w-full !py-2 text-right" type="number" placeholder={r.qty ? String(r.qty) : ''} value={it.qty ?? ''} onChange={(e) => updItem(i, 'qty', e.target.value)} /></td>
+                      <td className="py-2 pl-2"><input className="input w-full !py-2 !px-2 text-right" type="text" inputMode="numeric" placeholder={r.qty ? String(r.qty) : ''} value={it.qty ?? ''} onChange={(e) => updItem(i, 'qty', e.target.value.replace(/[^0-9.]/g, ''))} /></td>
                       <td className="py-2 pl-2"><select className="input w-full !py-2" value={it.unit || 'Lot'} onChange={(e) => updItem(i, 'unit', e.target.value)}>{BOQ_UNITS.map((u) => <option key={u} value={u}>{u}</option>)}</select></td>
                       <td className="py-2 pl-2 text-right whitespace-nowrap">
                         {isManual
