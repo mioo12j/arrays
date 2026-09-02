@@ -606,6 +606,12 @@ export default function QuoteBuilder() {
                   <div className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-200">System Configuration <span className="text-xs font-normal text-slate-400">— shown on the quotation</span></div>
                   <div className="grid grid-cols-2 gap-3">
                     <Field label="Solar Module"><input className="input text-xs" value={pinputs.module_config || ''} onChange={setPI('module_config')} placeholder="545 Wp Mono PERC / latest equivalent" /></Field>
+                    <Field label="Module Supply">
+                      <select className="input text-xs" value={pinputs.module_supply || 'us'} onChange={setPI('module_supply')}>
+                        <option value="us">Supplied by us</option>
+                        <option value="client">Free-issue by client (I&C only)</option>
+                      </select>
+                    </Field>
                     <Field label="Panel Type">
                       <select className="input text-xs" value={pinputs.panel_type || ''} onChange={setPI('panel_type')}>
                         <option value="">Not specified</option>
@@ -614,6 +620,12 @@ export default function QuoteBuilder() {
                       </select>
                     </Field>
                     <Field label="Inverter"><input className="input text-xs" value={pinputs.inverter_config || ''} onChange={setPI('inverter_config')} placeholder="3-phase grid-tie string inverter (as per design)" /></Field>
+                    <Field label="Inverter Supply">
+                      <select className="input text-xs" value={pinputs.inverter_supply || 'us'} onChange={setPI('inverter_supply')}>
+                        <option value="us">Supplied by us</option>
+                        <option value="client">Free-issue by client (I&C only)</option>
+                      </select>
+                    </Field>
                     <Field label="Mounting (MMS)"><input className="input text-xs" value={pinputs.mms_config || ''} onChange={setPI('mms_config')} placeholder="Aluminium / GI structure suitable for rooftop" /></Field>
                     <Field label="System"><input className="input text-xs" value={pinputs.system_config || ''} onChange={setPI('system_config')} placeholder="Grid-connected rooftop solar system" /></Field>
                     <Field label="Total DC Capacity (kWp)"><input className="input text-xs" type="number" value={pinputs.dc_capacity || ''} onChange={setPI('dc_capacity')} placeholder="optional · usually > AC" /></Field>

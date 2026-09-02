@@ -69,6 +69,23 @@ router.get(
     const dueReleased = r2(paymentTerms.filter((t) => t.is_done).reduce((s, t) => s + t.due_amount, 0));
     const released = r2(paymentTerms.reduce((s, t) => s + Number(t.released_amount || 0), 0));
 
+    // The source quotation (if this project was converted from one) — carries the
+    // system configuration, priced BOQ, financial breakdown and savings, so the
+    // project page can show the full agreed scope on demand.
+    const { rows: qrows } = await query(
+      `SELECT id, quote_number, status, version, capacity_kw, project_type, issue_date,
+              proposal_inputs, line_items,
+              subtotal, margin_amount, taxable_amount, gst_amount, total_amount,
+              cost_amount, per_watt, subsidy_amount, net_cost, annual_savings, payback_years, lifetime_savings, notes
+       FROM quotes WHERE project_id=$1 AND deleted_at IS NULL
+       ORDER BY created_at DESC LIMIT 1`, [project.id]
+    );
+    let quote = qrows[0] || null;
+    if (quote) {
+      const wp = Number(quote.capacity_kw || 0) * 1000;
+      quote = { ...quote, per_watt_basic: wp > 0 ? r2(Number(quote.taxable_amount || 0) / wp) : 0 };
+    }
+
     res.json({
       ...project,
       total_spent: totalSpent,
@@ -78,6 +95,7 @@ router.get(
       sites,
       payment_terms: paymentTerms,
       terms_summary: { total: termsTotal, due_released: dueReleased, released, pending_release: r2(dueReleased - released) },
+      quote,
     });
   })
 );

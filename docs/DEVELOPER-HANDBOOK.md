@@ -637,7 +637,7 @@ so operator fields (tariff, yield, system config, notes, scope) reach the PDF, w
 `routes/gst.routes.js` (~60 endpoints) + `services/gst/*` (39 files, §5.7) + ~20 `Gst*.jsx` pages. Self-contained; the government API provider is swappable via `adapter.js`.
 
 ### 7.9 Projects & sites
-Projects: PO number/date, contract value, budget, status, soft-delete, **payment-terms milestones** (`project_payment_terms`, due vs released). Sites: PO details + capacity. Rollups use allocation views.
+Projects: PO number/date, contract value, budget, status, soft-delete, **payment-terms milestones** (`project_payment_terms`, due vs released). Sites: PO details + capacity. Rollups use allocation views. `GET /projects/:id` also returns the **source `quote`** (found by `quotes.project_id`) with its `proposal_inputs`, priced `line_items` and financials + `per_watt_basic`, so the project page's **Quotation & Scope** card can show the agreed system config (incl. `module_supply`/`inverter_supply` — "supplied by us" vs "free-issue by client, I&C only"), the priced BOQ, and the ROI, with links to open the quote and download its documents.
 
 ### 7.10 Dashboard & reports
 KPIs: `total_outgoing`, `total_incoming`, `net_position`, `pending_receivables`, `vendor_liabilities`, plus cashflow, expense-by-category/project, vendor spend, receivable aging, client revenue, recent feed. All exclude `is_deleted`.

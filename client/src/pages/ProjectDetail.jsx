@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Loader2, FileDown, MapPin, Pencil, CheckCircle2, Circle, Trash2, ListChecks } from 'lucide-react';
+import { ArrowLeft, Plus, Loader2, FileDown, MapPin, Pencil, CheckCircle2, Circle, Trash2, ListChecks, ClipboardList } from 'lucide-react';
 import { api, apiError, download } from '../api/client.js';
 import { useFetch } from '../lib/useFetch.js';
 import { useToast } from '../components/ui/Toast.jsx';
@@ -71,6 +71,8 @@ export default function ProjectDetail() {
         <Card><p className="text-xs font-semibold uppercase text-slate-400">Gross Margin</p><p className={`mt-1 text-xl font-bold ${margin >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>{inr(margin, { compact: true })}</p></Card>
       </div>
 
+      {project.quote && <QuoteScopeCard quote={project.quote} />}
+
       <Card className="!p-0">
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4 dark:border-slate-800">
           <h3 className="font-semibold text-slate-800 dark:text-slate-100">Sites</h3>
@@ -103,6 +105,110 @@ export default function ProjectDetail() {
       {editSite && <SiteModal projectId={id} initial={editSite} onClose={() => setEditSite(null)} onSaved={() => { setEditSite(null); refetch(); toast.success('Site updated'); }} />}
       {editProject && <ProjectModal clients={clients} initial={project} onClose={() => setEditProject(false)} onSaved={() => { setEditProject(false); refetch(); toast.success('Project updated'); }} />}
     </div>
+  );
+}
+
+// ── Quotation & scope — the agreed system config, priced BOQ, money & savings ─
+function QuoteScopeCard({ quote }) {
+  const [showBoq, setShowBoq] = useState(false);
+  const pi = quote.proposal_inputs || {};
+  const items = Array.isArray(quote.line_items) ? quote.line_items : [];
+  const supply = (v) => (v === 'client' ? '  ·  free-issue by client (I&C only)' : '');
+  const cfg = [
+    ['Solar Module', (pi.module_config || '545 Wp Mono PERC / latest equivalent') + supply(pi.module_supply)],
+    pi.panel_type ? ['Panel Type', pi.panel_type] : null,
+    ['Inverter', (pi.inverter_config || 'Three-phase grid-connected string inverter') + supply(pi.inverter_supply)],
+    Number(pi.dc_capacity) ? ['DC Capacity', `${pi.dc_capacity} kWp`] : null,
+    ['Mounting (MMS)', pi.mms_config || 'Aluminium / GI structure suitable for rooftop'],
+    ['System', pi.system_config || 'Grid-connected rooftop solar system'],
+    ['Net Metering', pi.net_metering === 'included' ? 'Included' : 'Not included'],
+    ['Battery Backup', pi.battery_backup === 'included' ? 'Included' : 'Not included'],
+  ].filter(Boolean);
+  const money = [
+    ['Subtotal (basic cost)', quote.subtotal],
+    ['Margin', quote.margin_amount],
+    ['Taxable value (basic)', quote.taxable_amount, `₹${quote.per_watt_basic}/W`],
+    ['GST', quote.gst_amount],
+    ['Grand Total (incl. GST)', quote.total_amount, quote.per_watt ? `₹${quote.per_watt}/W` : null],
+  ];
+
+  return (
+    <Card className="mb-6 !p-0">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 px-5 py-4 dark:border-slate-800">
+        <h3 className="flex items-center gap-2 font-semibold text-slate-800 dark:text-slate-100">
+          <ClipboardList size={16} /> Quotation &amp; Scope
+          <span className="text-xs font-normal text-slate-400">from {quote.quote_number}{quote.version > 1 ? ` · R${quote.version}` : ''}</span>
+        </h3>
+        <div className="flex items-center gap-2">
+          <Link to={`/quotes/${quote.id}`} className="btn-ghost !py-1.5 !text-xs"><Pencil size={13} /> Open quote</Link>
+          <button className="btn-ghost !py-1.5 !text-xs" onClick={() => download(`/quotes/${quote.id}/document.pdf`)}><FileDown size={13} /> Documents</button>
+        </div>
+      </div>
+
+      <div className="grid gap-px bg-slate-100 dark:bg-slate-800 md:grid-cols-2">
+        {/* System configuration */}
+        <div className="bg-white p-5 dark:bg-slate-900">
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-slate-400">System Configuration</p>
+          <dl className="space-y-1.5">
+            {cfg.map(([k, v]) => (
+              <div key={k} className="flex justify-between gap-3 text-sm">
+                <dt className="shrink-0 text-slate-500">{k}</dt>
+                <dd className="text-right font-medium text-slate-700 dark:text-slate-200">{v}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+        {/* Financials + savings */}
+        <div className="bg-white p-5 dark:bg-slate-900">
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-slate-400">Priced Offer</p>
+          <dl className="space-y-1.5">
+            {money.map(([k, v, sub]) => (
+              <div key={k} className="flex items-baseline justify-between gap-3 text-sm">
+                <dt className="text-slate-500">{k}</dt>
+                <dd className="text-right font-medium text-slate-700 dark:text-slate-200">{inr(v)}{sub && <span className="ml-1 text-xs font-normal text-slate-400">{sub}</span>}</dd>
+              </div>
+            ))}
+          </dl>
+          {Number(quote.annual_savings) > 0 && (
+            <div className="mt-3 grid grid-cols-3 gap-2 border-t border-slate-100 pt-3 dark:border-slate-800">
+              <div><p className="text-[10px] font-semibold uppercase text-slate-400">Annual Savings</p><p className="text-sm font-bold text-emerald-600">{inr(quote.annual_savings, { compact: true })}</p></div>
+              <div><p className="text-[10px] font-semibold uppercase text-slate-400">Payback</p><p className="text-sm font-bold text-slate-700 dark:text-slate-200">{quote.payback_years} yrs</p></div>
+              <div><p className="text-[10px] font-semibold uppercase text-slate-400">25-yr Savings</p><p className="text-sm font-bold text-slate-700 dark:text-slate-200">{inr(quote.lifetime_savings, { compact: true })}</p></div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Priced BOQ — on demand */}
+      {items.length > 0 && (
+        <div className="border-t border-slate-100 dark:border-slate-800">
+          <button className="flex w-full items-center justify-between px-5 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800/50" onClick={() => setShowBoq((s) => !s)}>
+            <span>Priced Bill of Quantities — {items.length} items</span>
+            <span className="text-xs text-brand-600">{showBoq ? 'Hide' : 'View'}</span>
+          </button>
+          {showBoq && (
+            <div className="overflow-x-auto px-5 pb-4">
+              <table className="min-w-full text-sm">
+                <thead><tr className="text-left text-[11px] uppercase tracking-wide text-slate-400">
+                  <th className="py-1.5">Description</th><th className="py-1.5 text-right">Qty</th><th className="py-1.5 pl-2">Unit</th><th className="py-1.5 pl-2 text-right">Rate</th><th className="py-1.5 pl-2 text-right">Amount (basic)</th>
+                </tr></thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                  {items.map((it, i) => (
+                    <tr key={i}>
+                      <td className="py-1.5 pr-2 text-slate-700 dark:text-slate-200">{it.item}</td>
+                      <td className="py-1.5 text-right text-slate-500">{it.qty}</td>
+                      <td className="py-1.5 pl-2 text-slate-500">{it.unit}</td>
+                      <td className="py-1.5 pl-2 text-right text-slate-500">{inr(it.rate)}</td>
+                      <td className="py-1.5 pl-2 text-right font-medium text-slate-700 dark:text-slate-200">{inr(it.amount)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+    </Card>
   );
 }
 
