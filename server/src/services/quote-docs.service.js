@@ -165,18 +165,19 @@ export function renderQuotation(doc, data = {}, opts = {}) {
   const titleCase = (s) => String(s).replace(/\b\w/g, (m) => m.toUpperCase());
   // operator-entered system configuration; DC capacity only shows if provided
   const dcCap = num(data.dc_capacity, 0);
-  // Whether the panel / inverter is in OUR supply or free-issued by the client
-  // (we do only installation & commissioning). Shown clearly on the quotation.
-  const supplyNote = (v) => (v === 'client' ? '  ·  Free-issue by client (not in our supply — I&C only)' : '');
+  // Scope of supply — only the parts we actually provide appear on the quotation.
+  // Defaults to all in-scope; the operator can drop panel / inverter / I&C.
+  const scPanel = data.scope_panel !== false && String(data.scope_panel) !== 'false';
+  const scInverter = data.scope_inverter !== false && String(data.scope_inverter) !== 'false';
   const cfg = [
-    ['Solar Module', (data.module_config || '545 Wp Mono PERC / latest equivalent technology') + supplyNote(data.module_supply)],
+    ...(scPanel ? [['Solar Module', data.module_config || '545 Wp Mono PERC / latest equivalent technology']] : []),
     // Panel type (DCR / Non-DCR) only shows when the operator has chosen one
-    ...(data.panel_type ? [['Panel Type', data.panel_type === 'DCR'
+    ...(scPanel && data.panel_type ? [['Panel Type', data.panel_type === 'DCR'
       ? 'DCR — Domestic Content Requirement (India-made cells & modules)'
       : data.panel_type === 'Non-DCR'
         ? 'Non-DCR — imported cells / modules permitted'
         : String(data.panel_type)]] : []),
-    ['Inverter', (data.inverter_config || 'Three-phase grid-connected string inverter (as per design)') + supplyNote(data.inverter_supply)],
+    ...(scInverter ? [['Inverter', data.inverter_config || 'Three-phase grid-connected string inverter (as per design)']] : []),
     ...(dcCap > 0 ? [['DC Capacity', dcCap + ' kWp']] : []),
     ['Mounting (MMS)', data.mms_config || data.structure_type || 'Aluminium / GI structure suitable for rooftop'],
     ['System', data.system_config || 'Grid-connected rooftop solar system'],
@@ -215,7 +216,12 @@ export function renderQuotation(doc, data = {}, opts = {}) {
   };
   // Client-facing: a single system price (never expose internal contingency/margin).
   // The offer description is operator-defined.
-  line(data.commercial_scope || data.supply_description || 'Design, Engineering, Supply, Installation, Testing & Commissioning of Solar PV System', c.taxable);
+  // scope-aware default for the offer description (operator can override via Name of Work)
+  const scInc = data.scope_inc !== false && String(data.scope_inc) !== 'false';
+  const defaultOffer = scInc
+    ? 'Design, Engineering, Supply, Installation, Testing & Commissioning of Solar PV System'
+    : 'Design, Engineering & Supply of Solar PV System materials';
+  line(data.commercial_scope || data.supply_description || defaultOffer, c.taxable);
   gstRows(c, data).forEach(([l, v]) => line(l, v));
   y += 4;
   line('Total Investment (incl. GST)', c.total, { big: true, fill: C.emer });

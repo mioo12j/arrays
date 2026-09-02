@@ -66,20 +66,23 @@ export function calculateQuote(input = {}) {
   // so the BOQ and the rate assumptions are always linked — the system never
   // guesses the rate from the free-text description. 'manual' = type the rate.
   const contingency_amount = 0;
+  // Scope of supply — the operator can drop panels, inverter or I&C entirely.
+  // Out-of-scope categories are removed from the rates, the BOQ and the totals.
+  const scope = normalizeScope(input.scope);
   const panelUnitRate = panelBasis === 'watt' ? round(r.panel_rate_per_watt * r.panel_wattage) : round(r.panel_rate);
   const catRate = {
-    inverter: Number(r.inverter_rate) || 0,
+    inverter: scope.inverter ? (Number(r.inverter_rate) || 0) : 0,
     structure: Number(r.structure_rate) || 0,
     bos: Number(r.bos_rate) || 0,
     civil: Number(r.civil_rate) || 0,
-    labour: Number(r.labour_rate) || 0,
+    labour: scope.inc ? (Number(r.labour_rate) || 0) : 0,
     transport: Number(r.transport_rate) || 0,
   };
-  const ctx = { wp, panelCount, panelUnitRate, catRate, wattage: r.panel_wattage, extraPct };
+  const ctx = { wp, panelCount, panelUnitRate, catRate, wattage: r.panel_wattage, extraPct, scope };
 
   const hasCustom = Array.isArray(input.custom_items)
     && input.custom_items.some((x) => String(x.description ?? x.item ?? '').trim());
-  const specs = hasCustom ? input.custom_items : defaultSpecs(type, transportIncluded);
+  const specs = hasCustom ? input.custom_items : defaultSpecs(type, transportIncluded, scope);
   const items = specs
     .map((s) => costLine(s, ctx))
     .filter((i) => i.item && (i.cost_amount > 0 || i.category === 'manual'));
@@ -156,14 +159,27 @@ export const RATE_CATEGORIES = [
   { key: 'manual', label: 'Manual (type the rate)', hint: 'rate you type = basic cost' },
 ];
 
-function defaultSpecs(type, transportIncluded) {
+// Scope of supply: which of the three gated blocks we actually provide.
+// Defaults to all in-scope. `panel` → solar modules, `inverter` → inverter,
+// `inc` → installation, testing & commissioning (labour).
+export function normalizeScope(s) {
+  const on = (v) => v !== false && String(v).toLowerCase() !== 'false';
+  const o = s || {};
+  return { panel: on(o.panel), inverter: on(o.inverter), inc: on(o.inc) };
+}
+// A category is "gated off" when its scope block is unchecked.
+function outOfScope(cat, scope) {
+  return (cat === 'panel' && !scope.panel) || (cat === 'inverter' && !scope.inverter) || (cat === 'labour' && !scope.inc);
+}
+
+function defaultSpecs(type, transportIncluded, scope = { panel: true, inverter: true, inc: true }) {
   return [
-    { categories: ['panel'], description: 'Solar PV Modules' },
-    { categories: ['inverter'], description: 'Inverter', unit: 'Set' },
+    ...(scope.panel ? [{ categories: ['panel'], description: 'Solar PV Modules' }] : []),
+    ...(scope.inverter ? [{ categories: ['inverter'], description: 'Inverter', unit: 'Set' }] : []),
     { categories: ['structure'], description: type === 'ground_mount' ? 'Mounting Structure (ground)' : 'Mounting Structure' },
     { categories: ['bos'], description: 'Cabling, Earthing & Balance of System' },
     { categories: ['civil'], description: 'Civil Work' },
-    { categories: ['labour'], description: 'Installation, Testing & Commissioning' },
+    ...(scope.inc ? [{ categories: ['labour'], description: 'Installation, Testing & Commissioning' }] : []),
     ...(transportIncluded ? [] : [{ categories: ['transport'], description: 'Transportation' }]),
   ];
 }
@@ -173,14 +189,14 @@ function defaultSpecs(type, transportIncluded) {
 // (e.g. structure + cabling in one line); their per-watt rates add up. With no
 // category selected the line is 'manual' and uses the typed rate as cost.
 function costLine(spec, ctx) {
-  const { wp, panelCount, panelUnitRate, catRate, wattage, extraPct } = ctx;
+  const { wp, panelCount, panelUnitRate, catRate, wattage, extraPct, scope = { panel: true, inverter: true, inc: true } } = ctx;
   const item = String(spec.description ?? spec.item ?? '').trim();
   // accept `categories: []` (new), or a single `category` (back-compat)
   const raw = Array.isArray(spec.categories) && spec.categories.length
     ? spec.categories
     : (spec.category ? [spec.category] : []);
   const cats = [...new Set(raw.map((c) => String(c).toLowerCase()))]
-    .filter((c) => c === 'panel' || c in catRate);       // drop unknown / 'manual'
+    .filter((c) => (c === 'panel' || c in catRate) && !outOfScope(c, scope));  // drop unknown / manual / out-of-scope
   let qty = Number(spec.qty) || 0;
   let unit = String(spec.unit || '').trim();
   let note = String(spec.note || '').trim();

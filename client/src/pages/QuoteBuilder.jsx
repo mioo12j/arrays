@@ -93,6 +93,12 @@ export default function QuoteBuilder() {
   const debounceRef = useRef(null);
   const docMenuRef = useRef(null);
 
+  // Scope of supply: solar panels / inverter / I&C. All on by default; the
+  // operator can drop any. Gated categories vanish from rates, BOQ and the quote.
+  const scope = { panel: pinputs.scope_panel !== false, inverter: pinputs.scope_inverter !== false, inc: pinputs.scope_inc !== false };
+  const toggleScope = (k) => setPinputs((p) => ({ ...p, [`scope_${k}`]: !(p[`scope_${k}`] !== false) }));
+  const scopeGated = (cat) => (cat === 'panel' && !scope.panel) || (cat === 'inverter' && !scope.inverter) || (cat === 'labour' && !scope.inc);
+
   // close the documents menu on outside click
   useEffect(() => {
     if (!docMenu) return;
@@ -129,7 +135,7 @@ export default function QuoteBuilder() {
   }, [id]);
 
   // Live calculation (debounced)
-  const recalc = useCallback((f, r, ci, md) => {
+  const recalc = useCallback((f, r, ci, md, sc) => {
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(async () => {
       try {
@@ -137,14 +143,15 @@ export default function QuoteBuilder() {
           ...r, capacity_kw: Number(f.capacity_kw || 0), project_type: f.project_type,
           custom_items: ci && ci.length ? ci : undefined,
           margin_dist: Array.isArray(md) && md.length ? md : undefined,
+          scope: sc,
         });
         setCalc(data);
       } catch { /* ignore transient */ }
     }, 300);
   }, []);
 
-  useEffect(() => { recalc(form, rates, useCustom ? customItems : null, marginDist); },
-    [form.capacity_kw, form.project_type, rates, useCustom, customItems, marginDist, recalc]);
+  useEffect(() => { recalc(form, rates, useCustom ? customItems : null, marginDist, scope); },
+    [form.capacity_kw, form.project_type, rates, useCustom, customItems, marginDist, scope.panel, scope.inverter, scope.inc, recalc]);
 
   // BOQ rate categories — each line draws its cost from the matching rate
   // assumption (never guessed from the description text). Keep in sync with the
@@ -178,6 +185,7 @@ export default function QuoteBuilder() {
     branch_id: form.branch_id || null,
     custom_items: useCustom && customItems.length ? customItems : undefined,
     margin_dist: marginDist,
+    scope,
     proposal_inputs: {
       ...pinputs, project_type: form.project_type, capacity_kw: Number(form.capacity_kw || 0),
       _custom_boq: useCustom,
@@ -239,11 +247,11 @@ export default function QuoteBuilder() {
     const count = watts > 0 ? Math.ceil((watts * (1 + (eff('extra_module_pct') || 0) / 100)) / wattage) : 0;
     const panelUnit = (rates.panel_rate_basis === 'watt') ? Math.round(eff('panel_rate_per_watt') * wattage) : eff('panel_rate');
     const civil = rates.civil_rate !== undefined && rates.civil_rate !== '' ? Number(rates.civil_rate) : (CIVIL_BY_TYPE[form.project_type] ?? CIVIL_BY_TYPE.rooftop);
-    const catRate = { inverter: eff('inverter_rate'), structure: eff('structure_rate'), bos: eff('bos_rate'), civil, labour: eff('labour_rate'), transport: eff('transport_rate') };
+    const catRate = { inverter: scope.inverter ? eff('inverter_rate') : 0, structure: eff('structure_rate'), bos: eff('bos_rate'), civil, labour: scope.inc ? eff('labour_rate') : 0, transport: eff('transport_rate') };
     const fmtW = watts.toLocaleString('en-IN');
     const rows = customItems.map((it) => {
       const cats = (Array.isArray(it.categories) ? it.categories : (it.category ? [it.category] : []))
-        .map((c) => String(c).toLowerCase()).filter((c) => c === 'panel' || c in catRate);
+        .map((c) => String(c).toLowerCase()).filter((c) => (c === 'panel' || c in catRate) && !scopeGated(c));
       let qty = Number(it.qty) || 0; const unit = it.unit || 'Lot'; let cost; let formula = '';
       if (!cats.length) {
         qty = qty > 0 ? qty : 1; const rt = Number(it.rate) || 0;
@@ -504,16 +512,28 @@ export default function QuoteBuilder() {
             </button>
             {showRates && (
               <div className="mt-4 space-y-3">
+                {/* Scope of supply — gates rates, BOQ and the quotation */}
+                <div className="rounded-lg border border-brand-200 bg-brand-50/50 p-3 dark:border-brand-900/40 dark:bg-brand-900/10">
+                  <div className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Scope of Supply <span className="text-xs font-normal text-slate-400">— what we provide in this quote</span></div>
+                  <div className="flex flex-wrap gap-2">
+                    {[['panel', 'Solar Panels Supply'], ['inverter', 'Inverter Supply'], ['inc', 'I&C Work']].map(([k, label]) => (
+                      <label key={k} className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm ${scope[k] ? 'border-brand-400 bg-white text-slate-700 dark:border-brand-500 dark:bg-slate-800 dark:text-slate-200' : 'border-slate-200 text-slate-400 dark:border-slate-700'}`}>
+                        <input type="checkbox" checked={scope[k]} onChange={() => toggleScope(k)} /> {label}
+                      </label>
+                    ))}
+                  </div>
+                  <p className="mt-1.5 text-[11px] text-slate-400">Uncheck what you're not doing — it drops out of the rate assumptions, the BOQ and the quotation entirely.</p>
+                </div>
                 <div className="grid grid-cols-2 gap-3">
                   <Field label="Panel Rate Basis">
-                    <select className="input" value={rates.panel_rate_basis || 'module'} onChange={(e) => setRates((r) => ({ ...r, panel_rate_basis: e.target.value }))}>
+                    <select className="input disabled:opacity-40" disabled={!scope.panel} value={rates.panel_rate_basis || 'module'} onChange={(e) => setRates((r) => ({ ...r, panel_rate_basis: e.target.value }))}>
                       <option value="module">Per module (₹/panel)</option>
                       <option value="watt">Per watt (₹/W)</option>
                     </select>
                   </Field>
                   {rates.panel_rate_basis === 'watt'
-                    ? <Field label="Panel Rate (₹/W)"><input className="input" type="text" inputMode="decimal" value={rates.panel_rate_per_watt ?? ''} onChange={setRate('panel_rate_per_watt')} placeholder="22" /></Field>
-                    : <Field label="Panel Rate (₹/module)"><input className="input" type="text" inputMode="decimal" value={rates.panel_rate ?? ''} onChange={setRate('panel_rate')} placeholder="11990" /></Field>}
+                    ? <Field label="Panel Rate (₹/W)"><input className="input disabled:opacity-40" disabled={!scope.panel} type="text" inputMode="decimal" value={rates.panel_rate_per_watt ?? ''} onChange={setRate('panel_rate_per_watt')} placeholder="22" /></Field>
+                    : <Field label="Panel Rate (₹/module)"><input className="input disabled:opacity-40" disabled={!scope.panel} type="text" inputMode="decimal" value={rates.panel_rate ?? ''} onChange={setRate('panel_rate')} placeholder="11990" /></Field>}
                   {/* Panel-rate calculator: ₹/W × wattage → ₹/module */}
                   <div className="col-span-2 rounded-lg border border-slate-200 bg-slate-50 p-2.5 dark:border-slate-700 dark:bg-slate-800/50">
                     <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-500"><Calculator size={12} /> Panel Rate Calculator</div>
@@ -538,11 +558,15 @@ export default function QuoteBuilder() {
                   )}
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                  {RATE_FIELDS.map(([k, label]) => (
-                    <Field key={k} label={label}>
-                      <input className="input" type="text" inputMode="decimal" value={rates[k] ?? (c.inputs ? c.inputs[k] : '')} onChange={setRate(k)} placeholder={c.inputs ? String(c.inputs[k]) : ''} />
-                    </Field>
-                  ))}
+                  {RATE_FIELDS.map(([k, label]) => {
+                    const gateKey = k === 'inverter_rate' ? 'inverter' : k === 'labour_rate' ? 'inc' : null;
+                    const off = gateKey && !scope[gateKey];
+                    return (
+                      <Field key={k} label={off ? `${label} — not in scope` : label}>
+                        <input className="input disabled:opacity-40" disabled={off} type="text" inputMode="decimal" value={off ? '' : (rates[k] ?? (c.inputs ? c.inputs[k] : ''))} onChange={setRate(k)} placeholder={off ? '—' : (c.inputs ? String(c.inputs[k]) : '')} />
+                      </Field>
+                    );
+                  })}
                 </div>
 
                 {/* Margin distribution — where your margin % is loaded (tick + set share) */}
@@ -605,13 +629,7 @@ export default function QuoteBuilder() {
                 <div>
                   <div className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-200">System Configuration <span className="text-xs font-normal text-slate-400">— shown on the quotation</span></div>
                   <div className="grid grid-cols-2 gap-3">
-                    <Field label="Solar Module"><input className="input text-xs" value={pinputs.module_config || ''} onChange={setPI('module_config')} placeholder="545 Wp Mono PERC / latest equivalent" /></Field>
-                    <Field label="Module Supply">
-                      <select className="input text-xs" value={pinputs.module_supply || 'us'} onChange={setPI('module_supply')}>
-                        <option value="us">Supplied by us</option>
-                        <option value="client">Free-issue by client (I&C only)</option>
-                      </select>
-                    </Field>
+                    <Field label="Solar Module"><input className="input text-xs" value={pinputs.module_config || ''} onChange={setPI('module_config')} placeholder="545 Wp Mono PERC / latest equivalent" disabled={!scope.panel} /></Field>
                     <Field label="Panel Type">
                       <select className="input text-xs" value={pinputs.panel_type || ''} onChange={setPI('panel_type')}>
                         <option value="">Not specified</option>
@@ -619,13 +637,7 @@ export default function QuoteBuilder() {
                         <option value="Non-DCR">Non-DCR (imported cells allowed)</option>
                       </select>
                     </Field>
-                    <Field label="Inverter"><input className="input text-xs" value={pinputs.inverter_config || ''} onChange={setPI('inverter_config')} placeholder="3-phase grid-tie string inverter (as per design)" /></Field>
-                    <Field label="Inverter Supply">
-                      <select className="input text-xs" value={pinputs.inverter_supply || 'us'} onChange={setPI('inverter_supply')}>
-                        <option value="us">Supplied by us</option>
-                        <option value="client">Free-issue by client (I&C only)</option>
-                      </select>
-                    </Field>
+                    <Field label="Inverter"><input className="input text-xs" value={pinputs.inverter_config || ''} onChange={setPI('inverter_config')} placeholder="3-phase grid-tie string inverter (as per design)" disabled={!scope.inverter} /></Field>
                     <Field label="Mounting (MMS)"><input className="input text-xs" value={pinputs.mms_config || ''} onChange={setPI('mms_config')} placeholder="Aluminium / GI structure suitable for rooftop" /></Field>
                     <Field label="System"><input className="input text-xs" value={pinputs.system_config || ''} onChange={setPI('system_config')} placeholder="Grid-connected rooftop solar system" /></Field>
                     <Field label="Total DC Capacity (kWp)"><input className="input text-xs" type="number" value={pinputs.dc_capacity || ''} onChange={setPI('dc_capacity')} placeholder="optional · usually > AC" /></Field>
@@ -901,11 +913,13 @@ export default function QuoteBuilder() {
                         <div className="flex flex-wrap gap-1">
                           {RATE_CATS.map(([k, label]) => {
                             const on = cats.includes(k);
+                            const gated = scopeGated(k);   // out of scope of supply
                             // a category may be used on only one line — disable it elsewhere
                             const taken = !on && customItems.some((o, j) => j !== i && (Array.isArray(o.categories) ? o.categories : (o.category ? [o.category] : [])).includes(k));
+                            const off = gated || taken;
                             return (
-                              <label key={k} title={taken ? 'Already used in another line' : ''} className={`flex items-center gap-1 rounded-md border px-1.5 py-1 text-[11px] ${taken ? 'cursor-not-allowed border-slate-100 text-slate-300 dark:border-slate-800 dark:text-slate-600' : on ? 'cursor-pointer border-brand-400 bg-brand-50 text-brand-700 dark:border-brand-500 dark:bg-brand-900/30 dark:text-brand-300' : 'cursor-pointer border-slate-200 text-slate-500 dark:border-slate-700'}`}>
-                                <input type="checkbox" className="h-3 w-3" checked={on} disabled={taken} onChange={() => toggleCat(i, k)} />{label}
+                              <label key={k} title={gated ? 'Not in scope of supply' : taken ? 'Already used in another line' : ''} className={`flex items-center gap-1 rounded-md border px-1.5 py-1 text-[11px] ${off ? 'cursor-not-allowed border-slate-100 text-slate-300 dark:border-slate-800 dark:text-slate-600' : on ? 'cursor-pointer border-brand-400 bg-brand-50 text-brand-700 dark:border-brand-500 dark:bg-brand-900/30 dark:text-brand-300' : 'cursor-pointer border-slate-200 text-slate-500 dark:border-slate-700'}`}>
+                                <input type="checkbox" className="h-3 w-3" checked={on && !gated} disabled={off} onChange={() => toggleCat(i, k)} />{label}
                               </label>
                             );
                           })}
