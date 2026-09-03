@@ -123,22 +123,31 @@ function metaCard(doc, data, x, y, w) {
     ['Date', new Date(data.issue_date || data.date || Date.now()).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })],
     ['Valid Until', data.valid_until ? new Date(data.valid_until).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '30 days from issue'],
   ].filter((r) => r[1]);
-  const rowH = (r) => (Array.isArray(r[1]) ? 12 + r[1].length * 11 : 26);
-  let h = 16;
-  rows.forEach((r) => { h += rowH(r); });
+  // Measure each value's real wrapped height so long addresses / project names
+  // never overlap the next row. Value column starts at x+106, width w-122.
+  const valW = w - 122;
+  const gap = 13;                              // vertical padding between rows
+  const rowH = (r) => {
+    if (Array.isArray(r[1])) return r[1].length * 11;
+    doc.font('uiSB').fontSize(9.5);
+    return Math.max(11, doc.heightOfString(String(V(r[1])), { width: valW, lineGap: 1.5 }));
+  };
+  const heights = rows.map(rowH);
+  let h = 12;
+  heights.forEach((hh) => { h += hh + gap; });
   panel(doc, x, y, w, h, C.mint, 9, C.line);
   doc.rect(x, y, 4, h).fill(C.gold);
   let yy = y + 12;
   rows.forEach((r, i) => {
-    doc.font('ui').fontSize(7.5).fillColor(C.mute).text(String(r[0]).toUpperCase(), x + 18, yy, { characterSpacing: 0.8, width: 84 });
+    doc.font('ui').fontSize(7.5).fillColor(C.mute).text(String(r[0]).toUpperCase(), x + 18, yy + 1, { characterSpacing: 0.8, width: 84 });
     if (Array.isArray(r[1])) {
       doc.font('uiSB').fontSize(9).fillColor(C.ink);
-      r[1].forEach((ln, k) => doc.text(ln, x + 106, yy - 1 + k * 11, { width: w - 122 }));
+      r[1].forEach((ln, k) => doc.text(ln, x + 106, yy + k * 11, { width: valW }));
     } else {
-      doc.font('uiSB').fontSize(9.5).fillColor(C.ink).text(V(r[1]), x + 106, yy - 1, { width: w - 122 });
+      doc.font('uiSB').fontSize(9.5).fillColor(C.ink).text(V(r[1]), x + 106, yy, { width: valW, lineGap: 1.5 });
     }
-    yy += rowH(r);
-    if (i < rows.length - 1) doc.moveTo(x + 18, yy - 6).lineTo(x + w - 16, yy - 6).lineWidth(0.5).strokeColor(C.line).stroke();
+    yy += heights[i] + gap;
+    if (i < rows.length - 1) doc.moveTo(x + 18, yy - gap / 2).lineTo(x + w - 16, yy - gap / 2).lineWidth(0.5).strokeColor(C.line).stroke();
   });
   return y + h;
 }
@@ -318,10 +327,11 @@ export function renderQuotation(doc, data = {}, opts = {}) {
     y += nH + 8;
   }
 
-  // ---- PAGE 3 — terms, then payment/bank details, then client acceptance ----
-  doc.addPage(); chrome(doc, 'Commercial Quotation');
-  heading(doc, 'Please Read Carefully', 'Terms & Conditions');
-  y = doc.y + 2;
+  // ---- Terms, then payment/bank details, then client acceptance ----
+  // Flow straight after the exclusions (new page only if it won't fit) so we
+  // never leave a near-empty page between the two.
+  y = flowY(y + 18, 150);
+  y = heading(doc, 'Please Read Carefully', 'Terms & Conditions', { y }) + 2;
   const terms = normalizeTerms(data.terms) || defaultTerms();
   terms.forEach((t) => {
     doc.font('body').fontSize(9.2);
@@ -334,33 +344,36 @@ export function renderQuotation(doc, data = {}, opts = {}) {
     y = doc.y + 9;
   });
 
-  // payment & company details + payment method — right after the terms
+  // payment & company details + payment method + the client acceptance are kept
+  // together as one "commercial & signing" block — break to a fresh page if the
+  // whole set won't fit, rather than splitting it or leaving a near-empty page.
+  y = flowY(y + 10, 330);
   y = companyBankBlock(doc, data, y, flowY);
 
-  // client acceptance signature — generous room to sign, seal & fill details
-  y = flowY(y + 14, 150);
+  // client acceptance signature — room to sign, seal & fill details
+  y = flowY(y + 12, 128);
   const sw = (w - 24) / 2;
   const clientNm2 = data.client_name || data.client_full_name || data.customer_name || 'the Client';
   doc.font('uiSB').fontSize(8.5).fillColor(C.gold).text('ACCEPTED BY THE CLIENT', M, y, { characterSpacing: 0.8 });
   doc.font('body').fontSize(9).fillColor(C.body).text('We have read and accept the scope, pricing and terms set out in this quotation.', M, y + 14, { width: sw - 10 });
   // right column — "For <client>", open space to sign & stamp, then labelled blanks
   const sigX = M + w - sw, sigW = sw;
-  doc.font('bodyI').fontSize(10.5).fillColor(C.ink).text(`For ${clientNm2}`, sigX, y + 6);
+  doc.font('bodyI').fontSize(10.5).fillColor(C.ink).text(`For ${clientNm2}`, sigX, y + 4);
   const fieldLine = (lx, lw, yy, label) => {
     doc.moveTo(lx, yy).lineTo(lx + lw, yy).lineWidth(0.6).strokeColor(C.line).stroke();
     doc.font('ui').fontSize(7).fillColor(C.mute).text(String(label).toUpperCase(), lx, yy + 3, { characterSpacing: 0.5 });
   };
-  // big blank band for the physical signature + company seal
-  const sigY = y + 76;
+  // blank band for the physical signature + company seal
+  const sigY = y + 62;
   doc.moveTo(sigX, sigY).lineTo(sigX + sigW, sigY).lineWidth(0.8).strokeColor(C.ink).stroke();
   doc.font('ui').fontSize(7.5).fillColor(C.mute).text('AUTHORISED SIGNATORY  ·  SIGN & COMPANY SEAL', sigX, sigY + 4, { characterSpacing: 0.4 });
   // Name / Designation / Date blanks below the signature
   const sigCol = (sigW - 12) / 2;
-  fieldLine(sigX, sigCol, sigY + 34, 'Name');
-  fieldLine(sigX + sigCol + 12, sigCol, sigY + 34, 'Designation');
-  fieldLine(sigX, sigCol, sigY + 60, 'Date');
-  fieldLine(sigX + sigCol + 12, sigCol, sigY + 60, 'Place');
-  y = sigY + 76;
+  fieldLine(sigX, sigCol, sigY + 30, 'Name');
+  fieldLine(sigX + sigCol + 12, sigCol, sigY + 30, 'Designation');
+  fieldLine(sigX, sigCol, sigY + 54, 'Date');
+  fieldLine(sigX + sigCol + 12, sigCol, sigY + 54, 'Place');
+  y = sigY + 66;
 
   autoGenNote(doc, Math.min(y + 8, doc.page.height - 54), 'quotation');
 
