@@ -9,6 +9,7 @@
 export function isTranslatableDownload(path) {
   const p = String(path || '');
   if (/\/json(\b|\?)|format=json/i.test(p)) return false;
+  if (/\.docx(\b|\?)/i.test(p)) return false;   // Word exports are English-only — no language prompt
   return /\/pdf(\b|\?)|format=(pdf|xlsx)|\/reports\/|\/quotes\//i.test(p);
 }
 

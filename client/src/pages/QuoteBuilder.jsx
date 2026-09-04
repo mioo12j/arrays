@@ -367,24 +367,35 @@ export default function QuoteBuilder() {
                   <FileDown size={16} /> Documents <ChevronDown size={14} />
                 </button>
                 {docMenu && (
-                  <div className="absolute right-0 z-20 mt-1 w-64 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-800">
+                  <div className="absolute right-0 z-20 mt-1 w-72 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-800">
                     {[
-                      { label: 'Complete Package', sub: 'Proposal + Quotation + BOQ', path: `/quotes/${id}/document.pdf`, star: true },
-                      { label: 'Proposal (Brochure)', sub: 'Premium sales document', path: `/quotes/${id}/proposal.pdf` },
-                      { label: 'Commercial Quotation', sub: 'Priced offer, scope & terms', path: `/quotes/${id}/quotation.pdf` },
-                      { label: 'Bill of Quantities', sub: 'Component-level breakdown', path: `/quotes/${id}/boq.pdf` },
-                      { label: 'Proposal + Quotation', sub: 'Sales + pricing', path: `/quotes/${id}/document.pdf?parts=proposal,quotation` },
-                      { label: 'Quotation + BOQ', sub: 'Full commercial set', path: `/quotes/${id}/document.pdf?parts=quotation,boq` },
+                      { label: 'Complete Package', sub: 'Proposal + Quotation + BOQ', pdf: `/quotes/${id}/document.pdf`, star: true },
+                      { label: 'Proposal (Brochure)', sub: 'Premium sales document', pdf: `/quotes/${id}/proposal.pdf` },
+                      { label: 'Commercial Quotation', sub: 'Priced offer, scope & terms', pdf: `/quotes/${id}/quotation.pdf`, docx: `/quotes/${id}/quotation.docx` },
+                      { label: 'Bill of Quantities', sub: 'Component-level breakdown', pdf: `/quotes/${id}/boq.pdf`, docx: `/quotes/${id}/boq.docx` },
+                      { label: 'Proposal + Quotation', sub: 'Sales + pricing', pdf: `/quotes/${id}/document.pdf?parts=proposal,quotation` },
+                      { label: 'Quotation + BOQ', sub: 'Full commercial set', pdf: `/quotes/${id}/document.pdf?parts=quotation,boq`, docx: `/quotes/${id}/document.docx?parts=quotation,boq` },
                     ].map((d) => (
-                      <button
-                        key={d.label}
-                        onClick={() => { setDocMenu(false); download(d.path); }}
-                        className={`flex w-full flex-col items-start gap-0.5 px-4 py-2.5 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 ${d.star ? 'bg-brand-50/60 dark:bg-brand-900/20' : ''}`}
-                      >
-                        <span className={`text-sm font-semibold ${d.star ? 'text-brand-700 dark:text-brand-300' : 'text-slate-800 dark:text-slate-100'}`}>{d.label}</span>
-                        <span className="text-xs text-slate-500">{d.sub}</span>
-                      </button>
+                      <div key={d.label} className={`flex items-stretch ${d.star ? 'bg-brand-50/60 dark:bg-brand-900/20' : ''}`}>
+                        <button
+                          onClick={() => { setDocMenu(false); download(d.pdf); }}
+                          className="flex flex-1 flex-col items-start gap-0.5 px-4 py-2.5 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                        >
+                          <span className={`text-sm font-semibold ${d.star ? 'text-brand-700 dark:text-brand-300' : 'text-slate-800 dark:text-slate-100'}`}>{d.label}</span>
+                          <span className="text-xs text-slate-500">{d.sub}</span>
+                        </button>
+                        {d.docx && (
+                          <button
+                            onClick={() => { setDocMenu(false); download(d.docx); }}
+                            title="Download as editable Word (.docx)"
+                            className="my-2 mr-2 shrink-0 self-center rounded-md border border-brand-200 px-2 py-1 text-[11px] font-semibold text-brand-600 hover:bg-brand-50 dark:border-brand-700 dark:text-brand-300 dark:hover:bg-brand-900/30"
+                          >Word</button>
+                        )}
+                      </div>
                     ))}
+                    <div className="border-t border-slate-100 px-4 py-1.5 text-[11px] text-slate-400 dark:border-slate-700">
+                      Tap a row for PDF. <span className="font-semibold text-brand-600 dark:text-brand-300">Word</span> (editable) is available for the Quotation &amp; BOQ.
+                    </div>
                   </div>
                 )}
               </div>

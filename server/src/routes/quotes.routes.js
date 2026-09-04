@@ -8,6 +8,7 @@ import { calculateQuote } from '../services/quote-calc.service.js';
 import { streamQuotePdf } from '../services/quote-pdf.service.js';
 import { renderProposal, renderThankYou, renderFaq, renderCover, PROPOSAL_BRAND, registerFonts } from '../services/proposal-pdf.service.js';
 import { renderQuotation, renderBOQ, renderScope } from '../services/quote-docs.service.js';
+import { renderQuoteDocxBuffer, docxFilename } from '../services/quote-docx.service.js';
 import PDFDocument from 'pdfkit';
 import * as branding from '../services/gst/brandingService.js';
 import * as branchSvc from '../services/gst/branchService.js';
@@ -411,6 +412,37 @@ router.get('/:id/boq.pdf', asyncHandler(async (req, res) => {
 router.get('/:id/scope.pdf', asyncHandler(async (req, res) => {
   const { q, data } = await loadQuoteData(req.params.id);
   streamParts(res, q, data, ['scope']);
+}));
+
+// ---------------------------------------------------------------------------
+//  Word (.docx) exports — deliberately limited to the two transactional
+//  documents that render cleanly and are the ones operators actually edit:
+//  the Commercial Quotation and the Bill of Quantities (individually, or the
+//  two together). The proposal brochure and complete package stay PDF-only.
+//  Built natively as editable Word (real tables/headings/text, embedded brand
+//  fonts) — not an image dump.
+// ---------------------------------------------------------------------------
+const DOCX_PARTS = ['quotation', 'boq'];
+async function streamPartsDocx(res, q, data, parts) {
+  const buf = await renderQuoteDocxBuffer(data, parts);
+  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+  res.setHeader('Content-Disposition', `attachment; filename="${docxFilename(q.quote_number, parts)}"`);
+  res.send(buf);
+}
+router.get('/:id/document.docx', asyncHandler(async (req, res) => {
+  const { q, data } = await loadQuoteData(req.params.id);
+  const requested = String(req.query.parts || 'quotation,boq').toLowerCase().split(',').map((s) => s.trim());
+  const parts = DOCX_PARTS.filter((p) => requested.includes(p));
+  if (!parts.length) throw new ApiError(400, 'Word export is available only for the Commercial Quotation and the Bill of Quantities.');
+  await streamPartsDocx(res, q, data, parts);
+}));
+router.get('/:id/quotation.docx', asyncHandler(async (req, res) => {
+  const { q, data } = await loadQuoteData(req.params.id);
+  await streamPartsDocx(res, q, data, ['quotation']);
+}));
+router.get('/:id/boq.docx', asyncHandler(async (req, res) => {
+  const { q, data } = await loadQuoteData(req.params.id);
+  await streamPartsDocx(res, q, data, ['boq']);
 }));
 
 // Soft delete — moves the quote to Trash (restorable). Pass ?purge=1 to delete
