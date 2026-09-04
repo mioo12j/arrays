@@ -30,6 +30,24 @@ function Metric({ icon: Icon, label, value, tone = 'text-slate-700', bg = 'bg-sl
   return to ? <Link to={to}>{body}</Link> : body;
 }
 
+// Tooltip for the Monthly Invoice Volume chart — shows not just the invoice
+// count for the month but the taxable value and GST value raised in it.
+function VolumeTooltip({ active, payload, money }) {
+  if (!active || !payload || !payload.length) return null;
+  const d = payload[0].payload || {};
+  const row = (label, val, cls = 'text-slate-700 dark:text-slate-200') => (
+    <div className="flex items-center justify-between gap-6"><span className="text-slate-500">{label}</span><span className={`font-semibold tabular-nums ${cls}`}>{val}</span></div>
+  );
+  return (
+    <div className="rounded-lg border border-slate-200 bg-white p-2.5 text-xs shadow-lg dark:border-slate-700 dark:bg-slate-800">
+      <p className="mb-1 font-semibold text-slate-800 dark:text-slate-100">{d.month}</p>
+      {row('Invoices', d.invoices)}
+      {row('Taxable', money(d.taxableValue), 'text-brand-600 dark:text-brand-300')}
+      {row('GST', money(d.gstValue), 'text-emerald-600 dark:text-emerald-400')}
+    </div>
+  );
+}
+
 export default function GstDashboard() {
   const { branchQS, activeBranch } = useBranch();
   const { data, loading } = useFetch(`/gst/dashboard${branchQS ? `?${branchQS}` : ''}`, [branchQS]);
@@ -100,8 +118,9 @@ export default function GstDashboard() {
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={c.monthly || []}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis dataKey="month" fontSize={11} /><YAxis fontSize={11} />
-              <Tooltip /><Bar dataKey="invoices" fill="#1d4ed8" radius={[4, 4, 0, 0]} />
+              <XAxis dataKey="month" fontSize={11} /><YAxis fontSize={11} allowDecimals={false} />
+              <Tooltip content={<VolumeTooltip money={money} />} />
+              <Bar dataKey="invoices" name="Invoices" fill="#1d4ed8" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </Card>

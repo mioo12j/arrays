@@ -175,6 +175,10 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
     if (!b) return;
     setForm((f) => ({
       ...f,
+      // Bind the invoice to the SELECTED billing office so its branch (DL / BR /
+      // UP …) is recorded — otherwise the server falls back to the default branch
+      // and every document shows the same (UP) code.
+      branchId: b.id,
       seller: {
         ...f.seller,
         gstin: b.gstin || '',

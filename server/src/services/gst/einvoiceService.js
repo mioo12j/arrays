@@ -203,6 +203,7 @@ export async function updateDraft(db, id, body, userId) {
        supply_type=$2, doc_type=$3, doc_no=$4, doc_date=$5, reverse_charge=$6, igst_on_intra=$7, ecom_gstin=$8,
        seller_dtls=$9, buyer_dtls=$10, disp_dtls=$11, ship_dtls=$12, item_list=$13, val_dtls=$14,
        buyer_gstin=$15, buyer_name=$16, total_inv_val=$17, total_tax_val=$18, header_address=$19,
+       branch_id = COALESCE($20, branch_id),
        status = CASE WHEN status='error' THEN 'draft'::gst_einv_status ELSE status END
      WHERE id=$1 RETURNING *`,
     [
@@ -212,6 +213,7 @@ export async function updateDraft(db, id, body, userId) {
       body.dispatch ? JSON.stringify(body.dispatch) : null, body.shipTo ? JSON.stringify(body.shipTo) : null,
       JSON.stringify(body.items || []), JSON.stringify(body.val || {}),
       s.buyerGstin, s.buyerName, s.totalInvVal, s.totalTaxVal, body.headerAddress || null,
+      body.branchId || null,
     ]
   );
   await recordAudit(db, { objectType: 'einvoice', objectId: id, eventType: 'edited', message: 'Draft edited', userId });

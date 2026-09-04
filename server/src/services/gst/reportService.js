@@ -60,7 +60,7 @@ export async function dashboard(db, branchId = null) {
     einvoice: einv,
     ewb,
     charts: {
-      monthly: monthly.map((r) => ({ month: r.month, invoices: Number(r.invoices), invValue: Number(r.inv_value), gstValue: Number(r.gst_value) })),
+      monthly: monthly.map((r) => ({ month: r.month, invoices: Number(r.invoices), invValue: Number(r.inv_value), taxableValue: Number(r.inv_value) - Number(r.gst_value), gstValue: Number(r.gst_value) })),
       ewbStatus: ewbDist.map((r) => ({ status: r.status, count: Number(r.count) })),
       stateWise,
     },
