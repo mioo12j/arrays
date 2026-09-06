@@ -20,13 +20,17 @@ export async function dashboard(db, branchId = null) {
       count(*) FILTER (WHERE status IN ('irn_generated','printed')) AS irn_generated,
       count(*) FILTER (WHERE status='cancelled')                 AS cancelled,
       count(*) FILTER (WHERE status='needs_review' OR status='error') AS failed_validation,
-      coalesce(sum(total_inv_val) FILTER (WHERE NOT is_cancelled),0) AS total_inv_val,
-      coalesce(sum(total_tax_val) FILTER (WHERE NOT is_cancelled),0) AS total_tax_val,
-      -- split the value totals into IRN-filed (irn_generated / printed) vs not-yet-filed
-      coalesce(sum(total_inv_val) FILTER (WHERE NOT is_cancelled AND status IN ('irn_generated','printed')),0) AS filed_inv_val,
-      coalesce(sum(total_tax_val) FILTER (WHERE NOT is_cancelled AND status IN ('irn_generated','printed')),0) AS filed_tax_val,
-      coalesce(sum(total_inv_val) FILTER (WHERE NOT is_cancelled AND status NOT IN ('irn_generated','printed')),0) AS unfiled_inv_val,
-      coalesce(sum(total_tax_val) FILTER (WHERE NOT is_cancelled AND status NOT IN ('irn_generated','printed')),0) AS unfiled_tax_val
+      count(*) FILTER (WHERE doc_type='CRN' AND NOT is_cancelled) AS credit_notes,
+      coalesce(sum(total_inv_val) FILTER (WHERE doc_type='CRN' AND NOT is_cancelled),0) AS credit_note_val,
+      -- Value totals are NET of credit notes: a CRN subtracts (adjusts down) the
+      -- taxable / GST it credits back, so the dashboard reflects the real liability.
+      coalesce(sum((CASE WHEN doc_type='CRN' THEN -1 ELSE 1 END)*total_inv_val) FILTER (WHERE NOT is_cancelled),0) AS total_inv_val,
+      coalesce(sum((CASE WHEN doc_type='CRN' THEN -1 ELSE 1 END)*total_tax_val) FILTER (WHERE NOT is_cancelled),0) AS total_tax_val,
+      -- split the (net) value totals into IRN-filed (irn_generated / printed) vs not-yet-filed
+      coalesce(sum((CASE WHEN doc_type='CRN' THEN -1 ELSE 1 END)*total_inv_val) FILTER (WHERE NOT is_cancelled AND status IN ('irn_generated','printed')),0) AS filed_inv_val,
+      coalesce(sum((CASE WHEN doc_type='CRN' THEN -1 ELSE 1 END)*total_tax_val) FILTER (WHERE NOT is_cancelled AND status IN ('irn_generated','printed')),0) AS filed_tax_val,
+      coalesce(sum((CASE WHEN doc_type='CRN' THEN -1 ELSE 1 END)*total_inv_val) FILTER (WHERE NOT is_cancelled AND status NOT IN ('irn_generated','printed')),0) AS unfiled_inv_val,
+      coalesce(sum((CASE WHEN doc_type='CRN' THEN -1 ELSE 1 END)*total_tax_val) FILTER (WHERE NOT is_cancelled AND status NOT IN ('irn_generated','printed')),0) AS unfiled_tax_val
     FROM gst_einvoices WHERE is_deleted=FALSE ${BF}`, bp)).rows[0];
   einv.total_taxable_val = num(einv, 'total_inv_val') - num(einv, 'total_tax_val');
   einv.filed_taxable_val = num(einv, 'filed_inv_val') - num(einv, 'filed_tax_val');
@@ -47,8 +51,8 @@ export async function dashboard(db, branchId = null) {
     SELECT to_char(date_trunc('month', doc_date),'Mon YY') AS month,
            date_trunc('month', doc_date) AS m,
            count(*) AS invoices,
-           coalesce(sum(total_inv_val) FILTER (WHERE NOT is_cancelled),0) AS inv_value,
-           coalesce(sum(total_tax_val) FILTER (WHERE NOT is_cancelled),0) AS gst_value
+           coalesce(sum((CASE WHEN doc_type='CRN' THEN -1 ELSE 1 END)*total_inv_val) FILTER (WHERE NOT is_cancelled),0) AS inv_value,
+           coalesce(sum((CASE WHEN doc_type='CRN' THEN -1 ELSE 1 END)*total_tax_val) FILTER (WHERE NOT is_cancelled),0) AS gst_value
     FROM gst_einvoices
     WHERE is_deleted=FALSE AND doc_date >= (now() - interval '11 months') ${BF}
     GROUP BY 1,2 ORDER BY 2`, bp)).rows;
@@ -58,7 +62,7 @@ export async function dashboard(db, branchId = null) {
 
   const stateRows = (await db.query(`
     SELECT coalesce(buyer_dtls->>'pos', buyer_dtls->>'stateCode') AS st,
-           count(*) AS invoices, coalesce(sum(total_inv_val) FILTER (WHERE NOT is_cancelled),0) AS value
+           count(*) AS invoices, coalesce(sum((CASE WHEN doc_type='CRN' THEN -1 ELSE 1 END)*total_inv_val) FILTER (WHERE NOT is_cancelled),0) AS value
     FROM gst_einvoices WHERE is_deleted=FALSE ${BF} GROUP BY 1 ORDER BY value DESC NULLS LAST LIMIT 12`, bp)).rows;
   const stateWise = stateRows.map((r) => ({ state: stName(r.st), invoices: Number(r.invoices), value: Number(r.value) }));
 

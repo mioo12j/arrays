@@ -108,6 +108,7 @@ CREATE TABLE IF NOT EXISTS gst_einvoices (
 
   -- Cross-linking + safety
   source_invoice_id UUID REFERENCES invoices(id) ON DELETE SET NULL,
+  credit_note_source_einvoice_id UUID REFERENCES gst_einvoices(id), -- a CRN's original tax invoice (this table)
   idempotency_key TEXT UNIQUE,
   created_by      UUID REFERENCES users(id),
   created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),

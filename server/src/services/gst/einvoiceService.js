@@ -56,6 +56,7 @@ export function rowToRecord(r) {
     validationErrors: r.validation_errors || [],
     sourceInvoiceId: r.source_invoice_id,
     reference: r.ref_dtls || undefined,   // RefDtls (e.g. a credit note's preceding invoice)
+    creditNoteSourceEinvoiceId: r.credit_note_source_einvoice_id || null,  // for a CRN: its original invoice (this table)
     branchId: r.branch_id,
     branchCode: r.branch_code,
     branchName: r.branch_name,
@@ -147,7 +148,15 @@ export async function get(db, id) {
     `SELECT id, action, response_status, http_status, error_code, error_message, created_at
        FROM gst_api_logs WHERE object_type='einvoice' AND object_id=$1 ORDER BY created_at ASC`, [id]
   );
-  return { ...rec, timeline, apiLogs };
+  // Credit notes raised against THIS invoice (so the invoice can show
+  // "Credit Note Issued" once one is finalised with an IRN).
+  const { rows: creditNotes } = await db.query(
+    `SELECT id, doc_no AS "docNo", doc_date AS "docDate", status, irn
+       FROM gst_einvoices
+      WHERE credit_note_source_einvoice_id=$1 AND is_deleted=FALSE
+      ORDER BY created_at DESC`, [id]
+  );
+  return { ...rec, timeline, apiLogs, creditNotes };
 }
 
 // ── Create draft ───────────────────────────────────────────────────────────
@@ -419,8 +428,28 @@ export async function createCreditNote(db, id, body = {}, userId) {
     reference: { PrecDocDtls: [{ InvNo: cur.doc_no, InvDt: toDdMmYyyy(cur.doc_date) }] },
   };
   const created = await createDraft(db, cnBody, userId);
+  // Link the credit note back to its original invoice (this table) so the
+  // invoice can show "Credit Note Issued" once the CRN is finalised.
+  await db.query('UPDATE gst_einvoices SET credit_note_source_einvoice_id=$2 WHERE id=$1', [created.id, cur.id]);
+  created.creditNoteSourceEinvoiceId = cur.id;
   await recordAudit(db, { objectType: 'einvoice', objectId: created.id, eventType: 'created', message: `Credit note for invoice ${cur.doc_no || cur.id}`, userId });
   return created;
+}
+
+// Reverse a credit-note DRAFT back to a normal tax invoice — allowed only before
+// an IRN is generated. Clears the CRN type and the preceding-document reference.
+export async function revertToInvoice(db, id, userId) {
+  const cur = (await db.query('SELECT * FROM gst_einvoices WHERE id=$1 AND is_deleted=FALSE', [id])).rows[0];
+  if (!cur) throw new ApiError(404, 'e-Invoice not found');
+  if (String(cur.doc_type) !== 'CRN') throw new ApiError(400, 'Only a credit note can be reverted to an invoice.');
+  if (cur.irn) throw new ApiError(409, 'This credit note already has an IRN and can no longer be reverted.');
+  if (!EDITABLE.has(cur.status)) throw new ApiError(409, `A credit note in “${cur.status}” state cannot be reverted.`);
+  const { rows } = await db.query(
+    `UPDATE gst_einvoices SET doc_type='INV', ref_dtls=NULL, credit_note_source_einvoice_id=NULL,
+       status = CASE WHEN status='error' THEN 'draft'::gst_einv_status ELSE status END
+     WHERE id=$1 RETURNING *`, [id]);
+  await recordAudit(db, { objectType: 'einvoice', objectId: id, eventType: 'edited', message: `Reverted credit note ${cur.doc_no || id} back to a tax invoice`, userId });
+  return rowToRecord(rows[0]);
 }
 
 // ── Archive / soft-delete / restore ────────────────────────────────────────

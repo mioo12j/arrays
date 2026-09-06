@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import {
   FileText, Truck, FileCheck2, FileClock, FileX2, AlertTriangle, IndianRupee,
-  CheckCircle2, Timer, CalendarX2, Ban, PackageCheck, ArrowRight,
+  CheckCircle2, Timer, CalendarX2, Ban, PackageCheck, ArrowRight, FileMinus2,
 } from 'lucide-react';
 import {
   ResponsiveContainer, BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
@@ -107,6 +107,7 @@ export default function GstDashboard() {
         <Metric icon={FileCheck2} label="IRN Generated" value={e.irn_generated} tone="text-emerald-600" bg="bg-emerald-100" />
         <Metric icon={FileX2} label="Cancelled" value={e.cancelled} tone="text-red-600" bg="bg-red-100" />
         <Metric icon={AlertTriangle} label="Failed Validation" value={e.failed_validation} tone="text-red-600" bg="bg-red-100" />
+        <Metric icon={FileMinus2} label="Credit Notes" value={e.credit_notes} sub={Number(e.credit_note_val) > 0 ? <p className="mt-0.5 text-[11px] font-medium text-amber-600 dark:text-amber-500">− {money(e.credit_note_val)} adjusted</p> : undefined} tone="text-amber-600" bg="bg-amber-100" to="/gst/compliance" />
         <Metric icon={IndianRupee} label="Taxable Value" value={money(e.total_taxable_val)} tone="text-brand-600" bg="bg-brand-100"
           sub={<FiledSplit filed={e.filed_taxable_val} unfiled={e.unfiled_taxable_val} money={money} />} />
         <Metric icon={IndianRupee} label="GST Value" value={money(e.total_tax_val)} tone="text-brand-600" bg="bg-brand-100"

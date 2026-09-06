@@ -98,7 +98,7 @@ function EInvoicePanel({ can, master }) {
             const [tone, label] = einvStatus(r.status);
             return (
               <>
-                <td className="td font-semibold text-slate-800 dark:text-slate-100">{r.docNo || '—'}{r.branchCode && <span className="ml-1 rounded bg-slate-100 px-1 py-0.5 text-[10px] font-medium text-slate-500 dark:bg-slate-800">{r.branchCode}</span>}<div className="text-xs font-normal text-slate-400">{dmy(r.docDate)}</div></td>
+                <td className="td font-semibold text-slate-800 dark:text-slate-100">{r.docNo || '—'}{r.branchCode && <span className="ml-1 rounded bg-slate-100 px-1 py-0.5 text-[10px] font-medium text-slate-500 dark:bg-slate-800">{r.branchCode}</span>}{r.docType === 'CRN' && <span className="ml-1 rounded bg-amber-100 px-1 py-0.5 text-[10px] font-semibold text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">CRN</span>}<div className="text-xs font-normal text-slate-400">{dmy(r.docDate)}</div></td>
                 <td className="td">{r.buyerName || '—'}<div className="font-mono text-xs text-slate-400">{r.buyerGstin || ''}</div></td>
                 <td className="td text-right font-semibold">{inr(r.totalInvVal)}</td>
                 <td className="td">{r.irn ? <span className="text-emerald-600" title={r.irn}><ShieldCheck size={14} className="inline" /> {String(r.irn).slice(0, 8)}…</span> : <span className="text-slate-300">—</span>}</td>
@@ -109,7 +109,7 @@ function EInvoicePanel({ can, master }) {
         />
       )}
       {form && <EInvoiceForm master={master} initial={form.id ? form : null} onClose={() => setForm(null)} onSaved={() => { setForm(null); refetch(); }} />}
-      {detailId && <EInvoiceDetail id={detailId} can={can} master={master} onClose={() => setDetailId(null)} onChanged={refetch} onEdit={(rec) => { setDetailId(null); setForm(rec); }} />}
+      {detailId && <EInvoiceDetail id={detailId} can={can} master={master} onClose={() => setDetailId(null)} onChanged={refetch} onEdit={(rec) => { setDetailId(null); setForm(rec); }} onOpen={(nid) => setDetailId(nid)} />}
     </Card>
   );
 }
@@ -315,7 +315,7 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
   );
 }
 
-function EInvoiceDetail({ id, can, master, onClose, onChanged, onEdit }) {
+function EInvoiceDetail({ id, can, master, onClose, onChanged, onEdit, onOpen }) {
   const toast = useToast();
   const { data: rec, loading, refetch } = useFetch(`/gst/einvoices/${id}`, [id]);
   const { data: branches } = useFetch('/gst/branches');
@@ -373,15 +373,23 @@ function EInvoiceDetail({ id, can, master, onClose, onChanged, onEdit }) {
     try { await fn(); toast.success(`${label} done`); refetch(); onChanged?.(); }
     catch (e) { toast.error(apiError(e)); } finally { setBusy(''); }
   };
-  // Convert this invoice into a Credit Note (CRN) draft, then offer its portal JSON.
+  // Convert this invoice into a Credit Note (CRN) draft, then OPEN it so the
+  // number/date can be edited (or reverted) before the portal JSON is downloaded.
   const createCreditNote = async () => {
     setBusy('CRN');
     try {
       const { data } = await api.post(`/gst/einvoices/${id}/credit-note`, { docNo: cnForm.docNo?.trim(), docDate: cnForm.docDate });
-      toast.success(`Credit note ${data.docNo || ''} created (draft)`);
+      toast.success(`Credit note ${data.docNo || ''} created — review, then download its Portal JSON`);
       setCnForm(null); onChanged?.();
-      if (can('gst.download')) gstDownload(`/gst/einvoices/${data.id}/portal-json`);
+      onOpen?.(data.id);   // switch this drawer to the new credit note
     } catch (e) { toast.error(apiError(e)); } finally { setBusy(''); }
+  };
+  // Reverse a credit-note draft back to a normal invoice (only before its IRN).
+  const revertToInvoice = async () => {
+    if (!window.confirm('Revert this credit note back to a normal tax invoice? The credit-note reference will be removed.')) return;
+    setBusy('Revert');
+    try { await api.post(`/gst/einvoices/${id}/revert-to-invoice`); toast.success('Reverted to a tax invoice'); refetch(); onChanged?.(); }
+    catch (e) { toast.error(apiError(e)); } finally { setBusy(''); }
   };
   // OTP-gated cancel: first call returns 428 → show 2FA → retry with the token.
   const doCancel = async (otpToken) => {
@@ -407,12 +415,36 @@ function EInvoiceDetail({ id, can, master, onClose, onChanged, onEdit }) {
   const errs = (rec.validationErrors || []).filter((i) => i.severity === 'error');
 
   return (
-    <Modal open onClose={onClose} title={`e-Invoice ${rec.docNo || ''}`} size="lg"
+    <Modal open onClose={onClose} title={`${rec.docType === 'CRN' ? 'Credit Note' : 'e-Invoice'} ${rec.docNo || ''}`} size="lg"
       footer={<button className="btn-ghost" onClick={onClose}>Close</button>}>
       <div className="mb-4 flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-800">
-        <div><p className="text-xs uppercase text-slate-400">Total Invoice Value</p><p className="text-2xl font-bold text-brand-600">{inr(rec.totalInvVal)}</p></div>
+        <div><p className="text-xs uppercase text-slate-400">{rec.docType === 'CRN' ? 'Credit Note Value' : 'Total Invoice Value'}</p><p className="text-2xl font-bold text-brand-600">{inr(rec.totalInvVal)}</p></div>
         <Badge tone={tone}>{label}</Badge>
       </div>
+
+      {/* A credit note: show the original invoice it adjusts */}
+      {rec.docType === 'CRN' && rec.reference?.PrecDocDtls?.[0] && (
+        <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs dark:border-amber-900/40 dark:bg-amber-900/10">
+          <p className="font-semibold text-amber-800 dark:text-amber-300"><FileMinus2 size={13} className="mr-1 inline" />Credit Note</p>
+          <p className="mt-1 text-amber-700 dark:text-amber-400">Adjusts original tax invoice <span className="font-mono font-semibold">{rec.reference.PrecDocDtls[0].InvNo}</span> · {rec.reference.PrecDocDtls[0].InvDt}</p>
+        </div>
+      )}
+
+      {/* An invoice with credit note(s) raised against it */}
+      {rec.docType !== 'CRN' && (rec.creditNotes || []).length > 0 && (
+        <div className="mb-4 space-y-1.5 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs dark:border-amber-900/40 dark:bg-amber-900/10">
+          {rec.creditNotes.map((cn) => (
+            <div key={cn.id} className="flex items-center justify-between gap-2">
+              <p className="text-amber-800 dark:text-amber-300">
+                <FileMinus2 size={13} className="mr-1 inline" />
+                <span className="font-semibold">{cn.irn ? 'Credit Note Issued' : 'Credit note (draft)'}</span>
+                {' · '}<span className="font-mono">{cn.docNo}</span>{cn.irn && <span className="ml-1 rounded bg-emerald-100 px-1 text-[10px] font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">IRN</span>}
+              </p>
+              <button className="text-brand-600 hover:underline dark:text-brand-300" onClick={() => onOpen?.(cn.id)}>Open</button>
+            </div>
+          ))}
+        </div>
+      )}
 
       {rec.irn && (
         <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs dark:border-emerald-900/40 dark:bg-emerald-900/10">
@@ -497,6 +529,11 @@ function EInvoiceDetail({ id, can, master, onClose, onChanged, onEdit }) {
           <button className="btn-ghost !text-sm" disabled={!!busy}
             onClick={() => setCnForm(cnForm ? null : { docNo: `${rec.branchCode ? rec.branchCode + '/' : ''}`, docDate: todayISO() })}>
             <FileMinus2 size={14} /> Convert to Credit Note
+          </button>
+        )}
+        {rec.docType === 'CRN' && !rec.irn && editable && can('gst.edit') && (
+          <button className="btn-ghost !text-sm text-amber-600 hover:text-amber-700" disabled={!!busy} onClick={revertToInvoice}>
+            {busy === 'Revert' ? <Loader2 className="animate-spin" size={14} /> : <RefreshCw size={14} />} Revert to Invoice
           </button>
         )}
         {cnForm && (
