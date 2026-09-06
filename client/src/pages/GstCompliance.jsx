@@ -134,6 +134,9 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
   const officeOptions = (branches || []).map((b) => ({ label: `${b.code} — ${b.name}`, addr: officeAddr(b) })).filter((o) => o.addr);
   const [saving, setSaving] = useState(false);
   const [gv, setGv] = useState(null);
+  // Whether the document number is still system-suggested (so switching office
+  // re-derives its prefix) vs. manually typed (which we then leave alone).
+  const [autoNo, setAutoNo] = useState(!(initial?.id || initial?.docNo));
   const computed = useMemo(() => recalcInvoice(form), [form]);
   const validateGstin = async () => {
     try { const { data } = await api.post('/gst/validate-gstin', { gstin: form.buyer.gstin, name: form.buyer.legalName, pincode: form.buyer.pincode, stateCode: form.buyer.stateCode }); setGv(data); }
@@ -170,7 +173,7 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
   const buyerPin = pincodeToState(form.buyer.pincode);
   const sellerPin = pincodeToState(form.seller.pincode);
   // Pick a configured office → fill the whole supplier block (trade name = legal name).
-  const setSellerFromOffice = (e) => {
+  const setSellerFromOffice = async (e) => {
     const b = (branches || []).find((x) => String(x.id) === e.target.value);
     if (!b) return;
     setForm((f) => ({
@@ -192,6 +195,11 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
         phone: b.phone || f.seller.phone,
       },
     }));
+    // The document-number PREFIX must follow the selected office. While the
+    // number is still system-suggested, start it with this office's code (e.g.
+    // picking the Bihar office yields "BR/") — the operator fills the sequence
+    // in their own convention. Once they type, we stop touching it.
+    if (autoNo && b.code) setForm((f) => ({ ...f, docNo: `${b.code}/` }));
   };
 
   const save = async (override) => {
@@ -223,7 +231,9 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
       <Section title="Document (DocDtls / TranDtls)">
         <Field label="Supply Type"><select className="input" value={form.supplyType} onChange={set('supplyType')}>{opts('einv_supply_type').map((o) => <option key={o.code} value={o.code}>{o.code} — {o.name}</option>)}</select></Field>
         <Field label="Document Type"><select className="input" value={form.docType} onChange={set('docType')}>{opts('einv_doc_type').map((o) => <option key={o.code} value={o.code}>{o.name}</option>)}</select></Field>
-        <Field label="Document No"><input className="input" value={form.docNo} onChange={set('docNo')} placeholder="ARR/2026/001" /></Field>
+        <Field label="Document No" hint={autoNo ? 'Prefix follows the selected office' : undefined}>
+          <input className="input" value={form.docNo} onChange={(e) => { setAutoNo(false); set('docNo')(e); }} placeholder="Select an office → e.g. BR/06/2026-27" />
+        </Field>
         <Field label="Document Date"><input className="input" type="date" value={form.docDate} onChange={set('docDate')} /></Field>
       </Section>
 
