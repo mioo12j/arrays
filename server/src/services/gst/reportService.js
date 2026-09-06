@@ -21,9 +21,16 @@ export async function dashboard(db, branchId = null) {
       count(*) FILTER (WHERE status='cancelled')                 AS cancelled,
       count(*) FILTER (WHERE status='needs_review' OR status='error') AS failed_validation,
       coalesce(sum(total_inv_val) FILTER (WHERE NOT is_cancelled),0) AS total_inv_val,
-      coalesce(sum(total_tax_val) FILTER (WHERE NOT is_cancelled),0) AS total_tax_val
+      coalesce(sum(total_tax_val) FILTER (WHERE NOT is_cancelled),0) AS total_tax_val,
+      -- split the value totals into IRN-filed (irn_generated / printed) vs not-yet-filed
+      coalesce(sum(total_inv_val) FILTER (WHERE NOT is_cancelled AND status IN ('irn_generated','printed')),0) AS filed_inv_val,
+      coalesce(sum(total_tax_val) FILTER (WHERE NOT is_cancelled AND status IN ('irn_generated','printed')),0) AS filed_tax_val,
+      coalesce(sum(total_inv_val) FILTER (WHERE NOT is_cancelled AND status NOT IN ('irn_generated','printed')),0) AS unfiled_inv_val,
+      coalesce(sum(total_tax_val) FILTER (WHERE NOT is_cancelled AND status NOT IN ('irn_generated','printed')),0) AS unfiled_tax_val
     FROM gst_einvoices WHERE is_deleted=FALSE ${BF}`, bp)).rows[0];
   einv.total_taxable_val = num(einv, 'total_inv_val') - num(einv, 'total_tax_val');
+  einv.filed_taxable_val = num(einv, 'filed_inv_val') - num(einv, 'filed_tax_val');
+  einv.unfiled_taxable_val = num(einv, 'unfiled_inv_val') - num(einv, 'unfiled_tax_val');
 
   const ewb = (await db.query(`
     SELECT

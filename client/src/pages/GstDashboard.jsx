@@ -15,19 +15,30 @@ import { inr } from '../lib/gst.js';
 
 const COLORS = ['#1d4ed8', '#16a34a', '#f59e0b', '#dc2626', '#7c3aed', '#0891b2', '#db2777', '#65a30d'];
 
-function Metric({ icon: Icon, label, value, tone = 'text-slate-700', bg = 'bg-slate-100', to }) {
+function Metric({ icon: Icon, label, value, sub, tone = 'text-slate-700', bg = 'bg-slate-100', to }) {
   const body = (
     <Card className="!p-4">
       <div className="flex items-center justify-between">
         <div className="min-w-0">
           <p className="truncate text-xs font-semibold uppercase tracking-wide text-slate-400">{label}</p>
           <p className="mt-1 truncate text-xl font-bold tabular-nums text-slate-900 dark:text-white" title={String(value ?? '')}>{value}</p>
+          {sub}
         </div>
         <div className={`shrink-0 rounded-xl p-2.5 ${bg} ${tone}`}><Icon size={20} /></div>
       </div>
     </Card>
   );
   return to ? <Link to={to}>{body}</Link> : body;
+}
+
+// Two-part sub-line for the value metrics: IRN-filed vs not-yet-filed.
+function FiledSplit({ filed, unfiled, money }) {
+  return (
+    <p className="mt-0.5 flex flex-wrap gap-x-2 text-[11px] font-medium">
+      <span className="text-emerald-600 dark:text-emerald-400" title="Invoices with an IRN generated">IRN filed {money(filed)}</span>
+      <span className="text-amber-600 dark:text-amber-500" title="Non-cancelled invoices without an IRN yet (draft / validated / pending / error)">Not filed {money(unfiled)}</span>
+    </p>
+  );
 }
 
 // Tooltip for the Monthly Invoice Volume chart — shows not just the invoice
@@ -96,8 +107,10 @@ export default function GstDashboard() {
         <Metric icon={FileCheck2} label="IRN Generated" value={e.irn_generated} tone="text-emerald-600" bg="bg-emerald-100" />
         <Metric icon={FileX2} label="Cancelled" value={e.cancelled} tone="text-red-600" bg="bg-red-100" />
         <Metric icon={AlertTriangle} label="Failed Validation" value={e.failed_validation} tone="text-red-600" bg="bg-red-100" />
-        <Metric icon={IndianRupee} label="Taxable Value" value={money(e.total_taxable_val)} tone="text-brand-600" bg="bg-brand-100" />
-        <Metric icon={IndianRupee} label="GST Value" value={money(e.total_tax_val)} tone="text-brand-600" bg="bg-brand-100" />
+        <Metric icon={IndianRupee} label="Taxable Value" value={money(e.total_taxable_val)} tone="text-brand-600" bg="bg-brand-100"
+          sub={<FiledSplit filed={e.filed_taxable_val} unfiled={e.unfiled_taxable_val} money={money} />} />
+        <Metric icon={IndianRupee} label="GST Value" value={money(e.total_tax_val)} tone="text-brand-600" bg="bg-brand-100"
+          sub={<FiledSplit filed={e.filed_tax_val} unfiled={e.unfiled_tax_val} money={money} />} />
       </div>
 
       {/* EWB metrics */}
