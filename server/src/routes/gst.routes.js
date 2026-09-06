@@ -225,6 +225,8 @@ router.post('/einvoices/:id/cancel', requirePerm(PERMS.CANCEL), asyncHandler(asy
   res.json(await tx((db) => einv.cancel(db, req.params.id, req.body || {}, uid(req))));
 }));
 router.post('/einvoices/:id/duplicate', requirePerm(PERMS.CREATE), asyncHandler(async (req, res) => res.status(201).json(await tx((db) => einv.duplicate(db, req.params.id, uid(req))))));
+// Convert an invoice into a Credit Note (CRN) draft referencing the original.
+router.post('/einvoices/:id/credit-note', requirePerm(PERMS.CREATE), asyncHandler(async (req, res) => res.status(201).json(await tx((db) => einv.createCreditNote(db, req.params.id, req.body, uid(req))))));
 router.post('/einvoices/:id/archive', requirePerm(PERMS.ARCHIVE), asyncHandler(async (req, res) => res.json(await tx((db) => einv.setArchived(db, req.params.id, req.body?.archived !== false, uid(req))))));
 router.delete('/einvoices/:id', requirePerm(PERMS.EDIT), asyncHandler(async (req, res) => res.json(await tx((db) => einv.softDelete(db, req.params.id, uid(req))))));
 

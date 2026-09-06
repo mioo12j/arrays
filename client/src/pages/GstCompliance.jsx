@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import {
   Plus, Search, FileText, Truck, Loader2, Download, FileJson, ShieldCheck,
-  CheckCircle2, XCircle, Ban, Copy, Archive, Trash2, RefreshCw, Link2, AlertTriangle, ScanLine,
+  CheckCircle2, XCircle, Ban, Copy, Archive, Trash2, RefreshCw, Link2, AlertTriangle, ScanLine, FileMinus2,
 } from 'lucide-react';
 import { pincodeToState } from '../lib/pincode.js';
 import { todayISO } from '../lib/format.js';
@@ -325,6 +325,7 @@ function EInvoiceDetail({ id, can, master, onClose, onChanged, onEdit }) {
   const [cancelReason, setCancelReason] = useState('');
   const [otp, setOtp] = useState(false);
   const [irnForm, setIrnForm] = useState(null);   // offline IRN entry
+  const [cnForm, setCnForm] = useState(null);     // convert-to-credit-note entry
   const [scanning, setScanning] = useState(false);
   // Cosmetic letterhead/office address — editable at any time (even post-IRN).
   const [headerAddr, setHeaderAddr] = useState('');
@@ -371,6 +372,16 @@ function EInvoiceDetail({ id, can, master, onClose, onChanged, onEdit }) {
     setBusy(label);
     try { await fn(); toast.success(`${label} done`); refetch(); onChanged?.(); }
     catch (e) { toast.error(apiError(e)); } finally { setBusy(''); }
+  };
+  // Convert this invoice into a Credit Note (CRN) draft, then offer its portal JSON.
+  const createCreditNote = async () => {
+    setBusy('CRN');
+    try {
+      const { data } = await api.post(`/gst/einvoices/${id}/credit-note`, { docNo: cnForm.docNo?.trim(), docDate: cnForm.docDate });
+      toast.success(`Credit note ${data.docNo || ''} created (draft)`);
+      setCnForm(null); onChanged?.();
+      if (can('gst.download')) gstDownload(`/gst/einvoices/${data.id}/portal-json`);
+    } catch (e) { toast.error(apiError(e)); } finally { setBusy(''); }
   };
   // OTP-gated cancel: first call returns 428 → show 2FA → retry with the token.
   const doCancel = async (otpToken) => {
@@ -482,6 +493,26 @@ function EInvoiceDetail({ id, can, master, onClose, onChanged, onEdit }) {
           </div>
         )}
         {can('gst.create') && <button className="btn-ghost !text-sm" disabled={!!busy} onClick={() => act('Duplicate', () => api.post(`/gst/einvoices/${id}/duplicate`))}><Copy size={14} /> Duplicate</button>}
+        {rec.docType !== 'CRN' && can('gst.create') && (
+          <button className="btn-ghost !text-sm" disabled={!!busy}
+            onClick={() => setCnForm(cnForm ? null : { docNo: `${rec.branchCode ? rec.branchCode + '/' : ''}`, docDate: todayISO() })}>
+            <FileMinus2 size={14} /> Convert to Credit Note
+          </button>
+        )}
+        {cnForm && (
+          <div className="w-full rounded-lg border border-amber-200 bg-amber-50/60 p-3 dark:border-amber-900/40 dark:bg-amber-900/10">
+            <p className="mb-2 text-xs font-semibold text-slate-700 dark:text-slate-200">Credit Note (CRN) against invoice <span className="font-mono">{rec.docNo}</span> · {dmy(rec.docDate)}</p>
+            <div className="grid grid-cols-2 gap-2">
+              <Field label="Credit note no"><input className="input !py-1.5 text-sm" value={cnForm.docNo} onChange={(e) => setCnForm((f) => ({ ...f, docNo: e.target.value }))} placeholder="e.g. BR/CRN/01/2026-27" /></Field>
+              <Field label="Credit note date"><input className="input !py-1.5 text-sm" type="date" value={cnForm.docDate} onChange={(e) => setCnForm((f) => ({ ...f, docDate: e.target.value }))} /></Field>
+            </div>
+            <p className="mt-1.5 text-[11px] text-slate-500 dark:text-slate-400">Type is set to <span className="font-semibold">CRN</span> and the original invoice ({rec.docNo}, {dmy(rec.docDate)}) is recorded as the preceding document. Values copy from the invoice — edit the draft afterwards for a partial credit. The portal JSON downloads automatically.</p>
+            <div className="mt-2 flex gap-2">
+              <button className="btn-primary !py-1.5 !text-sm" disabled={busy === 'CRN' || !cnForm.docNo?.trim() || !cnForm.docDate} onClick={createCreditNote}>{busy === 'CRN' ? <Loader2 className="animate-spin" size={14} /> : <FileMinus2 size={14} />} Create credit note</button>
+              <button className="btn-ghost !py-1.5 !text-sm" onClick={() => setCnForm(null)}>Cancel</button>
+            </div>
+          </div>
+        )}
         {rec.irn && !rec.isCancelled && can('gst.cancel') && (
           <div className="flex w-full items-center gap-2 rounded-lg bg-red-50 p-2 dark:bg-red-900/10">
             <select className="input !py-1.5 max-w-[150px] text-sm" value={cancelReason} onChange={(e) => setCancelReason(e.target.value)}>

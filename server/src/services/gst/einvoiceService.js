@@ -14,6 +14,7 @@ import * as branches from './branchService.js';
 import * as series from './seriesService.js';
 import * as duplicates from './duplicateService.js';
 import * as versions from './versionService.js';
+import { toDdMmYyyy } from './util.js';
 
 const EDITABLE = new Set(['draft', 'validated', 'needs_review', 'error', 'pending_submission']);
 
@@ -54,6 +55,7 @@ export function rowToRecord(r) {
     isDeleted: r.is_deleted,
     validationErrors: r.validation_errors || [],
     sourceInvoiceId: r.source_invoice_id,
+    reference: r.ref_dtls || undefined,   // RefDtls (e.g. a credit note's preceding invoice)
     branchId: r.branch_id,
     branchCode: r.branch_code,
     branchName: r.branch_name,
@@ -171,9 +173,9 @@ export async function createDraft(db, body, userId) {
       (env, schema_version, status, supply_type, doc_type, doc_no, doc_date,
        reverse_charge, igst_on_intra, ecom_gstin,
        seller_dtls, buyer_dtls, disp_dtls, ship_dtls, item_list, val_dtls,
-       buyer_gstin, buyer_name, total_inv_val, total_tax_val, header_address,
+       buyer_gstin, buyer_name, total_inv_val, total_tax_val, header_address, ref_dtls,
        source_invoice_id, prepared_by, created_by)
-     VALUES ($1,'1.1','draft',$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$21)
+     VALUES ($1,'1.1','draft',$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$22)
      RETURNING *`,
     [
       body.env || 'sandbox', body.supplyType || 'B2B', body.docType || 'INV', body.docNo || null, body.docDate || null,
@@ -182,6 +184,7 @@ export async function createDraft(db, body, userId) {
       body.dispatch ? JSON.stringify(body.dispatch) : null, body.shipTo ? JSON.stringify(body.shipTo) : null,
       JSON.stringify(body.items || []), JSON.stringify(body.val || {}),
       s.buyerGstin, s.buyerName, s.totalInvVal, s.totalTaxVal, body.headerAddress || null,
+      body.reference ? JSON.stringify(body.reference) : null,
       body.sourceInvoiceId || null, userId,
     ]
   );
@@ -387,9 +390,36 @@ export async function duplicate(db, id, userId) {
     reverseCharge: cur.reverse_charge, igstOnIntra: cur.igst_on_intra, ecomGstin: cur.ecom_gstin,
     seller: cur.seller_dtls, buyer: cur.buyer_dtls, dispatch: cur.disp_dtls, shipTo: cur.ship_dtls,
     items: cur.item_list, val: cur.val_dtls, sourceInvoiceId: cur.source_invoice_id,
+    branchId: cur.branch_id,   // keep the original billing office
   };
   const created = await createDraft(db, body, userId);
   await recordAudit(db, { objectType: 'einvoice', objectId: created.id, eventType: 'created', message: `Duplicated from ${cur.doc_no || cur.id}`, userId });
+  return created;
+}
+
+// Convert an existing tax invoice into a Credit Note (CRN) draft. It carries the
+// same parties, items and values (edit the draft for a partial credit), stamps
+// the document type as CRN, records the ORIGINAL invoice as the preceding
+// document (RefDtls.PrecDocDtls — invoice no + date), and keeps the billing
+// office. Its Portal JSON is then downloadable and uploadable to the GST portal.
+export async function createCreditNote(db, id, body = {}, userId) {
+  const cur = (await db.query('SELECT * FROM gst_einvoices WHERE id=$1 AND is_deleted=FALSE', [id])).rows[0];
+  if (!cur) throw new ApiError(404, 'e-Invoice not found');
+  if (String(cur.doc_type) === 'CRN') throw new ApiError(400, 'This document is already a credit note.');
+  if (!body.docDate) throw new ApiError(400, 'A credit note date is required.');
+  const cnBody = {
+    env: cur.env, supplyType: cur.supply_type, docType: 'CRN',
+    docNo: body.docNo || '', docDate: body.docDate,
+    reverseCharge: cur.reverse_charge, igstOnIntra: cur.igst_on_intra, ecomGstin: cur.ecom_gstin,
+    seller: cur.seller_dtls, buyer: cur.buyer_dtls, dispatch: cur.disp_dtls, shipTo: cur.ship_dtls,
+    items: cur.item_list, val: cur.val_dtls,
+    branchId: cur.branch_id, sourceInvoiceId: cur.source_invoice_id,   // internal invoice link (FK → invoices)
+    // Preceding document details — the original tax invoice this note adjusts.
+    // This (not source_invoice_id) is the portal-facing reference to the original.
+    reference: { PrecDocDtls: [{ InvNo: cur.doc_no, InvDt: toDdMmYyyy(cur.doc_date) }] },
+  };
+  const created = await createDraft(db, cnBody, userId);
+  await recordAudit(db, { objectType: 'einvoice', objectId: created.id, eventType: 'created', message: `Credit note for invoice ${cur.doc_no || cur.id}`, userId });
   return created;
 }
 
