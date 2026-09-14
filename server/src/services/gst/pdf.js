@@ -300,7 +300,17 @@ export async function einvoicePdf(rec, branding = {}, lang = 'en') {
   doc.fontSize(8).fillColor(INK).font('Helvetica-Bold').text(`Invoice No:  ${rec.docNo || '—'}`, M + 10, my + 7, { lineBreak: false });
   doc.font('Helvetica').fillColor(MUTE).text(`Date: ${dmy(rec.docDate)}      Supply: ${rec.supplyType || '—'}      Reverse Charge: ${rec.reverseCharge ? 'Yes' : 'No'}`,
     M + CW / 2 - 40, my + 7, { width: CW / 2 + 30, align: 'right', lineBreak: false });
-  doc.y = my + 32;
+  let metaBottom = my + 22;
+  // Purchase-order reference (buyer's PO) — printed on our branded document only;
+  // it is deliberately NOT part of the IRP/portal JSON.
+  if (rec.poNo || rec.poDate) {
+    const py2 = metaBottom + 4;
+    box(doc, M, py2, CW, 20, SOFT);
+    doc.fontSize(8).fillColor(INK).font('Helvetica-Bold').text(`PO No:  ${rec.poNo || '—'}`, M + 10, py2 + 6, { lineBreak: false });
+    if (rec.poDate) doc.font('Helvetica').fillColor(MUTE).text(`PO Date: ${dmy(rec.poDate)}`, M + CW / 2, py2 + 6, { width: CW / 2 - 10, align: 'right', lineBreak: false });
+    metaBottom = py2 + 20;
+  }
+  doc.y = metaBottom + 10;
 
   // ── parties (cards grow to fit, aligned to the taller of the two) ───────────
   const py = doc.y, halfW = (CW - 10) / 2;

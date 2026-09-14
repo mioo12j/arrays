@@ -56,6 +56,8 @@ export function rowToRecord(r) {
     validationErrors: r.validation_errors || [],
     sourceInvoiceId: r.source_invoice_id,
     reference: r.ref_dtls || undefined,   // RefDtls (e.g. a credit note's preceding invoice)
+    poNo: r.po_no || null,                // buyer PO — branded PDF only, not in the IRP JSON
+    poDate: r.po_date || null,
     creditNoteSourceEinvoiceId: r.credit_note_source_einvoice_id || null,  // for a CRN: its original invoice (this table)
     branchId: r.branch_id,
     branchCode: r.branch_code,
@@ -182,9 +184,9 @@ export async function createDraft(db, body, userId) {
       (env, schema_version, status, supply_type, doc_type, doc_no, doc_date,
        reverse_charge, igst_on_intra, ecom_gstin,
        seller_dtls, buyer_dtls, disp_dtls, ship_dtls, item_list, val_dtls,
-       buyer_gstin, buyer_name, total_inv_val, total_tax_val, header_address, ref_dtls,
+       buyer_gstin, buyer_name, total_inv_val, total_tax_val, header_address, ref_dtls, po_no, po_date,
        source_invoice_id, prepared_by, created_by)
-     VALUES ($1,'1.1','draft',$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$22)
+     VALUES ($1,'1.1','draft',$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$24)
      RETURNING *`,
     [
       body.env || 'sandbox', body.supplyType || 'B2B', body.docType || 'INV', body.docNo || null, body.docDate || null,
@@ -194,6 +196,7 @@ export async function createDraft(db, body, userId) {
       JSON.stringify(body.items || []), JSON.stringify(body.val || {}),
       s.buyerGstin, s.buyerName, s.totalInvVal, s.totalTaxVal, body.headerAddress || null,
       body.reference ? JSON.stringify(body.reference) : null,
+      body.poNo || null, body.poDate || null,
       body.sourceInvoiceId || null, userId,
     ]
   );
@@ -215,7 +218,7 @@ export async function updateDraft(db, id, body, userId) {
        supply_type=$2, doc_type=$3, doc_no=$4, doc_date=$5, reverse_charge=$6, igst_on_intra=$7, ecom_gstin=$8,
        seller_dtls=$9, buyer_dtls=$10, disp_dtls=$11, ship_dtls=$12, item_list=$13, val_dtls=$14,
        buyer_gstin=$15, buyer_name=$16, total_inv_val=$17, total_tax_val=$18, header_address=$19,
-       branch_id = COALESCE($20, branch_id),
+       branch_id = COALESCE($20, branch_id), po_no=$21, po_date=$22,
        status = CASE WHEN status='error' THEN 'draft'::gst_einv_status ELSE status END
      WHERE id=$1 RETURNING *`,
     [
@@ -225,7 +228,7 @@ export async function updateDraft(db, id, body, userId) {
       body.dispatch ? JSON.stringify(body.dispatch) : null, body.shipTo ? JSON.stringify(body.shipTo) : null,
       JSON.stringify(body.items || []), JSON.stringify(body.val || {}),
       s.buyerGstin, s.buyerName, s.totalInvVal, s.totalTaxVal, body.headerAddress || null,
-      body.branchId || null,
+      body.branchId || null, body.poNo || null, body.poDate || null,
     ]
   );
   await recordAudit(db, { objectType: 'einvoice', objectId: id, eventType: 'edited', message: 'Draft edited', userId });
@@ -400,6 +403,7 @@ export async function duplicate(db, id, userId) {
     seller: cur.seller_dtls, buyer: cur.buyer_dtls, dispatch: cur.disp_dtls, shipTo: cur.ship_dtls,
     items: cur.item_list, val: cur.val_dtls, sourceInvoiceId: cur.source_invoice_id,
     branchId: cur.branch_id,   // keep the original billing office
+    poNo: cur.po_no, poDate: cur.po_date,
   };
   const created = await createDraft(db, body, userId);
   await recordAudit(db, { objectType: 'einvoice', objectId: created.id, eventType: 'created', message: `Duplicated from ${cur.doc_no || cur.id}`, userId });
@@ -421,7 +425,7 @@ export async function createCreditNote(db, id, body = {}, userId) {
     docNo: body.docNo || '', docDate: body.docDate,
     reverseCharge: cur.reverse_charge, igstOnIntra: cur.igst_on_intra, ecomGstin: cur.ecom_gstin,
     seller: cur.seller_dtls, buyer: cur.buyer_dtls, dispatch: cur.disp_dtls, shipTo: cur.ship_dtls,
-    items: cur.item_list, val: cur.val_dtls,
+    items: cur.item_list, val: cur.val_dtls, poNo: cur.po_no, poDate: cur.po_date,
     branchId: cur.branch_id, sourceInvoiceId: cur.source_invoice_id,   // internal invoice link (FK → invoices)
     // Preceding document details — the original tax invoice this note adjusts.
     // This (not source_invoice_id) is the portal-facing reference to the original.

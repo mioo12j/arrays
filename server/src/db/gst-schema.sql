@@ -106,6 +106,11 @@ CREATE TABLE IF NOT EXISTS gst_einvoices (
   validation_errors JSONB NOT NULL DEFAULT '[]',
   last_error      TEXT,
 
+  -- Buyer purchase-order reference — printed on our branded PDF only, NOT sent
+  -- to the IRP/portal JSON.
+  po_no           TEXT,
+  po_date         DATE,
+
   -- Cross-linking + safety
   source_invoice_id UUID REFERENCES invoices(id) ON DELETE SET NULL,
   credit_note_source_einvoice_id UUID REFERENCES gst_einvoices(id), -- a CRN's original tax invoice (this table)

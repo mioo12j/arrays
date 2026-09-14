@@ -235,6 +235,8 @@ function EInvoiceForm({ initial, master, onClose, onSaved }) {
           <input className="input" value={form.docNo} onChange={(e) => { setAutoNo(false); set('docNo')(e); }} placeholder="Select an office → e.g. BR/06/2026-27" />
         </Field>
         <Field label="Document Date"><input className="input" type="date" value={form.docDate} onChange={set('docDate')} /></Field>
+        <Field label="PO Number" hint="Buyer's purchase order — printed on the PDF only, not sent to the portal."><input className="input" value={form.poNo || ''} onChange={set('poNo')} placeholder="Optional" /></Field>
+        <Field label="PO Date"><input className="input" type="date" value={form.poDate || ''} onChange={set('poDate')} /></Field>
       </Section>
 
       <Section title="Letterhead / Office Address (printed on top of the PDF)">
@@ -463,6 +465,7 @@ function EInvoiceDetail({ id, can, master, onClose, onChanged, onEdit, onOpen })
       <DescList>
         <DescRow label="Supply / Doc Type">{rec.supplyType} / {rec.docType}</DescRow>
         <DescRow label="Document Date">{dmy(rec.docDate)}</DescRow>
+        {(rec.poNo || rec.poDate) && <DescRow label="PO No / Date">{rec.poNo || '—'}{rec.poDate ? ` · ${dmy(rec.poDate)}` : ''}</DescRow>}
         <DescRow label="Seller">{rec.seller?.legalName}<div className="font-mono text-xs text-slate-400">{rec.seller?.gstin}</div></DescRow>
         <DescRow label="Buyer">{rec.buyer?.legalName}<div className="font-mono text-xs text-slate-400">{rec.buyer?.gstin}</div></DescRow>
         <DescRow label="Items">{rec.items?.length}</DescRow>
