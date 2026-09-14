@@ -310,6 +310,17 @@ export async function einvoicePdf(rec, branding = {}, lang = 'en') {
     if (rec.poDate) doc.font('Helvetica').fillColor(MUTE).text(`PO Date: ${dmy(rec.poDate)}`, M + CW / 2, py2 + 6, { width: CW / 2 - 10, align: 'right', lineBreak: false });
     metaBottom = py2 + 20;
   }
+  // Delivery / site address (free text) — branded document only, NOT in the IRP JSON.
+  if (rec.siteAddress && String(rec.siteAddress).trim()) {
+    const sy = metaBottom + 4, labelW = 118, txt = String(rec.siteAddress).trim();
+    doc.font('Helvetica').fontSize(8);
+    const th = doc.heightOfString(txt, { width: CW - labelW - 20 });
+    const bh = Math.max(20, th + 12);
+    box(doc, M, sy, CW, bh, SOFT);
+    doc.fontSize(7.5).fillColor(MUTE).font('Helvetica-Bold').text('SITE / DELIVERY ADDRESS', M + 10, sy + 6, { width: labelW, lineBreak: false });
+    doc.font('Helvetica').fontSize(8).fillColor(INK).text(txt, M + labelW + 10, sy + 6, { width: CW - labelW - 20 });
+    metaBottom = sy + bh;
+  }
   doc.y = metaBottom + 10;
 
   // ── parties (cards grow to fit, aligned to the taller of the two) ───────────

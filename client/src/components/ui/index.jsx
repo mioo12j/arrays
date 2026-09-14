@@ -97,9 +97,9 @@ export function DescRow({ label, children, wide, mono }) {
   );
 }
 
-export function Field({ label, children, required, hint }) {
+export function Field({ label, children, required, hint, className }) {
   return (
-    <div>
+    <div className={className}>
       <label className="label">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
