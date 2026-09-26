@@ -95,7 +95,7 @@ PAGES = {
         desc="The page you were looking for could not be found. Explore Arrays Ingenieria's solar projects, services and news."),
 }
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from content import PROJECTS, FAQ, GLOSSARY, CLIENTS  # noqa: E402
+from content import PROJECTS, FAQ, GLOSSARY, CLIENTS, LEADER_QUOTES, NATIONAL_FACTS, SCHEMES, TIMELINE  # noqa: E402
 
 PAGES.update({
     "capex-solar-epc.html": dict(path="/capex-solar-epc.html", crumb="CAPEX Solar EPC", parent="services",
@@ -116,6 +116,12 @@ PAGES.update({
     "solar-glossary.html": dict(path="/solar-glossary.html", crumb="Solar Glossary",
         title="Solar Glossary: EPC, CAPEX, I&C Terms | Arrays Ingenieria",
         desc="Plain-English definitions of solar terms: EPC, I&C, CAPEX vs OPEX, net metering, kWp, pile foundations, DG synchronisation and more."),
+    "ex-servicemen-led-msme.html": dict(path="/ex-servicemen-led-msme.html", crumb="Ex-Servicemen-Led MSME",
+        title="Ex-Servicemen-Led Solar MSME | Arrays Ingenieria",
+        desc="Arrays Ingenieria is an ex-servicemen-led MSME founded by Lt. Gen. A.R. Prasad (Retd): Olive Green to Go Green, a second innings of national service."),
+    "solar-schemes-india.html": dict(path="/solar-schemes-india.html", crumb="Solar Schemes in India",
+        title="Government Solar Schemes in India 2026 | Arrays Ingenieria",
+        desc="PM Surya Ghar, PM-KUSUM, Assam's tea-garden solar policy, accelerated depreciation and net metering, with official sources and leaders' statements."),
     "contact.html": dict(path="/contact.html", crumb="Contact",
         title="Contact Arrays Ingenieria | Solar EPC, Greater Noida",
         desc="Contact Arrays Ingenieria for solar EPC, installation & commissioning or civil works. Corporate office Greater Noida, branch office Madhubani, Bihar."),
@@ -309,6 +315,16 @@ COVERAGE = [
          url="https://www.sentinelassam.com/north-east-india-news/assam-news/assam-aipl-commissions-1-mw-solar-power-plant-at-jayshree-tea-estate",
          img="assets/photos/proj-jayshree.jpg",
          alt="Jayshree Tea Estate 1 MW solar plant in Sonari, Assam, reported by The Sentinel"),
+    dict(id="hub-network-orangajuli", kind="online", outlet="Hub Network", place="Guwahati, Assam", platform="hubnetwork.in",
+         date="2026-09-04",
+         headline="Assam tea garden gets 450 kWp solar plant as clean energy push gathers pace",
+         summary="Reports the commissioning of the 450 kWp ground-mounted plant at Orangajuli Tea Garden, Panerihaat, Udalguri, by "
+                 "Arrays Ingenieria, the installation partner for the 3.11 MW TPREL and SustVest programme covering 18 Goodricke tea "
+                 "estates, with the plant inaugurated by garden manager Daljit Singh Maan.",
+         quote="For Arrays Ingenieria, the project also reflects its 'Olive Green to Go Green' philosophy.",
+         url="https://hubnetwork.in/assam-tea-garden-gets-450-kwp-solar-plant-as-clean-energy-push-gathers-pace/",
+         img="assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg",
+         alt="Orangajuli Tea Estate 450 kW solar plant inauguration, reported by Hub Network"),
     dict(id="prerna-bharati-orangajuli", kind="print", outlet="Prerna Bharati", place="Silchar, Assam", lang="hi",
          date="2026-09-05",
          headline="New green-energy initiative in Assam on Janmashtami: 450 kW solar plant starts",
@@ -450,7 +466,7 @@ FOOTER = f"""<footer class="footer">
             <img src="assets/img/logo-mark.svg" alt="Arrays Ingenieria logo" class="brand-mark" />
             {WORDMARK}
           </div>
-          <p>Developing Green Energy for the Nation. Arrays Ingenieria is a veteran-led, ISO-certified solar EPC company delivering ground-mount &amp; rooftop solar across India.</p>
+          <p>Developing Green Energy for the Nation. Arrays Ingenieria is an ex-servicemen-led, ISO-certified MSME delivering solar installation, EPC and civil works across India.</p>
           <a href="mailto:arraysingenieria@gmail.com" class="footer-email">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>arraysingenieria@gmail.com
           </a>
@@ -459,6 +475,7 @@ FOOTER = f"""<footer class="footer">
           <h2 class="footer__h">Explore</h2>
           <ul>
             <li><a href="about.html">About Us</a></li>
+            <li><a href="ex-servicemen-led-msme.html">Ex-Servicemen-Led MSME</a></li>
             <li><a href="industries.html">Industries</a></li>
             <li><a href="solar-for-tea-estates.html">Solar for Tea Estates</a></li>
             <li><a href="projects.html">Projects &amp; Case Studies</a></li>
@@ -467,6 +484,7 @@ FOOTER = f"""<footer class="footer">
             <li><a href="recognition.html">News &amp; Media</a></li>
             <li><a href="achievements.html">Achievements</a></li>
             <li><a href="insights.html">Insights</a></li>
+            <li><a href="solar-schemes-india.html">Government Solar Schemes</a></li>
             <li><a href="solar-glossary.html">Solar Glossary</a></li>
             <li><a href="faq.html">FAQ</a></li>
             <li><a href="contact.html">Contact</a></li>
@@ -670,6 +688,65 @@ def coverage_ld():
             "itemListElement": [{"@type": "ListItem", "position": i + 1, "item": it} for i, it in enumerate(items)]}}
 
 
+# ------------------------------------------- quotes, schemes, timeline ----
+QUOTE_NOTE = ("Public statements on India's clean-energy and veterans' agenda, quoted from the official sources linked. "
+              "They are national context for our work, not endorsements of Arrays Ingenieria.")
+
+
+def quote_figure(q, cls="lq-card"):
+    words = f'“{esc(q["quote"])}”'
+    reported = '<span class="lq-rep">As reported by PIB</span>' if q.get("reported") else ""
+    return (f'<figure class="{cls}" id="quote-{q["id"]}"><span class="lq-mono">{q["mono"]}</span>'
+            f'<blockquote><p>{words}</p></blockquote>'
+            f'<figcaption><b>{esc(q["who"])}</b><span>{esc(q["role"])}</span>'
+            f'<small>{esc(q["context"])} · {time_tag(q["date"])}{reported}</small>'
+            f'<a href="{q["url"]}" target="_blank" rel="noopener">Source: {esc(q["source"])} {EXT_SVG}</a></figcaption></figure>')
+
+
+def render_leader_quotes():
+    slides = "".join(quote_figure(q, "lq-card lq-slide") for q in LEADER_QUOTES)
+    return f"""<div class="lq-slider reveal" data-interval="7000">
+      <div class="lq-track">{slides}</div>
+      <div class="lq-nav"><button class="lq-prev" aria-label="Previous quote">&#8249;</button><div class="lq-dots"></div><button class="lq-next" aria-label="Next quote">&#8250;</button></div>
+    </div>
+    <p class="lq-note">{QUOTE_NOTE}</p>"""
+
+
+def render_leader_grid():
+    return ('<div class="lq-grid">' + "".join(quote_figure(q, "lq-card reveal") for q in LEADER_QUOTES)
+            + f'</div>\n    <p class="lq-note">{QUOTE_NOTE}</p>')
+
+
+def render_national_facts():
+    cards = []
+    for i, f in enumerate(NATIONAL_FACTS):
+        cards.append(f'<a class="nf-card reveal" data-d="{i}" href="{f["url"]}" target="_blank" rel="noopener">'
+                     f'<span class="nf-num"><span data-count="{f["num"]}">{f["num"]}</span><small>{f["suffix"]}</small></span>'
+                     f'<span class="nf-lbl">{esc(f["label"])}</span><span class="nf-src">Source: PIB {EXT_SVG}</span></a>')
+    return '<div class="nf-grid">' + "".join(cards) + "</div>"
+
+
+def render_schemes():
+    cards = []
+    for i, (title, who, points, fit, src, url) in enumerate(SCHEMES):
+        pts = "".join(f"<li>{esc(p)}</li>" for p in points)
+        source = (f'<a class="sc-src" href="{url}" target="_blank" rel="noopener">Source: {esc(src)} {EXT_SVG}</a>' if url
+                  else f'<span class="sc-src">Source: {esc(src)}</span>')
+        cards.append(f'<article class="scheme-card reveal" data-d="{i % 3}"><span class="sc-who">{esc(who)}</span><h3>{esc(title)}</h3>'
+                     f'<ul>{pts}</ul><p class="sc-fit"><b>Where we fit:</b> {esc(fit)}</p>{source}</article>')
+    return '<div class="scheme-grid">' + "".join(cards) + "</div>"
+
+
+def render_timeline():
+    items = []
+    for i, (label, iso, title, text, link) in enumerate(TIMELINE):
+        side = "l" if i % 2 == 0 else "r"
+        items.append(f'<li class="tl-item tl-{side} reveal"><span class="tl-dot" aria-hidden="true"></span>'
+                     f'<div class="tl-card"><time datetime="{iso}">{label}</time><h3>{esc(title)}</h3><p>{esc(text)}</p>'
+                     f'<a href="{link}">Read more →</a></div></li>')
+    return '<ol class="timeline" data-timeline>' + "".join(items) + "</ol>"
+
+
 BLOCKS = {
     "press-tv": lambda: render_tv(),
     "press-print": render_press,
@@ -677,6 +754,11 @@ BLOCKS = {
     "press-home": render_home_news,
     "press-band": render_press_band,
     "videos": lambda: render_tv(with_ids=False),
+    "leader-quotes": render_leader_quotes,
+    "leader-grid": render_leader_grid,
+    "national-facts": render_national_facts,
+    "schemes": render_schemes,
+    "timeline": render_timeline,
 }
 
 

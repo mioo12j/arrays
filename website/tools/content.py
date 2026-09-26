@@ -53,13 +53,13 @@ PROJECTS = [
         short="Orangajuli Tea Estate, Assam — 450 kW",
         title="450 kW Solar, Orangajuli Tea Estate | Arrays Ingenieria",
         desc="Case study: 450 kW grid-connected ground-mount solar plant at Goodricke's Orangajuli Tea Estate, Udalguri, Assam, commissioned on Janmashtami 2026.",
-        capacity="450 kW", kind="Ground-mount, grid-connected", location="Orangajuli, Udalguri district, Assam",
+        capacity="450 kW", kind="Ground-mount, grid-connected", location="Orangajuli, Panerihaat, Udalguri district, Assam",
         client="Orangajuli Tea Estate (Goodricke Group)", partner="Tata Power Renewable Energy Ltd. & Sustvest (3.11 MW programme)",
-        role="Installation partner", year="2026 (commissioned September 2026)",
+        role="Installation partner", year="2026 (commissioned 4 September 2026)",
         cat="ground", tag="Tea Estate · Ground-Mount",
         hero="assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg",
-        intro="A 450 kW grid-connected ground-mount solar plant at Orangajuli Tea Estate in Udalguri, Assam, commissioned on "
-              "Janmashtami 2026 and inaugurated by the estate manager, Daljit Singh Maan.",
+        intro="A 450 kW grid-connected ground-mount solar plant at Orangajuli Tea Estate, Panerihaat, in Udalguri, Assam, commissioned "
+              "on Janmashtami, 4 September 2026, and inaugurated by the estate manager, Daljit Singh Maan.",
         body=[
             "The plant is part of a 3.11 MW solar programme for Goodricke Group's tea estates, developed jointly by Tata Power Renewable "
             "Energy Ltd. and Sustvest, with Arrays Ingenieria as the installation partner.",
@@ -70,7 +70,7 @@ PROJECTS = [
         photos=[("assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg",
                  "Ribbon-cutting at the 450 kW Orangajuli Tea Estate solar plant in Udalguri, Assam, built by Arrays Ingenieria")],
         docs=[("assets/news/prerna-bharati-orangajuli-450kw-solar-ingenieria.jpg", "Prerna Bharati, 5 Sep 2026: report on the Orangajuli plant")],
-        coverage=["ne-reports-orangajuli", "prerna-bharati-orangajuli"],
+        coverage=["ne-reports-orangajuli", "hub-network-orangajuli", "prerna-bharati-orangajuli"],
         services=["solar-installation-commissioning.html", "service-ground-mount.html", "solar-for-tea-estates.html"],
     ),
     dict(
@@ -393,4 +393,109 @@ CLIENTS = [
     ("Amalgamated Plantations (APPL)", "Plant owner", "A solar project at Kakajan Tea Estate, Assam.", []),
     ("YIAPL", "Client", "Supply, civil works and chain-link fencing for a 14.36 MW solar project in Uttar Pradesh.",
      ["project-yiapl-14-36mw-solar-civil-fencing.html"]),
+]
+
+# -------------------------------------------------------- leader quotes ----
+# Verbatim public statements, each with its official source. Shown as the
+# national context for our work; they are not endorsements of the company.
+# reported=True: PIB reported the words in indirect speech, so the page says so.
+LEADER_QUOTES = [
+    dict(id="pm", who="Shri Narendra Modi", role="Prime Minister of India", mono="PM",
+         quote="In order to further sustainable development and people's wellbeing, we are launching the PM Surya Ghar: Muft Bijli "
+               "Yojana. This project, with an investment of over Rs. 75,000 crores, aims to light up 1 crore households by providing "
+               "up to 300 units of free electricity every month.",
+         context="Launching PM Surya Ghar: Muft Bijli Yojana", date="2024-02-13",
+         source="PIB, Prime Minister's Office", url="https://pib.gov.in/PressReleasePage.aspx?PRID=2005596"),
+    dict(id="rm", who="Shri Rajnath Singh", role="Raksha Mantri (Defence Minister)", mono="RM",
+         quote="Ex-servicemen are a national asset, bringing decades of experience, leadership, discipline & strategic thinking to "
+               "society. Their continued engagement in social & economic initiatives strengthen communities and the nation as a whole.",
+         context="National Conclave 2025 on ex-servicemen welfare, Manekshaw Centre, New Delhi", date="2025-09-29",
+         source="PIB, Ministry of Defence", url="https://pib.gov.in/PressReleasePage.aspx?PRID=2172917"),
+    dict(id="cm", who="Dr Himanta Biswa Sarma", role="Chief Minister of Assam", mono="CM",
+         quote="On solar, we are moving on multiple fronts: expediting adoption of the PM Surya Ghar scheme to expand rooftop solar, "
+               "and permitting tea garden owners to use up to 5% of their land for solar generation opening a new avenue for green "
+               "power across our tea belt.",
+         context="Rewriting Assam's Energy Future", date="2026-09-22",
+         source="Himanta Biswa Sarma", url="https://himantabiswa.substack.com/p/rewriting-assams-energy-future"),
+    dict(id="hm", who="Shri Amit Shah", role="Union Home Minister", mono="HM", reported=True,
+         quote="The stepwell construction and Solar Roof-Top Yojana have been made keeping in mind the earth's temperature, climate "
+               "change and water needs in the coming times.",
+         context="Urging Ahmedabad residents to adopt PM Surya Ghar rooftop solar", date="2025-01-23",
+         source="PIB, Ministry of Home Affairs (as reported)", url="https://pib.gov.in/PressReleasePage.aspx?PRID=2095622"),
+]
+
+# ------------------------------------------------------- national facts ----
+NATIONAL_FACTS = [
+    dict(num="500", suffix=" GW", label="Non-fossil capacity target for 2030, announced by the Prime Minister at COP26",
+         url="https://pib.gov.in/PressReleasePage.aspx?PRID=2250039"),
+    dict(num="283.46", suffix=" GW", label="Non-fossil capacity installed in India as on 31 March 2026",
+         url="https://pib.gov.in/PressReleasePage.aspx?PRID=2250039"),
+    dict(num="50", suffix="%", label="Share of India's installed power capacity from non-fossil sources, reached June 2025",
+         url="https://pib.gov.in/PressReleasePage.aspx?PRID=2250039"),
+    dict(num="1", suffix=" crore", label="Households targeted for rooftop solar under PM Surya Ghar",
+         url="https://pib.gov.in/PressReleasePage.aspx?PRID=2010133"),
+]
+
+# -------------------------------------------------------------- schemes ----
+# (title, who it is for, points, how we fit in, source name, source url)
+SCHEMES = [
+    ("PM Surya Ghar: Muft Bijli Yojana", "Homes",
+     ["Launched by the Prime Minister on 13 February 2024; approved by the Union Cabinet on 29 February 2024 with an outlay of Rs 75,021 crore",
+      "Central financial assistance of 60% of system cost for 2 kW and 40% of the additional cost between 2 and 3 kW, capped at 3 kW",
+      "At benchmark prices: Rs 30,000 for 1 kW, Rs 60,000 for 2 kW and Rs 78,000 for 3 kW or more",
+      "Collateral-free loans of around 7% for residential systems up to 3 kW; applications through the National Portal"],
+     "The scheme is aimed at households. Our focus is commercial, industrial and tea-estate plants, which fall outside it.",
+     "PIB, 29 Feb 2024", "https://pib.gov.in/PressReleasePage.aspx?PRID=2010133"),
+    ("PM-KUSUM", "Farmers, cooperatives, panchayats, FPOs",
+     ["Launched in March 2019 and scaled up in January 2024",
+      "Component A: decentralised ground- or stilt-mounted grid-connected solar plants of up to 2 MW on farmers' land, with the power bought by DISCOMs at a pre-fixed tariff",
+      "Component B: standalone solar agriculture pumps in off-grid areas",
+      "Component C: solarisation of grid-connected agriculture pumps, individually or at feeder level"],
+     "Component A plants are ground-mount plants of up to 2 MW: the pile foundations, civil works, installation and commissioning we do every day.",
+     "PIB, 6 Aug 2024", "https://pib.gov.in/PressReleasePage.aspx?PRID=2042069"),
+    ("Solar in Assam's tea gardens", "Tea estates in Assam",
+     ["The Chief Minister of Assam has announced that tea garden owners may use up to 5% of their land for solar generation",
+      "Assam's target is 6,000 MW of installed green energy capacity by 2030"],
+     "We have built 19 on-grid plants in Assam's tea gardens and know the estates, the land, DG synchronisation and APDCL approvals.",
+     "Himanta Biswa Sarma, 22 Sep 2026", "https://himantabiswa.substack.com/p/rewriting-assams-energy-future"),
+    ("Accelerated depreciation", "Businesses that own their plant",
+     ["A business that owns a solar plant can depreciate it faster than ordinary assets under the Income Tax Act, lowering tax in the early years",
+      "Available only when you own the plant, which is why it matters for the CAPEX model"],
+     "Every plant we build on the CAPEX model belongs to the client, so the benefit is theirs. Check the current rate with your tax adviser.",
+     "Income Tax Act, 1961", ""),
+    ("Net metering", "Grid-connected consumers",
+     ["Power exported to the grid is offset against power drawn, under the rules of your state DISCOM and electricity regulator"],
+     "We handle the net-metering application and inspections; at Barpatra Tea Estate we obtained the approvals from APDCL.",
+     "State electricity regulations", ""),
+    ("ALMM: approved modules", "Government-linked projects",
+     ["MNRE's Approved List of Models and Manufacturers sets which solar modules may be used in government-linked projects"],
+     "We are not a manufacturer, so we specify the ALMM-listed or client-approved makes each project requires.",
+     "Ministry of New and Renewable Energy", ""),
+]
+
+# ------------------------------------------------------------- timeline ----
+# (date label, iso, title, text, link)
+TIMELINE = [
+    ("Oct 2018", "2018-10", "Company founded",
+     "Arrays Ingenieria Pvt. Ltd. is incorporated in New Delhi. Founded by Lt. Gen. Ashish Ranjan Prasad (Retd), it sets out to give fellow veterans a second innings in green energy.", "about.html"),
+    ("Jun 2021", "2021-06", "First Tata Power work order",
+     "Civil works for the 9979 kWp (10 MW) solar plant at DCM Textile, Hisar.", "project-dcm-hisar-10mw-solar-civil-works.html"),
+    ("Jul 2023", "2023-07", "Tata Motors, Jamshedpur",
+     "Piling and civil works for the 5.5 MW plant, for Tata Power.", "project-tata-motors-jamshedpur-5-5mw-solar-piling.html"),
+    ("Apr 2024", "2024-04", "In Dainik Bhaskar",
+     "The 319 kWp rooftop plant for TCPL Greenery Agro in Vaishali, Bihar, makes the news.", "project-tcpl-vaishali-319kwp-rooftop-solar.html"),
+    ("2024", "2024", "India 5000 Best MSME Awards",
+     "Nominated for quality excellence.", "achievements.html"),
+    ("Dec 2024", "2024-12", "Jay Shree Tea purchase order",
+     "Supply, installation and commissioning of 1035 kWp at Towkok and Manjushree Tea Estates.", "project-jayshree-tea-1mw-solar-assam.html"),
+    ("Feb 2025", "2025-02", "SECI 300 MW, Koppal",
+     "Tata Power outline agreement for pile foundations on the 300 MW SECI project.", "project-seci-300mw-koppal-pile-foundation.html"),
+    ("May 2025", "2025-05", "Jay Shree Tea's first solar plants",
+     "Inaugurated on 20 May; reported by The Sentinel and announced by Jay Shree Tea.", "recognition.html#sentinel-jayshree"),
+    ("Nov 2025", "2025-11", "Dewan Group of Tea Estates",
+     "Solar plants at Dewan, Labac and Burtoll for Jay Shree Tea.", "recognition.html#jayshree-dewan"),
+    ("Mar 2026", "2026-03", "Sustvest, 1711.66 kWp",
+     "Appointed for supply, installation and commissioning of an on-grid project in Assam.", "project-assam-1711kwp-on-grid-solar.html"),
+    ("Sep 2026", "2026-09", "Orangajuli and Barpatra",
+     "450 kW at Orangajuli on Janmashtami and 230 kW at Barpatra: 19 on-grid plants in Assam's tea gardens.", "solar-for-tea-estates.html"),
 ]

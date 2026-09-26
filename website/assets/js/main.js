@@ -6,12 +6,112 @@
   const $  = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
 
+  const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- Auto-stagger: sibling reveals without data-d cascade in ---------- */
+  const staggerGroups = new Map();
+  $$(".reveal:not([data-d])").forEach(el => {
+    const list = staggerGroups.get(el.parentElement) || [];
+    list.push(el);
+    staggerGroups.set(el.parentElement, list);
+  });
+  staggerGroups.forEach(list => {
+    if (list.length > 1) list.forEach((el, i) => { el.style.transitionDelay = Math.min(i, 6) * 80 + "ms"; });
+  });
+
+  /* ---------- Page titles rise in word by word ---------- */
+  if (!reduceMotion) {
+    $$(".page-hero h1").forEach(h1 => {
+      let i = 0;
+      const wrap = node => {
+        const outer = document.createElement("span");
+        outer.className = "rise-w";
+        const inner = document.createElement("span");
+        inner.style.setProperty("--i", i++);
+        inner.appendChild(node);
+        outer.appendChild(inner);
+        return outer;
+      };
+      Array.from(h1.childNodes).forEach(node => {
+        if (node.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          node.textContent.split(/(\s+)/).forEach(part => {
+            if (!part) return;
+            frag.appendChild(/^\s+$/.test(part) ? document.createTextNode(part) : wrap(document.createTextNode(part)));
+          });
+          h1.replaceChild(frag, node);
+        } else if (node.nodeType === 1 && node.tagName !== "BR") {
+          // a styled phrase (e.g. the gold gradient) rises as one unit so its gradient stays intact
+          h1.replaceChild(wrap(node.cloneNode(true)), node);
+        }
+      });
+    });
+  }
+
+  /* ---------- Scroll progress, hero parallax, timeline fill ---------- */
+  const progress = document.createElement("div");
+  progress.className = "scroll-progress";
+  progress.setAttribute("aria-hidden", "true");
+  document.body.appendChild(progress);
+  const heroBg = $(".page-hero__bg");
+  const timelines = $$("[data-timeline]");
+  let ticking = false;
+  const onScrollFx = () => {
+    ticking = false;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    progress.style.setProperty("--sp", max > 0 ? (scrollY / max).toFixed(4) : 0);
+    if (heroBg && !reduceMotion && scrollY < innerHeight) heroBg.style.setProperty("--py", (scrollY * 0.25).toFixed(1) + "px");
+    timelines.forEach(tl => {
+      const r = tl.getBoundingClientRect();
+      const p = Math.min(Math.max((innerHeight * 0.7 - r.top) / r.height, 0), 1);
+      tl.style.setProperty("--tl", reduceMotion ? 1 : p.toFixed(3));
+    });
+  };
+  window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(onScrollFx); } }, { passive: true });
+  window.addEventListener("resize", onScrollFx);
+  onScrollFx();
+
+  /* ---------- Leaders' quote slider ---------- */
+  $$(".lq-slider").forEach(sl => {
+    const slides = $$(".lq-slide", sl);
+    const dotsWrap = $(".lq-dots", sl);
+    if (!slides.length) return;
+    let idx = 0, timer;
+    const dots = slides.map((s, i) => {
+      const d = document.createElement("button");
+      d.setAttribute("aria-label", "Show quote " + (i + 1));
+      d.addEventListener("click", () => go(i, true));
+      dotsWrap.appendChild(d);
+      return d;
+    });
+    const go = (n, manual) => {
+      slides[idx].classList.remove("active"); dots[idx].classList.remove("active");
+      idx = (n + slides.length) % slides.length;
+      slides[idx].classList.add("active"); dots[idx].classList.add("active");
+      if (manual) restart();
+    };
+    const start = () => { if (!reduceMotion) timer = setInterval(() => go(idx + 1), parseInt(sl.dataset.interval || "7000", 10)); };
+    const restart = () => { clearInterval(timer); start(); };
+    $(".lq-prev", sl).addEventListener("click", () => go(idx - 1, true));
+    $(".lq-next", sl).addEventListener("click", () => go(idx + 1, true));
+    sl.addEventListener("mouseenter", () => clearInterval(timer));
+    sl.addEventListener("mouseleave", restart);
+    slides[0].classList.add("active"); dots[0].classList.add("active");
+    start();
+  });
+
   /* ---------- Scroll reveal ---------- */
   const reveals = $$(".reveal");
   if ("IntersectionObserver" in window && reveals.length) {
     const io = new IntersectionObserver((entries, obs) => {
       entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add("in"); obs.unobserve(e.target); }
+        if (e.isIntersecting) {
+          const el = e.target;
+          el.classList.add("in");
+          obs.unobserve(el);
+          // once the entrance has played, drop its delay so hover effects respond instantly
+          setTimeout(() => { el.style.transitionDelay = "0s"; }, 1400);
+        }
       });
     }, { threshold: 0.1, rootMargin: "0px 0px -40px 0px" });
     reveals.forEach(el => io.observe(el));
@@ -23,11 +123,12 @@
   const counters = $$("[data-count]");
   const animateCount = el => {
     const target = parseFloat(el.dataset.count);
+    const decimals = (el.dataset.count.split(".")[1] || "").length;
     const suffix = el.dataset.suffix || "";
     const dur = 1600, start = performance.now();
     const step = now => {
       const p = Math.min((now - start) / dur, 1);
-      const val = Math.round(target * (1 - Math.pow(1 - p, 3)));
+      const val = (target * (1 - Math.pow(1 - p, 3))).toFixed(decimals);
       el.textContent = val + suffix;
       if (p < 1) requestAnimationFrame(step);
     };
