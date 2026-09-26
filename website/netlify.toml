@@ -1,0 +1,4 @@
+# Netlify config for the Ingenieria marketing website (plain static HTML/CSS/JS, no build step).
+# In Netlify: set "Base directory" to `website`.
+[build]
+  publish = "."

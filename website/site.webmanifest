@@ -1,0 +1,12 @@
+{
+  "name": "Arrays Ingenieria Pvt. Ltd.",
+  "short_name": "Ingenieria",
+  "description": "Developing Green Energy for the Nation — solar EPC & renewable energy solutions across India.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f3d2e",
+  "icons": [
+    { "src": "assets/img/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
