@@ -16,8 +16,8 @@ What it does to every page:
     for the first (hero) image
   * adds a BreadcrumbList where a page has none
 
-Edit PAGES for titles/descriptions, GALLERY for gallery photos, VIDEOS for
-video coverage. Change SITE_URL once the custom domain is live.
+Edit PAGES for titles/descriptions, GALLERY for gallery photos, COVERAGE for
+news, video and client-post coverage. Change SITE_URL once the custom domain is live.
 """
 import html
 import json
@@ -44,7 +44,7 @@ TODAY = date.today().isoformat()
 PAGES = {
     "index.html": dict(path="/", crumb="Home",
         title="Arrays Ingenieria | Veteran-Led Solar EPC Company in India",
-        desc="Arrays Ingenieria is a veteran-led, ISO-certified solar EPC company building ground-mount & rooftop solar plants across India for Tata Power, Tata Steel & more."),
+        desc="Arrays Ingenieria is a veteran-led, ISO-certified solar EPC company building ground-mount & rooftop solar across India for Tata Power, Tata Steel & more."),
     "about.html": dict(path="/about.html", crumb="About",
         title="About Arrays Ingenieria | Veteran-Led Solar EPC, India",
         desc="Founded in 2018 by ex-servicemen and led by Lt. Gen. A.R. Prasad (Retd), Arrays Ingenieria is an ISO 9001/14001/45001-certified solar EPC company."),
@@ -54,9 +54,9 @@ PAGES = {
     "gallery.html": dict(path="/gallery.html", crumb="Gallery",
         title="Photo & Video Gallery | Arrays Ingenieria Solar Projects",
         desc="Photos and videos of Arrays Ingenieria solar power plants, inaugurations, awards, certifications and news coverage from Assam to Karnataka."),
-    "recognition.html": dict(path="/recognition.html", crumb="Recognition",
-        title="News, Media & Recognition | Arrays Ingenieria",
-        desc="Arrays Ingenieria in the news: Assam tea-estate solar plants at Orangajuli & Barpatra, TV coverage, and honours from India's national leadership."),
+    "recognition.html": dict(path="/recognition.html", crumb="News & Media",
+        title="Arrays Ingenieria in the News | TV, Press & Client Posts",
+        desc="Arrays Ingenieria on NE Reports, Sonari Live, News Axom, The Sentinel, Prerna Bharati and Dainik Bhaskar, plus client posts and national honours."),
     "achievements.html": dict(path="/achievements.html", crumb="Achievements",
         title="Awards & ISO Certifications | Arrays Ingenieria",
         desc="Client appreciation from Jay Shree Tea, Super Smelters & Bharat Petroleum, ISO 9001, 14001 & 45001 certification and work orders won by Arrays Ingenieria."),
@@ -237,33 +237,149 @@ GALLERY = [
      "Purchase order to Arrays Ingenieria for 1711.66 kWp on-grid solar in Assam"),
 ]
 
-# ------------------------------------------------------------- videos ----
-VIDEOS = [
-    dict(url="https://www.facebook.com/reel/1678209397245830/", net="Facebook · NE Reports",
-         title="Janmashtami launch: 450 kW solar plant at Orangajuli Tea Estate, Udalguri, Assam",
+# ----------------------------------------------------------- coverage ----
+# Every place Arrays Ingenieria has been reported on. One list drives the
+# News & Media page, the home-page "In the News" section, the "featured in"
+# strips, the gallery videos and the structured data. Quotes are verbatim from
+# the source; keep them that way. kind: tv | online | print | client.
+# date: ISO (YYYY-MM-DD or YYYY-MM) or None when the source shows no date.
+COVERAGE = [
+    dict(id="ne-reports-orangajuli", kind="tv", outlet="NE Reports", place="Dibrugarh, Assam", platform="Facebook",
+         date="2026-09",
+         headline="Janmashtami launch: 450 kW solar plant at Orangajuli Tea Estate, Udalguri",
+         summary="NE Reports filmed the ribbon-cutting at the 450 kW ground-mount solar plant Arrays Ingenieria built for "
+                 "Goodricke Group's Orangajuli Tea Estate, commissioned on Janmashtami.",
+         url="https://www.facebook.com/reel/1678209397245830/",
          img="assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg",
-         alt="Ribbon-cutting at the Orangajuli Tea Estate solar plant built by Arrays Ingenieria (still from NE Reports video)"),
-    dict(url="https://www.facebook.com/100089972142580/videos/1069048716104190/", net="Facebook · Sonari Live",
-         title="Sonari Live video report on Arrays Ingenieria's tea-estate solar plants in Assam",
-         img="assets/photos/proj-jayshree.jpg",
-         alt="Tea-estate ground-mount solar plant in Sonari, Assam built by Arrays Ingenieria"),
-    dict(url="https://www.facebook.com/61564147994036/videos/122210117936471599/", net="Facebook · News Axom",
-         title="News Axom video report on veteran-led solar power for Assam's tea gardens",
-         img="assets/photos/proj-manjushree.jpg",
+         alt="Ribbon-cutting at the 450 kW Orangajuli Tea Estate solar plant built by Arrays Ingenieria (still from the NE Reports video)"),
+    dict(id="sonari-live", kind="tv", outlet="Sonari Live", place="Sonari, Assam", platform="Facebook", date=None,
+         headline="Sonari Live news report on Arrays Ingenieria's tea-estate solar plants",
+         summary="Sonari Live's news video on Arrays Ingenieria's solar work in Sonari, where the company has commissioned "
+                 "ground-mount plants for tea estates including Jayshree, Towkok and Barpatra.",
+         url="https://www.facebook.com/100089972142580/videos/1069048716104190/",
+         bg="assets/photos/proj-jayshree.jpg",
+         alt="Jayshree Tea Estate solar plant in Sonari, Assam, built by Arrays Ingenieria"),
+    dict(id="news-axom", kind="tv", outlet="News Axom", place="Nagaon, Assam", platform="Facebook", date=None,
+         headline="News Axom video report on Arrays Ingenieria's solar work in Assam",
+         summary="Assamese news channel News Axom's video report on Arrays Ingenieria, the ex-servicemen-run company "
+                 "building solar power plants for Assam's tea industry.",
+         url="https://www.facebook.com/61564147994036/videos/122210117936471599/",
+         bg="assets/photos/proj-manjushree.jpg",
          alt="Manjushree Tea Estate solar plant in Assam built by Arrays Ingenieria"),
+    dict(id="sentinel-jayshree", kind="online", outlet="The Sentinel", place="Assam", platform="sentinelassam.com",
+         date="2025-05-22",
+         headline="Assam: AIPL commissions 1 MW solar power plant at Jayshree Tea Estate",
+         summary="Assam's English daily reports that Arrays Ingenieria installed 1 MW of solar at Jayshree Tea Estates in "
+                 "Sonari under Tata Power's EPC contract: 535 kWp at Towkok and 500 kWp at Manjushree, the first renewable "
+                 "project in the 80-year history of Jayshree Tea & Industries (BK Birla Group).",
+         quote="Arrays Ingenieria is a unique MSME founded by ex-servicemen, symbolizing a disciplined, mission-driven "
+               "transition from OG (Olive Green-the military uniform) to GG (Go Green-renewable energy).",
+         url="https://www.sentinelassam.com/north-east-india-news/assam-news/assam-aipl-commissions-1-mw-solar-power-plant-at-jayshree-tea-estate",
+         img="assets/photos/proj-jayshree.jpg",
+         alt="Jayshree Tea Estate 1 MW solar plant in Sonari, Assam, reported by The Sentinel"),
+    dict(id="prerna-bharati-orangajuli", kind="print", outlet="Prerna Bharati", place="Silchar, Assam", lang="hi",
+         date="2026-09-05",
+         headline="New green-energy initiative in Assam on Janmashtami: 450 kW solar plant starts",
+         original="जन्माष्टमी पर असम में हरित ऊर्जा की नई पहल, ४५० किलोवाट सौर संयंत्र शुरू",
+         summary="Arrays Ingenieria's 450 kW grid-connected ground-mount plant at Orangajuli Tea Estate, Udalguri, is part "
+                 "of the 3.11 MW solar programme for Goodricke tea estates by Tata Power Renewable Energy and Sustvest. "
+                 "With it, the company has commissioned solar plants at 18 tea gardens in Assam.",
+         img="assets/news/prerna-bharati-orangajuli-450kw-solar-ingenieria.jpg",
+         alt="Prerna Bharati Hindi newspaper report on the 450 kW solar plant built by Arrays Ingenieria at Orangajuli Tea Estate, Udalguri, Assam"),
+    dict(id="barpatra-230kw", kind="print", outlet="Hindi daily, Dibrugarh–Sonari edition", place="Sonari, Assam", lang="hi",
+         date="2026-09-25",
+         headline="230 kW solar plant starts at Barpatra Tea Estate",
+         original="बरपात्रा टीई में 230 किलोवाट का सौर संयंत्र शुरू",
+         summary="Arrays Ingenieria, turnkey implementing partner, commissions a 230 kW on-grid ground-mount plant at "
+                 "Goodricke Group's Barpatra Tea Estate, bringing its total to 19 on-grid solar plants in Assam's tea gardens.",
+         img="assets/news/barpatra-tea-estate-230kw-solar-ingenieria.jpg",
+         extra="assets/news/barpatra-tea-estate-230kw-solar-newspaper-print.jpg",
+         alt="Hindi newspaper report on the 230 kW solar plant built by Arrays Ingenieria at Barpatra Tea Estate, Sonari, Assam"),
+    dict(id="bhaskar-tcpl", kind="print", outlet="Dainik Bhaskar", place="Hajipur, Bihar", lang="hi",
+         date="2024-04-03",
+         headline="Bhagwanpur solar plant to generate 319 kW of power",
+         original="भगवानपुर में सोलर पावर ग्रिड से 319 किलोवाट बिजली का होगा उत्पादन",
+         summary="Dainik Bhaskar reports on the 319 kWp rooftop solar plant built by Arrays Ingenieria for TCPL Greenery "
+                 "Agro (Tata Consumer Products) in Vaishali district, Bihar.",
+         img="assets/news/news-bhaskar-tcpl.jpg",
+         alt="Dainik Bhaskar report on the 319 kWp rooftop solar plant by Arrays Ingenieria in Vaishali, Bihar"),
+    dict(id="sanmarg-supersmelters", kind="print", outlet="Sanmarg", place="Jamuria, West Bengal", lang="hi", date=None,
+         headline="1980.3 kWp solar plant installed for environmental protection at Super Smelters",
+         original="पर्यावरण संरक्षण के लिए लगाया गया 1980.3 केवी का सोलर प्लांट",
+         summary="Super Smelters, the largest industrial unit in the area, inaugurates a 1980.3 kWp rooftop solar plant "
+                 "built with Tata Power Solar and Arrays Ingenieria (AIPL), about 2 MW of clean power.",
+         img="assets/news/news-supersmelters-inaug.jpg",
+         alt="Sanmarg newspaper report on the 1980.3 kWp Super Smelters solar plant inauguration, Arrays Ingenieria"),
+    dict(id="supersmelters-rooftop", kind="print", outlet="Hindi daily, Jamuria", place="Jamuria, West Bengal", lang="hi", date=None,
+         headline="1980.3 kWp rooftop solar power plant inaugurated at Super Smelters",
+         original="जामुड़िया : सुपर स्मेलटर्स कारखाना में 1980.3 केडब्ल्यूपी रूफटॉप सोलर पावर प्लांट का हुआ उद्घाटन",
+         summary="The inauguration ceremony of the 1980.3 kWp rooftop plant at Super Smelters, with Lt. Gen. Ashish Ranjan "
+                 "Prasad (Retd) of Arrays Ingenieria among the guests.",
+         img="assets/news/news-supersmelters-rooftop.jpg",
+         alt="Newspaper report on the Super Smelters rooftop solar plant in Jamuria built by Arrays Ingenieria"),
+    dict(id="jayshree-towkok", kind="client", outlet="Jay Shree Tea & Industries Ltd.", place="BK Birla Group",
+         date="2025-05-22",
+         headline="Jay Shree Tea commissions 1 MW solar plant in Assam",
+         quote="Our sincere thanks to Lieutenant General Ashish Ranjan Prasad (Retd) and the team at Arrays Ingenieria "
+               "for their partnership in bringing this vision to life.",
+         summary="Announcing 535 kWp at Towkok and 500 kWp at Manjushree Tea Estate, installed under Tata Power's EPC "
+                 "contract and implemented by Arrays Ingenieria, a veteran-led MSME.",
+         links=[("Instagram", "https://www.instagram.com/p/DJ8xow6Sklv/"),
+                ("Facebook", "https://www.facebook.com/jayshree.tea/posts/we-are-proud-to-announce-the-commissioning-of-a-1-mw-solar-power-plant-at-our-to/992080983078401/"),
+                ("LinkedIn", "https://www.linkedin.com/posts/jayshreetea-sustainability-solarpower-share-7331237620603084800-V592/")],
+         img="assets/photos/proj-towkok.jpg",
+         alt="Towkok Tea Estate 535 kWp solar plant in Assam built by Arrays Ingenieria"),
+    dict(id="jayshree-dewan", kind="client", outlet="Jay Shree Tea & Industries Ltd.", place="BK Birla Group",
+         date="2025-11-24",
+         headline="Solar for the Dewan Group of Tea Estates: Dewan, Labac & Burtoll",
+         quote="The solar power systems were executed by Arrays Ingenieria Private Limited (AIPL), an organisation "
+               "established and operated by ex-servicemen, under Tata Power's EPC contract. Their precision, discipline "
+               "and commitment to excellence ensured seamless implementation across all three locations.",
+         summary="New solar power plants at three Jay Shree Tea gardens in Assam, all executed by Arrays Ingenieria.",
+         links=[("Instagram", "https://www.instagram.com/reel/DRcNrhXEyFT/")],
+         img="assets/press/event-commissioning.jpg",
+         alt="Solar power plant commissioning ceremony, Arrays Ingenieria"),
 ]
+# The founder's appearances as a defence expert on national TV (existing section).
+NATIONAL_TV = ["India Today", "Aaj Tak", "India TV"]
+
+KIND_LABEL = {"tv": "News channel", "online": "Online news", "print": "Newspaper", "client": "Client post"}
+MONTHS = "January February March April May June July August September October November December".split()
+
+
+def fmt_date(iso):
+    if not iso:
+        return ""
+    parts = [int(p) for p in iso.split("-")]
+    return f"{MONTHS[parts[1] - 1]} {parts[0]}" if len(parts) == 2 else f"{parts[2]} {MONTHS[parts[1] - 1][:3]} {parts[0]}"
+
+
+def time_tag(iso):
+    return f'<time datetime="{iso}">{fmt_date(iso)}</time>' if iso else ""
+
+
+def cov(kind):
+    return [c for c in COVERAGE if c["kind"] == kind]
+
 
 PLAY_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>'
 FB_SVG = ('<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 '
           '2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.33l-.53 3.5h-2.8V24C19.62 23.1 24 18.1 24 12.07"/></svg>')
+EXT_SVG = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" '
+           'stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>')
 ARROW_SVG = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" '
              'stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>')
+PLATFORM_ICON = {
+    "Instagram": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>',
+    "Facebook": FB_SVG,
+    "LinkedIn": '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>',
+}
 
 # ----------------------------------------------------- header / footer ----
 NAV = [
     ("About", "about.html", "about"), ("Services", "/#services", "services"),
     ("Projects", "projects.html", "projects"), ("Gallery", "gallery.html", "gallery"),
-    ("Recognition", "recognition.html", "recognition"), ("Achievements", "achievements.html", "achievements"),
+    ("News & Media", "recognition.html", "recognition"), ("Achievements", "achievements.html", "achievements"),
     ("Insights", "insights.html", "insights"), ("Contact", "/#contact", "contact"),
 ]
 WORDMARK = ('<span class="brand-word"><i style="color:#F4A11E">ING</i><i style="color:#2BA9E0">E</i><i style="color:#1C2A6E">N</i>'
@@ -314,7 +430,7 @@ FOOTER = f"""<footer class="footer">
             <li><a href="industries.html">Industries</a></li>
             <li><a href="projects.html">Projects</a></li>
             <li><a href="gallery.html">Photo &amp; Video Gallery</a></li>
-            <li><a href="recognition.html">News &amp; Recognition</a></li>
+            <li><a href="recognition.html">News &amp; Media</a></li>
             <li><a href="achievements.html">Achievements</a></li>
             <li><a href="insights.html">Insights</a></li>
             <li><a href="/#faq">FAQ</a></li>
@@ -355,15 +471,175 @@ FOOTER = f"""<footer class="footer">
   </button>"""
 
 
-def render_videos():
-    cards = []
-    for i, v in enumerate(VIDEOS):
-        d = f' data-d="{i}"' if i else ""
-        cards.append(f"""<a class="video-card reveal"{d} href="{v['url']}" target="_blank" rel="noopener">
-        <div class="vc-thumb"><img src="{v['img']}" alt="{html.escape(v['alt'])}" /><span class="vc-play">{PLAY_SVG}</span><span class="vc-badge">{FB_SVG}</span></div>
-        <div class="vc-body"><span class="vc-net">{v['net']}</span><b>{html.escape(v['title'])}</b><span class="vc-go">Watch on Facebook →</span></div>
-      </a>""")
-    return '<div class="video-grid">\n      ' + "\n      ".join(cards) + "\n    </div>"
+# ----------------------------------------------------- coverage blocks ----
+def esc(s):
+    return html.escape(s, quote=True)
+
+
+def initials(name):
+    return "".join(w[0] for w in re.findall(r"[A-Za-z]+", name) if w[0].isupper())[:3]
+
+
+def by_date(items):
+    return sorted(items, key=lambda c: c["date"] or "0000", reverse=True)
+
+
+def tv_card(c, lead=False, with_id=True):
+    img = c.get("img") or c["bg"]
+    tile = "" if c.get("img") else f'<span class="tv-tile"><b>{esc(c["outlet"])}</b><small>News report · {esc(c["place"])}</small></span>'
+    cls = "tv-card reveal" + (" tv-card--lead" if lead else "") + ("" if c.get("img") else " tv-card--tile")
+    ident = f' id="{c["id"]}"' if with_id else ""
+    return f"""<a class="{cls}"{ident} href="{c['url']}" target="_blank" rel="noopener">
+        <span class="tv-thumb"><img src="{img}" alt="{esc(c['alt'])}" />{tile}<span class="tv-onair"><i></i>News channel</span><span class="vc-play">{PLAY_SVG}</span></span>
+        <span class="tv-body">
+          <span class="tv-outlet"><span class="tv-mono">{initials(c['outlet'])}</span><span><b>{esc(c['outlet'])}</b><small>{esc(c['place'])} · on {c['platform']}</small></span></span>
+          <h3 class="tv-title">{esc(c['headline'])}</h3>
+          <span class="tv-sum">{esc(c['summary'])}</span>
+          <span class="tv-foot">{time_tag(c['date'])}<span class="tv-go">Watch the report {EXT_SVG}</span></span>
+        </span>
+      </a>"""
+
+
+def render_tv(with_ids=True):
+    items = cov("tv")
+    cards = [tv_card(c, lead=(i == 0), with_id=with_ids) for i, c in enumerate(items)]
+    return '<div class="tv-grid">\n      ' + "\n      ".join(cards) + "\n    </div>"
+
+
+def press_item(c):
+    cap = esc(f"{c['outlet']}{', ' + fmt_date(c['date']) if c['date'] else ''}: {c['headline']}")
+    if c.get("url"):
+        thumb = (f'<a class="press-thumb" href="{c["url"]}" target="_blank" rel="noopener" tabindex="-1">'
+                 f'<img src="{c["img"]}" alt="{esc(c["alt"])}" /></a>')
+    else:
+        thumb = (f'<div class="press-thumb" data-full="{c["img"]}" data-gallery="press" data-caption="{cap}" tabindex="0" role="button" '
+                 f'aria-label="View the {esc(c["outlet"])} clipping full size"><img src="{c["img"]}" alt="{esc(c["alt"])}" />'
+                 f'<span class="press-zoom">View clipping</span></div>')
+    orig = f'\n          <p class="press-orig" lang="{c.get("lang", "hi")}">{esc(c["original"])}</p>' if c.get("original") else ""
+    quote = (f'\n          <blockquote class="press-quote"><p>“{esc(c["quote"])}”</p><cite>{esc(c["outlet"])}</cite></blockquote>'
+             if c.get("quote") else "")
+    actions = []
+    if c.get("url"):
+        actions.append(f'<a class="press-link" href="{c["url"]}" target="_blank" rel="noopener">Read on {esc(c["outlet"])} {EXT_SVG}</a>')
+    else:
+        actions.append(f'<span class="press-link" data-full="{c["img"]}" data-gallery="press-read" data-caption="{cap}" tabindex="0" role="button">Read the clipping</span>')
+    if c.get("extra"):
+        actions.append(f'<span class="press-link" data-full="{c["extra"]}" data-gallery="press-read" data-caption="{cap} (print edition)" tabindex="0" role="button">See the printed page</span>')
+    src = f'<span class="press-kind">{KIND_LABEL[c["kind"]]}</span><b>{esc(c["outlet"])}</b><span>{esc(c["place"])}</span>{time_tag(c["date"])}'
+    return f"""<article class="press-item reveal" id="{c['id']}">
+        {thumb}
+        <div class="press-body">
+          <div class="press-src">{src}</div>
+          <h3>{esc(c['headline'])}</h3>{orig}
+          <p>{esc(c['summary'])}</p>{quote}
+          <div class="press-actions">{''.join(actions)}</div>
+        </div>
+      </article>"""
+
+
+def render_press():
+    items = by_date(cov("online") + cov("print"))
+    return '<div class="press-list">\n      ' + "\n      ".join(press_item(c) for c in items) + "\n    </div>"
+
+
+def client_post(c, with_id=True):
+    links = "".join(f'<a class="cp-link cp-{n.lower()}" href="{u}" target="_blank" rel="noopener">{PLATFORM_ICON[n]}{n}</a>'
+                    for n, u in c["links"])
+    ident = f' id="{c["id"]}"' if with_id else ""
+    return f"""<article class="client-post reveal"{ident}>
+        <div class="cp-head"><span class="cp-mono">{initials(c['outlet'])}</span><div><b>{esc(c['outlet'])}</b><span>{esc(c['place'])} · our client</span></div>{time_tag(c['date'])}</div>
+        <h3>{esc(c['headline'])}</h3>
+        <blockquote class="cp-quote"><p>“{esc(c['quote'])}”</p></blockquote>
+        <p class="cp-sum">{esc(c['summary'])}</p>
+        <div class="cp-links"><span>Read the original post on</span>{links}</div>
+      </article>"""
+
+
+def render_clients():
+    return ('<div class="client-posts">\n      ' + "\n      ".join(client_post(c) for c in by_date(cov("client")))
+            + "\n    </div>")
+
+
+def featured_list():
+    seen, out = set(), []
+    for c in cov("tv") + by_date(cov("online") + cov("print")):
+        if c["outlet"] in seen or c["outlet"].startswith("Hindi daily"):
+            continue
+        seen.add(c["outlet"])
+        tag = '<span class="fi-tv">TV</span>' if c["kind"] == "tv" else ""
+        out.append(f'<li><a href="recognition.html#{c["id"]}">{tag}{esc(c["outlet"])}</a></li>')
+    return "".join(out)
+
+
+def render_featured_inner():
+    national = "".join(f'<li><a href="recognition.html#national-tv"><span class="fi-tv">TV</span>{n}</a></li>' for n in NATIONAL_TV)
+    return f"""<div class="featured-in reveal">
+      <div class="fi-row"><span class="fi-label">Our work in the news</span><ul class="fi-list">{featured_list()}</ul></div>
+      <div class="fi-row"><span class="fi-label">Our founder on national TV</span><ul class="fi-list">{national}</ul></div>
+    </div>"""
+
+
+def render_press_band():
+    return f"""<section class="featured-band" aria-label="Media coverage of Arrays Ingenieria">
+  <div class="container">
+    {render_featured_inner()}
+  </div>
+</section>"""
+
+
+def render_home_news():
+    lead = cov("tv")[0]
+    sentinel = next(c for c in COVERAGE if c["kind"] == "online")
+    client = by_date(cov("client"))[-1]
+    def quote_card(c, label, d):
+        return (f'<a class="quote-card reveal" data-d="{d}" href="recognition.html#{c["id"]}">'
+                f'<span class="qc-src"><span class="press-kind">{label}</span><b>{esc(c["outlet"])}</b>{time_tag(c["date"])}</span>'
+                f'<span class="qc-head">{esc(c["headline"])}</span>'
+                f'<blockquote><p>“{esc(c["quote"])}”</p></blockquote><span class="qc-go">Read the coverage {ARROW_SVG}</span></a>')
+    return f"""{render_featured_inner()}
+    <div class="home-news">
+      {tv_card(lead, lead=False, with_id=False)}
+      {quote_card(sentinel, KIND_LABEL['online'], 1)}
+      {quote_card(client, KIND_LABEL['client'], 2)}
+    </div>"""
+
+
+def coverage_ld():
+    org = {"@id": SITE_URL + "/#organization"}
+    items = []
+    for c in COVERAGE:
+        publisher = {"@type": "Organization", "name": c["outlet"]}
+        if c["kind"] == "client":
+            node = {"@type": "SocialMediaPosting", "headline": c["headline"], "url": c["links"][0][1],
+                    "sameAs": [u for _, u in c["links"][1:]] or None, "author": {"@type": "Organization", "name": c["outlet"]},
+                    "articleBody": c["quote"], "about": org}
+        elif c["kind"] == "tv":
+            node = {"@type": "CreativeWork", "genre": "News report (video)", "name": c["headline"], "url": c["url"],
+                    "publisher": publisher, "description": c["summary"], "about": org}
+        else:
+            node = {"@type": "NewsArticle", "headline": c.get("original") or c["headline"], "publisher": publisher,
+                    "description": c["summary"], "about": org, "inLanguage": c.get("lang", "en")}
+            if c.get("original"):
+                node["alternativeHeadline"] = c["headline"]
+            node["url"] = c.get("url")
+            node["image"] = f"{SITE_URL}/{c['img']}" if not c.get("url") else None
+        if c["date"]:
+            node["datePublished"] = c["date"]
+        items.append({k: v for k, v in node.items() if v is not None})
+    return {"@context": "https://schema.org", "@type": "CollectionPage",
+            "name": "Arrays Ingenieria in the news", "url": SITE_URL + "/recognition.html",
+            "about": org, "mainEntity": {"@type": "ItemList", "numberOfItems": len(items),
+            "itemListElement": [{"@type": "ListItem", "position": i + 1, "item": it} for i, it in enumerate(items)]}}
+
+
+BLOCKS = {
+    "press-tv": lambda: render_tv(),
+    "press-print": render_press,
+    "press-clients": render_clients,
+    "press-home": render_home_news,
+    "press-band": render_press_band,
+    "videos": lambda: render_tv(with_ids=False),
+}
 
 
 # -------------------------------------------------------------- gallery ----
@@ -593,8 +869,9 @@ def process_page(fname):
     # header / footer / videos baked in
     text = replace_block(text, "header", render_header(page_key))
     text = replace_block(text, "footer", FOOTER)
-    if "<!-- build:videos -->" in text:
-        text = replace_block(text, "videos", render_videos())
+    for name, render in BLOCKS.items():
+        if f"<!-- build:{name} -->" in text:
+            text = replace_block(text, name, render())
 
     # head
     head, body = text.split("</head>", 1)
@@ -610,6 +887,10 @@ def process_page(fname):
     head = head.replace("/assets/img/logo.svg", "/assets/img/logo-mark.svg")
     if PAGES[fname]["path"] and '"BreadcrumbList"' not in head:
         head += '<script type="application/ld+json">\n' + json.dumps(breadcrumb_ld(fname), ensure_ascii=False, indent=2) + "\n</script>\n"
+    head = re.sub(r'<script type="application/ld\+json" data-build="coverage">.*?</script>\n', "", head, flags=re.S)
+    if "<!-- build:press-tv -->" in body:
+        head += ('<script type="application/ld+json" data-build="coverage">\n'
+                 + json.dumps(coverage_ld(), ensure_ascii=False, indent=2) + "\n</script>\n")
     text = head + "</head>" + body
 
     # links, asset versions, scripts
@@ -700,7 +981,7 @@ def check_links():
                 problems.append(f"{fname}: <img> without alt: {tag[:90]}")
         if len(re.findall(r"<h1\b", t)) != 1:
             problems.append(f"{fname}: expected exactly one <h1>")
-        for m in re.findall(r'<script type="application/ld\+json">(.*?)</script>', t, re.S):
+        for m in re.findall(r'<script type="application/ld\+json"[^>]*>(.*?)</script>', t, re.S):
             try:
                 json.loads(m)
             except ValueError as err:
