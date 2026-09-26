@@ -63,6 +63,8 @@
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-precast.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-piling-extra.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-earthing.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/news/barpatra-tea-estate-230kw-solar-newspaper-print.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/news/news-bhaskar-tcpl.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://arraysingenieria.netlify.app/gallery.html</loc>
@@ -202,6 +204,9 @@
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-ramnagar.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-appl.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/hero-solar-farm.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-jayshree.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-yiapl.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://arraysingenieria.netlify.app/service-rooftop.html</loc>
@@ -212,6 +217,7 @@
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-pantnagar.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-rooftop-pano.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-earthing.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/news/news-bhaskar-tcpl.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://arraysingenieria.netlify.app/service-epc.html</loc>
@@ -222,6 +228,9 @@
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-dcm-hisar.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-supersmelters.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-rooftop-pano.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/news/barpatra-tea-estate-230kw-solar-newspaper-print.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/news/news-bhaskar-tcpl.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-assam-rooftop.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://arraysingenieria.netlify.app/service-piling.html</loc>
@@ -242,6 +251,7 @@
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-piling-extra.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-seci.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-tml.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-dcm-hisar.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://arraysingenieria.netlify.app/service-om.html</loc>
@@ -262,5 +272,155 @@
     <loc>https://arraysingenieria.netlify.app/terms.html</loc>
     <lastmod>2026-09-26</lastmod>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/hero-solar-farm.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/capex-solar-epc.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-manjushree.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-jayshree.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/solar-installation-commissioning.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-seci.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-jayshree.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/news/barpatra-tea-estate-230kw-solar-newspaper-print.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-supersmelters.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-assam-rooftop.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/solar-for-tea-estates.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-towkok.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-jayshree.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/news/barpatra-tea-estate-230kw-solar-newspaper-print.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/faq.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-towkok.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/clients.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-supersmelters.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-jayshree.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/news/barpatra-tea-estate-230kw-solar-newspaper-print.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-seci.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-dcm-hisar.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-tml.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-yiapl.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/news/news-bhaskar-tcpl.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-assam-rooftop.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/solar-glossary.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-rooftop-pano.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/contact.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-dcm-hisar.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/project-jayshree-tea-1mw-solar-assam.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-jayshree.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-towkok.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-manjushree.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-grid1035.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/orders/po-jayshree-1035.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/certs/appreciation-jayshree-towkok.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/certs/appreciation-jayshree-500kwp.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/news/barpatra-tea-estate-230kw-solar-newspaper-print.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-supersmelters.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/project-orangajuli-tea-estate-450kw-solar.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/news/prerna-bharati-orangajuli-450kw-solar-ingenieria.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-jayshree.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/news/barpatra-tea-estate-230kw-solar-newspaper-print.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-supersmelters.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/project-barpatra-tea-estate-230kw-solar.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/news/barpatra-tea-estate-230kw-solar-newspaper-print.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/news/barpatra-tea-estate-230kw-solar-ingenieria.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-jayshree.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-supersmelters.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/project-super-smelters-1980kwp-rooftop-solar.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-supersmelters.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/press/event-inauguration.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-rooftop-pano.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/certs/appreciation-super-smelters.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/news/news-bhaskar-tcpl.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-assam-rooftop.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-jayshree.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/project-seci-300mw-koppal-pile-foundation.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-seci.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/orders/wo-tatapower-seci.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-dcm-hisar.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-tml.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-yiapl.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/project-dcm-hisar-10mw-solar-civil-works.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-dcm-hisar.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/orders/wo-tatapower-dcm.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-seci.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-tml.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-yiapl.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/project-tata-motors-jamshedpur-5-5mw-solar-piling.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-tml.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-precast.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/orders/wo-tatapower-tml.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-seci.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-dcm-hisar.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-yiapl.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/project-yiapl-14-36mw-solar-civil-fencing.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-yiapl.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-seci.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-dcm-hisar.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-tml.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/project-tcpl-vaishali-319kwp-rooftop-solar.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/how-photo.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/news/news-bhaskar-tcpl.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-supersmelters.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-assam-rooftop.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-jayshree.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/project-assam-1711kwp-on-grid-solar.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-assam-rooftop.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/orders/po-sustvest-assam.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-supersmelters.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/news/news-bhaskar-tcpl.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-jayshree.jpg</image:loc></image:image>
   </url>
 </urlset>

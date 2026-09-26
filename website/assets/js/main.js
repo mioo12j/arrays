@@ -139,7 +139,11 @@
     const move = d => { pos = (pos + d + group.length) % group.length; render(); };
     triggers.forEach(t => {
       t.style.cursor = "zoom-in";
-      t.addEventListener("click", e => { if (t.tagName !== "A") e.preventDefault(); open(t); });
+      t.addEventListener("click", e => {
+        if (e.target.closest("a") && e.target.closest("a") !== t) return; // a link inside the card navigates
+        if (t.tagName !== "A") e.preventDefault();
+        open(t);
+      });
       // keyboard access for non-link triggers (clippings marked role="button")
       if (t.getAttribute("role") === "button") t.addEventListener("keydown", e => {
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(t); }

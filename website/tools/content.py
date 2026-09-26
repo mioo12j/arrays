@@ -1,0 +1,396 @@
+"""
+Content data for the generated pages (case studies, FAQ, glossary, clients).
+Imported by build.py. Keep every statement factual: each project fact below
+comes from the client's purchase/work order, a certificate, or a news report.
+Arrays Ingenieria does installation & commissioning (I&C), EPC and civil
+works on a CAPEX basis; it does not manufacture modules or inverters and does
+not offer OPEX/RESCO financing.
+"""
+
+# ------------------------------------------------------------ projects ----
+# file: page name; photos: [(src, alt)]; docs: [(src, caption)];
+# coverage: ids from COVERAGE in build.py; services: page file names.
+PROJECTS = [
+    dict(
+        file="project-jayshree-tea-1mw-solar-assam.html",
+        name="Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates",
+        short="Jay Shree Tea, Assam — 1035 kWp",
+        title="1 MW Solar, Jay Shree Tea Estates Assam | Arrays Ingenieria",
+        desc="Case study: 1035 kWp ground-mount solar (535 kWp Towkok + 500 kWp Manjushree) for Jay Shree Tea, BK Birla Group, in Sonari, Assam, under Tata Power's EPC.",
+        capacity="1035 kWp (535 + 500 kWp)", kind="Ground-mount, on-grid", location="Sonari, Charaideo district, Assam",
+        client="Jay Shree Tea & Industries Ltd. (BK Birla Group)", partner="Tata Power Renewable Energy Ltd. (EPC contract)",
+        role="Material supply, installation & commissioning", year="2025 (inaugurated 20 May 2025)",
+        cat="ground", tag="Tea Estate · Ground-Mount",
+        hero="assets/photos/proj-jayshree.jpg",
+        intro="Two ground-mount, grid-connected solar plants for Jay Shree Tea & Industries, part of the BK Birla Group: 535 kWp at "
+              "Towkok Tea Estate and 500 kWp at Manjushree Tea Estate, together about 1 MW, in Sonari, Assam.",
+        body=[
+            "Jay Shree Tea placed the purchase order with Arrays Ingenieria on 2 December 2024 for the material supply, installation and "
+            "commissioning of a 1035 kWp grid-connected solar power generation system across the two estates. The project was executed "
+            "under Tata Power's EPC contract, with all materials to Tata Power-approved makes.",
+            "Both estates run on grid power backed by diesel generators, so the scope included synchronising each plant with two DG sets "
+            "per site, letting the estates use solar power alongside their generators.",
+            "The plants were inaugurated on 20 May 2025. It was the first renewable-energy project in Jay Shree Tea's 80-year history, "
+            "and was reported by The Sentinel and announced by Jay Shree Tea on Instagram, Facebook and LinkedIn.",
+        ],
+        scope=["AC LT power cabling (1.1 kV, armoured XLPE)", "Cable trays and conduits with supporting structures",
+               "Lightning arrestors", "Chemical earthing system with all associated civil work",
+               "Module cleaning system (HDPE pipe network)", "Safety equipment to Tata Power standards",
+               "Synchronisation with two DG sets at each site", "Testing and commissioning"],
+        photos=[("assets/photos/proj-jayshree.jpg", "Jayshree Tea Estate ground-mount solar plant in Sonari, Assam, built by Arrays Ingenieria"),
+                ("assets/photos/proj-towkok.jpg", "Towkok Tea Estate 535 kWp ground-mount solar plant, Assam, by Arrays Ingenieria"),
+                ("assets/photos/proj-manjushree.jpg", "Manjushree Tea Estate 500 kWp ground-mount solar plant, Assam, by Arrays Ingenieria"),
+                ("assets/photos/proj-grid1035.jpg", "1035 kWp grid-connected solar system for Jay Shree Tea, built by Arrays Ingenieria")],
+        docs=[("assets/orders/po-jayshree-1035.jpg", "Jay Shree Tea purchase order, 2 Dec 2024: supply, installation & commissioning of 1035 kWp"),
+              ("assets/certs/appreciation-jayshree-towkok.jpg", "Jay Shree Tea certificate of appreciation: 535 kWp, Towkok Tea Estate"),
+              ("assets/certs/appreciation-jayshree-500kwp.jpg", "Jay Shree Tea certificate of appreciation: 500 kWp ground-mount solar")],
+        coverage=["sentinel-jayshree", "jayshree-towkok"],
+        services=["capex-solar-epc.html", "solar-installation-commissioning.html", "service-ground-mount.html", "solar-for-tea-estates.html"],
+    ),
+    dict(
+        file="project-orangajuli-tea-estate-450kw-solar.html",
+        name="Orangajuli Tea Estate: 450 kW Ground-Mount Solar Plant",
+        short="Orangajuli Tea Estate, Assam — 450 kW",
+        title="450 kW Solar, Orangajuli Tea Estate | Arrays Ingenieria",
+        desc="Case study: 450 kW grid-connected ground-mount solar plant at Goodricke's Orangajuli Tea Estate, Udalguri, Assam, commissioned on Janmashtami 2026.",
+        capacity="450 kW", kind="Ground-mount, grid-connected", location="Orangajuli, Udalguri district, Assam",
+        client="Orangajuli Tea Estate (Goodricke Group)", partner="Tata Power Renewable Energy Ltd. & Sustvest (3.11 MW programme)",
+        role="Installation partner", year="2026 (commissioned September 2026)",
+        cat="ground", tag="Tea Estate · Ground-Mount",
+        hero="assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg",
+        intro="A 450 kW grid-connected ground-mount solar plant at Orangajuli Tea Estate in Udalguri, Assam, commissioned on "
+              "Janmashtami 2026 and inaugurated by the estate manager, Daljit Singh Maan.",
+        body=[
+            "The plant is part of a 3.11 MW solar programme for Goodricke Group's tea estates, developed jointly by Tata Power Renewable "
+            "Energy Ltd. and Sustvest, with Arrays Ingenieria as the installation partner.",
+            "With Orangajuli, Arrays Ingenieria reported that it had completed the installation and commissioning of solar plants at 18 "
+            "tea gardens in Assam. The launch was reported by the Hindi daily Prerna Bharati and filmed by NE Reports.",
+        ],
+        scope=["Installation of the ground-mount solar plant", "Grid connection", "Testing and commissioning"],
+        photos=[("assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg",
+                 "Ribbon-cutting at the 450 kW Orangajuli Tea Estate solar plant in Udalguri, Assam, built by Arrays Ingenieria")],
+        docs=[("assets/news/prerna-bharati-orangajuli-450kw-solar-ingenieria.jpg", "Prerna Bharati, 5 Sep 2026: report on the Orangajuli plant")],
+        coverage=["ne-reports-orangajuli", "prerna-bharati-orangajuli"],
+        services=["solar-installation-commissioning.html", "service-ground-mount.html", "solar-for-tea-estates.html"],
+    ),
+    dict(
+        file="project-barpatra-tea-estate-230kw-solar.html",
+        name="Barpatra Tea Estate: 230 kW On-Grid Solar Plant",
+        short="Barpatra Tea Estate, Assam — 230 kW",
+        title="230 kW Solar, Barpatra Tea Estate | Arrays Ingenieria",
+        desc="Case study: 230 kW on-grid ground-mount solar at Goodricke's Barpatra Tea Estate, Sonari, Assam, with net-metering approvals from APDCL.",
+        capacity="230 kW", kind="Ground-mount, on-grid (net-metered)", location="Sonari, Assam",
+        client="Barpatra Tea Estate (Goodricke Group)", partner="Tata Power Renewable Energy Ltd. & Sustvest (3.11 MW programme)",
+        role="Turnkey implementation partner", year="2026 (commissioned September 2026)",
+        cat="ground", tag="Tea Estate · Ground-Mount",
+        hero="assets/news/barpatra-tea-estate-230kw-solar-newspaper-print.jpg",
+        intro="A 230 kW on-grid ground-mount solar plant at Goodricke Group's Barpatra Tea Estate in Sonari, Assam, formally "
+              "inaugurated by the estate manager, Satish Pandey, in September 2026.",
+        body=[
+            "The plant is part of the 3.11 MW commercial & industrial solar programme for Goodricke's estates, developed jointly by Tata "
+            "Power Renewable Energy Ltd. and Sustvest, with Arrays Ingenieria as the turnkey implementation partner.",
+            "Arrays Ingenieria obtained the net-metering and statutory approvals from Assam Power Distribution Company Ltd. (APDCL), "
+            "including technical inspection by the Namrup SDE and the APDCL Dibrugarh TRD department, so the plant could start on schedule.",
+            "Barpatra brought the company's count to 19 on-grid solar plants in Assam's tea gardens, as reported in the Hindi press on "
+            "25 September 2026.",
+        ],
+        scope=["Turnkey implementation of the ground-mount plant", "Net-metering and statutory approvals with APDCL",
+               "Grid connection", "Testing and commissioning"],
+        photos=[("assets/news/barpatra-tea-estate-230kw-solar-newspaper-print.jpg",
+                 "Printed newspaper report on the 230 kW Barpatra Tea Estate solar plant by Arrays Ingenieria")],
+        docs=[("assets/news/barpatra-tea-estate-230kw-solar-ingenieria.jpg", "Hindi newspaper report, 25 Sep 2026")],
+        coverage=["barpatra-230kw", "sonari-live"],
+        services=["solar-installation-commissioning.html", "service-epc.html", "solar-for-tea-estates.html"],
+    ),
+    dict(
+        file="project-super-smelters-1980kwp-rooftop-solar.html",
+        name="Super Smelters: 1980.3 kWp Rooftop Solar Plant",
+        short="Super Smelters, West Bengal — 1980.3 kWp",
+        title="1980.3 kWp Rooftop Solar, Super Smelters | Arrays Ingenieria",
+        desc="Case study: a 1980.3 kWp industrial rooftop solar plant at Super Smelters Ltd., Jamuria, West Bengal, built with Tata Power Solar.",
+        capacity="1980.3 kWp (about 2 MW)", kind="Industrial rooftop", location="Jamuria (Asansol), West Bengal",
+        client="Super Smelters Ltd.", partner="Tata Power Solar",
+        role="Implementation partner", year="Commissioned and inaugurated",
+        cat="rooftop", tag="Industrial · Rooftop",
+        hero="assets/photos/proj-supersmelters.jpg",
+        intro="A 1980.3 kWp rooftop solar power plant, about 2 MW, on the open roofs of Super Smelters Ltd., described by the local "
+              "press as the largest industrial unit in the Jamuria industrial area of West Bengal.",
+        body=[
+            "The plant was built in collaboration with Tata Power Solar, with Arrays Ingenieria as implementation partner. It was "
+            "inaugurated by Super Smelters' director, Sanjay Singhania, with Lt. Gen. Ashish Ranjan Prasad (Retd) of Arrays Ingenieria present.",
+            "Super Smelters issued Arrays Ingenieria a letter of appreciation for the project, and the inauguration was covered by Sanmarg "
+            "and other Hindi dailies.",
+        ],
+        scope=["Rooftop solar installation", "Electrical works", "Testing and commissioning"],
+        photos=[("assets/photos/proj-supersmelters.jpg", "Super Smelters 1980.3 kWp rooftop solar plant in West Bengal, built by Arrays Ingenieria with Tata Power Solar"),
+                ("assets/press/event-inauguration.jpg", "Inauguration of the 1980.3 kWp Super Smelters solar plant, Arrays Ingenieria"),
+                ("assets/photos/proj-rooftop-pano.jpg", "Large industrial rooftop solar array installed by Arrays Ingenieria")],
+        docs=[("assets/certs/appreciation-super-smelters.jpg", "Super Smelters Ltd. letter of appreciation, 1980.3 kWp solar plant")],
+        coverage=["sanmarg-supersmelters", "supersmelters-rooftop"],
+        services=["service-rooftop.html", "solar-installation-commissioning.html", "service-epc.html"],
+    ),
+    dict(
+        file="project-seci-300mw-koppal-pile-foundation.html",
+        name="SECI 300 MW Solar Park, Koppal: Pile Foundation Works",
+        short="SECI 300 MW, Karnataka — piling",
+        title="SECI 300 MW Koppal Solar Pile Foundation | Arrays Ingenieria",
+        desc="Case study: construction of pile foundations for the 300 MW SECI solar project at Koppal, Karnataka, under an outline agreement with Tata Power (TPREL).",
+        capacity="300 MW solar project", kind="Utility-scale, pile foundations", location="Koppal, Karnataka",
+        client="Tata Power Renewable Energy Ltd. (TPREL)", partner="SECI project",
+        role="Pile foundation contractor", year="2025 (agreement dated 17 February 2025)",
+        cat="civil", tag="Utility-Scale · Piling",
+        hero="assets/photos/proj-seci.jpg",
+        intro="Construction of pile foundations for the 300 MW SECI solar project at Koppal, Karnataka, one of the largest "
+              "utility-scale jobs in the company's portfolio.",
+        body=[
+            "Tata Power Renewable Energy Ltd. (TPREL) issued Arrays Ingenieria an outline agreement on 17 February 2025 for the "
+            "construction of pile foundation work at the 300 MW SECI project.",
+            "Pile foundations carry the module mounting structures of a ground-mount plant, so their depth, alignment and "
+            "levels decide how the rest of the plant goes up. Arrays Ingenieria's veteran-led site teams run piling to the EPC's "
+            "specifications and schedule.",
+        ],
+        scope=["Construction of pile foundations for the module mounting structures", "Work to Tata Power specifications and schedule"],
+        photos=[("assets/photos/proj-seci.jpg", "SECI 300 MW solar park pile-foundation works at Koppal, Karnataka, by Arrays Ingenieria")],
+        docs=[("assets/orders/wo-tatapower-seci.jpg", "Tata Power (TPREL) outline agreement, 17 Feb 2025: pile foundation work, 300 MW SECI, Koppal")],
+        coverage=[],
+        services=["service-piling.html", "service-civil.html", "solar-installation-commissioning.html"],
+    ),
+    dict(
+        file="project-dcm-hisar-10mw-solar-civil-works.html",
+        name="DCM Textile, Hisar: Civil Works for a 10 MW Solar Plant",
+        short="DCM Hisar, Haryana — 10 MW civil",
+        title="10 MW Solar Civil Works, DCM Hisar | Arrays Ingenieria",
+        desc="Case study: civil works for the 9979 kWp (10 MW) solar plant at DCM Textile, Hisar, Haryana, under a Tata Power work order.",
+        capacity="9979 kWp (10 MW)", kind="Ground-mount, civil works", location="Hisar, Haryana",
+        client="Tata Power", partner="DCM Textile (plant owner)",
+        role="Civil works contractor", year="2021 (work order dated 18 June 2021)",
+        cat="civil", tag="Industrial · Civil Works",
+        hero="assets/photos/proj-dcm-hisar.jpg",
+        intro="Civil works for a 9979 kWp (10 MW) ground-mount solar plant at DCM Textile in Hisar, Haryana.",
+        body=[
+            "Tata Power issued Arrays Ingenieria the work order on 18 June 2021 for civil works at the 9979 kWp plant. Tata Power "
+            "has since engaged the company for piling, civil works and installation on projects across India.",
+        ],
+        scope=["Civil works for the 10 MW ground-mount plant", "Work to Tata Power specifications"],
+        photos=[("assets/photos/proj-dcm-hisar.jpg", "DCM Hisar 10 MW ground-mount solar project civil works, Haryana, by Arrays Ingenieria")],
+        docs=[("assets/orders/wo-tatapower-dcm.jpg", "Tata Power work order, 18 Jun 2021: civil works at 9979 kWp DCM Textile, Hisar")],
+        coverage=[],
+        services=["service-civil.html", "service-ground-mount.html"],
+    ),
+    dict(
+        file="project-tata-motors-jamshedpur-5-5mw-solar-piling.html",
+        name="Tata Motors, Jamshedpur: Piling & Civil Works for 5.5 MW Solar",
+        short="Tata Motors, Jamshedpur — 5.5 MW",
+        title="5.5 MW Solar Piling, Tata Motors | Arrays Ingenieria",
+        desc="Case study: piling and civil works, including a pre-cast boundary wall, for the 5.5 MW solar plant at Tata Motors, Jamshedpur, for Tata Power.",
+        capacity="5.5 MW", kind="Ground-mount, piling & civil", location="Jamshedpur, Jharkhand",
+        client="Tata Power", partner="Tata Motors (plant owner)",
+        role="Piling & civil works contractor", year="2023 (work order dated 27 July 2023)",
+        cat="civil", tag="Industrial · Piling & Civil",
+        hero="assets/photos/proj-tml.jpg",
+        intro="Piling and civil works for the 5.5 MW solar plant at Tata Motors in Jamshedpur, Jharkhand.",
+        body=[
+            "Tata Power issued Arrays Ingenieria the work order on 27 July 2023 for piling and civil work for the 5.5 MW plant at Tata "
+            "Motors, Jamshedpur. The scope included a pre-cast boundary wall around the plant.",
+        ],
+        scope=["Pile foundations for the module mounting structures", "Civil works", "Pre-cast boundary wall"],
+        photos=[("assets/photos/proj-tml.jpg", "Tata Motors 5.5 MW solar piling and civil works in Jamshedpur by Arrays Ingenieria"),
+                ("assets/photos/proj-precast.jpg", "Pre-cast boundary wall for the Tata Motors solar plant, Jamshedpur, by Arrays Ingenieria")],
+        docs=[("assets/orders/wo-tatapower-tml.jpg", "Tata Power work order, 27 Jul 2023: piling & civil work for TML 5.5 MW, Jamshedpur")],
+        coverage=[],
+        services=["service-piling.html", "service-civil.html"],
+    ),
+    dict(
+        file="project-yiapl-14-36mw-solar-civil-fencing.html",
+        name="YIAPL: 14.36 MW Solar Project, Supply, Civil Works & Fencing",
+        short="YIAPL, Uttar Pradesh — 14.36 MW",
+        title="14.36 MW Solar Civil Works & Fencing, UP | Arrays Ingenieria",
+        desc="Case study: supply, civil works and chain-link fencing for the 14.36 MW YIAPL solar power project in Uttar Pradesh.",
+        capacity="14.36 MW", kind="Ground-mount, civil & fencing", location="Uttar Pradesh",
+        client="YIAPL", partner="",
+        role="Supply, civil works & fencing", year="",
+        cat="civil", tag="Utility-Scale · Civil & Fencing",
+        hero="assets/photos/proj-yiapl.jpg",
+        intro="Supply, civil works and chain-link fencing for the 14.36 MW YIAPL solar power project in Uttar Pradesh.",
+        body=[
+            "A plant of this size needs its perimeter secured and its civil works finished before installation crews can move in. "
+            "Arrays Ingenieria delivered the supply, civil work and chain-link fencing for the site.",
+        ],
+        scope=["Supply of materials", "Civil works", "Chain-link perimeter fencing"],
+        photos=[("assets/photos/proj-yiapl.jpg", "YIAPL 14.36 MW solar power project civil works and fencing in Uttar Pradesh by Arrays Ingenieria")],
+        docs=[],
+        coverage=[],
+        services=["service-civil.html", "service-ground-mount.html"],
+    ),
+    dict(
+        file="project-tcpl-vaishali-319kwp-rooftop-solar.html",
+        name="TCPL Greenery Agro, Vaishali: 319 kWp Rooftop Solar",
+        short="TCPL, Bihar — 319 kWp rooftop",
+        title="319 kWp Rooftop Solar, TCPL Vaishali | Arrays Ingenieria",
+        desc="Case study: 319 kWp rooftop solar plant for TCPL Greenery Agro (Tata Consumer Products) at Bhagwanpur, Vaishali, Bihar, reported by Dainik Bhaskar.",
+        capacity="319 kWp", kind="Rooftop, grid-connected", location="Bhagwanpur, Vaishali district, Bihar",
+        client="TCPL Greenery Agro (Tata Consumer Products)", partner="",
+        role="Plant construction", year="2024",
+        cat="rooftop", tag="Industrial · Rooftop",
+        hero="assets/photos/how-photo.jpg",
+        hero_alt="Rooftop solar installation by Arrays Ingenieria",
+        intro="A 319 kWp rooftop solar plant for TCPL Greenery Agro, a Tata Consumer Products unit, at Bhagwanpur in Vaishali "
+              "district, Bihar.",
+        body=[
+            "Dainik Bhaskar's Hajipur edition reported the plant on 3 April 2024 under the headline \"भगवानपुर में सोलर पावर ग्रिड से "
+            "319 किलोवाट बिजली का होगा उत्पादन\" (Bhagwanpur solar plant to generate 319 kW of power), including Arrays Ingenieria's "
+            "work on the plant.",
+            "Bihar is home ground for the company: its branch office is in Madhubani.",
+        ],
+        scope=["Rooftop solar plant construction", "Grid connection"],
+        photos=[("assets/news/news-bhaskar-tcpl.jpg", "Dainik Bhaskar report on the 319 kWp rooftop solar plant by Arrays Ingenieria in Vaishali, Bihar")],
+        docs=[],
+        coverage=["bhaskar-tcpl"],
+        services=["service-rooftop.html", "service-epc.html"],
+    ),
+    dict(
+        file="project-assam-1711kwp-on-grid-solar.html",
+        name="1711.66 kWp On-Grid Solar PV Project, Assam",
+        short="Assam — 1711.66 kWp on-grid",
+        title="1711.66 kWp On-Grid Solar Project, Assam | Arrays Ingenieria",
+        desc="Case study: supply of components and installation & commissioning of a 1711.66 kWp on-grid solar PV project in Assam for Sustvest (SolarGridX Ventures).",
+        capacity="1711.66 kWp", kind="On-grid solar PV", location="Assam",
+        client="SolarGridX Ventures Pvt. Ltd. (Sustvest)", partner="",
+        role="Supply of components, installation & commissioning", year="2026 (purchase order dated 25 March 2026)",
+        cat="rooftop", tag="On-Grid · I&C",
+        hero="assets/photos/proj-assam-rooftop.jpg",
+        intro="Supply of components and installation & commissioning of a 1711.66 kWp on-grid solar PV project in Assam.",
+        body=[
+            "SolarGridX Ventures Pvt. Ltd., which trades as Sustvest, appointed Arrays Ingenieria as contractor by a purchase order "
+            "dated 25 March 2026, for the supply of components and the installation and commissioning of the project.",
+            "It is a clear example of the company's installation & commissioning (I&C) work for solar developers: the developer "
+            "finances and owns the project, and Arrays Ingenieria's veteran-led crews build and commission it.",
+        ],
+        scope=["Supply of components (as per the contract annexure)", "Installation", "Commissioning"],
+        photos=[("assets/photos/proj-assam-rooftop.jpg", "1711.66 kWp on-grid solar PV project in Assam by Arrays Ingenieria")],
+        docs=[("assets/orders/po-sustvest-assam.jpg", "Sustvest (SolarGridX) purchase order, 25 Mar 2026: supply, installation & commissioning of 1711.66 kWp")],
+        coverage=[],
+        services=["solar-installation-commissioning.html", "service-epc.html"],
+    ),
+]
+
+# ----------------------------------------------------------------- FAQ ----
+FAQ = [
+    ("What does Arrays Ingenieria do?",
+     "Arrays Ingenieria is a veteran-led solar contractor. We do three things: installation & commissioning (I&C) of solar plants, "
+     "complete EPC (engineering, procurement and construction), and all the civil works a plant needs, from pile foundations to "
+     "boundary walls and fencing. We work on the CAPEX model, so the plant belongs to our client."),
+    ("Do you manufacture solar panels or inverters?",
+     "No. We are an installation, EPC and civil company, not a manufacturer. We source Tier-1 modules, inverters and balance-of-system "
+     "equipment from established manufacturers, or use the makes approved by our client or the lead EPC, such as Tata Power-approved makes."),
+    ("What is the CAPEX model for solar?",
+     "Under CAPEX you pay for the plant and own it from day one. We design, supply and build it; every unit it generates is yours, "
+     "and there is no long-term power purchase agreement. Businesses that own the plant may also claim accelerated depreciation "
+     "under the Income Tax Act; check the current rate with your tax adviser."),
+    ("Do you offer OPEX, RESCO or zero-investment solar?",
+     "No, we do not finance or own plants. If your organisation prefers an OPEX or RESCO arrangement, the developer that finances "
+     "the plant can engage us as its installation and EPC partner, as Tata Power Renewable Energy and Sustvest have done for tea "
+     "estates in Assam."),
+    ("What is the difference between CAPEX and OPEX solar?",
+     "With CAPEX you invest upfront, own the plant and keep all the savings. With OPEX or RESCO a developer invests and owns the plant, "
+     "and you buy its power at an agreed tariff for many years. CAPEX usually gives the highest lifetime savings; OPEX avoids the upfront cost."),
+    ("What does solar installation & commissioning (I&C) include?",
+     "I&C covers everything on site after the design and equipment are fixed: mounting structures, module installation, DC and AC "
+     "cabling, inverters and distribution boards, earthing and lightning protection, testing, grid synchronisation and commissioning."),
+    ("Do you work as a subcontractor for EPC companies and developers?",
+     "Yes, it is a large part of our work. Tata Power has engaged us for pile foundations on the 300 MW SECI project at Koppal, civil "
+     "works on the 10 MW DCM Textile plant in Hisar and piling and civil works for the 5.5 MW Tata Motors plant in Jamshedpur, and "
+     "Sustvest for the installation and commissioning of 1711.66 kWp in Assam."),
+    ("What civil works do you carry out for solar plants?",
+     "Pile foundations for module mounting structures, RCC works, pre-cast boundary walls, chain-link fencing, earthing with its "
+     "civil work, and cable trays and conduits with their supports."),
+    ("Can a solar plant work alongside our diesel generators?",
+     "Yes. At Jay Shree Tea's Towkok and Manjushree estates the scope included synchronising each solar plant with two DG sets, so "
+     "the estates can run solar and generators together."),
+    ("Do you handle net-metering and DISCOM approvals?",
+     "Yes. At Barpatra Tea Estate in Assam we obtained the net-metering and statutory approvals from APDCL, including its technical "
+     "inspections, so the plant could start on schedule."),
+    ("How many tea-estate solar plants have you built?",
+     "As reported in September 2026, Arrays Ingenieria has installed 19 on-grid solar plants in Assam's tea gardens, for estates "
+     "including those of Jay Shree Tea (BK Birla Group) and Goodricke Group."),
+    ("Where in India do you work?",
+     "Across India. Our projects span Assam, West Bengal, Bihar, Jharkhand, Uttar Pradesh, Uttarakhand, Haryana and Karnataka. Our "
+     "corporate office is in Greater Noida, Uttar Pradesh, with a branch office in Madhubani, Bihar."),
+    ("Who runs Arrays Ingenieria?",
+     "The company was founded in 2018 by Lt. Gen. Ashish Ranjan Prasad (Retd), AVSM, VSM, ADC, former Signal Officer-in-Chief of the "
+     "Indian Army, and is run by ex-servicemen who bring military discipline, safety and timeliness to every site."),
+    ("Which certifications do you hold?",
+     "We are ISO 9001:2015 (quality), ISO 14001:2015 (environment) and ISO 45001:2018 (occupational health & safety) certified, and "
+     "a registered MSME (Udyam UDYAM-DL-03-0023905)."),
+    ("How do I get a quote?",
+     "Send us your site location, the type of plant (rooftop or ground-mount), the approximate capacity or your monthly electricity "
+     "bill, and whether you need full EPC, I&C only or civil works only. Use the contact form or email arraysingenieria@gmail.com."),
+]
+
+# ------------------------------------------------------------ glossary ----
+GLOSSARY = [
+    ("ACDB / DCDB", "AC and DC distribution boards: the enclosures that house the fuses, isolators and surge protection between the modules, the inverters and the grid connection."),
+    ("Accelerated depreciation", "A tax benefit that lets a business that owns a solar plant write off its cost faster than normal assets, reducing taxable income in the early years. Available under the CAPEX model."),
+    ("ALMM", "Approved List of Models and Manufacturers: the list of solar modules approved by India's Ministry of New and Renewable Energy (MNRE) for use in government-linked projects."),
+    ("Balance of system (BOS)", "Everything in a solar plant except the modules: mounting structures, inverters, cables, distribution boards, earthing, lightning protection and monitoring."),
+    ("Bifacial module", "A solar module that generates power from both sides, using light reflected from the ground onto its rear face."),
+    ("CAPEX model", "The owner pays for the solar plant upfront and owns it outright, keeping all the savings. Arrays Ingenieria builds plants on this model."),
+    ("Commissioning", "The final stage of a project: testing every component, synchronising the plant with the grid and handing it over as ready to generate."),
+    ("CUF (capacity utilisation factor)", "The energy a plant actually generates in a year as a percentage of what it would generate running at full capacity all year."),
+    ("DCR (domestic content requirement)", "A rule in some government schemes that modules and cells must be made in India."),
+    ("DG synchronisation", "Controls that let a solar plant run alongside diesel generators safely, reducing fuel use without back-feeding the generators."),
+    ("Earthing", "Connecting the plant's metal structures and electrical equipment to the ground so that fault currents and lightning are carried safely away."),
+    ("EPC", "Engineering, procurement and construction: a single contract covering the design, equipment purchase and building of the whole plant."),
+    ("Grid-connected (on-grid) system", "A solar plant connected to the utility grid, which can draw from or export to the grid; the most common type for businesses."),
+    ("Ground-mount solar", "Modules installed on structures fixed to the ground, typically on pile foundations; used for tea estates, industrial land and utility parks."),
+    ("Group captive", "An arrangement where consumers take an ownership stake in an off-site solar plant and draw its power under captive-generation rules."),
+    ("I&C (installation & commissioning)", "The on-site work of building a solar plant to an agreed design and bringing it into operation: structures, modules, cabling, inverters, earthing, testing and commissioning."),
+    ("Inverter", "The equipment that converts the direct current (DC) from the modules into alternating current (AC) for use on site or export to the grid."),
+    ("kWp / MWp", "Kilowatt-peak and megawatt-peak: the rated DC output of a solar plant under standard test conditions. 1 MWp = 1,000 kWp."),
+    ("Lightning arrestor", "A device that intercepts lightning strikes and conducts them safely to earth, protecting modules and equipment."),
+    ("Module cleaning system", "A pipe network with taps or nozzles across the plant so that modules can be washed regularly, recovering output lost to dust (soiling)."),
+    ("MMS (module mounting structure)", "The steel or aluminium frame that holds the modules at the designed tilt and orientation."),
+    ("Net metering", "A billing arrangement where the power a solar plant exports to the grid is offset against the power drawn from it."),
+    ("OPEX / RESCO model", "A developer (a renewable energy service company) finances and owns the plant, and the site owner buys its power at an agreed tariff. Arrays Ingenieria works as I&C or EPC partner to such developers."),
+    ("Performance ratio (PR)", "Actual energy generated divided by the theoretical energy available from the sunlight; a measure of how well a plant is built and maintained."),
+    ("Pile foundation", "A steel or concrete pile driven or cast into the ground to anchor the module mounting structures of a ground-mount plant."),
+    ("PM Surya Ghar: Muft Bijli Yojana", "The central government scheme that subsidises rooftop solar for homes."),
+    ("Rooftop solar", "Modules installed on a building's RCC or metal-sheet roof, turning unused roof space into a power source."),
+    ("SCADA / remote monitoring", "Systems that record a plant's generation and faults in real time and make them visible remotely."),
+    ("Tier-1 module", "A module from a large, bankable manufacturer with an established production and financing track record."),
+    ("TOPCon", "Tunnel oxide passivated contact: a high-efficiency solar cell technology now common in new modules."),
+]
+
+# ------------------------------------------------------------- clients ----
+# name, relationship, what we did, project files
+CLIENTS = [
+    ("Tata Power Renewable Energy Ltd. / Tata Power Solar", "EPC partner",
+     "Pile foundations for the 300 MW SECI project at Koppal, civil works for the 10 MW DCM Textile plant, piling and civil works for "
+     "Tata Motors' 5.5 MW plant, and implementation of tea-estate and industrial plants built under Tata Power's EPC contracts.",
+     ["project-seci-300mw-koppal-pile-foundation.html", "project-dcm-hisar-10mw-solar-civil-works.html",
+      "project-tata-motors-jamshedpur-5-5mw-solar-piling.html", "project-super-smelters-1980kwp-rooftop-solar.html"]),
+    ("Jay Shree Tea & Industries Ltd. (BK Birla Group)", "Client",
+     "1035 kWp across Towkok and Manjushree Tea Estates, and solar plants at the Dewan, Labac and Burtoll gardens of the Dewan Group of Tea Estates.",
+     ["project-jayshree-tea-1mw-solar-assam.html"]),
+    ("Goodricke Group", "Plant owner",
+     "Solar plants at Orangajuli (450 kW) and Barpatra (230 kW) Tea Estates under the 3.11 MW programme with Tata Power Renewable Energy and Sustvest.",
+     ["project-orangajuli-tea-estate-450kw-solar.html", "project-barpatra-tea-estate-230kw-solar.html"]),
+    ("Sustvest (SolarGridX Ventures Pvt. Ltd.)", "Developer partner",
+     "Supply of components and installation & commissioning of a 1711.66 kWp on-grid project in Assam, and the Goodricke tea-estate programme.",
+     ["project-assam-1711kwp-on-grid-solar.html"]),
+    ("Super Smelters Ltd.", "Client", "A 1980.3 kWp industrial rooftop plant at Jamuria, West Bengal, with Tata Power Solar.",
+     ["project-super-smelters-1980kwp-rooftop-solar.html"]),
+    ("Tata Motors", "Plant owner", "Piling, civil works and a pre-cast boundary wall at Jamshedpur, and a solar carport at Pantnagar.",
+     ["project-tata-motors-jamshedpur-5-5mw-solar-piling.html"]),
+    ("Tata Consumer Products (TCPL Greenery Agro)", "Client", "A 319 kWp rooftop plant at Bhagwanpur, Vaishali, Bihar.",
+     ["project-tcpl-vaishali-319kwp-rooftop-solar.html"]),
+    ("DCM Textile", "Plant owner", "Civil works for a 9979 kWp (10 MW) plant at Hisar, Haryana.",
+     ["project-dcm-hisar-10mw-solar-civil-works.html"]),
+    ("SECI", "Project", "Pile foundations on the 300 MW SECI solar project at Koppal, Karnataka, for Tata Power.",
+     ["project-seci-300mw-koppal-pile-foundation.html"]),
+    ("Bharat Petroleum", "Client", "An RCC rooftop on-grid solar plant, recognised with a certificate of appreciation.", []),
+    ("Tata Steel", "Plant owner", "A solar project at Noamundi, Jharkhand.", []),
+    ("Amalgamated Plantations (APPL)", "Plant owner", "A solar project at Kakajan Tea Estate, Assam.", []),
+    ("YIAPL", "Client", "Supply, civil works and chain-link fencing for a 14.36 MW solar project in Uttar Pradesh.",
+     ["project-yiapl-14-36mw-solar-civil-fencing.html"]),
+]

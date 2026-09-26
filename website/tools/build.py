@@ -44,7 +44,7 @@ TODAY = date.today().isoformat()
 PAGES = {
     "index.html": dict(path="/", crumb="Home",
         title="Arrays Ingenieria | Veteran-Led Solar EPC Company in India",
-        desc="Arrays Ingenieria is a veteran-led, ISO-certified solar EPC company building ground-mount & rooftop solar across India for Tata Power, Tata Steel & more."),
+        desc="Veteran-led, ISO-certified solar installation & commissioning, EPC and civil works on the CAPEX model, for Tata Power, Jay Shree Tea and more across India."),
     "about.html": dict(path="/about.html", crumb="About",
         title="About Arrays Ingenieria | Veteran-Led Solar EPC, India",
         desc="Founded in 2018 by ex-servicemen and led by Lt. Gen. A.R. Prasad (Retd), Arrays Ingenieria is an ISO 9001/14001/45001-certified solar EPC company."),
@@ -94,7 +94,39 @@ PAGES = {
         title="Page Not Found | Arrays Ingenieria",
         desc="The page you were looking for could not be found. Explore Arrays Ingenieria's solar projects, services and news."),
 }
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from content import PROJECTS, FAQ, GLOSSARY, CLIENTS  # noqa: E402
+
+PAGES.update({
+    "capex-solar-epc.html": dict(path="/capex-solar-epc.html", crumb="CAPEX Solar EPC", parent="services",
+        title="CAPEX Solar EPC Company in India | Arrays Ingenieria",
+        desc="Own your solar plant outright. Arrays Ingenieria designs, supplies, builds and commissions rooftop and ground-mount solar on the CAPEX model."),
+    "solar-installation-commissioning.html": dict(path="/solar-installation-commissioning.html", crumb="Installation & Commissioning",
+        parent="services", title="Solar Installation & Commissioning (I&C) | Arrays Ingenieria",
+        desc="Solar I&C for EPC companies, developers and plant owners: structures, modules, cabling, earthing, testing and commissioning by veteran-led crews."),
+    "solar-for-tea-estates.html": dict(path="/solar-for-tea-estates.html", crumb="Solar for Tea Estates", parent="industries",
+        title="Solar Power for Tea Estates in Assam | Arrays Ingenieria",
+        desc="19 on-grid solar plants built in Assam's tea gardens for Jay Shree Tea and Goodricke: ground-mount solar with DG sync and net-metering."),
+    "faq.html": dict(path="/faq.html", crumb="FAQ",
+        title="Solar EPC FAQs: CAPEX, I&C & Civil Works | Arrays Ingenieria",
+        desc="Answers on CAPEX solar, installation & commissioning, civil works, DG synchronisation, net-metering and working with Arrays Ingenieria."),
+    "clients.html": dict(path="/clients.html", crumb="Clients & Partners",
+        title="Clients & Partners | Arrays Ingenieria Solar EPC",
+        desc="Arrays Ingenieria's clients and partners: Tata Power, Jay Shree Tea (BK Birla Group), Goodricke, Sustvest, Super Smelters, Tata Motors and more."),
+    "solar-glossary.html": dict(path="/solar-glossary.html", crumb="Solar Glossary",
+        title="Solar Glossary: EPC, CAPEX, I&C Terms | Arrays Ingenieria",
+        desc="Plain-English definitions of solar terms: EPC, I&C, CAPEX vs OPEX, net metering, kWp, pile foundations, DG synchronisation and more."),
+    "contact.html": dict(path="/contact.html", crumb="Contact",
+        title="Contact Arrays Ingenieria | Solar EPC, Greater Noida",
+        desc="Contact Arrays Ingenieria for solar EPC, installation & commissioning or civil works. Corporate office Greater Noida, branch office Madhubani, Bihar."),
+})
+for _p in PROJECTS:
+    PAGES[_p["file"]] = dict(path="/" + _p["file"], crumb=_p["short"], parent="projects", title=_p["title"], desc=_p["desc"])
+PARENTS = {"services": ("Services", "/#services"), "projects": ("Projects", "/projects.html"),
+           "industries": ("Industries", "/industries.html")}
 SERVICE_PAGES = [p for p in PAGES if p.startswith("service-")]
+for _p in SERVICE_PAGES:
+    PAGES[_p].setdefault("parent", "services")
 
 # ------------------------------------------------------------ gallery ----
 # (src, categories, caption, alt). Captions are visible text; alt describes the image.
@@ -380,7 +412,7 @@ NAV = [
     ("About", "about.html", "about"), ("Services", "/#services", "services"),
     ("Projects", "projects.html", "projects"), ("Gallery", "gallery.html", "gallery"),
     ("News & Media", "recognition.html", "recognition"), ("Achievements", "achievements.html", "achievements"),
-    ("Insights", "insights.html", "insights"), ("Contact", "/#contact", "contact"),
+    ("Insights", "insights.html", "insights"), ("Contact", "contact.html", "contact"),
 ]
 WORDMARK = ('<span class="brand-word"><i style="color:#F4A11E">ING</i><i style="color:#2BA9E0">E</i><i style="color:#1C2A6E">N</i>'
             '<i style="color:#2BA9E0">I</i><i style="color:#1C2A6E">E</i><i style="color:#39A935">R</i><i style="color:#2BA9E0">I</i>'
@@ -398,10 +430,10 @@ def render_header(page_key):
         <img src="assets/img/logo-mark.svg" alt="Arrays Ingenieria logo" class="brand-mark" />
         {WORDMARK}
       </a>
-      <nav class="nav-links" id="navLinks" aria-label="Primary">{links}<a class="nav-quote" href="/#contact">Get a Free Quote</a></nav>
+      <nav class="nav-links" id="navLinks" aria-label="Primary">{links}<a class="nav-quote" href="contact.html">Get a Free Quote</a></nav>
       <div class="nav-cta">
         <a href="projects.html" class="btn btn--outline">Our Work</a>
-        <a href="/#contact" class="btn btn--primary">Get a Quote</a>
+        <a href="contact.html" class="btn btn--primary">Get a Quote</a>
         <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
           <span></span><span></span><span></span>
         </button>
@@ -428,17 +460,23 @@ FOOTER = f"""<footer class="footer">
           <ul>
             <li><a href="about.html">About Us</a></li>
             <li><a href="industries.html">Industries</a></li>
-            <li><a href="projects.html">Projects</a></li>
+            <li><a href="solar-for-tea-estates.html">Solar for Tea Estates</a></li>
+            <li><a href="projects.html">Projects &amp; Case Studies</a></li>
+            <li><a href="clients.html">Clients &amp; Partners</a></li>
             <li><a href="gallery.html">Photo &amp; Video Gallery</a></li>
             <li><a href="recognition.html">News &amp; Media</a></li>
             <li><a href="achievements.html">Achievements</a></li>
             <li><a href="insights.html">Insights</a></li>
-            <li><a href="/#faq">FAQ</a></li>
+            <li><a href="solar-glossary.html">Solar Glossary</a></li>
+            <li><a href="faq.html">FAQ</a></li>
+            <li><a href="contact.html">Contact</a></li>
           </ul>
         </div>
         <div>
           <h2 class="footer__h">Services</h2>
           <ul>
+            <li><a href="capex-solar-epc.html">CAPEX Solar EPC</a></li>
+            <li><a href="solar-installation-commissioning.html">Installation &amp; Commissioning</a></li>
             <li><a href="service-ground-mount.html">Ground-Mount Solar</a></li>
             <li><a href="service-rooftop.html">Rooftop Solar</a></li>
             <li><a href="service-epc.html">EPC Turnkey</a></li>
@@ -642,6 +680,258 @@ BLOCKS = {
 }
 
 
+# ------------------------------------------------------ generated pages ----
+def page_shell(page_key, body, og_image, og_alt, ld=None, extra_head=""):
+    """A complete page; the build fills in title, meta, canonical and header/footer."""
+    ld_html = "".join('<script type="application/ld+json">\n' + json.dumps(x, ensure_ascii=False, indent=2) + "\n</script>\n"
+                      for x in (ld or []))
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#0f7a57" />
+<title>x</title>
+<meta property="og:image" content="{SITE_URL}/{og_image}" />
+<meta property="og:image:alt" content="{esc(og_alt)}" />
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/style.css?v={ASSET_VERSION}" />
+{extra_head}{ld_html}</head>
+<body data-page="{page_key}">
+<!-- build:header --><!-- /build:header -->
+
+{body}
+
+<!-- build:footer --><!-- /build:footer -->
+<script src="assets/js/components.js?v={ASSET_VERSION}"></script>
+<script src="assets/js/main.js?v={ASSET_VERSION}"></script>
+</body>
+</html>
+"""
+
+
+def page_hero(img, alt, eyebrow, h1, lead, crumbs):
+    trail = '<a href="/">Home</a>' + "".join(
+        f'<span>/</span><a href="{href}">{esc(name)}</a>' if href else f"<span>/</span>{esc(name)}" for name, href in crumbs)
+    return f"""<section class="page-hero">
+  <div class="page-hero__bg"><img src="{img}" alt="{esc(alt)}" /></div>
+  <div class="container">
+    <span class="eyebrow">{eyebrow}</span>
+    <h1>{h1}</h1>
+    <p>{lead}</p>
+    <nav class="breadcrumb" aria-label="Breadcrumb">{trail}</nav>
+  </div>
+</section>"""
+
+
+PAGE_TITLES = {}  # filled lazily: file -> short label used for related links
+
+
+def page_label(fname):
+    return {"service-ground-mount.html": "Ground-Mount Solar", "service-rooftop.html": "Rooftop Solar",
+            "service-epc.html": "EPC Turnkey", "service-piling.html": "Pile Foundations",
+            "service-civil.html": "Civil Works & Fencing", "service-om.html": "O&M & Support",
+            "capex-solar-epc.html": "CAPEX Solar EPC", "solar-installation-commissioning.html": "Installation & Commissioning",
+            "solar-for-tea-estates.html": "Solar for Tea Estates"}.get(fname, PAGES[fname]["crumb"])
+
+
+def case_card(p, d=0):
+    img, alt = p["photos"][0]
+    return (f'<a class="case-card reveal" data-d="{d % 3}" href="{p["file"]}"><span class="cc-img"><img src="{img}" alt="{esc(alt)}" /></span>'
+            f'<span class="cc-body"><span class="cc-tag">{esc(p["tag"])}</span><b>{esc(p["name"])}</b>'
+            f'<span class="cc-meta">{esc(p["capacity"])} · {esc(p["location"])}</span>'
+            f'<span class="cc-go">Read the case study {ARROW_SVG}</span></span></a>')
+
+
+def render_case_cards(service=None, exclude=None, limit=None):
+    items = [p for p in PROJECTS if (not service or service in p["services"]) and p["file"] != exclude]
+    items = items[:limit] if limit else items
+    return '<div class="case-grid">\n      ' + "\n      ".join(case_card(p, i) for i, p in enumerate(items)) + "\n    </div>"
+
+
+def coverage_mini(ids):
+    out = []
+    for c in COVERAGE:
+        if c["id"] in ids:
+            out.append(f'<a class="cov-mini" href="recognition.html#{c["id"]}"><span class="press-kind">{KIND_LABEL[c["kind"]]}</span>'
+                       f'<b>{esc(c["outlet"])}</b>{time_tag(c["date"])}<span class="cov-h">{esc(c["headline"])}</span></a>')
+    return "".join(out)
+
+
+def render_project_page(p):
+    facts = [("Capacity", p["capacity"]), ("Plant type", p["kind"]), ("Location", p["location"]), ("Client", p["client"]),
+             ("Partner / programme", p["partner"]), ("Our role", p["role"]), ("Year", p["year"])]
+    specs = "".join(f'<div class="spec"><span>{k}</span><b>{esc(v)}</b></div>' for k, v in facts if v)
+    body = "".join(f"\n      <p>{esc(x)}</p>" for x in p["body"])
+    scope = "".join(f'\n        <li><span class="tick"></span>{esc(x)}</li>' for x in p["scope"])
+    photos = ""
+    if p["photos"]:
+        photos = '\n      <h3>Photos</h3>\n      <div class="detail-photos">' + "".join(
+            f'<div class="ph" data-full="{src}" data-gallery="case" data-caption="{esc(alt)}"><img src="{src}" alt="{esc(alt)}" /></div>'
+            for src, alt in p["photos"]) + "</div>"
+    docs = ""
+    if p["docs"]:
+        docs = f"""
+<section class="section section--soft">
+  <div class="container">
+    <div class="section-head center reveal"><span class="eyebrow">Documents</span><h2>Orders, Certificates &amp; <span class="text-grad">Press</span></h2><p>The documents behind this case study. Tap to view full size.</p></div>
+    <div class="clip-grid">""" + "".join(
+            f'\n      <div class="clip reveal" data-full="{src}" data-gallery="docs" data-caption="{esc(cap)}"><img src="{src}" alt="{esc(cap)} — Arrays Ingenieria" /><div class="ccap">{esc(cap)}</div></div>'
+            for src, cap in p["docs"]) + "\n    </div>\n  </div>\n</section>"
+    cov = ""
+    if p["coverage"]:
+        cov = f'\n      <h3>In the news</h3>\n      <div class="cov-list">{coverage_mini(p["coverage"])}</div>'
+    related = "".join(f'<a href="{f}">{esc(page_label(f))}</a>' for f in p["services"])
+    others = [q for q in PROJECTS if q["file"] != p["file"]]
+    same = [q for q in others if q["cat"] == p["cat"]] + [q for q in others if q["cat"] != p["cat"]]
+    hero_alt = p.get("hero_alt") or next((a for s, a in p["photos"] if s == p["hero"]), p["name"])
+    body_html = page_hero(p["hero"], hero_alt, f"Case Study · {esc(p['tag'])}", esc(p["name"]), esc(p["intro"]),
+                          [("Projects", "projects.html"), (p["short"], None)]) + f"""
+
+<section class="section">
+  <div class="container detail-grid">
+    <div class="detail-body reveal">
+      <span class="eyebrow">The Project</span>
+      <h2>About the {esc(p['short'].split(' — ')[0])} project</h2>{body}
+      <h3>Our scope of work</h3>
+      <ul class="detail-list">{scope}
+      </ul>{cov}{photos}
+    </div>
+    <aside class="detail-aside reveal" data-d="1">
+      <div class="aside-card">
+        <h2 class="aside-h">Project facts</h2>
+        {specs}
+      </div>
+      <div class="aside-card cta">
+        <h2 class="aside-h">Planning a similar project?</h2>
+        <p>Talk to our veteran-led team about EPC, installation &amp; commissioning or civil works.</p>
+        <a class="btn btn--sun" href="contact.html" style="width:100%;">Get a Free Quote</a>
+      </div>
+    </aside>
+  </div>
+</section>
+{docs}
+<section class="section">
+  <div class="container">
+    <div class="section-head center reveal"><span class="eyebrow">Related</span><h2>Services Used on <span class="text-grad">This Project</span></h2></div>
+    <div class="svc-other reveal">{related}<a href="projects.html">All Projects &rarr;</a></div>
+  </div>
+</section>
+
+<section class="section section--soft">
+  <div class="container">
+    <div class="section-head center reveal"><span class="eyebrow">More Case Studies</span><h2>Other Projects by <span class="text-grad">Arrays Ingenieria</span></h2></div>
+    <div class="case-grid">{"".join(case_card(q, i) for i, q in enumerate(same[:3]))}</div>
+  </div>
+</section>"""
+    ld = [{"@context": "https://schema.org", "@type": "WebPage", "name": p["name"], "url": SITE_URL + "/" + p["file"],
+           "description": p["desc"], "primaryImageOfPage": f"{SITE_URL}/{p['hero']}",
+           "about": {"@type": "Place", "name": p["location"]},
+           "mentions": [{"@type": "Organization", "name": x} for x in (p["client"], p["partner"]) if x],
+           "publisher": {"@id": SITE_URL + "/#organization"}}]
+    return page_shell("projects", body_html, p["hero"], hero_alt, ld)
+
+
+def render_faq_page():
+    items = "".join(f'\n      <details class="faq"{" open" if i == 0 else ""}><summary>{esc(q)}</summary><div class="faq-a">{esc(a)}</div></details>'
+                    for i, (q, a) in enumerate(FAQ))
+    ld = [{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+        {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in FAQ]}]
+    body = page_hero("assets/photos/proj-towkok.jpg", "Towkok Tea Estate solar plant in Assam built by Arrays Ingenieria",
+                     "Frequently Asked Questions", 'Solar EPC, <span class="text-sun">Answered</span>',
+                     "What we do, how the CAPEX model works, what installation &amp; commissioning covers, and how to start a project with us.",
+                     [("FAQ", None)]) + f"""
+
+<section class="section">
+  <div class="container">
+    <div class="faq-list reveal">{items}
+    </div>
+    <div class="section-cta reveal"><a class="btn btn--primary" href="contact.html">Ask Us Anything {ARROW_SVG}</a><a class="btn btn--outline" href="solar-glossary.html">Solar Glossary</a></div>
+  </div>
+</section>"""
+    return page_shell("faq", body, "assets/photos/proj-towkok.jpg", "Towkok Tea Estate solar plant by Arrays Ingenieria", ld)
+
+
+def render_glossary_page():
+    terms = sorted(GLOSSARY, key=lambda t: t[0].lower())
+    def slug(t):
+        return re.sub(r"[^a-z0-9]+", "-", t.lower()).strip("-")
+    letters = sorted({t[0][0].upper() for t in terms})
+    index = "".join(f'<a href="#letter-{l}">{l}</a>' for l in letters)
+    blocks, cur = [], None
+    for term, definition in terms:
+        l = term[0].upper()
+        if l != cur:
+            if cur:
+                blocks.append("</dl>")
+            blocks.append(f'<h2 class="gl-letter" id="letter-{l}">{l}</h2><dl class="gl-list">')
+            cur = l
+        blocks.append(f'<div class="gl-item" id="{slug(term)}"><dt>{esc(term)}</dt><dd>{esc(definition)}</dd></div>')
+    blocks.append("</dl>")
+    ld = [{"@context": "https://schema.org", "@type": "DefinedTermSet", "name": "Solar glossary",
+           "url": SITE_URL + "/solar-glossary.html", "publisher": {"@id": SITE_URL + "/#organization"},
+           "hasDefinedTerm": [{"@type": "DefinedTerm", "name": t, "description": d,
+                               "url": f"{SITE_URL}/solar-glossary.html#{slug(t)}"} for t, d in terms]}]
+    body = page_hero("assets/photos/proj-rooftop-pano.jpg", "Industrial rooftop solar array installed by Arrays Ingenieria",
+                     "Solar Glossary", 'Solar Terms, <span class="text-sun">in Plain English</span>',
+                     "The words you will meet when planning a solar plant, from CAPEX and I&amp;C to kWp and net metering.",
+                     [("Insights", "insights.html"), ("Solar Glossary", None)]) + f"""
+
+<section class="section">
+  <div class="container gl-wrap">
+    <nav class="gl-index reveal" aria-label="Glossary index">{index}</nav>
+    {"".join(blocks)}
+    <div class="section-cta reveal"><a class="btn btn--primary" href="faq.html">Read the FAQ {ARROW_SVG}</a><a class="btn btn--outline" href="insights.html">Solar Guides</a></div>
+  </div>
+</section>"""
+    return page_shell("insights", body, "assets/photos/proj-rooftop-pano.jpg", "Rooftop solar array by Arrays Ingenieria", ld)
+
+
+def render_clients_page():
+    cards = []
+    for i, (name, rel, what, files) in enumerate(CLIENTS):
+        links = "".join(f'<a href="{f}">{esc(PAGES[f]["crumb"])} →</a>' for f in files)
+        cards.append(f'<article class="client-card reveal" data-d="{i % 3}"><span class="cl-rel">{esc(rel)}</span><h3>{esc(name)}</h3>'
+                     f'<p>{esc(what)}</p>{f"<div class=cl-links>{links}</div>" if links else ""}</article>')
+    ld = [{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Clients and partners of Arrays Ingenieria",
+           "url": SITE_URL + "/clients.html", "about": {"@id": SITE_URL + "/#organization"},
+           "mentions": [{"@type": "Organization", "name": n} for n, *_ in CLIENTS]}]
+    body = page_hero("assets/photos/proj-supersmelters.jpg", "Super Smelters rooftop solar plant built by Arrays Ingenieria with Tata Power Solar",
+                     "Clients &amp; Partners", 'Trusted by <span class="text-sun">India\'s Leading Names</span>',
+                     "EPC majors, developers and plant owners who have engaged our veteran-led team for installation, EPC and civil works.",
+                     [("Clients & Partners", None)]) + f"""
+
+<section class="section">
+  <div class="container">
+    <div class="section-head center reveal"><span class="eyebrow">Who We Work With</span><h2>Our Clients &amp; <span class="text-grad">What We Built for Them</span></h2><p>Each engagement is backed by a work order, purchase order, certificate or news report. Follow the links for the full case studies.</p></div>
+    <div class="client-grid">
+      {"".join(cards)}
+    </div>
+  </div>
+</section>
+
+<!-- build:press-band --><!-- /build:press-band -->
+
+<section class="section section--soft">
+  <div class="container">
+    <div class="section-head center reveal"><span class="eyebrow">Case Studies</span><h2>Projects in <span class="text-grad">Detail</span></h2></div>
+    <!-- build:cases --><!-- /build:cases -->
+  </div>
+</section>"""
+    return page_shell("clients", body, "assets/photos/proj-supersmelters.jpg", "Super Smelters solar plant by Arrays Ingenieria", ld)
+
+
+def write_generated_pages():
+    for p in PROJECTS:
+        open(os.path.join(ROOT, p["file"]), "w", encoding="utf8").write(render_project_page(p))
+    for fname, render in (("faq.html", render_faq_page), ("solar-glossary.html", render_glossary_page),
+                          ("clients.html", render_clients_page)):
+        open(os.path.join(ROOT, fname), "w", encoding="utf8").write(render())
+
+
 # -------------------------------------------------------------- gallery ----
 def render_gallery_page():
     filters = '<button class="filter active" data-filter="all">All</button>' + "".join(
@@ -813,8 +1103,9 @@ def normalise_links(text):
 def breadcrumb_ld(fname):
     items = [{"@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL + "/"}]
     meta = PAGES[fname]
-    if fname in SERVICE_PAGES:
-        items.append({"@type": "ListItem", "position": 2, "name": "Services", "item": SITE_URL + "/#services"})
+    if meta.get("parent"):
+        name, path = PARENTS[meta["parent"]]
+        items.append({"@type": "ListItem", "position": 2, "name": name, "item": SITE_URL + path})
     if fname != "index.html":
         items.append({"@type": "ListItem", "position": len(items) + 1, "name": meta["crumb"], "item": SITE_URL + meta["path"]})
     return {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": items}
@@ -832,6 +1123,8 @@ def head_block(fname, og_image, og_alt):
     lines += [
         '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />',
         f'<link rel="canonical" href="{url}" />',
+        f'<link rel="alternate" hreflang="en-IN" href="{url}" />',
+        f'<link rel="alternate" hreflang="x-default" href="{url}" />',
         '<meta property="og:type" content="website" />',
         f'<meta property="og:site_name" content="{BRAND}" />',
         '<meta property="og:locale" content="en_IN" />',
@@ -869,6 +1162,9 @@ def process_page(fname):
     # header / footer / videos baked in
     text = replace_block(text, "header", render_header(page_key))
     text = replace_block(text, "footer", FOOTER)
+    text = re.sub(r"<!-- build:cases(?::([\w.-]+))? -->.*?<!-- /build:cases -->",
+                  lambda m: f"<!-- build:cases{':' + m.group(1) if m.group(1) else ''} -->\n"
+                            f"{render_case_cards(service=m.group(1))}\n<!-- /build:cases -->", text, flags=re.S)
     for name, render in BLOCKS.items():
         if f"<!-- build:{name} -->" in text:
             text = replace_block(text, name, render())
@@ -885,6 +1181,14 @@ def process_page(fname):
     head = HEAD_TAG_RE.sub("", head)
     head = re.sub(r'(<meta name="viewport"[^>]*>\n)', lambda m: m.group(1) + head_block(fname, og_image, alt) + "\n", head, count=1)
     head = head.replace("/assets/img/logo.svg", "/assets/img/logo-mark.svg")
+
+    def link_provider(m):
+        data = json.loads(m.group(2))
+        if isinstance(data, dict) and data.get("@type") == "Service" and "@id" not in data.get("provider", {}):
+            data["provider"] = {"@id": SITE_URL + "/#organization"}
+            return m.group(1) + "\n" + json.dumps(data, ensure_ascii=False, indent=2) + "\n</script>"
+        return m.group(0)
+    head = re.sub(r'(<script type="application/ld\+json">)\s*(.*?)\s*</script>', link_provider, head, flags=re.S)
     if PAGES[fname]["path"] and '"BreadcrumbList"' not in head:
         head += '<script type="application/ld+json">\n' + json.dumps(breadcrumb_ld(fname), ensure_ascii=False, indent=2) + "\n</script>\n"
     head = re.sub(r'<script type="application/ld\+json" data-build="coverage">.*?</script>\n', "", head, flags=re.S)
@@ -991,6 +1295,7 @@ def check_links():
 
 def main():
     open(os.path.join(ROOT, "gallery.html"), "w", encoding="utf8").write(render_gallery_page())
+    write_generated_pages()
     for fname in PAGES:
         process_page(fname)
     write_sitemap()
