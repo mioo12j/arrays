@@ -1,13 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /tools/
 
-# Allow all search & image crawlers full access
-User-agent: Googlebot
-Allow: /
-User-agent: Googlebot-Image
-Allow: /
-User-agent: Bingbot
-Allow: /
-
-Sitemap: https://www.arraysingenieria.com/sitemap.xml
-Host: https://www.arraysingenieria.com
+Sitemap: https://arraysingenieria.netlify.app/sitemap.xml

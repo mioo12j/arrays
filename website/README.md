@@ -1,18 +1,45 @@
-# Ingenieria — company website
+# Arrays Ingenieria — company website
 
-Source for https://arraysingenieria.netlify.app/ (canonical: https://www.arraysingenieria.com/).
+Source for https://arraysingenieria.netlify.app/ (planned domain: www.arraysingenieria.com).
 
 The original source was lost; this copy was recovered on 2026-09-26 by mirroring the
-live deployment. The site is plain static HTML/CSS/JS with no build step, so the
-deployed files are the source.
+live deployment. It is plain static HTML/CSS/JS, so the files here are what gets served.
 
-- Pages: `index.html`, `about.html`, `service-*.html`, `projects.html`, `industries.html`,
-  `achievements.html`, `recognition.html`, `insights.html`, `privacy.html`, `terms.html`, `404.html`
-- Shared header/footer: `assets/js/components.js`; styles: `assets/css/style.css`
-- Solar calculator: `assets/js/calculator.js` (PDF export via bundled `jspdf.umd.min.js`)
+## Pages
+`index.html`, `about.html`, `service-*.html`, `projects.html`, `gallery.html`,
+`recognition.html` (news, video coverage, national media), `achievements.html`,
+`industries.html`, `insights.html`, `privacy.html`, `terms.html`, `404.html`.
+
+## After any edit: run the build
+    python3 tools/build.py
+
+It needs only Python 3 and rewrites the pages in place. It:
+- bakes the shared header/footer into every page (edit them in `tools/build.py`, not in the pages)
+- sets each page's title, description, canonical, Open Graph and Twitter tags (`PAGES` in `tools/build.py`)
+- regenerates `gallery.html` from the `GALLERY` list and the video cards from `VIDEOS`
+- adds image width/height and lazy-loading, regenerates `sitemap.xml` (with every image),
+  `robots.txt` and `_redirects`
+- checks every internal link, image and `#anchor`, and fails if anything is broken
+
+### Adding a photo
+1. Save it under `assets/photos/` (projects/events), `assets/news/` (clippings) or `assets/press/`
+   with a descriptive file name, e.g. `barpatra-tea-estate-230kw-solar-plant.jpg`.
+2. Add a line to `GALLERY` in `tools/build.py` with a caption and a descriptive alt text
+   that names the place, the capacity and "Arrays Ingenieria".
+3. Run `python3 tools/build.py`.
+
+### Adding a video or news link
+Add an entry to `VIDEOS` (shown on the gallery and recognition pages), or a card to the
+"Media Mentions" section of `recognition.html`, then run the build.
+
+## Domain
+`SITE_URL` at the top of `tools/build.py` is the address used in canonical tags, the
+sitemap and social previews. **arraysingenieria.com is not registered yet.** Once it is
+registered and added in Netlify, set `SITE_URL = "https://www.arraysingenieria.com"`,
+run the build, and submit the new sitemap in Google Search Console.
 
 ## Run locally
-    cd website && python3 -m http.server 8000
+    python3 -m http.server 8000     # from this folder, then open http://localhost:8000
 
 ## Deploy (Netlify)
-Point the site at this repo with Base directory `website` (see `netlify.toml`).
+Point the site at this repo with Base directory `website` (see `netlify.toml`). No build command.

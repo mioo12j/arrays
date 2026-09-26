@@ -1,3 +1,8 @@
+/* Images carry width/height attributes (set by tools/build.py) to reserve space
+   and prevent layout shift; keep them scaling with their CSS width. This sits
+   first so component rules that set an explicit height still win. */
+img[width][height] { height: auto; }
+
 /* ===========================================================
    ARRAYS INGENIERIA PVT LTD — Developing Green Energy
    Stylesheet
@@ -564,7 +569,7 @@ h1, h2, h3, h4 { font-family: var(--head); color: var(--ink); line-height: 1.15;
 @keyframes shine { to { background-position: 200% center; } }
 
 /* section CTA */
-.section-cta { display: flex; justify-content: center; margin-top: 48px; }
+.section-cta { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 48px; }
 
 /* ---------- PAGE HERO (subpages) ---------- */
 .page-hero { position: relative; padding: 160px 0 70px; color: #fff; overflow: hidden; }
@@ -1051,3 +1056,51 @@ a.news:hover .news-link { text-decoration: underline; }
 .impact .num .suffix { color: var(--gold-300); }
 .impact .lbl { color: #dcf3e7; font-size: 13.5px; margin-top: 8px; }
 @media (max-width: 640px) { .impact-grid { grid-template-columns: 1fr 1fr; gap: 30px 16px; } }
+
+
+/* ===========================================================
+   Footer headings (h2 for a clean heading outline)
+   =========================================================== */
+.footer .footer__h { color: #fff; font-family: var(--head); font-size: 15px; margin-bottom: 18px; letter-spacing: .5px; }
+
+/* ===========================================================
+   Gallery page: captioned grid + filtering
+   =========================================================== */
+.gallery-grid .g-item.hide { display: none; }
+.gallery-grid.captioned .g-item { margin: 0 0 18px; background: #fff; border: 1px solid var(--line); }
+.gallery-grid.captioned .g-item figcaption { padding: 11px 14px 13px; font-size: 13px; line-height: 1.45; color: var(--body); font-family: var(--head); font-weight: 500; }
+.gallery-grid.captioned .g-item { transition: box-shadow .3s, transform .3s; }
+.gallery-grid.captioned .g-item:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.gallery-grid.captioned .g-item:hover img { transform: none; }
+
+/* ===========================================================
+   Video coverage cards
+   =========================================================== */
+.video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.video-card { display: flex; flex-direction: column; border-radius: var(--radius); overflow: hidden; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow-sm); text-decoration: none; transition: transform .3s, box-shadow .3s, border-color .3s; }
+.video-card:hover { transform: translateY(-7px); box-shadow: var(--shadow); border-color: #1877F2; }
+.video-card .vc-thumb { position: relative; aspect-ratio: 16/9; overflow: hidden; background: #0b2a1f; }
+.video-card .vc-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+.video-card:hover .vc-thumb img { transform: scale(1.06); }
+.video-card .vc-thumb::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 40%, rgba(5,30,21,.55)); }
+.video-card .vc-play { position: absolute; z-index: 1; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0 0 -31px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.92); color: var(--green-700); box-shadow: 0 10px 30px rgba(0,0,0,.35); transition: transform .3s; }
+.video-card .vc-play svg { width: 28px; height: 28px; margin-left: 3px; }
+.video-card:hover .vc-play { transform: scale(1.1); }
+.video-card .vc-badge { position: absolute; z-index: 1; top: 10px; left: 10px; width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; background: #1877F2; color: #fff; }
+.video-card .vc-badge svg { width: 18px; height: 18px; }
+.video-card .vc-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 7px; flex: 1; }
+.video-card .vc-net { font-family: var(--head); font-size: 11px; font-weight: 700; letter-spacing: .4px; color: var(--muted); text-transform: uppercase; }
+.video-card b { font-weight: 600; font-size: 15px; color: var(--ink); line-height: 1.45; flex: 1; }
+.video-card .vc-go { font-family: var(--head); font-weight: 600; font-size: 13px; color: #1877F2; }
+@media (max-width: 900px) { .video-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .video-grid { grid-template-columns: 1fr; } }
+
+/* Clipping card that links out to the original article */
+.clip .ccap a { color: var(--green-600); }
+@media (min-width: 1025px) { .news-strip--4 { grid-template-columns: repeat(4, 1fr); } }
+/* 981–1180px: tighten the desktop menu so the wordmark never touches it */
+@media (min-width: 981px) and (max-width: 1180px) {
+  .nav-links { gap: 18px; }
+  .nav-links a { font-size: 14px; }
+  .brand-word { font-size: .92em; }
+}

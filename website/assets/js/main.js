@@ -122,12 +122,14 @@
     const render = () => {
       const t = group[pos];
       img.src = t.dataset.full;
-      img.alt = t.alt || "";
-      cap.textContent = t.dataset.caption || t.alt || "";
+      const thumb = t.tagName === "IMG" ? t : $("img", t);
+      img.alt = (thumb && thumb.alt) || "";
+      cap.textContent = t.dataset.caption || img.alt;
     };
     const open = t => {
       const g = t.dataset.gallery;
-      group = g ? triggers.filter(x => x.dataset.gallery === g) : [t];
+      // only step through items the current filter is showing
+      group = g ? triggers.filter(x => x.dataset.gallery === g && x.offsetParent !== null) : [t];
       pos = group.indexOf(t);
       render();
       lb.classList.add("open");
