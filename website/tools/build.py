@@ -95,7 +95,8 @@ PAGES = {
         desc="The page you were looking for could not be found. Explore Arrays Ingenieria's solar projects, services and news."),
 }
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from content import PROJECTS, FAQ, GLOSSARY, CLIENTS, LEADER_QUOTES, NATIONAL_FACTS, SCHEMES, TIMELINE  # noqa: E402
+from content import (PROJECTS, FAQ, GLOSSARY, CLIENTS, LEADER_QUOTES, NATIONAL_FACTS, SCHEMES, TIMELINE,  # noqa: E402
+                     PANCHAMRIT, PANCHAMRIT_URL)
 
 PAGES.update({
     "capex-solar-epc.html": dict(path="/capex-solar-epc.html", crumb="CAPEX Solar EPC", parent="services",
@@ -737,6 +738,13 @@ def render_schemes():
     return '<div class="scheme-grid">' + "".join(cards) + "</div>"
 
 
+def render_panchamrit():
+    items = "".join(f'<li class="pa-item reveal" data-d="{i % 5}"><span class="pa-n">{i + 1}</span><p>{esc(t)}</p></li>'
+                    for i, t in enumerate(PANCHAMRIT))
+    return (f'<ol class="panchamrit">{items}</ol><p class="lq-note">The five commitments in the Prime Minister\'s words, from his '
+            f'national statement at COP26, Glasgow, 1 November 2021 (<a href="{PANCHAMRIT_URL}" target="_blank" rel="noopener">PIB</a>).</p>')
+
+
 def render_timeline():
     items = []
     for i, (label, iso, title, text, link) in enumerate(TIMELINE):
@@ -759,6 +767,7 @@ BLOCKS = {
     "national-facts": render_national_facts,
     "schemes": render_schemes,
     "timeline": render_timeline,
+    "panchamrit": render_panchamrit,
 }
 
 
@@ -866,6 +875,17 @@ def render_project_page(p):
     cov = ""
     if p["coverage"]:
         cov = f'\n      <h3>In the news</h3>\n      <div class="cov-list">{coverage_mini(p["coverage"])}</div>'
+    impact = ""
+    if p.get("impact"):
+        im = p["impact"]
+        paras = "".join(f"<p>{esc(x)}</p>" for x in im["paras"])
+        srcs = "; ".join(f'<a href="{u}" target="_blank" rel="noopener">{esc(n)}</a>' for n, u in im["sources"])
+        impact = f"""
+<section class="section section--news impact-band">
+  <div class="container">
+    <div class="impact reveal"><span class="eyebrow">Why It Matters</span><h2>{esc(im['heading'])}</h2>{paras}<p class="src-note">Sources: {srcs}.</p></div>
+  </div>
+</section>"""
     related = "".join(f'<a href="{f}">{esc(page_label(f))}</a>' for f in p["services"])
     others = [q for q in PROJECTS if q["file"] != p["file"]]
     same = [q for q in others if q["cat"] == p["cat"]] + [q for q in others if q["cat"] != p["cat"]]
@@ -895,7 +915,7 @@ def render_project_page(p):
     </aside>
   </div>
 </section>
-{docs}
+{impact}{docs}
 <section class="section">
   <div class="container">
     <div class="section-head center reveal"><span class="eyebrow">Related</span><h2>Services Used on <span class="text-grad">This Project</span></h2></div>

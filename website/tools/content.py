@@ -75,16 +75,16 @@ PROJECTS = [
     ),
     dict(
         file="project-barpatra-tea-estate-230kw-solar.html",
-        name="Barpatra Tea Estate: 230 kW On-Grid Solar Plant",
+        name="Barpatra (Borpatra) Tea Estate: 230 kW On-Grid Solar Plant",
         short="Barpatra Tea Estate, Assam — 230 kW",
         title="230 kW Solar, Barpatra Tea Estate | Arrays Ingenieria",
-        desc="Case study: 230 kW on-grid ground-mount solar at Goodricke's Barpatra Tea Estate, Sonari, Assam, with net-metering approvals from APDCL.",
+        desc="Case study: 230 kW on-grid ground-mount solar at Goodricke's Barpatra (Borpatra) Tea Estate, Sonari, Assam, with net-metering approvals from APDCL.",
         capacity="230 kW", kind="Ground-mount, on-grid (net-metered)", location="Sonari, Assam",
         client="Barpatra Tea Estate (Goodricke Group)", partner="Tata Power Renewable Energy Ltd. & Sustvest (3.11 MW programme)",
         role="Turnkey implementation partner", year="2026 (commissioned September 2026)",
         cat="ground", tag="Tea Estate · Ground-Mount",
         hero="assets/news/barpatra-tea-estate-230kw-solar-newspaper-print.jpg",
-        intro="A 230 kW on-grid ground-mount solar plant at Goodricke Group's Barpatra Tea Estate in Sonari, Assam, formally "
+        intro="A 230 kW on-grid ground-mount solar plant at Goodricke Group's Barpatra (Borpatra) Tea Estate in Sonari, Assam, formally "
               "inaugurated by the estate manager, Satish Pandey, in September 2026.",
         body=[
             "The plant is part of the 3.11 MW commercial & industrial solar programme for Goodricke's estates, developed jointly by Tata "
@@ -93,11 +93,27 @@ PROJECTS = [
             "including technical inspection by the Namrup SDE and the APDCL Dibrugarh TRD department, so the plant could start on schedule.",
             "Barpatra brought the company's count to 19 on-grid solar plants in Assam's tea gardens, as reported in the Hindi press on "
             "25 September 2026.",
+            "Under its motto \"Olive Green to Go Green\", Arrays Ingenieria brings military-grade discipline and engineering precision "
+            "to building critical clean-energy infrastructure. For its team of veterans, working in renewable energy is a \"second "
+            "innings of national service\", contributing directly to sustainable nation-building.",
         ],
+        impact=dict(
+            heading="Driving the PM's Panchamrit and Assam's green-energy goals",
+            paras=[
+                "By cutting reliance on fossil fuels in the energy-intensive tea-processing sector, the Barpatra solar installation "
+                "contributes to Prime Minister Narendra Modi's \"Panchamrit\" climate commitments, announced at COP26: 500 GW of "
+                "non-fossil capacity and half of India's energy needs from renewables by 2030, and net zero by 2070.",
+                "It also advances Assam Chief Minister Dr Himanta Biswa Sarma's target of 6,000 MW of installed green-energy capacity "
+                "by 2030. The project shows that sustainable innovation and clean energy can drive the next chapter of Assam's "
+                "economic growth story.",
+            ],
+            sources=[("PM's national statement at COP26, PIB, 1 Nov 2021", "https://pib.gov.in/PressReleasePage.aspx?PRID=1768712"),
+                     ("Himanta Biswa Sarma, Rewriting Assam's Energy Future, 22 Sep 2026", "https://himantabiswa.substack.com/p/rewriting-assams-energy-future")],
+        ),
         scope=["Turnkey implementation of the ground-mount plant", "Net-metering and statutory approvals with APDCL",
                "Grid connection", "Testing and commissioning"],
         photos=[("assets/news/barpatra-tea-estate-230kw-solar-newspaper-print.jpg",
-                 "Printed newspaper report on the 230 kW Barpatra Tea Estate solar plant by Arrays Ingenieria")],
+                 "Printed newspaper report on the 230 kW Barpatra (Borpatra) Tea Estate solar plant by Arrays Ingenieria")],
         docs=[("assets/news/barpatra-tea-estate-230kw-solar-ingenieria.jpg", "Hindi newspaper report, 25 Sep 2026")],
         coverage=["barpatra-230kw", "sonari-live"],
         services=["solar-installation-commissioning.html", "service-epc.html", "solar-for-tea-estates.html"],
@@ -426,8 +442,8 @@ LEADER_QUOTES = [
 
 # ------------------------------------------------------- national facts ----
 NATIONAL_FACTS = [
-    dict(num="500", suffix=" GW", label="Non-fossil capacity target for 2030, announced by the Prime Minister at COP26",
-         url="https://pib.gov.in/PressReleasePage.aspx?PRID=2250039"),
+    dict(num="500", suffix=" GW", label="Non-fossil capacity target for 2030: the first of the Prime Minister's Panchamrit commitments at COP26",
+         url="https://pib.gov.in/PressReleasePage.aspx?PRID=1768712"),
     dict(num="283.46", suffix=" GW", label="Non-fossil capacity installed in India as on 31 March 2026",
          url="https://pib.gov.in/PressReleasePage.aspx?PRID=2250039"),
     dict(num="50", suffix="%", label="Share of India's installed power capacity from non-fossil sources, reached June 2025",
@@ -498,4 +514,15 @@ TIMELINE = [
      "Appointed for supply, installation and commissioning of an on-grid project in Assam.", "project-assam-1711kwp-on-grid-solar.html"),
     ("Sep 2026", "2026-09", "Orangajuli and Barpatra",
      "450 kW at Orangajuli on Janmashtami and 230 kW at Barpatra: 19 on-grid plants in Assam's tea gardens.", "solar-for-tea-estates.html"),
+]
+
+# ----------------------------------------------------------- panchamrit ----
+# Verbatim from the Prime Minister's national statement at COP26, Glasgow (PIB, 1 Nov 2021).
+PANCHAMRIT_URL = "https://pib.gov.in/PressReleasePage.aspx?PRID=1768712"
+PANCHAMRIT = [
+    "India will reach its non-fossil energy capacity to 500 GW by 2030.",
+    "India will meet 50 percent of its energy requirements from renewable energy by 2030.",
+    "India will reduce the total projected carbon emissions by one billion tonnes from now onwards till 2030.",
+    "By 2030, India will reduce the carbon intensity of its economy by less than 45 percent.",
+    "By the year 2070, India will achieve the target of Net Zero.",
 ]

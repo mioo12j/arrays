@@ -1467,3 +1467,19 @@ html, body { overflow-x: clip; }
   .detail-aside.reveal, .leader__content.reveal, .leader__photo.reveal, .tl-l.reveal, .tl-r.reveal { transform: translateY(30px); }
   .reveal.in, .tl-item.reveal.in { transform: none; }
 }
+
+/* Panchamrit + "why it matters" band */
+.panchamrit { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.pa-item { position: relative; padding: 26px 20px 22px; border-radius: var(--radius); background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow-sm); overflow: hidden; }
+.pa-item::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; background: var(--grad-sun); transform: scaleX(0); transform-origin: left; transition: transform .8s .3s cubic-bezier(.2,.7,.2,1); }
+.pa-item.in::before { transform: scaleX(1); }
+.pa-n { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--grad-green); color: #fff; font-family: var(--head); font-weight: 800; margin-bottom: 12px; }
+.pa-item p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink); }
+.lq-note a { color: inherit; text-decoration: underline; }
+@media (max-width: 1024px) { .panchamrit { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 640px) { .panchamrit { grid-template-columns: 1fr; } }
+.impact { max-width: 860px; margin: 0 auto; }
+.impact h2 { color: #fff; font-size: clamp(24px, 3vw, 34px); margin: 12px 0 16px; }
+.impact p { color: #cfe8dd; font-size: 16px; line-height: 1.7; }
+.impact .src-note, .impact .src-note a { color: #8fb9a8; }
+.impact p + p { margin-top: 12px; }
