@@ -1511,3 +1511,9 @@ html, body { overflow-x: clip; }
 }
 .lq-card figcaption > span.lq-credit { font-weight: 400; font-size: 11px; color: var(--muted); }
 .lq-card figcaption .lq-credit a { display: inline; margin: 0; font-family: inherit; font-weight: 400; font-size: 11px; color: var(--muted); text-decoration: underline; }
+
+/* Original INGENIERIA logo (mark + wordmark lockup from the brand artwork) */
+.brand .brand-logo, .footer .brand-logo { height: 46px; width: auto; display: block; }
+.header.scrolled .brand .brand-logo { height: 42px; }
+.footer .brand-logo { height: 50px; }
+@media (max-width: 760px) { .brand .brand-logo, .header.scrolled .brand .brand-logo { height: 36px; } }

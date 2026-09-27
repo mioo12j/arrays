@@ -431,10 +431,6 @@ NAV = [
     ("News & Media", "recognition.html", "recognition"), ("Achievements", "achievements.html", "achievements"),
     ("Insights", "insights.html", "insights"), ("Contact", "contact.html", "contact"),
 ]
-WORDMARK = ('<span class="brand-word"><i style="color:#F4A11E">ING</i><i style="color:#2BA9E0">E</i><i style="color:#1C2A6E">N</i>'
-            '<i style="color:#2BA9E0">I</i><i style="color:#1C2A6E">E</i><i style="color:#39A935">R</i><i style="color:#2BA9E0">I</i>'
-            '<i style="color:#39A935">A</i></span>')
-
 
 def render_header(page_key):
     active = ' class="active" aria-current="page"'
@@ -444,8 +440,7 @@ def render_header(page_key):
     return f"""<header class="header scrolled solid" id="header">
     <div class="container nav">
       <a href="/" class="brand" aria-label="Arrays Ingenieria — home">
-        <img src="assets/img/logo-mark.svg" alt="Arrays Ingenieria logo" class="brand-mark" />
-        {WORDMARK}
+        <img src="assets/img/logo-horizontal.png" alt="INGENIERIA — Arrays Ingenieria Pvt. Ltd. logo" class="brand-logo" width="558" height="128" />
       </a>
       <nav class="nav-links" id="navLinks" aria-label="Primary">{links}<a class="nav-quote" href="contact.html">Get a Free Quote</a></nav>
       <div class="nav-cta">
@@ -464,8 +459,7 @@ FOOTER = f"""<footer class="footer">
       <div class="footer__top">
         <div class="footer__brand">
           <div class="logo">
-            <img src="assets/img/logo-mark.svg" alt="Arrays Ingenieria logo" class="brand-mark" />
-            {WORDMARK}
+            <img src="assets/img/logo-horizontal.png" alt="INGENIERIA — Arrays Ingenieria Pvt. Ltd. logo" class="brand-logo" width="558" height="128" />
           </div>
           <p>Developing Green Energy for the Nation. Arrays Ingenieria is an ex-servicemen-led, ISO-certified MSME delivering solar installation, EPC and civil works across India.</p>
           <a href="mailto:arraysingenieria@gmail.com" class="footer-email">
@@ -790,7 +784,7 @@ def page_shell(page_key, body, og_image, og_alt, ld=None, extra_head=""):
 <title>x</title>
 <meta property="og:image" content="{SITE_URL}/{og_image}" />
 <meta property="og:image:alt" content="{esc(og_alt)}" />
-<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet" />
@@ -1069,7 +1063,7 @@ def render_gallery_page():
 <meta name="keywords" content="Arrays Ingenieria gallery, Ingenieria solar photos, solar plant photos India, Assam tea estate solar, Orangajuli solar plant, Barpatra solar plant, solar EPC projects" />
 <meta property="og:image" content="{SITE_URL}/assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg" />
 <meta property="og:image:alt" content="Orangajuli Tea Estate 450 kW solar plant inauguration, Assam, by Arrays Ingenieria" />
-<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet" />
@@ -1287,7 +1281,10 @@ def process_page(fname):
         alt = html.unescape(hero.group(2)) if hero and hero.group(1) in og_image else f"{BRAND} — veteran-led solar EPC company in India"
     head = HEAD_TAG_RE.sub("", head)
     head = re.sub(r'(<meta name="viewport"[^>]*>\n)', lambda m: m.group(1) + head_block(fname, og_image, alt) + "\n", head, count=1)
-    head = head.replace("/assets/img/logo.svg", "/assets/img/logo-mark.svg")
+    head = head.replace("/assets/img/logo.svg", "/assets/img/logo.png").replace("/assets/img/logo-mark.svg", "/assets/img/logo.png")
+    head = re.sub(r'<link rel="icon"[^>]*>\n(?:<link rel="apple-touch-icon"[^>]*>\n)?',
+                  '<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png" />\n'
+                  '<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png" />\n', head, count=1)
 
     def link_provider(m):
         data = json.loads(m.group(2))
