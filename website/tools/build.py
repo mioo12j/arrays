@@ -96,7 +96,7 @@ PAGES = {
 }
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from content import (PROJECTS, FAQ, GLOSSARY, CLIENTS, LEADER_QUOTES, NATIONAL_FACTS, SCHEMES, TIMELINE,  # noqa: E402
-                     PANCHAMRIT, PANCHAMRIT_URL)
+                     PANCHAMRIT, PANCHAMRIT_URL, STATES)
 
 PAGES.update({
     "capex-solar-epc.html": dict(path="/capex-solar-epc.html", crumb="CAPEX Solar EPC", parent="services",
@@ -123,6 +123,15 @@ PAGES.update({
     "solar-schemes-india.html": dict(path="/solar-schemes-india.html", crumb="Solar Schemes in India",
         title="Government Solar Schemes in India 2026 | Arrays Ingenieria",
         desc="PM Surya Ghar, PM-KUSUM, Assam's tea-garden solar policy, accelerated depreciation and net metering, with official sources and leaders' statements."),
+    "how-it-works.html": dict(path="/how-it-works.html", crumb="How It Works",
+        title="How It Works: Your Solar Project | Arrays Ingenieria",
+        desc="How a solar project with Arrays Ingenieria works: how solar makes power, CAPEX vs I&C, each step from site survey to commissioning, and who owns what."),
+    "quality-safety.html": dict(path="/quality-safety.html", crumb="Quality & Safety",
+        title="Quality, Safety & Environment | Arrays Ingenieria",
+        desc="ISO 9001, ISO 14001 and ISO 45001 certified: how Arrays Ingenieria's veteran-led teams build solar plants safely, to quality and with care for the site."),
+    "where-we-work.html": dict(path="/where-we-work.html", crumb="Where We Work",
+        title="Where We Work: Solar Projects by State | Arrays Ingenieria",
+        desc="Arrays Ingenieria's solar projects across Assam, West Bengal, Bihar, Jharkhand, Uttar Pradesh, Uttarakhand, Haryana and Karnataka."),
     "contact.html": dict(path="/contact.html", crumb="Contact",
         title="Contact Arrays Ingenieria | Solar EPC, Greater Noida",
         desc="Contact Arrays Ingenieria for solar EPC, installation & commissioning or civil works. Corporate office Greater Noida, branch office Madhubani, Bihar."),
@@ -425,18 +434,45 @@ PLATFORM_ICON = {
 }
 
 # ----------------------------------------------------- header / footer ----
+# Top-level menu: (label, href, page keys that light it up, dropdown items or None)
 NAV = [
-    ("About", "about.html", "about"), ("Services", "/#services", "services"),
-    ("Projects", "projects.html", "projects"), ("Gallery", "gallery.html", "gallery"),
-    ("News & Media", "recognition.html", "recognition"), ("Achievements", "achievements.html", "achievements"),
-    ("Insights", "insights.html", "insights"), ("Contact", "contact.html", "contact"),
+    ("About", "about.html", {"about", "clients", "achievements"}, [
+        ("About Us", "about.html"), ("Ex-Servicemen-Led MSME", "ex-servicemen-led-msme.html"),
+        ("Quality & Safety", "quality-safety.html"), ("Clients & Partners", "clients.html"), ("Achievements", "achievements.html")]),
+    ("Services", "/#services", {"services", "industries"}, [
+        ("CAPEX Solar EPC", "capex-solar-epc.html"), ("Installation & Commissioning", "solar-installation-commissioning.html"),
+        ("EPC Turnkey", "service-epc.html"), ("Ground-Mount Solar", "service-ground-mount.html"), ("Rooftop Solar", "service-rooftop.html"),
+        ("Pile Foundations", "service-piling.html"), ("Civil Works & Fencing", "service-civil.html"), ("O&M & Support", "service-om.html"),
+        ("Solar for Tea Estates", "solar-for-tea-estates.html"), ("Industries We Serve", "industries.html")]),
+    ("How It Works", "how-it-works.html", {"how"}, None),
+    ("Projects", "projects.html", {"projects", "gallery"}, [
+        ("All Projects", "projects.html"), ("Case Studies", "projects.html#case-studies"),
+        ("Where We Work", "where-we-work.html"), ("Photo & Video Gallery", "gallery.html")]),
+    ("News & Media", "recognition.html", {"recognition"}, None),
+    ("Resources", "insights.html", {"insights", "faq"}, [
+        ("Solar Insights", "insights.html"), ("Government Solar Schemes", "solar-schemes-india.html"),
+        ("Solar Glossary", "solar-glossary.html"), ("FAQ", "faq.html")]),
+    ("Contact", "contact.html", {"contact"}, None),
 ]
+CARET = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>'
 
-def render_header(page_key):
-    active = ' class="active" aria-current="page"'
-    links = "".join(
-        f'<a href="{href}"{active if key == page_key else ""}>{label}</a>'
-        for label, href, key in NAV)
+
+def render_header(page_key, fname=""):
+    items = ['<a class="nav-home" href="/">Home</a>']
+    for i, (label, href, keys, sub) in enumerate(NAV):
+        on = page_key in keys
+        cls = ' class="active"' if on else ""
+        cur = ' aria-current="page"' if href == fname else ""
+        if not sub:
+            items.append(f'<a href="{href}"{cls}{cur}>{esc(label)}</a>')
+            continue
+        wide = " sub--wide" if len(sub) > 6 else ""
+        subs = "".join(f'<a href="{h}"{" aria-current=" + chr(34) + "page" + chr(34) if h == fname else ""}>{esc(t)}</a>' for t, h in sub)
+        items.append(f'<div class="nav-item has-sub{" active" if on else ""}">'
+                     f'<a href="{href}" class="nav-top{" active" if on else ""}"{cur}>{esc(label)}</a>'
+                     f'<button class="sub-toggle" type="button" aria-expanded="false" aria-controls="sub-{i}" aria-label="Show {esc(label)} menu">{CARET}</button>'
+                     f'<div class="sub{wide}" id="sub-{i}">{subs}</div></div>')
+    links = "".join(items)
     return f"""<header class="header scrolled solid" id="header">
     <div class="container nav">
       <a href="/" class="brand" aria-label="Arrays Ingenieria — home">
@@ -471,6 +507,9 @@ FOOTER = f"""<footer class="footer">
           <ul>
             <li><a href="about.html">About Us</a></li>
             <li><a href="ex-servicemen-led-msme.html">Ex-Servicemen-Led MSME</a></li>
+            <li><a href="how-it-works.html">How It Works</a></li>
+            <li><a href="quality-safety.html">Quality &amp; Safety</a></li>
+            <li><a href="where-we-work.html">Where We Work</a></li>
             <li><a href="industries.html">Industries</a></li>
             <li><a href="solar-for-tea-estates.html">Solar for Tea Estates</a></li>
             <li><a href="projects.html">Projects &amp; Case Studies</a></li>
@@ -1261,7 +1300,7 @@ def process_page(fname):
     page_key = re.search(r'<body data-page="([^"]+)"', text).group(1)
 
     # header / footer / videos baked in
-    text = replace_block(text, "header", render_header(page_key))
+    text = replace_block(text, "header", render_header(page_key, fname))
     text = replace_block(text, "footer", FOOTER)
     text = re.sub(r"<!-- build:cases(?::([\w.-]+))? -->.*?<!-- /build:cases -->",
                   lambda m: f"<!-- build:cases{':' + m.group(1) if m.group(1) else ''} -->\n"

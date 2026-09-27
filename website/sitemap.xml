@@ -365,6 +365,27 @@
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/img/logo-wordmark.png</image:loc></image:image>
   </url>
   <url>
+    <loc>https://arraysingenieria.netlify.app/how-it-works.html</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-towkok.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/img/logo-wordmark.png</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/quality-safety.html</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-earthing.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/certs/iso-9001.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/certs/iso-14001.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/certs/iso-45001.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/img/logo-wordmark.png</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/where-we-work.html</loc>
+    <lastmod>2026-09-27</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-dcm-hisar.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/img/logo-wordmark.png</image:loc></image:image>
+  </url>
+  <url>
     <loc>https://arraysingenieria.netlify.app/contact.html</loc>
     <lastmod>2026-09-27</lastmod>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-dcm-hisar.jpg</image:loc></image:image>

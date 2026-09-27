@@ -533,3 +533,33 @@ PANCHAMRIT = [
     "By 2030, India will reduce the carbon intensity of its economy by less than 45 percent.",
     "By the year 2070, India will achieve the target of Net Zero.",
 ]
+
+# ----------------------------------------------------------- where we work ----
+# (state, headline, [(project text, link or "")]); only projects documented on this site.
+STATES = [
+    ("Assam", "Our biggest region: 19 on-grid plants in the tea gardens", [
+        ("Jay Shree Tea: 535 kWp Towkok and 500 kWp Manjushree, Sonari", "project-jayshree-tea-1mw-solar-assam.html"),
+        ("Orangajuli Tea Estate: 450 kW, Udalguri", "project-orangajuli-tea-estate-450kw-solar.html"),
+        ("Barpatra (Borpatra) Tea Estate: 230 kW, Sonari", "project-barpatra-tea-estate-230kw-solar.html"),
+        ("1711.66 kWp on-grid project for Sustvest", "project-assam-1711kwp-on-grid-solar.html"),
+        ("Dewan, Labac and Burtoll gardens for Jay Shree Tea", "recognition.html#jayshree-dewan"),
+        ("Kakajan Tea Estate for Amalgamated Plantations", "")]),
+    ("West Bengal", "Industrial rooftop solar", [
+        ("Super Smelters: 1980.3 kWp rooftop, Jamuria", "project-super-smelters-1980kwp-rooftop-solar.html")]),
+    ("Bihar", "Home to our branch office in Madhubani", [
+        ("TCPL Greenery Agro (Tata Consumer): 319 kWp rooftop, Vaishali", "project-tcpl-vaishali-319kwp-rooftop-solar.html"),
+        ("Pile foundations and chain-link fencing, Madhepura", "")]),
+    ("Jharkhand", "Piling and civil works for the Tata group", [
+        ("Tata Motors: 5.5 MW piling and civil works, Jamshedpur", "project-tata-motors-jamshedpur-5-5mw-solar-piling.html"),
+        ("Tata Steel: solar project, Noamundi", "")]),
+    ("Uttar Pradesh", "Home to our corporate office in Greater Noida", [
+        ("YIAPL: 14.36 MW supply, civil works and fencing", "project-yiapl-14-36mw-solar-civil-fencing.html")]),
+    ("Uttarakhand", "Rooftop, carport and ground-mount projects", [
+        ("Tata Motors: solar carport, Pantnagar", ""),
+        ("Balaji Action: rooftop solar, Sitarganj", ""),
+        ("Ground-mount solar project, Ramnagar", "")]),
+    ("Haryana", "Utility-scale civil works", [
+        ("DCM Textile: civil works for 10 MW, Hisar", "project-dcm-hisar-10mw-solar-civil-works.html")]),
+    ("Karnataka", "Our largest project", [
+        ("SECI 300 MW, Koppal: pile foundations for Tata Power", "project-seci-300mw-koppal-pile-foundation.html")]),
+]
