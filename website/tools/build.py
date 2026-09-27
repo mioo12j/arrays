@@ -35,7 +35,17 @@ SITE_URL = "https://arraysingenieria.netlify.app"
 KNOWN_HOSTS = re.compile(r"https?://(?:www\.)?arraysingenieria\.(?:com|netlify\.app)")
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ASSET_VERSION = "19"
+def _asset_version():
+    """Short hash of the CSS and JS: changes whenever they change, so browsers never reuse stale files."""
+    import hashlib
+    h = hashlib.sha1()
+    for rel in ("assets/css/style.css", "assets/js/main.js", "assets/js/components.js", "assets/js/calculator.js"):
+        with open(os.path.join(ROOT, rel), "rb") as fh:
+            h.update(fh.read())
+    return h.hexdigest()[:8]
+
+
+ASSET_VERSION = _asset_version()
 BRAND = "Arrays Ingenieria"
 TODAY = date.today().isoformat()
 
@@ -476,7 +486,7 @@ def render_header(page_key, fname=""):
     return f"""<header class="header scrolled solid" id="header">
     <div class="container nav">
       <a href="/" class="brand" aria-label="Arrays Ingenieria, home">
-        <img src="assets/img/logo-wordmark.png" alt="INGENIERIA, Arrays Ingenieria Pvt. Ltd." class="brand-logo" width="632" height="72" />
+        <img src="assets/img/logo-wordmark.svg" alt="INGENIERIA, Arrays Ingenieria Pvt. Ltd." class="brand-logo" width="690" height="72" />
       </a>
       <nav class="nav-links" id="navLinks" aria-label="Primary">{links}<a class="nav-quote" href="contact.html">Get a Free Quote</a></nav>
       <div class="nav-cta">
@@ -495,7 +505,7 @@ FOOTER = f"""<footer class="footer">
       <div class="footer__top">
         <div class="footer__brand">
           <div class="logo">
-            <img src="assets/img/logo-wordmark.png" alt="INGENIERIA, Arrays Ingenieria Pvt. Ltd." class="brand-logo" width="632" height="72" />
+            <img src="assets/img/logo-wordmark.svg" alt="INGENIERIA, Arrays Ingenieria Pvt. Ltd." class="brand-logo" width="690" height="72" />
           </div>
           <p>Developing Green Energy for the Nation. Arrays Ingenieria is an ex-servicemen-led, ISO-certified MSME delivering solar installation, EPC and civil works across India.</p>
           <a href="mailto:arraysingenieria@gmail.com" class="footer-email">
@@ -1342,7 +1352,7 @@ def process_page(fname):
 
     # links, asset versions, scripts
     text = normalise_links(text)
-    text = re.sub(r"\?v=\d+", f"?v={ASSET_VERSION}", text)
+    text = re.sub(r"\?v=[0-9a-f]+", f"?v={ASSET_VERSION}", text)
     if 'id="indiaMap"' not in text:
         text = re.sub(r'<script src="assets/js/india-map-data\.js[^"]*"></script>\n', "", text)
 
@@ -1421,6 +1431,9 @@ def check_links():
     for url in re.findall(r"url\(['\"]?([^'\")]+)", css):
         if not url.startswith(("data:", "http")) and not os.path.isfile(os.path.join(ROOT, "assets/css", url)):
             problems.append(f"style.css: missing {url}")
+    # stylesheet sanity: catch mangled colour values such as rgba(6, 78, 59.08)
+    for m in re.finditer(r"rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\.\d+\s*\)", css):
+        problems.append(f"style.css: malformed colour {m.group(0)}")
     for fname in PAGES:
         t = open(os.path.join(ROOT, fname), encoding="utf8").read()
         for tag in re.findall(r"<img\b[^>]*>", t):
