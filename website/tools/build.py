@@ -440,7 +440,7 @@ def render_header(page_key):
     return f"""<header class="header scrolled solid" id="header">
     <div class="container nav">
       <a href="/" class="brand" aria-label="Arrays Ingenieria — home">
-        <img src="assets/img/logo-horizontal.png" alt="INGENIERIA — Arrays Ingenieria Pvt. Ltd. logo" class="brand-logo" width="558" height="128" />
+        <img src="assets/img/logo-wordmark.png" alt="INGENIERIA — Arrays Ingenieria Pvt. Ltd." class="brand-logo" width="632" height="72" />
       </a>
       <nav class="nav-links" id="navLinks" aria-label="Primary">{links}<a class="nav-quote" href="contact.html">Get a Free Quote</a></nav>
       <div class="nav-cta">
@@ -459,7 +459,7 @@ FOOTER = f"""<footer class="footer">
       <div class="footer__top">
         <div class="footer__brand">
           <div class="logo">
-            <img src="assets/img/logo-horizontal.png" alt="INGENIERIA — Arrays Ingenieria Pvt. Ltd. logo" class="brand-logo" width="558" height="128" />
+            <img src="assets/img/logo-wordmark.png" alt="INGENIERIA — Arrays Ingenieria Pvt. Ltd." class="brand-logo" width="632" height="72" />
           </div>
           <p>Developing Green Energy for the Nation. Arrays Ingenieria is an ex-servicemen-led, ISO-certified MSME delivering solar installation, EPC and civil works across India.</p>
           <a href="mailto:arraysingenieria@gmail.com" class="footer-email">

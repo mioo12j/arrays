@@ -1517,3 +1517,10 @@ html, body { overflow-x: clip; }
 .header.scrolled .brand .brand-logo { height: 42px; }
 .footer .brand-logo { height: 50px; }
 @media (max-width: 760px) { .brand .brand-logo, .header.scrolled .brand .brand-logo { height: 36px; } }
+/* Navbar/footer logo = the INGENIERIA wordmark from the main logo (option B) */
+.brand .brand-logo, .header.scrolled .brand .brand-logo { height: 26px; }
+.footer .brand-logo { height: 30px; }
+@media (max-width: 760px) { .brand .brand-logo, .header.scrolled .brand .brand-logo { height: 22px; } }
+.nav-links a { white-space: nowrap; }
+@media (min-width: 981px) { .brand .brand-logo, .header.scrolled .brand .brand-logo { height: 24px; } }
+@media (min-width: 981px) and (max-width: 1320px) { .nav-links { gap: 18px; } .nav-links a { font-size: 14.5px; } }
