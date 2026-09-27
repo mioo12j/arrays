@@ -415,25 +415,32 @@ CLIENTS = [
 # Verbatim public statements, each with its official source. Shown as the
 # national context for our work; they are not endorsements of the company.
 # reported=True: PIB reported the words in indirect speech, so the page says so.
+# Photos: official portraits from Wikimedia Commons under the Government Open Data
+# License - India (GODL-India), which requires this attribution and forbids implying
+# that the government endorses our use.
 LEADER_QUOTES = [
-    dict(id="pm", who="Shri Narendra Modi", role="Prime Minister of India", mono="PM",
+    dict(id="pm", photo="assets/leaders/narendra-modi.jpg", photo_alt="Official portrait of Prime Minister Narendra Modi", photo_credit="Prime Minister's Office",
+         photo_url="https://commons.wikimedia.org/wiki/File:Narendra_Modi_Portrait_2026.jpg", who="Shri Narendra Modi", role="Prime Minister of India", mono="PM",
          quote="In order to further sustainable development and people's wellbeing, we are launching the PM Surya Ghar: Muft Bijli "
                "Yojana. This project, with an investment of over Rs. 75,000 crores, aims to light up 1 crore households by providing "
                "up to 300 units of free electricity every month.",
          context="Launching PM Surya Ghar: Muft Bijli Yojana", date="2024-02-13",
          source="PIB, Prime Minister's Office", url="https://pib.gov.in/PressReleasePage.aspx?PRID=2005596"),
-    dict(id="rm", who="Shri Rajnath Singh", role="Raksha Mantri (Defence Minister)", mono="RM",
+    dict(id="rm", photo="assets/leaders/rajnath-singh.jpg", photo_alt="Official portrait of Raksha Mantri Rajnath Singh", photo_credit="Ministry of Defence / PIB",
+         photo_url="https://commons.wikimedia.org/wiki/File:Shri_Rajnath_Singh,_in_New_Delhi_on_May_09,_2023_(cropped).jpg", who="Shri Rajnath Singh", role="Raksha Mantri (Defence Minister)", mono="RM",
          quote="Ex-servicemen are a national asset, bringing decades of experience, leadership, discipline & strategic thinking to "
                "society. Their continued engagement in social & economic initiatives strengthen communities and the nation as a whole.",
          context="National Conclave 2025 on ex-servicemen welfare, Manekshaw Centre, New Delhi", date="2025-09-29",
          source="PIB, Ministry of Defence", url="https://pib.gov.in/PressReleasePage.aspx?PRID=2172917"),
-    dict(id="cm", who="Dr Himanta Biswa Sarma", role="Chief Minister of Assam", mono="CM",
+    dict(id="cm", photo="assets/leaders/himanta-biswa-sarma.jpg", photo_alt="Official portrait of Assam Chief Minister Himanta Biswa Sarma", photo_credit="President's Secretariat",
+         photo_url="https://commons.wikimedia.org/wiki/File:Himanta_Biswa_Sarma_in_2026.jpg", who="Dr Himanta Biswa Sarma", role="Chief Minister of Assam", mono="CM",
          quote="On solar, we are moving on multiple fronts: expediting adoption of the PM Surya Ghar scheme to expand rooftop solar, "
                "and permitting tea garden owners to use up to 5% of their land for solar generation opening a new avenue for green "
                "power across our tea belt.",
          context="Rewriting Assam's Energy Future", date="2026-09-22",
          source="Himanta Biswa Sarma", url="https://himantabiswa.substack.com/p/rewriting-assams-energy-future"),
-    dict(id="hm", who="Shri Amit Shah", role="Union Home Minister", mono="HM", reported=True,
+    dict(id="hm", photo="assets/leaders/amit-shah.jpg", photo_alt="Portrait of Union Home Minister Amit Shah", photo_credit="Ministry of Home Affairs / PIB",
+         photo_url="https://commons.wikimedia.org/wiki/File:Shri_Amit_Shah_in_Raigad.jpg", who="Shri Amit Shah", role="Union Home Minister", mono="HM", reported=True,
          quote="The stepwell construction and Solar Roof-Top Yojana have been made keeping in mind the earth's temperature, climate "
                "change and water needs in the coming times.",
          context="Urging Ahmedabad residents to adopt PM Surya Ghar rooftop solar", date="2025-01-23",

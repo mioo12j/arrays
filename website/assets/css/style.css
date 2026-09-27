@@ -1483,3 +1483,31 @@ html, body { overflow-x: clip; }
 .impact p { color: #cfe8dd; font-size: 16px; line-height: 1.7; }
 .impact .src-note, .impact .src-note a { color: #8fb9a8; }
 .impact p + p { margin-top: 12px; }
+
+/* Leaders' quote cards with circular official portraits */
+.lq-card { display: grid; grid-template-columns: 116px 1fr; column-gap: 26px; row-gap: 12px; align-items: start; padding: 28px 30px 24px; }
+.lq-photo { grid-row: span 2; position: relative; width: 116px; height: 116px; }
+.lq-photo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid #fff; box-shadow: 0 0 0 3px var(--gold-400), 0 12px 28px rgba(0,0,0,.25); }
+.lq-photo::before { content: ""; position: absolute; inset: -9px; border-radius: 50%; border: 2px dashed rgba(245,158,11,.55); animation: lqSpin 24s linear infinite; }
+@keyframes lqSpin { to { transform: rotate(360deg); } }
+.lq-tag { position: absolute; right: -6px; bottom: 2px; padding: 3px 9px; border-radius: 50px; background: var(--grad-sun); color: #3d2c00; font-family: var(--head); font-weight: 800; font-size: 12px; box-shadow: 0 4px 12px rgba(245,158,11,.45); }
+.lq-card blockquote { grid-column: 2; margin: 0; }
+.lq-card figcaption { grid-column: 2; }
+.lq-credit { font-size: 11px; color: var(--muted); }
+.lq-credit a { display: inline; margin: 0; font-weight: 500; font-size: 11px; color: var(--muted); text-decoration: underline; }
+/* portrait pops in when its card appears */
+.lq-card.reveal .lq-photo, .lq-slide .lq-photo { transform: scale(.6); opacity: 0; transition: transform .7s cubic-bezier(.3,1.5,.5,1) .2s, opacity .5s .2s; }
+.lq-card.reveal.in .lq-photo, .lq-slide.active .lq-photo { transform: none; opacity: 1; }
+.lq-card--wide { grid-template-columns: 140px 1fr; }
+.lq-card--wide .lq-photo { width: 140px; height: 140px; }
+@media (max-width: 560px) {
+  .lq-card, .lq-card--wide { grid-template-columns: 1fr; text-align: left; }
+  .lq-photo, .lq-card--wide .lq-photo { grid-row: auto; width: 96px; height: 96px; margin: 0 auto 6px; }
+  .lq-card blockquote, .lq-card figcaption { grid-column: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lq-photo::before { animation: none; }
+  .lq-card.reveal .lq-photo, .lq-slide .lq-photo { transform: none; opacity: 1; }
+}
+.lq-card figcaption > span.lq-credit { font-weight: 400; font-size: 11px; color: var(--muted); }
+.lq-card figcaption .lq-credit a { display: inline; margin: 0; font-family: inherit; font-weight: 400; font-size: 11px; color: var(--muted); text-decoration: underline; }

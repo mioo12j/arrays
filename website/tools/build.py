@@ -691,17 +691,22 @@ def coverage_ld():
 
 # ------------------------------------------- quotes, schemes, timeline ----
 QUOTE_NOTE = ("Public statements on India's clean-energy and veterans' agenda, quoted from the official sources linked. "
-              "They are national context for our work, not endorsements of Arrays Ingenieria.")
+              "They are national context for our work, not endorsements of Arrays Ingenieria. Official portraits used under the "
+              "Government Open Data License – India; the Government of India does not endorse this website.")
 
 
 def quote_figure(q, cls="lq-card"):
     words = f'“{esc(q["quote"])}”'
     reported = '<span class="lq-rep">As reported by PIB</span>' if q.get("reported") else ""
-    return (f'<figure class="{cls}" id="quote-{q["id"]}"><span class="lq-mono">{q["mono"]}</span>'
+    photo = (f'<span class="lq-photo"><img src="{q["photo"]}" alt="{esc(q["photo_alt"])}" width="240" height="240" />'
+             f'<span class="lq-tag">{q["mono"]}</span></span>')
+    credit = (f'<span class="lq-credit">Photo: <a href="{q["photo_url"]}" target="_blank" rel="noopener">{esc(q["photo_credit"])}, '
+              f'GODL-India</a></span>')
+    return (f'<figure class="{cls}" id="quote-{q["id"]}">{photo}'
             f'<blockquote><p>{words}</p></blockquote>'
             f'<figcaption><b>{esc(q["who"])}</b><span>{esc(q["role"])}</span>'
             f'<small>{esc(q["context"])} · {time_tag(q["date"])}{reported}</small>'
-            f'<a href="{q["url"]}" target="_blank" rel="noopener">Source: {esc(q["source"])} {EXT_SVG}</a></figcaption></figure>')
+            f'<a href="{q["url"]}" target="_blank" rel="noopener">Source: {esc(q["source"])} {EXT_SVG}</a>{credit}</figcaption></figure>')
 
 
 def render_leader_quotes():
