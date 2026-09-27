@@ -1,5 +1,5 @@
 /* ===========================================================
-   ARRAYS INGENIERIA — shared header & footer behaviour
+   ARRAYS INGENIERIA, shared header & footer behaviour
    =========================================================== */
 (function () {
   "use strict";

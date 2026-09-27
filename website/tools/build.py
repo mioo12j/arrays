@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Ingenieria website — SEO build step.
+Ingenieria website, SEO build step.
 
 Run from anywhere:   python3 website/tools/build.py
 Re-running is safe (idempotent). It rewrites the .html files in place, then
@@ -475,8 +475,8 @@ def render_header(page_key, fname=""):
     links = "".join(items)
     return f"""<header class="header scrolled solid" id="header">
     <div class="container nav">
-      <a href="/" class="brand" aria-label="Arrays Ingenieria — home">
-        <img src="assets/img/logo-wordmark.png" alt="INGENIERIA — Arrays Ingenieria Pvt. Ltd." class="brand-logo" width="632" height="72" />
+      <a href="/" class="brand" aria-label="Arrays Ingenieria, home">
+        <img src="assets/img/logo-wordmark.png" alt="INGENIERIA, Arrays Ingenieria Pvt. Ltd." class="brand-logo" width="632" height="72" />
       </a>
       <nav class="nav-links" id="navLinks" aria-label="Primary">{links}<a class="nav-quote" href="contact.html">Get a Free Quote</a></nav>
       <div class="nav-cta">
@@ -495,7 +495,7 @@ FOOTER = f"""<footer class="footer">
       <div class="footer__top">
         <div class="footer__brand">
           <div class="logo">
-            <img src="assets/img/logo-wordmark.png" alt="INGENIERIA — Arrays Ingenieria Pvt. Ltd." class="brand-logo" width="632" height="72" />
+            <img src="assets/img/logo-wordmark.png" alt="INGENIERIA, Arrays Ingenieria Pvt. Ltd." class="brand-logo" width="632" height="72" />
           </div>
           <p>Developing Green Energy for the Nation. Arrays Ingenieria is an ex-servicemen-led, ISO-certified MSME delivering solar installation, EPC and civil works across India.</p>
           <a href="mailto:arraysingenieria@gmail.com" class="footer-email">
@@ -908,7 +908,7 @@ def render_project_page(p):
   <div class="container">
     <div class="section-head center reveal"><span class="eyebrow">Documents</span><h2>Orders, Certificates &amp; <span class="text-grad">Press</span></h2><p>The documents behind this case study. Tap to view full size.</p></div>
     <div class="clip-grid">""" + "".join(
-            f'\n      <div class="clip reveal" data-full="{src}" data-gallery="docs" data-caption="{esc(cap)}"><img src="{src}" alt="{esc(cap)} — Arrays Ingenieria" /><div class="ccap">{esc(cap)}</div></div>'
+            f'\n      <div class="clip reveal" data-full="{src}" data-gallery="docs" data-caption="{esc(cap)}"><img src="{src}" alt="{esc(cap)}, Arrays Ingenieria" /><div class="ccap">{esc(cap)}</div></div>'
             for src, cap in p["docs"]) + "\n    </div>\n  </div>\n</section>"
     cov = ""
     if p["coverage"]:
@@ -935,7 +935,7 @@ def render_project_page(p):
   <div class="container detail-grid">
     <div class="detail-body reveal">
       <span class="eyebrow">The Project</span>
-      <h2>About the {esc(p['short'].split(' — ')[0])} project</h2>{body}
+      <h2>About the {esc(p['short'].split(' · ')[0])} project</h2>{body}
       <h3>Our scope of work</h3>
       <ul class="detail-list">{scope}
       </ul>{cov}{photos}
@@ -1316,8 +1316,8 @@ def process_page(fname):
     hero = re.search(r'<img[^>]*src="([^"]+)"[^>]*alt="([^"]*)"', body.split("</header>", 1)[-1])
     og_image = og_img.group(1) if og_img else f"{SITE_URL}/{hero.group(1)}"
     alt = html.unescape(og_alt.group(1)) if og_alt else ""
-    if not alt or alt.startswith("Ingenieria — veteran-led solar EPC"):
-        alt = html.unescape(hero.group(2)) if hero and hero.group(1) in og_image else f"{BRAND} — veteran-led solar EPC company in India"
+    if not alt or alt.startswith("Ingenieria, veteran-led solar EPC"):
+        alt = html.unescape(hero.group(2)) if hero and hero.group(1) in og_image else f"{BRAND}, veteran-led solar EPC company in India"
     head = HEAD_TAG_RE.sub("", head)
     head = re.sub(r'(<meta name="viewport"[^>]*>\n)', lambda m: m.group(1) + head_block(fname, og_image, alt) + "\n", head, count=1)
     head = head.replace("/assets/img/logo.svg", "/assets/img/logo.png").replace("/assets/img/logo-mark.svg", "/assets/img/logo.png")
@@ -1447,7 +1447,7 @@ def main():
     problems = check_links()
     for p in problems:
         print("PROBLEM:", p)
-    print(f"Built {len(PAGES)} pages for {SITE_URL} — {len(problems)} problem(s).")
+    print(f"Built {len(PAGES)} pages for {SITE_URL}, {len(problems)} problem(s).")
     sys.exit(1 if problems else 0)
 
 

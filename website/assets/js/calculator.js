@@ -1,5 +1,5 @@
 /* ===========================================================
-   INGENIERIA — Solar Savings Calculator + rich 2-page PDF
+   INGENIERIA, Solar Savings Calculator + rich 2-page PDF
    =========================================================== */
 (function () {
   "use strict";
@@ -75,7 +75,7 @@
     } else { subEl.hidden = true; }
 
     $("rEco").innerHTML = "🌱 Equivalent to planting <b>" + trees.toLocaleString("en-IN") +
-      " trees</b> every year — your clean-energy contribution to the nation.";
+      " trees</b> every year, your clean-energy contribution to the nation.";
 
     $("calcResults").hidden = false;
   }
@@ -119,7 +119,7 @@
       dc(C.line); doc.line(M, H - 40, W - M, H - 40);
       font(8); t(C.mut);
       doc.text("arraysingenieria@gmail.com", M, H - 26);
-      doc.text("Ingenieria — Solar Savings Estimate", W / 2, H - 26, { align: "center" });
+      doc.text("Ingenieria: Solar Savings Estimate", W / 2, H - 26, { align: "center" });
       doc.text("Page " + pg + " of 2", W - M, H - 26, { align: "right" });
     }
 
@@ -128,7 +128,7 @@
     let y = 118;
     font(18, "bold"); t(C.ink); doc.text("Your Solar Savings Estimate", M, y);
     font(10); t(C.mut);
-    doc.text("A " + d.size.toFixed(1) + " kWp system tailored to your " + d.type.toLowerCase() + " — here's what it delivers.", M, y + 17);
+    doc.text("A " + d.size.toFixed(1) + " kWp system tailored to your " + d.type.toLowerCase() + ", here's what it delivers.", M, y + 17);
     y += 42;
 
     // two panels
@@ -215,7 +215,7 @@
     font(8); doc.text("2", M + 35, y + 43);
     font(11.5, "bold"); t(C.green); doc.text("Environmental Impact", M + 58, y + 28);
     font(10); t(C.ink);
-    doc.text("Offsets " + d.co2.toFixed(1) + " tonnes of CO2 every year — equal to planting about", M + 58, y + 46);
+    doc.text("Offsets " + d.co2.toFixed(1) + " tonnes of CO2 every year, equal to planting about", M + 58, y + 46);
     font(10, "bold"); t(C.green); doc.text(d.trees.toLocaleString("en-IN") + " trees annually.", M + 58, y + 61);
     y += 72 + 24;
 

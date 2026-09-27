@@ -14,7 +14,7 @@ PROJECTS = [
     dict(
         file="project-jayshree-tea-1mw-solar-assam.html",
         name="Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates",
-        short="Jay Shree Tea, Assam — 1035 kWp",
+        short="Jay Shree Tea, Assam · 1035 kWp",
         title="1 MW Solar, Jay Shree Tea Estates Assam | Arrays Ingenieria",
         desc="Case study: 1035 kWp ground-mount solar (535 kWp Towkok + 500 kWp Manjushree) for Jay Shree Tea, BK Birla Group, in Sonari, Assam, under Tata Power's EPC.",
         capacity="1035 kWp (535 + 500 kWp)", kind="Ground-mount, on-grid", location="Sonari, Charaideo district, Assam",
@@ -50,7 +50,7 @@ PROJECTS = [
     dict(
         file="project-orangajuli-tea-estate-450kw-solar.html",
         name="Orangajuli Tea Estate: 450 kW Ground-Mount Solar Plant",
-        short="Orangajuli Tea Estate, Assam — 450 kW",
+        short="Orangajuli Tea Estate, Assam · 450 kW",
         title="450 kW Solar, Orangajuli Tea Estate | Arrays Ingenieria",
         desc="Case study: 450 kW grid-connected ground-mount solar plant at Goodricke's Orangajuli Tea Estate, Udalguri, Assam, commissioned on Janmashtami 2026.",
         capacity="450 kW", kind="Ground-mount, grid-connected", location="Orangajuli, Panerihaat, Udalguri district, Assam",
@@ -76,7 +76,7 @@ PROJECTS = [
     dict(
         file="project-barpatra-tea-estate-230kw-solar.html",
         name="Barpatra (Borpatra) Tea Estate: 230 kW On-Grid Solar Plant",
-        short="Barpatra Tea Estate, Assam — 230 kW",
+        short="Barpatra Tea Estate, Assam · 230 kW",
         title="230 kW Solar, Barpatra Tea Estate | Arrays Ingenieria",
         desc="Case study: 230 kW on-grid ground-mount solar at Goodricke's Barpatra (Borpatra) Tea Estate, Sonari, Assam, with net-metering approvals from APDCL.",
         capacity="230 kW", kind="Ground-mount, on-grid (net-metered)", location="Sonari, Assam",
@@ -121,7 +121,7 @@ PROJECTS = [
     dict(
         file="project-super-smelters-1980kwp-rooftop-solar.html",
         name="Super Smelters: 1980.3 kWp Rooftop Solar Plant",
-        short="Super Smelters, West Bengal — 1980.3 kWp",
+        short="Super Smelters, West Bengal · 1980.3 kWp",
         title="1980.3 kWp Rooftop Solar, Super Smelters | Arrays Ingenieria",
         desc="Case study: a 1980.3 kWp industrial rooftop solar plant at Super Smelters Ltd., Jamuria, West Bengal, built with Tata Power Solar.",
         capacity="1980.3 kWp (about 2 MW)", kind="Industrial rooftop", location="Jamuria (Asansol), West Bengal",
@@ -148,7 +148,7 @@ PROJECTS = [
     dict(
         file="project-seci-300mw-koppal-pile-foundation.html",
         name="SECI 300 MW Solar Park, Koppal: Pile Foundation Works",
-        short="SECI 300 MW, Karnataka — piling",
+        short="SECI 300 MW, Karnataka · piling",
         title="SECI 300 MW Koppal Solar Pile Foundation | Arrays Ingenieria",
         desc="Case study: construction of pile foundations for the 300 MW SECI solar project at Koppal, Karnataka, under an outline agreement with Tata Power (TPREL).",
         capacity="300 MW solar project", kind="Utility-scale, pile foundations", location="Koppal, Karnataka",
@@ -174,7 +174,7 @@ PROJECTS = [
     dict(
         file="project-dcm-hisar-10mw-solar-civil-works.html",
         name="DCM Textile, Hisar: Civil Works for a 10 MW Solar Plant",
-        short="DCM Hisar, Haryana — 10 MW civil",
+        short="DCM Hisar, Haryana · 10 MW civil",
         title="10 MW Solar Civil Works, DCM Hisar | Arrays Ingenieria",
         desc="Case study: civil works for the 9979 kWp (10 MW) solar plant at DCM Textile, Hisar, Haryana, under a Tata Power work order.",
         capacity="9979 kWp (10 MW)", kind="Ground-mount, civil works", location="Hisar, Haryana",
@@ -196,7 +196,7 @@ PROJECTS = [
     dict(
         file="project-tata-motors-jamshedpur-5-5mw-solar-piling.html",
         name="Tata Motors, Jamshedpur: Piling & Civil Works for 5.5 MW Solar",
-        short="Tata Motors, Jamshedpur — 5.5 MW",
+        short="Tata Motors, Jamshedpur · 5.5 MW",
         title="5.5 MW Solar Piling, Tata Motors | Arrays Ingenieria",
         desc="Case study: piling and civil works, including a pre-cast boundary wall, for the 5.5 MW solar plant at Tata Motors, Jamshedpur, for Tata Power.",
         capacity="5.5 MW", kind="Ground-mount, piling & civil", location="Jamshedpur, Jharkhand",
@@ -219,7 +219,7 @@ PROJECTS = [
     dict(
         file="project-yiapl-14-36mw-solar-civil-fencing.html",
         name="YIAPL: 14.36 MW Solar Project, Supply, Civil Works & Fencing",
-        short="YIAPL, Uttar Pradesh — 14.36 MW",
+        short="YIAPL, Uttar Pradesh · 14.36 MW",
         title="14.36 MW Solar Civil Works & Fencing, UP | Arrays Ingenieria",
         desc="Case study: supply, civil works and chain-link fencing for the 14.36 MW YIAPL solar power project in Uttar Pradesh.",
         capacity="14.36 MW", kind="Ground-mount, civil & fencing", location="Uttar Pradesh",
@@ -241,7 +241,7 @@ PROJECTS = [
     dict(
         file="project-tcpl-vaishali-319kwp-rooftop-solar.html",
         name="TCPL Greenery Agro, Vaishali: 319 kWp Rooftop Solar",
-        short="TCPL, Bihar — 319 kWp rooftop",
+        short="TCPL, Bihar · 319 kWp rooftop",
         title="319 kWp Rooftop Solar, TCPL Vaishali | Arrays Ingenieria",
         desc="Case study: 319 kWp rooftop solar plant for TCPL Greenery Agro (Tata Consumer Products) at Bhagwanpur, Vaishali, Bihar, reported by Dainik Bhaskar.",
         capacity="319 kWp", kind="Rooftop, grid-connected", location="Bhagwanpur, Vaishali district, Bihar",
@@ -267,7 +267,7 @@ PROJECTS = [
     dict(
         file="project-assam-1711kwp-on-grid-solar.html",
         name="1711.66 kWp On-Grid Solar PV Project, Assam",
-        short="Assam — 1711.66 kWp on-grid",
+        short="Assam · 1711.66 kWp on-grid",
         title="1711.66 kWp On-Grid Solar Project, Assam | Arrays Ingenieria",
         desc="Case study: supply of components and installation & commissioning of a 1711.66 kWp on-grid solar PV project in Assam for Sustvest (SolarGridX Ventures).",
         capacity="1711.66 kWp", kind="On-grid solar PV", location="Assam",

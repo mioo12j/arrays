@@ -1,4 +1,4 @@
-# Arrays Ingenieria — company website
+# Arrays Ingenieria, company website
 
 Source for https://arraysingenieria.netlify.app/ (planned domain: www.arraysingenieria.com).
 

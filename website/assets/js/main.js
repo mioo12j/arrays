@@ -1,5 +1,5 @@
 /* ===========================================================
-   ARRAYS INGENIERIA — page interactions
+   ARRAYS INGENIERIA, page interactions
    =========================================================== */
 (function () {
   "use strict";
@@ -367,7 +367,7 @@
 
       // Fallback: open the visitor's email client pre-addressed to the company
       const subject = encodeURIComponent("Solar Enquiry from " + name);
-      const body = encodeURIComponent(`Name: ${name}\nPhone: ${phone}\nEmail: ${email}\nProject Type: ${type || "—"}\nLocation: ${loc || "—"}\n\nMessage:\n${msg || "—"}`);
+      const body = encodeURIComponent(`Name: ${name}\nPhone: ${phone}\nEmail: ${email}\nProject Type: ${type || "-"}\nLocation: ${loc || "-"}\n\nMessage:\n${msg || "-"}`);
       status.className = "form-status ok";
       status.textContent = "Thank you, " + name + "! Opening your email app to send the enquiry…";
       window.location.href = `mailto:${COMPANY_EMAIL}?subject=${subject}&body=${body}`;
