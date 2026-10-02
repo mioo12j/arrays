@@ -65,8 +65,8 @@ PAGES = {
         title="Photo & Video Gallery | Arrays Ingenieria Solar Projects",
         desc="Photos and videos of Arrays Ingenieria solar power plants, inaugurations, awards, certifications and news coverage from Assam to Karnataka."),
     "recognition.html": dict(path="/recognition.html", crumb="News & Media",
-        title="Arrays Ingenieria in the News | TV, Press & Client Posts",
-        desc="Arrays Ingenieria on NE Reports, Sonari Live, News Axom, The Sentinel, Prerna Bharati and Dainik Bhaskar, plus client posts and national honours."),
+        title="Arrays Ingenieria in the News | CM Inauguration, TV & Press",
+        desc="Koomber solar plant inaugurated by Assam CM Dr Himanta Biswa Sarma; coverage on CMO Assam, The Sentinel, NE Reports, Prerna Bharati and Dainik Bhaskar."),
     "achievements.html": dict(path="/achievements.html", crumb="Achievements",
         title="Awards & ISO Certifications | Arrays Ingenieria",
         desc="Client appreciation from Jay Shree Tea, Super Smelters & Bharat Petroleum, ISO 9001, 14001 & 45001 certification and work orders won by Arrays Ingenieria."),
@@ -106,7 +106,7 @@ PAGES = {
 }
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from content import (PROJECTS, FAQ, GLOSSARY, CLIENTS, LEADER_QUOTES, NATIONAL_FACTS, SCHEMES, TIMELINE,  # noqa: E402
-                     PANCHAMRIT, PANCHAMRIT_URL, STATES)
+                     PANCHAMRIT, PANCHAMRIT_URL, STATES, KOOMBER_ALBUM)
 
 PAGES.update({
     "capex-solar-epc.html": dict(path="/capex-solar-epc.html", crumb="CAPEX Solar EPC", parent="services",
@@ -157,6 +157,7 @@ for _p in SERVICE_PAGES:
 # ------------------------------------------------------------ gallery ----
 # (src, categories, caption, alt). Captions are visible text; alt describes the image.
 GALLERY_CATS = [
+    ("cm", "CM Inauguration, Koomber"),
     ("projects", "Solar Projects"),
     ("events", "Inaugurations & Events"),
     ("media", "News & Media"),
@@ -335,6 +336,41 @@ COVERAGE = [
          url="https://www.sentinelassam.com/north-east-india-news/assam-news/assam-aipl-commissions-1-mw-solar-power-plant-at-jayshree-tea-estate",
          img="assets/photos/proj-jayshree.jpg",
          alt="Jayshree Tea Estate 1 MW solar plant in Sonari, Assam, reported by The Sentinel"),
+    dict(id="sentinel-koomber", kind="online", outlet="The Sentinel", place="Guwahati, Assam", platform="sentinelassam.com",
+         date="2026-10-01",
+         headline="Assam: Himanta Biswa Sarma Inaugurates 595 kWp Solar Plant at Koomber Tea Estate",
+         summary="Reports the Chief Minister's inauguration of the 595 kWp ground-mounted, on-grid plant at Koomber Tea Estate, "
+                 "Cachar, part of the 3.11 MW Goodricke Tea Estates Solar Programme for which Arrays Ingenieria is the "
+                 "installation partner.",
+         quote="It also aligns with the government's efforts to promote its Green Assam mission and increase the adoption of "
+               "sustainable energy solutions.",
+         url="https://www.sentinelassam.com/breakingnews/assam-himanta-biswa-sarma-inaugurates-595-kwp-solar-plant-at-koomber-tea-estate",
+         also=[("Instagram", "https://www.instagram.com/p/Dd89-ViDQcG/"),
+               ("Facebook", "https://www.facebook.com/100066523279937/posts/pfbid05Ug3kevPqUdUBp7ZyFbD8Eix3hYRzu78MVR8yNixHt17o5B3cShMNFXW1o4Mw1Y8l/")],
+         img="assets/koomber/cm-inaugurates-595kwp-solar-plant-ribbon-cutting.jpg",
+         alt="Chief Minister Dr Himanta Biswa Sarma inaugurates the 595 kWp Koomber solar plant, reported by The Sentinel"),
+    dict(id="cmo-assam-koomber", kind="official", outlet="Chief Minister's Office, Assam", handle="@CMOfficeAssam",
+         place="Official handle of the Chief Minister of Assam", date="2026-10-01",
+         headline="HCM inaugurates 595 kWp solar plant at Koomber Tea Estate",
+         quote="HCM Dr @himantabiswa inaugurated a 595 kWp Ground-Mounted On-Grid Solar Power Plant at Koomber Tea Estate today. "
+               "Part of the 3.11 MW Goodricke Tea Estates Solar Programme, this initiative empowers iconic tea industry with clean "
+               "energy and accelerates the mission towards a Green Assam.",
+         summary="The Chief Minister's Office announced the inauguration on X and Facebook, with photos from Koomber.",
+         links=[("X", "https://x.com/CMOfficeAssam/status/2105545750054928662"),
+                ("Facebook", "https://www.facebook.com/cmofficeassam/photos/d41d8cd9/1422387263413542/?set=a.302403535411926")],
+         img="assets/koomber/cm-cuts-ribbon-595kwp-solar-plant-koomber.jpg",
+         alt="The Chief Minister of Assam cuts the ribbon at Koomber Tea Estate"),
+    dict(id="kaushik-rai-koomber", kind="official", outlet="Shri Kaushik Rai, MLA, Lakhipur", handle="@iKaushikRai",
+         place="Member of the Assam Legislative Assembly", date="2026-10-01",
+         headline="\"Glad to see Arrays Ingenieria deliver critical renewable infrastructure\"",
+         quote="Glad to see Arrays Ingenieria, an MSME spearheaded by ex-servicemen under Lt Gen AR Prasad (Retd), deliver critical "
+               "renewable infrastructure with uncompromising military discipline.",
+         summary="Writing after joining the Chief Minister at the inauguration of the 595 kWp plant at Koomber Tea Garden under the "
+                 "Goodricke green initiative.",
+         links=[("X", "https://x.com/iKaushikRai/status/2105642116089008488"),
+                ("Facebook", "https://www.facebook.com/100065189221572/posts/pfbid0MmznkBYfeKxNF66pmnNDk3iEFfGnY1wan7LNwMDm4316vznz3bg86ZkZwAgdjheHl/")],
+         img="assets/koomber/cm-reviews-koomber-solar-plant-with-mlas.jpg",
+         alt="The Chief Minister with MLAs at the Koomber solar plant"),
     dict(id="hub-network-orangajuli", kind="online", outlet="Hub Network", place="Guwahati, Assam", platform="hubnetwork.in",
          date="2026-09-04",
          headline="Assam tea garden gets 450 kWp solar plant as clean energy push gathers pace",
@@ -411,7 +447,7 @@ COVERAGE = [
 # The founder's appearances as a defence expert on national TV (existing section).
 NATIONAL_TV = ["India Today", "Aaj Tak", "India TV"]
 
-KIND_LABEL = {"tv": "News channel", "online": "Online news", "print": "Newspaper", "client": "Client post"}
+KIND_LABEL = {"tv": "News channel", "online": "Online news", "print": "Newspaper", "client": "Client post", "official": "Official handle"}
 MONTHS = "January February March April May June July August September October November December".split()
 
 
@@ -438,6 +474,7 @@ EXT_SVG = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-wi
 ARROW_SVG = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" '
              'stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>')
 PLATFORM_ICON = {
+    "X": '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.68l7.73-8.84L1.25 2.25h6.83l4.71 6.23zm-1.16 17.52h1.83L7.08 4.13H5.12z"/></svg>',
     "Instagram": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>',
     "Facebook": FB_SVG,
     "LinkedIn": '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>',
@@ -623,6 +660,8 @@ def press_item(c):
         actions.append(f'<a class="press-link" href="{c["url"]}" target="_blank" rel="noopener">Read on {esc(c["outlet"])} {EXT_SVG}</a>')
     else:
         actions.append(f'<span class="press-link" data-full="{c["img"]}" data-gallery="press-read" data-caption="{cap}" tabindex="0" role="button">Read the clipping</span>')
+    for n, u in c.get("also", []):
+        actions.append(f'<a class="press-link" href="{u}" target="_blank" rel="noopener">{PLATFORM_ICON[n]} {n}</a>')
     if c.get("extra"):
         actions.append(f'<span class="press-link" data-full="{c["extra"]}" data-gallery="press-read" data-caption="{cap} (print edition)" tabindex="0" role="button">See the printed page</span>')
     src = f'<span class="press-kind">{KIND_LABEL[c["kind"]]}</span><b>{esc(c["outlet"])}</b><span>{esc(c["place"])}</span>{time_tag(c["date"])}'
@@ -642,17 +681,26 @@ def render_press():
     return '<div class="press-list">\n      ' + "\n      ".join(press_item(c) for c in items) + "\n    </div>"
 
 
-def client_post(c, with_id=True):
+def client_post(c, with_id=True, tag="our client"):
     links = "".join(f'<a class="cp-link cp-{n.lower()}" href="{u}" target="_blank" rel="noopener">{PLATFORM_ICON[n]}{n}</a>'
                     for n, u in c["links"])
     ident = f' id="{c["id"]}"' if with_id else ""
     return f"""<article class="client-post reveal"{ident}>
-        <div class="cp-head"><span class="cp-mono">{initials(c['outlet'])}</span><div><b>{esc(c['outlet'])}</b><span>{esc(c['place'])} · our client</span></div>{time_tag(c['date'])}</div>
+        <div class="cp-head"><span class="cp-mono">{initials(c['outlet'])}</span><div><b>{esc(c['outlet'])}</b><span>{esc(c['place'])}{" · " + tag if tag else ""}</span></div>{time_tag(c['date'])}</div>
         <h3>{esc(c['headline'])}</h3>
         <blockquote class="cp-quote"><p>“{esc(c['quote'])}”</p></blockquote>
         <p class="cp-sum">{esc(c['summary'])}</p>
         <div class="cp-links"><span>Read the original post on</span>{links}</div>
       </article>"""
+
+
+def official_post(c, with_id=True):
+    return client_post(c, with_id, tag=c.get("handle", "")).replace('class="client-post', 'class="client-post official-post', 1)
+
+
+def render_official(ids=None, with_ids=True):
+    items = [c for c in cov("official") if not ids or c["id"] in ids]
+    return '<div class="client-posts">\n      ' + "\n      ".join(official_post(c, with_ids) for c in items) + "\n    </div>"
 
 
 def render_clients():
@@ -675,6 +723,7 @@ def render_featured_inner():
     national = "".join(f'<li><a href="recognition.html#national-tv"><span class="fi-tv">TV</span>{n}</a></li>' for n in NATIONAL_TV)
     return f"""<div class="featured-in reveal">
       <div class="fi-row"><span class="fi-label">Our work in the news</span><ul class="fi-list">{featured_list()}</ul></div>
+      <div class="fi-row"><span class="fi-label">Shared by official handles</span><ul class="fi-list">{"".join(f'<li><a href="recognition.html#{c["id"]}"><span class="fi-tv fi-off">OFFICIAL</span>{esc(c["outlet"])}</a></li>' for c in cov("official"))}</ul></div>
       <div class="fi-row"><span class="fi-label">Our founder on national TV</span><ul class="fi-list">{national}</ul></div>
     </div>"""
 
@@ -709,7 +758,7 @@ def coverage_ld():
     items = []
     for c in COVERAGE:
         publisher = {"@type": "Organization", "name": c["outlet"]}
-        if c["kind"] == "client":
+        if c["kind"] in ("client", "official"):
             node = {"@type": "SocialMediaPosting", "headline": c["headline"], "url": c["links"][0][1],
                     "sameAs": [u for _, u in c["links"][1:]] or None, "author": {"@type": "Organization", "name": c["outlet"]},
                     "articleBody": c["quote"], "about": org}
@@ -803,6 +852,33 @@ def render_timeline():
     return '<ol class="timeline" data-timeline>' + "".join(items) + "</ol>"
 
 
+def render_cm_showcase():
+    case = "project-koomber-tea-estate-595kwp-solar-cm-inauguration.html"
+    pics = KOOMBER_ALBUM[:4]
+    mosaic = "".join(f'<div class="cm-pic cm-pic--{i}" data-full="{src}" data-gallery="cm-show" data-caption="{esc(alt)}"><img src="{src}" alt="{esc(alt)}" /></div>'
+                     for i, (src, alt) in enumerate(pics))
+    chips = "".join(f'<a class="cm-chip" href="{u}" target="_blank" rel="noopener">{PLATFORM_ICON.get(n, "")}<span>{esc(lbl)}</span></a>' for lbl, n, u in [
+        ("CM's Office on X", "X", "https://x.com/CMOfficeAssam/status/2105545750054928662"),
+        ("CM's Office on Facebook", "Facebook", "https://www.facebook.com/cmofficeassam/photos/d41d8cd9/1422387263413542/?set=a.302403535411926"),
+        ("MLA Kaushik Rai on X", "X", "https://x.com/iKaushikRai/status/2105642116089008488"),
+        ("MLA Kaushik Rai on Facebook", "Facebook", "https://www.facebook.com/100065189221572/posts/pfbid0MmznkBYfeKxNF66pmnNDk3iEFfGnY1wan7LNwMDm4316vznz3bg86ZkZwAgdjheHl/"),
+        ("The Sentinel", "", "https://www.sentinelassam.com/breakingnews/assam-himanta-biswa-sarma-inaugurates-595-kwp-solar-plant-at-koomber-tea-estate"),
+        ("The Sentinel on Instagram", "Instagram", "https://www.instagram.com/p/Dd89-ViDQcG/"),
+        ("The Sentinel on Facebook", "Facebook", "https://www.facebook.com/100066523279937/posts/pfbid05Ug3kevPqUdUBp7ZyFbD8Eix3hYRzu78MVR8yNixHt17o5B3cShMNFXW1o4Mw1Y8l/")])
+    rai = next(c for c in COVERAGE if c["id"] == "kaushik-rai-koomber")
+    return f"""<div class="cm-show">
+      <div class="cm-mosaic reveal">{mosaic}<span class="cm-badge"><b>1 Oct 2026</b>Koomber Tea Estate, Assam</span></div>
+      <div class="cm-text reveal" data-d="1">
+        <span class="cm-kicker">Inaugurated by the Hon'ble Chief Minister of Assam</span>
+        <h3>Dr Himanta Biswa Sarma opens the 595 kWp solar plant we installed at Koomber Tea Estate</h3>
+        <p>Part of the 3.11 MW Goodricke Tea Estates Solar Programme with Tata Power Renewable Energy and Sustvest, with Arrays Ingenieria as installation partner.</p>
+        <blockquote class="cm-quote"><p>“{esc(rai['quote'])}”</p><cite>{esc(rai['outlet'])}, on X and Facebook</cite></blockquote>
+        <div class="cm-chips"><span>Shared and reported by</span>{chips}</div>
+        <div class="cm-cta"><a class="btn btn--sun" href="{case}">See the inauguration {ARROW_SVG}</a><a class="btn btn--ghost" href="{case}#album">Photo album ({len(KOOMBER_ALBUM)})</a></div>
+      </div>
+    </div>"""
+
+
 BLOCKS = {
     "press-tv": lambda: render_tv(),
     "press-print": render_press,
@@ -815,6 +891,8 @@ BLOCKS = {
     "national-facts": render_national_facts,
     "schemes": render_schemes,
     "timeline": render_timeline,
+    "cm-showcase": render_cm_showcase,
+    "press-official": render_official,
     "panchamrit": render_panchamrit,
 }
 
@@ -934,6 +1012,35 @@ def render_project_page(p):
     <div class="impact reveal"><span class="eyebrow">Why It Matters</span><h2>{esc(im['heading'])}</h2>{paras}<p class="src-note">Sources: {srcs}.</p></div>
   </div>
 </section>"""
+    extra = ""
+    if p.get("official"):
+        extra += f"""
+<section class="section section--news" id="official">
+  <div class="container">
+    <div class="section-head center reveal"><span class="eyebrow">On Official Handles</span><h2>Announced by the <span class="text-sun">Chief Minister's Office</span></h2><p>The inauguration as posted by the Chief Minister's Office and MLA Kaushik Rai, quoted word for word with links to the original posts.</p></div>
+    {render_official(p["official"], with_ids=False)}
+  </div>
+</section>"""
+    if p.get("people"):
+        ppl = "".join(f'<li><span class="tick"></span>{esc(x)}</li>' for x in p["people"])
+        extra += f"""
+<section class="section">
+  <div class="container">
+    <div class="section-head center reveal"><span class="eyebrow">Present at the Inauguration</span><h2>Leaders Who <span class="text-grad">Joined the Chief Minister</span></h2></div>
+    <ul class="detail-list people-list reveal">{ppl}</ul>
+  </div>
+</section>"""
+    if p.get("album"):
+        figs = "\n".join(f'      <figure class="g-item reveal" data-full="{src}" data-gallery="album" data-caption="{esc(alt)}"><img src="{src}" alt="{esc(alt)}" /><figcaption>{esc(alt)}</figcaption></figure>' for src, alt in p["album"])
+        extra += f"""
+<section class="section section--soft" id="album">
+  <div class="container">
+    <div class="section-head center reveal"><span class="eyebrow">Photo Album</span><h2>The Inauguration <span class="text-grad">in Pictures</span></h2><p>{len(p["album"])} photos from Koomber Tea Estate, 1 October 2026. Tap any photo to view it full size.</p></div>
+    <div class="gallery-grid captioned">
+{figs}
+    </div>
+  </div>
+</section>"""
     related = "".join(f'<a href="{f}">{esc(page_label(f))}</a>' for f in p["services"])
     others = [q for q in PROJECTS if q["file"] != p["file"]]
     same = [q for q in others if q["cat"] == p["cat"]] + [q for q in others if q["cat"] != p["cat"]]
@@ -963,7 +1070,7 @@ def render_project_page(p):
     </aside>
   </div>
 </section>
-{impact}{docs}
+{impact}{extra}{docs}
 <section class="section">
   <div class="container">
     <div class="section-head center reveal"><span class="eyebrow">Related</span><h2>Services Used on <span class="text-grad">This Project</span></h2></div>
@@ -982,6 +1089,20 @@ def render_project_page(p):
            "about": {"@type": "Place", "name": p["location"]},
            "mentions": [{"@type": "Organization", "name": x} for x in (p["client"], p["partner"]) if x],
            "publisher": {"@id": SITE_URL + "/#organization"}}]
+    links = [c for c in COVERAGE if c["id"] in p["coverage"] + p.get("official", [])]
+    if links:
+        ld[0]["citation"] = [c.get("url") or c["links"][0][1] for c in links if c.get("url") or c.get("links")]
+        ld[0]["subjectOf"] = [u for c in links for _, u in (c.get("links") or []) + (c.get("also") or [])]
+    if p.get("album"):
+        ld.append({"@context": "https://schema.org", "@type": "Event", "name": p["name"],
+                   "startDate": "2026-10-01", "eventStatus": "https://schema.org/EventScheduled",
+                   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                   "location": {"@type": "Place", "name": "Koomber Tea Estate",
+                                "address": {"@type": "PostalAddress", "addressRegion": "Assam", "addressLocality": "Cachar", "addressCountry": "IN"}},
+                   "description": p["intro"], "image": [f"{SITE_URL}/{src}" for src, _ in p["album"][:6]],
+                   "performer": {"@type": "Person", "name": "Dr Himanta Biswa Sarma", "jobTitle": "Chief Minister of Assam"},
+                   "organizer": {"@type": "Organization", "name": "Goodricke Group"},
+                   "contributor": {"@id": SITE_URL + "/#organization"}})
     return page_shell("projects", body_html, p["hero"], hero_alt, ld)
 
 
@@ -1083,6 +1204,10 @@ def write_generated_pages():
 
 
 # -------------------------------------------------------------- gallery ----
+GALLERY[:0] = [(src, "cm events projects" if "ground-mount" in src or "inaugurates" in src else "cm events", alt, alt)
+               for src, alt in KOOMBER_ALBUM]
+
+
 def render_gallery_page():
     filters = '<button class="filter active" data-filter="all">All</button>' + "".join(
         f'<button class="filter" data-filter="{k}">{html.escape(v)}</button>' for k, v in GALLERY_CATS)

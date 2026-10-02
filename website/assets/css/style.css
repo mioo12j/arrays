@@ -1650,3 +1650,39 @@ html, body { overflow-x: clip; }
   .nav-links a::after { display: none; }
 }
 @media (min-width: 761px) and (max-width: 1320px) { .nav-cta .btn--outline { display: none; } }
+
+/* ===========================================================
+   CM inauguration showcase (Koomber)
+   =========================================================== */
+.cm-show { display: grid; grid-template-columns: 1.05fr 1fr; gap: 40px; align-items: center; }
+.cm-mosaic { position: relative; display: grid; grid-template-columns: 1.4fr 1fr; grid-template-rows: 1fr 1fr; gap: 10px; height: 460px; }
+.cm-pic { overflow: hidden; border-radius: 16px; cursor: zoom-in; box-shadow: 0 16px 40px rgba(0,0,0,.25); }
+.cm-pic img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s; }
+.cm-pic:hover img { transform: scale(1.05); }
+.cm-pic--0 { grid-row: span 2; }
+.cm-pic--3 { display: none; }
+.cm-badge { position: absolute; left: 14px; bottom: 14px; display: flex; flex-direction: column; padding: 10px 14px; border-radius: 12px; background: var(--grad-sun); color: #3d2c00; font-size: 12.5px; box-shadow: 0 10px 24px rgba(245,158,11,.4); }
+.cm-badge b { font-family: var(--head); font-size: 16px; }
+.cm-kicker { display: inline-block; padding: 6px 12px; border-radius: 50px; background: rgba(251,191,36,.15); border: 1px solid rgba(251,191,36,.5); color: var(--gold-400); font-family: var(--head); font-weight: 700; font-size: 12px; letter-spacing: .5px; text-transform: uppercase; }
+.cm-text h3 { color: #fff; font-size: clamp(22px, 2.4vw, 30px); line-height: 1.25; margin: 14px 0 10px; }
+.cm-text > p { color: #cfe8dd; font-size: 15.5px; }
+.cm-section:not(.section--news) .cm-text h3 { color: var(--ink); }
+.cm-section:not(.section--news) .cm-text > p { color: var(--body); }
+.cm-quote { margin: 16px 0; padding: 14px 18px; border-left: 4px solid var(--gold-400); background: #fffaf0; border-radius: 0 12px 12px 0; }
+.cm-quote p { margin: 0; font-style: italic; font-size: 15px; line-height: 1.55; color: var(--ink); }
+.cm-quote cite { display: block; margin-top: 6px; font-style: normal; font-size: 12.5px; color: var(--muted); }
+.cm-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 6px 0 20px; }
+.cm-chips > span { width: 100%; font-family: var(--head); font-size: 11.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #8fb9a8; }
+.cm-section:not(.section--news) .cm-chips > span { color: var(--muted); }
+.cm-chip { display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px; border-radius: 50px; background: #fff; border: 1.5px solid var(--line); color: var(--ink); font-family: var(--head); font-weight: 600; font-size: 13px; text-decoration: none; transition: transform .2s, border-color .2s; }
+.cm-chip:hover { transform: translateY(-2px); border-color: var(--green-500); }
+.cm-chip svg { width: 14px; height: 14px; }
+.cm-cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.cm-section:not(.section--news) .cm-cta .btn--ghost { color: var(--green-700); border-color: var(--line); }
+.fi-off { background: var(--green-700); }
+.official-post { border-top: 4px solid var(--gold-400); }
+.official-post .cp-mono { background: var(--grad-sun); color: #3d2c00; }
+.people-list { max-width: 760px; margin: 0 auto; }
+@media (max-width: 900px) { .cm-show { grid-template-columns: 1fr; } .cm-mosaic { height: 360px; } }
+@media (max-width: 520px) { .cm-mosaic { height: 280px; grid-template-columns: 1fr 1fr; } }
+.cp-x { background: #000; }

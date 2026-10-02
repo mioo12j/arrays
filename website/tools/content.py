@@ -389,8 +389,8 @@ CLIENTS = [
      "1035 kWp across Towkok and Manjushree Tea Estates, and solar plants at the Dewan, Labac and Burtoll gardens of the Dewan Group of Tea Estates.",
      ["project-jayshree-tea-1mw-solar-assam.html"]),
     ("Goodricke Group", "Plant owner",
-     "Solar plants at Orangajuli (450 kW) and Barpatra (230 kW) Tea Estates under the 3.11 MW programme with Tata Power Renewable Energy and Sustvest.",
-     ["project-orangajuli-tea-estate-450kw-solar.html", "project-barpatra-tea-estate-230kw-solar.html"]),
+     "Solar plants at Koomber (595 kWp, inaugurated by the Chief Minister of Assam), Orangajuli (450 kW) and Barpatra (230 kW) Tea Estates under the 3.11 MW programme with Tata Power Renewable Energy and Sustvest.",
+     ["project-koomber-tea-estate-595kwp-solar-cm-inauguration.html", "project-orangajuli-tea-estate-450kw-solar.html", "project-barpatra-tea-estate-230kw-solar.html"]),
     ("Sustvest (SolarGridX Ventures Pvt. Ltd.)", "Developer partner",
      "Supply of components and installation & commissioning of a 1711.66 kWp on-grid project in Assam, and the Goodricke tea-estate programme.",
      ["project-assam-1711kwp-on-grid-solar.html"]),
@@ -537,7 +537,8 @@ PANCHAMRIT = [
 # ----------------------------------------------------------- where we work ----
 # (state, headline, [(project text, link or "")]); only projects documented on this site.
 STATES = [
-    ("Assam", "Our biggest region: 19 on-grid plants in the tea gardens", [
+    ("Assam", "Our biggest region: on-grid plants across the tea gardens", [
+        ("Koomber Tea Estate: 595 kWp, inaugurated by the Chief Minister, Cachar", "project-koomber-tea-estate-595kwp-solar-cm-inauguration.html"),
         ("Jay Shree Tea: 535 kWp Towkok and 500 kWp Manjushree, Sonari", "project-jayshree-tea-1mw-solar-assam.html"),
         ("Orangajuli Tea Estate: 450 kW, Udalguri", "project-orangajuli-tea-estate-450kw-solar.html"),
         ("Barpatra (Borpatra) Tea Estate: 230 kW, Sonari", "project-barpatra-tea-estate-230kw-solar.html"),
@@ -563,3 +564,88 @@ STATES = [
     ("Karnataka", "Our largest project", [
         ("SECI 300 MW, Koppal: pile foundations for Tata Power", "project-seci-300mw-koppal-pile-foundation.html")]),
 ]
+
+# ------------------------------------------------- Koomber inauguration ----
+# Inaugurated by the Chief Minister of Assam, 1 October 2026. Facts from The
+# Sentinel, the CM's Office and MLA Kaushik Rai's posts, and the company's own
+# press release; photo captions describe only what each photo shows.
+K = "assets/koomber/"
+KOOMBER_ALBUM = [
+    (K + "cm-inaugurates-595kwp-solar-plant-ribbon-cutting.jpg", "Chief Minister Dr Himanta Biswa Sarma cuts the ribbon to inaugurate the 595 kWp solar plant at Koomber Tea Estate"),
+    (K + "cm-cuts-ribbon-595kwp-solar-plant-koomber.jpg", "The Chief Minister of Assam cuts the ribbon at the Koomber Tea Estate solar plant"),
+    (K + "arrays-ingenieria-welcomes-cm-with-assamese-gamosa.jpg", "Shri Ranveer Singh of Arrays Ingenieria welcomes the Chief Minister with a traditional Assamese gamosa"),
+    (K + "gamosa-welcome-cm-arrays-ingenieria.jpg", "The Chief Minister is felicitated with a gamosa by Arrays Ingenieria at the inauguration"),
+    (K + "cm-tours-koomber-solar-plant-with-arrays-ingenieria.jpg", "Arrays Ingenieria takes the Chief Minister around the 595 kWp ground-mount solar plant"),
+    (K + "koomber-tea-estate-595kwp-ground-mount-solar-plant.jpg", "The 595 kWp ground-mounted on-grid solar plant at Koomber Tea Estate, built by Arrays Ingenieria"),
+    (K + "cm-speaks-at-koomber-solar-plant-site.jpg", "The Chief Minister speaks at the Koomber solar plant site"),
+    (K + "cm-reviews-koomber-solar-plant-with-mlas.jpg", "The Chief Minister with MLAs and officials at the solar plant"),
+    (K + "cm-inspects-solar-modules-koomber-tea-estate.jpg", "The Chief Minister inspects the solar modules at Koomber Tea Estate"),
+    (K + "cm-himanta-biswa-sarma-arrives-koomber-tea-estate.jpg", "The Chief Minister of Assam arrives at Koomber Tea Estate"),
+    (K + "cm-at-ribbon-koomber-solar-plant.jpg", "Before the ribbon-cutting at the Koomber solar plant"),
+    (K + "ribbon-ceremony-koomber-tea-garden.jpg", "The ribbon ceremony at Koomber Tea Garden"),
+    (K + "cm-enters-koomber-solar-plant-after-inauguration.jpg", "The Chief Minister walks into the solar plant after the inauguration"),
+    (K + "cm-on-site-at-koomber-solar-plant.jpg", "The Chief Minister on site at the Koomber solar plant"),
+    (K + "cm-and-officials-at-koomber-solar-site.jpg", "The Chief Minister with officials at the solar site"),
+    (K + "arrays-ingenieria-greets-cm-at-inauguration-banner.jpg", "Arrays Ingenieria greets the Chief Minister at the inauguration banner"),
+    (K + "cm-greeted-by-arrays-ingenieria-team.jpg", "The Arrays Ingenieria team greets the Chief Minister"),
+    (K + "gamosa-felicitation-cm-koomber.jpg", "Gamosa felicitation of the Chief Minister at Koomber"),
+    (K + "koomber-595kwp-solar-inauguration-banner.jpg", "Inauguration banner: 595 kWp solar plant at Koomber Tea Garden, with Tata Power Solar, Goodricke, Sustvest and Arrays Ingenieria"),
+    (K + "arrays-ingenieria-welcome-banner-lt-gen-prasad.jpg", "Arrays Ingenieria's welcome banner for the Chief Minister, with Lt. Gen. A.R. Prasad (Retd)"),
+]
+KOOMBER_PEOPLE = [
+    "Shri Krishnendu Paul, Minister of Public Health Engineering and MLA, Patharkandi",
+    "Dr Rajdeep Roy, MLA, Silchar",
+    "Shri Rajdeep Goala, MLA, Udharbond",
+    "Shri Kaushik Rai, MLA, Lakhipur",
+    "Shri Anil Gurung, Manager, and Shri Jitul Chetia, Assistant Manager, Koomber Tea Estate",
+]
+
+PROJECTS.insert(0, dict(
+    file="project-koomber-tea-estate-595kwp-solar-cm-inauguration.html",
+    name="Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam",
+    short="Koomber Tea Estate, Assam · 595 kWp",
+    title="Assam CM Opens 595 kWp Koomber Solar | Arrays Ingenieria",
+    desc="Assam CM Dr Himanta Biswa Sarma inaugurated the 595 kWp solar plant at Koomber Tea Estate, Cachar, on 1 Oct 2026. Installation partner: Arrays Ingenieria.",
+    capacity="595 kWp", kind="Ground-mounted, on-grid", location="Koomber Tea Estate, Cachar district (Barak Valley), Assam",
+    client="Koomber Tea Estate (Goodricke Group)", partner="Tata Power Renewable Energy Ltd. & Sustvest (3.11 MW programme)",
+    role="Installation partner", year="2026 (inaugurated 1 October 2026)",
+    cat="ground", tag="Tea Estate · Inaugurated by the CM",
+    hero=K + "cm-inaugurates-595kwp-solar-plant-ribbon-cutting.jpg",
+    intro="On 1 October 2026 the Chief Minister of Assam, Dr Himanta Biswa Sarma, inaugurated the 595 kWp ground-mounted, "
+          "on-grid solar power plant at Koomber Tea Estate in Cachar district. Arrays Ingenieria was the installation partner.",
+    body=[
+        "The plant is part of the 3.11 MW Goodricke Tea Estates Solar Programme, developed with Tata Power Renewable Energy Ltd. "
+        "(TPREL) and Sustvest, which brings clean energy to Goodricke's tea estates across Assam.",
+        "On behalf of the company's Chief Executive Officer, Lt. Gen. A.R. Prasad (Retd), AVSM, VSM, ADC, Ph.D, Shri Ranveer Singh "
+        "welcomed the Chief Minister with a traditional Assamese gamosa. At the inauguration the Chief Minister said the state "
+        "government is working to promote tea-garden tourism and to connect tea gardens with solar power, so that they become more "
+        "self-reliant in energy.",
+        "The plant was built by the Arrays Ingenieria team, including the ex-servicemen Shri Birendra and Shri Dinesh, with the "
+        "guidance of Shri Kundal Kant Singh, Abhinanda Basu, Shri Santosh Singh and Baliram of TPREL, and Shri Hardik (CEO) and "
+        "Shri Devyansh of Sustvest.",
+        "The inauguration was announced by the Chief Minister's Office on X and Facebook, posted by MLA Kaushik Rai, and reported "
+        "by The Sentinel on its website, Facebook and Instagram.",
+    ],
+    scope=["Installation of the 595 kWp ground-mounted plant", "Electrical works and grid connection",
+           "Testing and commissioning", "Handover for inauguration"],
+    photos=KOOMBER_ALBUM[:6],
+    album=KOOMBER_ALBUM,
+    people=KOOMBER_PEOPLE,
+    docs=[],
+    coverage=["sentinel-koomber"],
+    official=["cmo-assam-koomber", "kaushik-rai-koomber"],
+    services=["solar-installation-commissioning.html", "service-ground-mount.html", "solar-for-tea-estates.html"],
+    impact=dict(
+        heading="Driving the PM's Panchamrit and the CM's Green Assam mission",
+        paras=[
+            "The Chief Minister's Office said the plant \"empowers iconic tea industry with clean energy and accelerates the mission "
+            "towards a Green Assam\". The Sentinel reported that it aligns with the government's efforts to promote its Green Assam "
+            "mission.",
+            "By cutting fossil-fuel use in energy-intensive tea processing, the plant also contributes to the Prime Minister's "
+            "Panchamrit commitments made at COP26, and to Assam's target of 6,000 MW of green-energy capacity by 2030.",
+        ],
+        sources=[("CM's Office, Assam on X, 1 Oct 2026", "https://x.com/CMOfficeAssam/status/2105545750054928662"),
+                 ("The Sentinel, 1 Oct 2026", "https://www.sentinelassam.com/breakingnews/assam-himanta-biswa-sarma-inaugurates-595-kwp-solar-plant-at-koomber-tea-estate"),
+                 ("PM's national statement at COP26, PIB", "https://pib.gov.in/PressReleasePage.aspx?PRID=1768712")],
+    ),
+))
