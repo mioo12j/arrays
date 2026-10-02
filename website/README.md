@@ -31,10 +31,22 @@ It needs only Python 3 and rewrites the pages in place. It:
 
 ### Adding a photo
 1. Save it under `assets/photos/` (projects/events), `assets/news/` (clippings) or `assets/press/`
-   with a descriptive file name, e.g. `barpatra-tea-estate-230kw-solar-plant.jpg`.
+   (or a per-event folder like `assets/borpatra/`) with an SEO file name that starts with the brand and
+   names the plant, e.g. `arrays-ingenieria-ex-servicemen-led-borpatra-tea-estate-230kwp-solar-modules.jpg`.
+   The build appends "Arrays Ingenieria (Ingenieria), ex-servicemen-led MSME" to any photo alt text that
+   does not already name the company.
 2. Add a line to `GALLERY` in `tools/build.py` with a caption and a descriptive alt text
    that names the place, the capacity and "Arrays Ingenieria".
 3. Run `python3 tools/build.py`.
+
+### Adding an insight (essay)
+Add an entry to `INSIGHTS` in `tools/content.py` (title, summary, takeaways, paragraphs, sources with links).
+The build regenerates `insights.html` with BlogPosting structured data. Every number needs a source.
+
+### Search engines and AI assistants
+The build writes `sitemap.xml` (pages, images and videos), `robots.txt` (welcomes Google, Bing and AI
+crawlers such as GPTBot, ClaudeBot and PerplexityBot) and `llms.txt` (a plain-language summary of the
+company and every page, for AI assistants). Update the "Key facts" in `write_llms()` when facts change.
 
 ### Adding a case study
 Add an entry to `PROJECTS` in `tools/content.py` (facts only, from the order, certificate or news report),

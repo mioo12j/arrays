@@ -10,10 +10,12 @@
   /* ---------- header behaviour ---------- */
   const headerEl = document.getElementById("header");
   const toTop = document.getElementById("toTop");
+  const dock = document.querySelector(".contact-dock");
   const onScroll = () => {
     // header is always solid/frosted so the colour logo stays legible everywhere
     if (headerEl) headerEl.classList.add("scrolled");
     if (toTop) toTop.classList.toggle("show", window.scrollY > 600);
+    if (dock) dock.classList.toggle("show", window.scrollY > 400);
   };
   window.addEventListener("scroll", onScroll, { passive: true });
   if (headerEl) headerEl.classList.add("scrolled", "solid");

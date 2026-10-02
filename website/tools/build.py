@@ -74,8 +74,8 @@ PAGES = {
         title="Solar for Industry, Tea Estates & Homes | Arrays Ingenieria",
         desc="Solar power for every sector in India: factories, tea estates, commercial buildings, institutions, homes and government/PSU projects by Arrays Ingenieria."),
     "insights.html": dict(path="/insights.html", crumb="Insights",
-        title="Solar Guides & Insights for India | Arrays Ingenieria",
-        desc="Guides from Arrays Ingenieria on the PM Surya Ghar subsidy, rooftop vs ground-mount solar, net-metering, solar O&M and solar ROI in India."),
+        title="Solar Insights India 2026: Guides & Updates | Arrays Ingenieria",
+        desc="India's solar in 2026: 164 GW installed, ALMM List-II, GST cut to 5%, CAPEX vs OPEX, PM Surya Ghar, PM-KUSUM and solar for Assam tea estates."),
     "service-ground-mount.html": dict(path="/service-ground-mount.html", crumb="Ground-Mount Solar",
         title="Ground-Mount Solar Power Plants | Arrays Ingenieria",
         desc="Utility and industrial ground-mount solar plants designed, built and commissioned across India by Arrays Ingenieria, from piling to grid connection."),
@@ -106,7 +106,7 @@ PAGES = {
 }
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from content import (PROJECTS, FAQ, GLOSSARY, CLIENTS, LEADER_QUOTES, NATIONAL_FACTS, SCHEMES, TIMELINE,  # noqa: E402
-                     PANCHAMRIT, PANCHAMRIT_URL, STATES, KOOMBER_ALBUM)
+                     PANCHAMRIT, PANCHAMRIT_URL, STATES, KOOMBER_ALBUM, BORPATRA_ALBUM, INSIGHTS)
 
 PAGES.update({
     "capex-solar-epc.html": dict(path="/capex-solar-epc.html", crumb="CAPEX Solar EPC", parent="services",
@@ -132,7 +132,7 @@ PAGES.update({
         desc="Arrays Ingenieria is an ex-servicemen-led MSME founded by Lt. Gen. A.R. Prasad (Retd): Olive Green to Go Green, a second innings of national service."),
     "solar-schemes-india.html": dict(path="/solar-schemes-india.html", crumb="Solar Schemes in India",
         title="Government Solar Schemes in India 2026 | Arrays Ingenieria",
-        desc="PM Surya Ghar, PM-KUSUM, Assam's tea-garden solar policy, accelerated depreciation and net metering, with official sources and leaders' statements."),
+        desc="Solar schemes in India 2026: PM Surya Ghar, PM-KUSUM deadlines, ALMM List-II, GST at 5%, Assam tea-garden solar, depreciation and net metering."),
     "leadership.html": dict(path="/leadership.html", crumb="Message from the Leadership",
         title="Message from the Leadership | Arrays Ingenieria",
         desc="A message from Lt. Gen. A.R. Prasad (Retd), AVSM, VSM, ADC, Ph.D, Chief Executive Officer of Arrays Ingenieria, the ex-servicemen-led solar MSME."),
@@ -161,6 +161,7 @@ for _p in SERVICE_PAGES:
 # (src, categories, caption, alt). Captions are visible text; alt describes the image.
 GALLERY_CATS = [
     ("cm", "CM Inauguration, Koomber"),
+    ("borpatra", "Borpatra Inauguration"),
     ("projects", "Solar Projects"),
     ("events", "Inaugurations & Events"),
     ("media", "News & Media"),
@@ -169,58 +170,58 @@ GALLERY_CATS = [
     ("orders", "Work Orders"),
 ]
 GALLERY = [
-    ("assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg", "projects events",
+    ("assets/photos/arrays-ingenieria-ex-servicemen-led-orangajuli-tea-estate-450kwp-solar-inauguration-ribbon.jpg", "projects events",
      "Orangajuli Tea Estate, Udalguri (Assam): 450 kW ground-mount solar plant inaugurated on Janmashtami 2026",
      "Ribbon-cutting at the 450 kW Orangajuli Tea Estate solar plant in Udalguri, Assam, built by Arrays Ingenieria (still from NE Reports video)"),
-    ("assets/photos/proj-seci.jpg", "projects", "SECI 300 MW solar park: pile-foundation works, Koppal, Karnataka",
+    ("assets/photos/arrays-ingenieria-seci-300mw-koppal-karnataka-solar-pile-foundation.jpg", "projects", "SECI 300 MW solar park: pile-foundation works, Koppal, Karnataka",
      "SECI 300 MW solar park pile-foundation works at Koppal, Karnataka by Arrays Ingenieria"),
-    ("assets/photos/proj-yiapl.jpg", "projects", "YIAPL 14.36 MW solar project: supply, civil works & chain-link fencing, Uttar Pradesh",
+    ("assets/photos/arrays-ingenieria-yiapl-14-36mw-solar-civil-works-fencing-uttar-pradesh.jpg", "projects", "YIAPL 14.36 MW solar project: supply, civil works & chain-link fencing, Uttar Pradesh",
      "YIAPL 14.36 MW solar power project civil works and fencing in Uttar Pradesh by Arrays Ingenieria"),
-    ("assets/photos/proj-dcm-hisar.jpg", "projects", "DCM Hisar: 10 MW ground-mount solar & civil works, Haryana",
+    ("assets/photos/arrays-ingenieria-dcm-hisar-10mw-ground-mount-solar-civil-works.jpg", "projects", "DCM Hisar: 10 MW ground-mount solar & civil works, Haryana",
      "DCM Hisar 10 MW ground-mount solar project in Haryana, Arrays Ingenieria solar EPC"),
-    ("assets/photos/proj-tml.jpg", "projects", "Tata Motors, Jamshedpur: 5.5 MW solar piling & civil works",
+    ("assets/photos/arrays-ingenieria-tata-motors-jamshedpur-5-5mw-solar-piling.jpg", "projects", "Tata Motors, Jamshedpur: 5.5 MW solar piling & civil works",
      "Tata Motors 5.5 MW solar piling and civil works in Jamshedpur by Arrays Ingenieria"),
-    ("assets/photos/proj-supersmelters.jpg", "projects", "Super Smelters Ltd., Asansol: 1980.3 kWp solar plant with Tata Power Solar",
+    ("assets/photos/arrays-ingenieria-super-smelters-1980kwp-solar-plant-asansol.jpg", "projects", "Super Smelters Ltd., Asansol: 1980.3 kWp solar plant with Tata Power Solar",
      "Super Smelters 1980.3 kWp industrial solar plant in Asansol by Arrays Ingenieria with Tata Power Solar"),
-    ("assets/photos/proj-jayshree.jpg", "projects", "Jayshree Tea Estate, Sonari (Assam): 1 MW ground-mount on-grid solar",
+    ("assets/photos/arrays-ingenieria-jayshree-tea-estate-1mw-ground-mount-solar-sonari-assam.jpg", "projects", "Jayshree Tea Estate, Sonari (Assam): 1 MW ground-mount on-grid solar",
      "Jayshree Tea Estate 1 MW ground-mount solar plant in Sonari, Assam by Arrays Ingenieria"),
-    ("assets/photos/proj-towkok.jpg", "projects", "Towkok Tea Estate, Assam: 535 kWp ground-mount on-grid solar",
+    ("assets/photos/arrays-ingenieria-towkok-tea-estate-535kwp-ground-mount-solar-assam.jpg", "projects", "Towkok Tea Estate, Assam: 535 kWp ground-mount on-grid solar",
      "Towkok Tea Estate 535 kWp ground-mount solar plant in Assam by Arrays Ingenieria"),
-    ("assets/photos/proj-manjushree.jpg", "projects", "Manjushree Tea Estate, Assam: 500 kWp ground-mount on-grid solar",
+    ("assets/photos/arrays-ingenieria-manjushree-tea-estate-500kwp-ground-mount-solar-assam.jpg", "projects", "Manjushree Tea Estate, Assam: 500 kWp ground-mount on-grid solar",
      "Manjushree Tea Estate 500 kWp ground-mount solar plant in Assam by Arrays Ingenieria"),
-    ("assets/photos/proj-assam-rooftop.jpg", "projects", "1711.66 kWp on-grid rooftop solar PV, Assam",
+    ("assets/photos/arrays-ingenieria-assam-1711kwp-on-grid-rooftop-solar.jpg", "projects", "1711.66 kWp on-grid rooftop solar PV, Assam",
      "1711.66 kWp on-grid rooftop solar PV plant in Assam by Arrays Ingenieria"),
-    ("assets/photos/proj-grid1035.jpg", "projects", "1035 kWp grid-connected solar power generation system",
+    ("assets/photos/arrays-ingenieria-jay-shree-tea-1035kwp-grid-connected-solar.jpg", "projects", "1035 kWp grid-connected solar power generation system",
      "1035 kWp grid-connected solar power system by Arrays Ingenieria"),
-    ("assets/photos/proj-appl.jpg", "projects", "APPL Kakajan Tea Estate, Assam: solar project",
+    ("assets/photos/arrays-ingenieria-appl-kakajan-tea-estate-solar-assam.jpg", "projects", "APPL Kakajan Tea Estate, Assam: solar project",
      "APPL Kakajan Tea Estate solar project in Assam by Arrays Ingenieria"),
-    ("assets/photos/proj-pantnagar.jpg", "projects", "Tata Motors, Pantnagar: solar carport / parking shed",
+    ("assets/photos/arrays-ingenieria-tata-motors-pantnagar-solar-carport.jpg", "projects", "Tata Motors, Pantnagar: solar carport / parking shed",
      "Tata Motors Pantnagar solar carport built by Arrays Ingenieria"),
-    ("assets/photos/proj-balaji.jpg", "projects", "Balaji Action Tesa, Sitarganj: rooftop solar",
+    ("assets/photos/arrays-ingenieria-balaji-action-tesa-sitarganj-rooftop-solar.jpg", "projects", "Balaji Action Tesa, Sitarganj: rooftop solar",
      "Balaji Action Tesa rooftop solar project in Sitarganj by Arrays Ingenieria"),
-    ("assets/photos/proj-tatasteel.jpg", "projects", "Tata Steel, Noamundi (Jharkhand): solar project",
+    ("assets/photos/arrays-ingenieria-tata-steel-noamundi-jharkhand-solar.jpg", "projects", "Tata Steel, Noamundi (Jharkhand): solar project",
      "Tata Steel solar project at Noamundi, Jharkhand by Arrays Ingenieria"),
-    ("assets/photos/proj-ramnagar.jpg", "projects", "Ramnagar, Uttarakhand: ground-mount solar project",
+    ("assets/photos/arrays-ingenieria-ramnagar-uttarakhand-ground-mount-solar.jpg", "projects", "Ramnagar, Uttarakhand: ground-mount solar project",
      "Ramnagar ground-mount solar project in Uttarakhand by Arrays Ingenieria"),
-    ("assets/photos/hero-solar-farm.jpg", "projects", "Utility-scale ground-mount solar power plant",
+    ("assets/photos/arrays-ingenieria-utility-scale-ground-mount-solar-power-plant.jpg", "projects", "Utility-scale ground-mount solar power plant",
      "Utility-scale ground-mount solar power plant built by Arrays Ingenieria"),
-    ("assets/photos/proj-rooftop-pano.jpg", "projects", "Large industrial rooftop solar array",
+    ("assets/photos/arrays-ingenieria-industrial-rooftop-solar-array.jpg", "projects", "Large industrial rooftop solar array",
      "Large industrial rooftop solar array installed by Arrays Ingenieria"),
-    ("assets/photos/how-photo.jpg", "projects", "Completed rooftop solar installation generating clean power",
+    ("assets/photos/arrays-ingenieria-rooftop-solar-installation-clean-power.jpg", "projects", "Completed rooftop solar installation generating clean power",
      "Completed rooftop solar installation by Arrays Ingenieria generating clean power"),
-    ("assets/photos/proj-precast.jpg", "projects", "Pre-cast boundary wall for Tata Motors, Jamshedpur",
+    ("assets/photos/arrays-ingenieria-tata-motors-jamshedpur-precast-boundary-wall.jpg", "projects", "Pre-cast boundary wall for Tata Motors, Jamshedpur",
      "Pre-cast boundary wall civil works for Tata Motors, Jamshedpur by Arrays Ingenieria"),
-    ("assets/photos/proj-piling-extra.jpg", "projects", "Solar pile foundation & chain-link fencing, Madhepura, Bihar",
+    ("assets/photos/arrays-ingenieria-madhepura-bihar-solar-pile-foundation-fencing.jpg", "projects", "Solar pile foundation & chain-link fencing, Madhepura, Bihar",
      "Solar pile foundation and chain-link fencing in Madhepura, Bihar by Arrays Ingenieria"),
-    ("assets/photos/proj-earthing.jpg", "projects", "Earthing & electrical safety works on a solar plant",
+    ("assets/photos/arrays-ingenieria-solar-plant-earthing-electrical-safety-works.jpg", "projects", "Earthing & electrical safety works on a solar plant",
      "Solar plant earthing and electrical safety works by Arrays Ingenieria"),
-    ("assets/press/event-inauguration.jpg", "events", "1980.3 kWp solar plant inauguration with Tata Power Solar",
+    ("assets/press/arrays-ingenieria-super-smelters-1980kwp-solar-inauguration-tata-power-solar.jpg", "events", "1980.3 kWp solar plant inauguration with Tata Power Solar",
      "Inauguration of the 1980.3 kWp solar plant built by Arrays Ingenieria with Tata Power Solar"),
-    ("assets/photos/proj-inauguration.jpg", "events", "Solar power plant inauguration ceremony",
+    ("assets/photos/arrays-ingenieria-solar-power-plant-inauguration-ceremony.jpg", "events", "Solar power plant inauguration ceremony",
      "Solar power plant inauguration ceremony, Arrays Ingenieria"),
-    ("assets/press/event-commissioning.jpg", "events", "Switching on clean power: solar plant commissioning",
+    ("assets/press/arrays-ingenieria-solar-plant-commissioning-ceremony.jpg", "events", "Switching on clean power: solar plant commissioning",
      "Solar power plant commissioning ceremony, Arrays Ingenieria"),
-    ("assets/press/event-pooja.jpg", "events", "Ground-breaking ceremony for a solar project",
+    ("assets/press/arrays-ingenieria-solar-project-ground-breaking-ceremony.jpg", "events", "Ground-breaking ceremony for a solar project",
      "Ground-breaking ceremony for an Arrays Ingenieria solar project"),
     ("assets/news/prerna-bharati-orangajuli-450kw-solar-ingenieria.jpg", "media",
      "Prerna Bharati, 5 Sep 2026: veteran-led Arrays Ingenieria commissions 450 kW solar plant at Orangajuli Tea Estate, Assam",
@@ -228,56 +229,56 @@ GALLERY = [
     ("assets/news/barpatra-tea-estate-230kw-solar-ingenieria.jpg", "media",
      "25 Sep 2026: 230 kW on-grid solar plant starts at Barpatra Tea Estate (Goodricke Group), Sonari, Assam",
      "Hindi newspaper report on the 230 kW solar plant built by Arrays Ingenieria at Barpatra Tea Estate, Sonari, Assam"),
-    ("assets/news/barpatra-tea-estate-230kw-solar-newspaper-print.jpg", "media",
+    ("assets/news/arrays-ingenieria-borpatra-tea-estate-230kwp-solar-newspaper-print.jpg", "media",
      "Print edition: Barpatra Tea Estate 230 kW solar plant, Dibrugarh/Sonari, 25 Sep 2026",
      "Printed Hindi newspaper page on the Barpatra Tea Estate 230 kW solar plant by Arrays Ingenieria"),
-    ("assets/news/news-bhaskar-tcpl.jpg", "media", "Dainik Bhaskar: 319 kWp rooftop solar at TCPL Greenery Agro (Tata Consumer), Vaishali",
+    ("assets/news/arrays-ingenieria-tcpl-vaishali-319kwp-rooftop-solar-dainik-bhaskar.jpg", "media", "Dainik Bhaskar: 319 kWp rooftop solar at TCPL Greenery Agro (Tata Consumer), Vaishali",
      "Dainik Bhaskar report on the 319 kWp rooftop solar plant by Arrays Ingenieria in Vaishali, Bihar"),
-    ("assets/news/news-supersmelters-inaug.jpg", "media", "1980.3 kWp solar plant inaugurated at Super Smelters with Tata Power Solar",
+    ("assets/news/arrays-ingenieria-super-smelters-1980kwp-solar-inauguration-newspaper.jpg", "media", "1980.3 kWp solar plant inaugurated at Super Smelters with Tata Power Solar",
      "Newspaper report on the 1980.3 kWp Super Smelters solar plant inauguration, Arrays Ingenieria"),
-    ("assets/news/news-supersmelters-rooftop.jpg", "media", "Jamuria: 1980.3 kWp rooftop solar plant inaugurated at Super Smelters",
+    ("assets/news/arrays-ingenieria-super-smelters-jamuria-rooftop-solar-newspaper.jpg", "media", "Jamuria: 1980.3 kWp rooftop solar plant inaugurated at Super Smelters",
      "Newspaper report on the Super Smelters rooftop solar plant in Jamuria by Arrays Ingenieria"),
-    ("assets/press/media-indiatoday.jpg", "media", "India Today: expert analysis on the India–China faceoff",
+    ("assets/press/arrays-ingenieria-lt-gen-ar-prasad-india-today-analysis.jpg", "media", "India Today: expert analysis on the India–China faceoff",
      "Lt. Gen. A.R. Prasad (Retd), founder of Arrays Ingenieria, on India Today"),
-    ("assets/press/media-aajtak-panel.jpg", "media", "Aaj Tak: prime-time national debate panellist",
+    ("assets/press/arrays-ingenieria-lt-gen-ar-prasad-aaj-tak-panel.jpg", "media", "Aaj Tak: prime-time national debate panellist",
      "Lt. Gen. A.R. Prasad (Retd) of Arrays Ingenieria on an Aaj Tak prime-time debate"),
-    ("assets/press/media-indiatv.jpg", "media", "India TV: border & defence coverage",
+    ("assets/press/arrays-ingenieria-lt-gen-ar-prasad-india-tv-analysis.jpg", "media", "India TV: border & defence coverage",
      "Lt. Gen. A.R. Prasad (Retd) of Arrays Ingenieria on India TV"),
-    ("assets/press/media-aajtak-breaking.jpg", "media", "Aaj Tak: breaking-news analysis",
+    ("assets/press/arrays-ingenieria-lt-gen-ar-prasad-aaj-tak-breaking-news.jpg", "media", "Aaj Tak: breaking-news analysis",
      "Lt. Gen. A.R. Prasad (Retd) of Arrays Ingenieria on Aaj Tak breaking news"),
-    ("assets/press/ceo-president.jpg", "leadership", "Honoured by the President of India",
+    ("assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-honoured-by-president-of-india.jpg", "leadership", "Honoured by the President of India",
      "Lt. Gen. A.R. Prasad (Retd), CEO of Arrays Ingenieria, honoured by the President of India"),
-    ("assets/press/ceo-president-flowers.jpg", "leadership", "Welcomed at Rashtrapati Bhavan",
+    ("assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-rashtrapati-bhavan.jpg", "leadership", "Welcomed at Rashtrapati Bhavan",
      "Lt. Gen. A.R. Prasad (Retd) of Arrays Ingenieria welcomed at Rashtrapati Bhavan"),
-    ("assets/press/ceo-modi.jpg", "leadership", "With Prime Minister Shri Narendra Modi",
+    ("assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-with-pm-narendra-modi.jpg", "leadership", "With Prime Minister Shri Narendra Modi",
      "Lt. Gen. A.R. Prasad (Retd) of Arrays Ingenieria with Prime Minister Shri Narendra Modi"),
-    ("assets/press/ceo-rajnath.jpg", "leadership", "With Defence Minister Shri Rajnath Singh",
+    ("assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-with-defence-minister-rajnath-singh.jpg", "leadership", "With Defence Minister Shri Rajnath Singh",
      "Lt. Gen. A.R. Prasad (Retd) of Arrays Ingenieria with Defence Minister Shri Rajnath Singh"),
-    ("assets/press/ceo-rajnath-event.jpg", "leadership", "At a national ceremonial event",
+    ("assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-national-ceremonial-event.jpg", "leadership", "At a national ceremonial event",
      "Lt. Gen. A.R. Prasad (Retd) of Arrays Ingenieria at a national ceremonial event"),
-    ("assets/press/ceo-defcom.jpg", "leadership", "Keynote at DEFCOM India",
+    ("assets/press/arrays-ingenieria-founder-lt-gen-ar-prasad-defcom-india-keynote.jpg", "leadership", "Keynote at DEFCOM India",
      "Lt. Gen. A.R. Prasad (Retd) of Arrays Ingenieria delivering the keynote at DEFCOM India"),
-    ("assets/press/ceo-official.jpg", "leadership", "Meeting national leadership",
+    ("assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-meeting-national-leadership.jpg", "leadership", "Meeting national leadership",
      "Lt. Gen. A.R. Prasad (Retd) of Arrays Ingenieria meeting national leadership"),
-    ("assets/press/ceo-office.jpg", "leadership", "A distinguished military career",
+    ("assets/press/arrays-ingenieria-founder-ceo-lt-gen-ashish-ranjan-prasad-retd.jpg", "leadership", "A distinguished military career",
      "Lt. Gen. A.R. Prasad (Retd), founder of Arrays Ingenieria, at his command office"),
-    ("assets/press/ceo-airforce.jpg", "leadership", "Armed forces ceremony",
+    ("assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-armed-forces-ceremony.jpg", "leadership", "Armed forces ceremony",
      "Lt. Gen. A.R. Prasad (Retd) of Arrays Ingenieria at an armed-forces ceremony"),
-    ("assets/press/ceo-event.jpg", "leadership", "With fellow officers",
+    ("assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-with-fellow-officers.jpg", "leadership", "With fellow officers",
      "Lt. Gen. A.R. Prasad (Retd) of Arrays Ingenieria with fellow officers"),
-    ("assets/press/ceo-handshake.jpg", "leadership", "Felicitation & honours",
+    ("assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-felicitated.jpg", "leadership", "Felicitation & honours",
      "Lt. Gen. A.R. Prasad (Retd) of Arrays Ingenieria being felicitated"),
-    ("assets/press/ceo-govt-event.jpg", "leadership", "A national celebration",
+    ("assets/press/arrays-ingenieria-leadership-national-celebration.jpg", "leadership", "A national celebration",
      "Arrays Ingenieria leadership at a national celebration"),
-    ("assets/press/ceo-family.jpg", "leadership", "Celebrating a milestone",
+    ("assets/press/arrays-ingenieria-leadership-milestone-celebration.jpg", "leadership", "Celebrating a milestone",
      "Arrays Ingenieria leadership celebrating a milestone"),
-    ("assets/certs/iso-9001.jpg", "certificates", "ISO 9001:2015 Quality Management System",
+    ("assets/certs/arrays-ingenieria-iso-9001-certificate.jpg", "certificates", "ISO 9001:2015 Quality Management System",
      "ISO 9001:2015 quality management certificate of Arrays Ingenieria Pvt. Ltd."),
-    ("assets/certs/iso-14001.jpg", "certificates", "ISO 14001:2015 Environmental Management System",
+    ("assets/certs/arrays-ingenieria-iso-14001-certificate.jpg", "certificates", "ISO 14001:2015 Environmental Management System",
      "ISO 14001:2015 environmental management certificate of Arrays Ingenieria Pvt. Ltd."),
-    ("assets/certs/iso-45001.jpg", "certificates", "ISO 45001:2018 Occupational Health & Safety",
+    ("assets/certs/arrays-ingenieria-iso-45001-certificate.jpg", "certificates", "ISO 45001:2018 Occupational Health & Safety",
      "ISO 45001:2018 occupational health and safety certificate of Arrays Ingenieria Pvt. Ltd."),
-    ("assets/certs/award-india5000.jpg", "certificates", "India 5000 Best MSME Awards: nomination for quality excellence (2024)",
+    ("assets/certs/arrays-ingenieria-india-5000-msme-award.jpg", "certificates", "India 5000 Best MSME Awards: nomination for quality excellence (2024)",
      "India 5000 Best MSME Award for Quality Excellence nomination, Arrays Ingenieria Pvt. Ltd."),
     ("assets/certs/goodricke-appreciation-koomber-595kwp-arrays-ingenieria.jpg", "certificates cm",
      "Goodricke: Certificate of Appreciation, installation & commissioning of 595 kWp at Koomber Tea Garden",
@@ -285,23 +286,23 @@ GALLERY = [
     ("assets/certs/goodricke-appreciation-borpatra-230kwp-arrays-ingenieria.jpg", "certificates",
      "Goodricke: Certificate of Appreciation, installation & commissioning of 230 kWp at Borpatra Tea Garden",
      "Goodricke certificate of appreciation to Arrays Ingenieria for the 230 kWp Borpatra Tea Garden solar plant"),
-    ("assets/certs/appreciation-jayshree-towkok.jpg", "certificates", "Jay Shree Tea (BK Birla Group): appreciation for 535 kWp Towkok solar",
+    ("assets/certs/arrays-ingenieria-jay-shree-tea-towkok-535kwp-certificate-of-appreciation.jpg", "certificates", "Jay Shree Tea (BK Birla Group): appreciation for 535 kWp Towkok solar",
      "Jay Shree Tea certificate of appreciation to Arrays Ingenieria for the 535 kWp Towkok solar plant"),
-    ("assets/certs/appreciation-jayshree-500kwp.jpg", "certificates", "Jay Shree Tea: appreciation for 500 kWp ground-mount solar",
+    ("assets/certs/arrays-ingenieria-jay-shree-tea-500kwp-certificate-of-appreciation.jpg", "certificates", "Jay Shree Tea: appreciation for 500 kWp ground-mount solar",
      "Jay Shree Tea certificate of appreciation to Arrays Ingenieria for a 500 kWp solar plant"),
-    ("assets/certs/appreciation-super-smelters.jpg", "certificates", "Super Smelters Ltd.: letter of appreciation, 1980.3 kWp solar",
+    ("assets/certs/arrays-ingenieria-super-smelters-certificate-of-appreciation.jpg", "certificates", "Super Smelters Ltd.: letter of appreciation, 1980.3 kWp solar",
      "Super Smelters Ltd. letter of appreciation to Arrays Ingenieria for the 1980.3 kWp solar plant"),
-    ("assets/certs/appreciation-bharat-petroleum.jpg", "certificates", "Bharat Petroleum: appreciation for RCC rooftop on-grid solar",
+    ("assets/certs/arrays-ingenieria-bharat-petroleum-certificate-of-appreciation.jpg", "certificates", "Bharat Petroleum: appreciation for RCC rooftop on-grid solar",
      "Bharat Petroleum certificate of appreciation to Arrays Ingenieria for rooftop solar"),
-    ("assets/orders/wo-tatapower-seci.jpg", "orders", "Tata Power (TPREL): pile-foundation works, 300 MW SECI, Koppal",
+    ("assets/orders/arrays-ingenieria-tata-power-seci-koppal-work-order.jpg", "orders", "Tata Power (TPREL): pile-foundation works, 300 MW SECI, Koppal",
      "Tata Power work order to Arrays Ingenieria for SECI 300 MW solar pile foundation"),
-    ("assets/orders/wo-tatapower-dcm.jpg", "orders", "Tata Power: civil works, 10 MW DCM Textile, Hisar",
+    ("assets/orders/arrays-ingenieria-tata-power-dcm-hisar-work-order.jpg", "orders", "Tata Power: civil works, 10 MW DCM Textile, Hisar",
      "Tata Power work order to Arrays Ingenieria for DCM Hisar 10 MW solar civil works"),
-    ("assets/orders/wo-tatapower-tml.jpg", "orders", "Tata Power: piling & civil works, 5.5 MW Tata Motors, Jamshedpur",
+    ("assets/orders/arrays-ingenieria-tata-power-tata-motors-jamshedpur-work-order.jpg", "orders", "Tata Power: piling & civil works, 5.5 MW Tata Motors, Jamshedpur",
      "Tata Power work order to Arrays Ingenieria for Tata Motors 5.5 MW solar"),
-    ("assets/orders/po-jayshree-1035.jpg", "orders", "Jay Shree Tea: purchase order for 1035 kWp grid-connected solar",
+    ("assets/orders/arrays-ingenieria-jay-shree-tea-1035kwp-purchase-order.jpg", "orders", "Jay Shree Tea: purchase order for 1035 kWp grid-connected solar",
      "Jay Shree Tea purchase order to Arrays Ingenieria for 1035 kWp grid-connected solar"),
-    ("assets/orders/po-sustvest-assam.jpg", "orders", "SolarGridX / Sustvest: purchase order for 1711.66 kWp on-grid solar, Assam",
+    ("assets/orders/arrays-ingenieria-sustvest-assam-solar-purchase-order.jpg", "orders", "SolarGridX / Sustvest: purchase order for 1711.66 kWp on-grid solar, Assam",
      "Purchase order to Arrays Ingenieria for 1711.66 kWp on-grid solar in Assam"),
 ]
 
@@ -318,21 +319,21 @@ COVERAGE = [
          summary="NE Reports filmed the ribbon-cutting at the 450 kW ground-mount solar plant Arrays Ingenieria built for "
                  "Goodricke Group's Orangajuli Tea Estate, commissioned on Janmashtami.",
          url="https://www.facebook.com/reel/1678209397245830/",
-         img="assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg",
+         img="assets/photos/arrays-ingenieria-ex-servicemen-led-orangajuli-tea-estate-450kwp-solar-inauguration-ribbon.jpg",
          alt="Ribbon-cutting at the 450 kW Orangajuli Tea Estate solar plant built by Arrays Ingenieria (still from the NE Reports video)"),
     dict(id="sonari-live", kind="tv", outlet="Sonari Live", place="Sonari, Assam", platform="Facebook", date=None,
          headline="Exclusive: 230 kW solar project launched at Borpatra tea garden",
          summary="Sonari Live's exclusive report on the launch of the 230 kW solar plant Arrays Ingenieria built at "
                  "Goodricke's Borpatra Tea Garden: \"বৰপাত্ৰা চাহ বাগিচাত ২৩০ কিলোৱাট সৌৰ শক্তি প্ৰকল্পৰ শুভাৰম্ভ\".",
          url="https://www.facebook.com/100089972142580/videos/1069048716104190/",
-         img="assets/news/sonari-live-borpatra-230kw-solar-report.jpg",
+         img="assets/news/arrays-ingenieria-borpatra-230kwp-solar-sonari-live-report.jpg",
          alt="Sonari Live exclusive report on the 230 kW Borpatra solar plant built by Arrays Ingenieria"),
     dict(id="news-axom", kind="tv", outlet="News Axom", place="Nagaon, Assam", platform="Facebook", date=None,
          headline="A new era of solar power at Borpatra tea garden: 230 kW project launched",
          summary="News Axom TV on the 230 kW plant at Borpatra: \"Important step towards decarbonization, 230 kw solar project "
                  "at Barpatra.\"",
          url="https://www.facebook.com/61564147994036/videos/122210117936471599/",
-         img="assets/news/news-axom-borpatra-230kw-solar-report.jpg",
+         img="assets/news/arrays-ingenieria-borpatra-230kwp-solar-news-axom-report.jpg",
          alt="News Axom TV report on the 230 kW Borpatra solar plant built by Arrays Ingenieria"),
     dict(id="sentinel-jayshree", kind="online", outlet="The Sentinel", place="Assam", platform="sentinelassam.com",
          date="2025-05-22",
@@ -343,7 +344,7 @@ COVERAGE = [
          quote="Arrays Ingenieria is a unique MSME founded by ex-servicemen, symbolizing a disciplined, mission-driven "
                "transition from OG (Olive Green-the military uniform) to GG (Go Green-renewable energy).",
          url="https://www.sentinelassam.com/north-east-india-news/assam-news/assam-aipl-commissions-1-mw-solar-power-plant-at-jayshree-tea-estate",
-         img="assets/photos/proj-jayshree.jpg",
+         img="assets/photos/arrays-ingenieria-jayshree-tea-estate-1mw-ground-mount-solar-sonari-assam.jpg",
          alt="Jayshree Tea Estate 1 MW solar plant in Sonari, Assam, reported by The Sentinel"),
     dict(id="sentinel-koomber", kind="online", outlet="The Sentinel", place="Guwahati, Assam", platform="sentinelassam.com",
          date="2026-10-01",
@@ -359,7 +360,7 @@ COVERAGE = [
                      "the state's tea industry.",
          also=[("Instagram", "https://www.instagram.com/p/Dd89-ViDQcG/"),
                ("Facebook", "https://www.facebook.com/100066523279937/posts/pfbid05Ug3kevPqUdUBp7ZyFbD8Eix3hYRzu78MVR8yNixHt17o5B3cShMNFXW1o4Mw1Y8l/")],
-         img="assets/koomber/cm-inaugurates-595kwp-solar-plant-ribbon-cutting.jpg",
+         img="assets/koomber/arrays-ingenieria-ex-servicemen-led-koomber-tea-estate-595kwp-solar-cm-inaugurates-595kwp-solar-plant-ribbon-cutting.jpg",
          alt="Chief Minister Dr Himanta Biswa Sarma inaugurates the 595 kWp Koomber solar plant, reported by The Sentinel"),
     dict(id="cmo-assam-koomber", kind="official", outlet="Chief Minister's Office, Assam", handle="@CMOfficeAssam",
          place="Official handle of the Chief Minister of Assam", date="2026-10-01",
@@ -370,7 +371,7 @@ COVERAGE = [
          summary="The Chief Minister's Office announced the inauguration on X and Facebook, with photos from Koomber.",
          links=[("X", "https://x.com/CMOfficeAssam/status/2105545750054928662"),
                 ("Facebook", "https://www.facebook.com/cmofficeassam/photos/d41d8cd9/1422387263413542/?set=a.302403535411926")],
-         img="assets/koomber/cm-cuts-ribbon-595kwp-solar-plant-koomber.jpg",
+         img="assets/koomber/arrays-ingenieria-ex-servicemen-led-koomber-tea-estate-595kwp-solar-cm-cuts-ribbon-595kwp-solar-plant.jpg",
          alt="The Chief Minister of Assam cuts the ribbon at Koomber Tea Estate"),
     dict(id="kaushik-rai-koomber", kind="official", outlet="Shri Kaushik Rai, MLA, Lakhipur", handle="@iKaushikRai",
          place="Member of the Assam Legislative Assembly", date="2026-10-01",
@@ -381,7 +382,7 @@ COVERAGE = [
                  "Goodricke green initiative.",
          links=[("X", "https://x.com/iKaushikRai/status/2105642116089008488"),
                 ("Facebook", "https://www.facebook.com/100065189221572/posts/pfbid0MmznkBYfeKxNF66pmnNDk3iEFfGnY1wan7LNwMDm4316vznz3bg86ZkZwAgdjheHl/")],
-         img="assets/koomber/cm-reviews-koomber-solar-plant-with-mlas.jpg",
+         img="assets/koomber/arrays-ingenieria-ex-servicemen-led-koomber-tea-estate-595kwp-solar-cm-reviews-solar-plant-with-mlas.jpg",
          alt="The Chief Minister with MLAs at the Koomber solar plant"),
     dict(id="hub-network-orangajuli", kind="online", outlet="Hub Network", place="Guwahati, Assam", platform="hubnetwork.in",
          date="2026-09-04",
@@ -391,7 +392,7 @@ COVERAGE = [
                  "estates, with the plant inaugurated by garden manager Daljit Singh Maan.",
          quote="For Arrays Ingenieria, the project also reflects its 'Olive Green to Go Green' philosophy.",
          url="https://hubnetwork.in/assam-tea-garden-gets-450-kwp-solar-plant-as-clean-energy-push-gathers-pace/",
-         img="assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg",
+         img="assets/photos/arrays-ingenieria-ex-servicemen-led-orangajuli-tea-estate-450kwp-solar-inauguration-ribbon.jpg",
          alt="Orangajuli Tea Estate 450 kW solar plant inauguration, reported by Hub Network"),
     dict(id="prerna-bharati-orangajuli", kind="print", outlet="Prerna Bharati", place="Silchar, Assam", lang="hi",
          date="2026-09-05",
@@ -409,7 +410,7 @@ COVERAGE = [
          summary="Arrays Ingenieria, turnkey implementing partner, commissions a 230 kW on-grid ground-mount plant at "
                  "Goodricke Group's Barpatra Tea Estate, bringing its total to 19 on-grid solar plants in Assam's tea gardens.",
          img="assets/news/dainik-purvoday-borpatra-230kw-solar-arrays-ingenieria.jpg",
-         extra="assets/news/barpatra-tea-estate-230kw-solar-newspaper-print.jpg",
+         extra="assets/news/arrays-ingenieria-borpatra-tea-estate-230kwp-solar-newspaper-print.jpg",
          alt="Dainik Purvoday report on the 230 kW solar plant built by Arrays Ingenieria at Barpatra Tea Estate, Assam"),
     dict(id="northeast-chronicle-borpatra", kind="print", outlet="Northeast Chronicle", place="Dibrugarh, Assam", lang="en",
          date="2026-09-27",
@@ -420,7 +421,7 @@ COVERAGE = [
          quote="Arrays Ingenieria's \"Olive Green to Go Green\" initiative, under which the veteran-led company applies "
                "military-grade discipline and engineering expertise to renewable energy projects.",
          img="assets/news/northeast-chronicle-borpatra-230kwp-solar-arrays-ingenieria.jpg",
-         extra="assets/news/tata-power-media-monitor-borpatra-230kwp.jpg",
+         extra="assets/news/arrays-ingenieria-borpatra-230kwp-tata-power-media-monitor.jpg",
          alt="Northeast Chronicle report: 230 kWp solar plant commissioned by Arrays Ingenieria at Borpatra tea estate"),
     dict(id="prerna-bharati-borpatra", kind="print", outlet="Prerna Bharati", place="Silchar, Assam", lang="hi",
          date="2026-09-26",
@@ -473,21 +474,21 @@ COVERAGE = [
          original="भगवानपुर में सोलर पावर ग्रिड से 319 किलोवाट बिजली का होगा उत्पादन",
          summary="Dainik Bhaskar reports on the 319 kWp rooftop solar plant built by Arrays Ingenieria for TCPL Greenery "
                  "Agro (Tata Consumer Products) in Vaishali district, Bihar.",
-         img="assets/news/news-bhaskar-tcpl.jpg",
+         img="assets/news/arrays-ingenieria-tcpl-vaishali-319kwp-rooftop-solar-dainik-bhaskar.jpg",
          alt="Dainik Bhaskar report on the 319 kWp rooftop solar plant by Arrays Ingenieria in Vaishali, Bihar"),
     dict(id="sanmarg-supersmelters", kind="print", outlet="Sanmarg", place="Jamuria, West Bengal", lang="hi", date=None,
          headline="1980.3 kWp solar plant installed for environmental protection at Super Smelters",
          original="पर्यावरण संरक्षण के लिए लगाया गया 1980.3 केवी का सोलर प्लांट",
          summary="Super Smelters, the largest industrial unit in the area, inaugurates a 1980.3 kWp rooftop solar plant "
                  "built with Tata Power Solar and Arrays Ingenieria (AIPL), about 2 MW of clean power.",
-         img="assets/news/news-supersmelters-inaug.jpg",
+         img="assets/news/arrays-ingenieria-super-smelters-1980kwp-solar-inauguration-newspaper.jpg",
          alt="Sanmarg newspaper report on the 1980.3 kWp Super Smelters solar plant inauguration, Arrays Ingenieria"),
     dict(id="supersmelters-rooftop", kind="print", outlet="Hindi daily, Jamuria", place="Jamuria, West Bengal", lang="hi", date=None,
          headline="1980.3 kWp rooftop solar power plant inaugurated at Super Smelters",
          original="जामुड़िया : सुपर स्मेलटर्स कारखाना में 1980.3 केडब्ल्यूपी रूफटॉप सोलर पावर प्लांट का हुआ उद्घाटन",
          summary="The inauguration ceremony of the 1980.3 kWp rooftop plant at Super Smelters, with Lt. Gen. Ashish Ranjan "
                  "Prasad (Retd) of Arrays Ingenieria among the guests.",
-         img="assets/news/news-supersmelters-rooftop.jpg",
+         img="assets/news/arrays-ingenieria-super-smelters-jamuria-rooftop-solar-newspaper.jpg",
          alt="Newspaper report on the Super Smelters rooftop solar plant in Jamuria built by Arrays Ingenieria"),
     dict(id="supersmelters-kwp-rooftop", kind="print", outlet="Hindi daily, Jamuria", place="Jamuria, West Bengal", lang="hi",
          date=None,
@@ -495,7 +496,7 @@ COVERAGE = [
          original="केडब्ल्यूपी रूफ टॉप सोलर पावर प्लांट का हुआ उद्घाटन",
          summary="A further report of the 1980.3 kWp rooftop plant inaugurated at Super Smelters with Tata Power Solar and "
                  "Arrays Ingenieria.",
-         img="assets/news/super-smelters-1980kwp-rooftop-inauguration-hindi-daily.jpg",
+         img="assets/news/arrays-ingenieria-super-smelters-1980kwp-rooftop-inauguration-hindi-daily.jpg",
          alt="Hindi newspaper report on the Super Smelters rooftop solar inauguration, Arrays Ingenieria"),
     dict(id="jayshree-towkok", kind="client", outlet="Jay Shree Tea & Industries Ltd.", place="BK Birla Group",
          date="2025-05-22",
@@ -507,7 +508,7 @@ COVERAGE = [
          links=[("Instagram", "https://www.instagram.com/p/DJ8xow6Sklv/"),
                 ("Facebook", "https://www.facebook.com/jayshree.tea/posts/we-are-proud-to-announce-the-commissioning-of-a-1-mw-solar-power-plant-at-our-to/992080983078401/"),
                 ("LinkedIn", "https://www.linkedin.com/posts/jayshreetea-sustainability-solarpower-share-7331237620603084800-V592/")],
-         img="assets/photos/proj-towkok.jpg",
+         img="assets/photos/arrays-ingenieria-towkok-tea-estate-535kwp-ground-mount-solar-assam.jpg",
          alt="Towkok Tea Estate 535 kWp solar plant in Assam built by Arrays Ingenieria"),
     dict(id="jayshree-dewan", kind="client", outlet="Jay Shree Tea & Industries Ltd.", place="BK Birla Group",
          date="2025-11-24",
@@ -517,7 +518,7 @@ COVERAGE = [
                "and commitment to excellence ensured seamless implementation across all three locations.",
          summary="New solar power plants at three Jay Shree Tea gardens in Assam, all executed by Arrays Ingenieria.",
          links=[("Instagram", "https://www.instagram.com/reel/DRcNrhXEyFT/")],
-         img="assets/press/event-commissioning.jpg",
+         img="assets/press/arrays-ingenieria-solar-plant-commissioning-ceremony.jpg",
          alt="Solar power plant commissioning ceremony, Arrays Ingenieria"),
 ]
 # The founder's appearances as a defence expert on national TV (existing section).
@@ -613,7 +614,17 @@ def render_header(page_key, fname=""):
   </header>"""
 
 
-FOOTER = f"""<footer class="footer">
+FOOTER = f"""<section class="cta-strip" aria-label="Contact Arrays Ingenieria">
+    <div class="container cta-strip__in">
+      <div class="cta-strip__txt"><span class="eyebrow">Talk to an engineer</span><h2>Planning a solar plant? <span class="text-sun">Let's build it together.</span></h2>
+        <p>CAPEX solar EPC, installation &amp; commissioning and civil works, delivered by an ex-servicemen-led team across India. Tell us about your site and an engineer will get back to you.</p></div>
+      <div class="cta-strip__btns">
+        <a class="btn btn--sun" href="contact.html">Get a Free Quote {ARROW_SVG}</a>
+        <a class="btn btn--ghost" href="mailto:arraysingenieria@gmail.com?subject=Solar%20project%20enquiry">Email arraysingenieria@gmail.com</a>
+      </div>
+    </div>
+  </section>
+  <footer class="footer">
     <div class="container">
       <div class="footer__top">
         <div class="footer__brand">
@@ -680,6 +691,10 @@ FOOTER = f"""<footer class="footer">
     </div>
   </footer>
 
+  <nav class="contact-dock" aria-label="Quick contact">
+    <a class="cd-mail" href="mailto:arraysingenieria@gmail.com?subject=Solar%20project%20enquiry" aria-label="Email Arrays Ingenieria"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>Email us</span></a>
+    <a class="cd-quote" href="contact.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span>Free solar quote</span></a>
+  </nav>
   <button class="to-top" id="toTop" aria-label="Back to top">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
   </button>"""
@@ -935,7 +950,7 @@ def render_national_facts():
     for i, f in enumerate(NATIONAL_FACTS):
         cards.append(f'<a class="nf-card reveal" data-d="{i}" href="{f["url"]}" target="_blank" rel="noopener">'
                      f'<span class="nf-num"><span data-count="{f["num"]}">{f["num"]}</span><small>{f["suffix"]}</small></span>'
-                     f'<span class="nf-lbl">{esc(f["label"])}</span><span class="nf-src">Source: PIB {EXT_SVG}</span></a>')
+                     f'<span class="nf-lbl">{esc(f["label"])}</span><span class="nf-src">Source: {"MNRE data" if "solarquarter" in f["url"] else "PIB"} {EXT_SVG}</span></a>')
     return '<div class="nf-grid">' + "".join(cards) + "</div>"
 
 
@@ -968,10 +983,10 @@ def render_timeline():
 
 
 KOOMBER_VIDEOS = [
-    ("assets/video/koomber-cm-inauguration-solar-plant-1.mp4", "assets/video/koomber-cm-inauguration-solar-plant-1.jpg",
-     "The Chief Minister of Assam cuts the ribbon at the 595 kWp Koomber solar plant", "PT12S", "portrait"),
-    ("assets/video/koomber-cm-inauguration-solar-plant-2.mp4", "assets/video/koomber-cm-inauguration-solar-plant-2.jpg",
-     "The inauguration ceremony at the Koomber Tea Estate solar plant, 1 October 2026", "PT12S", "landscape"),
+    ("assets/video/arrays-ingenieria-ex-servicemen-led-koomber-tea-estate-595kwp-solar-assam-cm-inauguration-video-1.mp4", "assets/video/arrays-ingenieria-ex-servicemen-led-koomber-tea-estate-595kwp-solar-assam-cm-inauguration-video-1.jpg",
+     "The Chief Minister of Assam cuts the ribbon at the 595 kWp Koomber Tea Estate solar plant installed by Arrays Ingenieria", "PT12S", "portrait"),
+    ("assets/video/arrays-ingenieria-ex-servicemen-led-koomber-tea-estate-595kwp-solar-assam-cm-inauguration-video-2.mp4", "assets/video/arrays-ingenieria-ex-servicemen-led-koomber-tea-estate-595kwp-solar-assam-cm-inauguration-video-2.jpg",
+     "The inauguration ceremony at the Koomber Tea Estate 595 kWp solar plant, 1 October 2026, Arrays Ingenieria installation partner", "PT12S", "landscape"),
 ]
 
 
@@ -982,13 +997,19 @@ def render_koomber_videos():
     return f'<div class="kv-grid">{items}</div>'
 
 
+VIDEO_DESC = (" Part of the 3.11 MW Goodricke Tea Estates Solar Programme developed by Tata Power Renewable Energy and Sustvest. "
+              "Arrays Ingenieria (Ingenieria) is an ex-servicemen-led solar EPC and installation MSME.")
+
+
 def koomber_video_ld():
-    return [{"@context": "https://schema.org", "@type": "VideoObject", "name": cap, "description": cap,
+    return [{"@context": "https://schema.org", "@type": "VideoObject", "name": cap, "description": cap + "." + VIDEO_DESC,
+             "embedUrl": f"{SITE_URL}/project-koomber-tea-estate-595kwp-solar-cm-inauguration.html#videos",
+             "contentLocation": {"@type": "Place", "name": "Koomber Tea Estate, Cachar, Assam"},
              "contentUrl": f"{SITE_URL}/{src}", "thumbnailUrl": f"{SITE_URL}/{poster}", "uploadDate": "2026-10-01",
              "duration": dur, "publisher": {"@id": SITE_URL + "/#organization"}} for src, poster, cap, dur, _ in KOOMBER_VIDEOS]
 
 
-def render_cm_showcase():
+def render_cm_showcase(videos=True):
     case = "project-koomber-tea-estate-595kwp-solar-cm-inauguration.html"
     pics = KOOMBER_ALBUM[:4]
     mosaic = "".join(f'<div class="cm-pic cm-pic--{i}" data-full="{src}" data-gallery="cm-show" data-caption="{esc(alt)}"><img src="{src}" alt="{esc(alt)}" /></div>'
@@ -1012,9 +1033,9 @@ def render_cm_showcase():
         <div class="cm-chips"><span>Shared and reported by</span>{chips}</div>
         <div class="cm-cta"><a class="btn btn--sun" href="{case}">See the inauguration {ARROW_SVG}</a><a class="btn btn--ghost" href="{case}#album">Photo album ({len(KOOMBER_ALBUM)})</a></div>
       </div>
-    </div>
+    </div>""" + (f"""
     <div class="kv-head reveal"><span class="cm-kicker">Watch</span><b>The inauguration on video</b></div>
-    {render_koomber_videos()}"""
+    {render_koomber_videos()}""" if videos else "")
 
 
 BLOCKS = {
@@ -1030,6 +1051,7 @@ BLOCKS = {
     "schemes": render_schemes,
     "timeline": render_timeline,
     "cm-showcase": render_cm_showcase,
+    "cm-showcase-home": lambda: render_cm_showcase(videos=False),
     "koomber-videos": render_koomber_videos,
     "press-official": render_official,
     "panchamrit": render_panchamrit,
@@ -1169,7 +1191,7 @@ def render_project_page(p):
     <ul class="detail-list people-list reveal">{ppl}</ul>
   </div>
 </section>"""
-    if p.get("album"):
+    if p.get("videos"):
         extra += f"""
 <section class="section section--news" id="videos">
   <div class="container">
@@ -1177,11 +1199,12 @@ def render_project_page(p):
     {render_koomber_videos()}
   </div>
 </section>"""
+    if p.get("album"):
         figs = "\n".join(f'      <figure class="g-item reveal" data-full="{src}" data-gallery="album" data-caption="{esc(alt)}"><img src="{src}" alt="{esc(alt)}" /><figcaption>{esc(alt)}</figcaption></figure>' for src, alt in p["album"])
         extra += f"""
 <section class="section section--soft" id="album">
   <div class="container">
-    <div class="section-head center reveal"><span class="eyebrow">Photo Album</span><h2>The Inauguration <span class="text-grad">in Pictures</span></h2><p>{len(p["album"])} photos from Koomber Tea Estate, 1 October 2026. Tap any photo to view it full size.</p></div>
+    <div class="section-head center reveal"><span class="eyebrow">Photo Album</span><h2>The Inauguration <span class="text-grad">in Pictures</span></h2><p>{esc(p.get("album_lead", ""))} Tap any photo to view it full size.</p></div>
     <div class="gallery-grid captioned">
 {figs}
     </div>
@@ -1258,7 +1281,7 @@ def render_faq_page():
                     for i, (q, a) in enumerate(FAQ))
     ld = [{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
         {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in FAQ]}]
-    body = page_hero("assets/photos/proj-towkok.jpg", "Towkok Tea Estate solar plant in Assam built by Arrays Ingenieria",
+    body = page_hero("assets/photos/arrays-ingenieria-towkok-tea-estate-535kwp-ground-mount-solar-assam.jpg", "Towkok Tea Estate solar plant in Assam built by Arrays Ingenieria",
                      "Frequently Asked Questions", 'Solar EPC, <span class="text-sun">Answered</span>',
                      "What we do, how the CAPEX model works, what installation &amp; commissioning covers, and how to start a project with us.",
                      [("FAQ", None)]) + f"""
@@ -1270,7 +1293,59 @@ def render_faq_page():
     <div class="section-cta reveal"><a class="btn btn--primary" href="contact.html">Ask Us Anything {ARROW_SVG}</a><a class="btn btn--outline" href="solar-glossary.html">Solar Glossary</a></div>
   </div>
 </section>"""
-    return page_shell("faq", body, "assets/photos/proj-towkok.jpg", "Towkok Tea Estate solar plant by Arrays Ingenieria", ld)
+    return page_shell("faq", body, "assets/photos/arrays-ingenieria-towkok-tea-estate-535kwp-ground-mount-solar-assam.jpg", "Towkok Tea Estate solar plant by Arrays Ingenieria", ld)
+
+
+def render_insights_page():
+    img = "assets/photos/arrays-ingenieria-industrial-rooftop-solar-array.jpg"
+    cards, arts, posts = [], [], []
+    for i, a in enumerate(INSIGHTS):
+        words = len(re.sub(r"<[^>]+>", " ", " ".join(a["paras"])).split())
+        mins = max(2, round(words / 200))
+        cards.append(f'<a class="ins-card reveal" data-d="{i % 3}" href="#{a["id"]}"><span class="ins-tag">{esc(a["tag"])}</span>'
+                     f'<b>{esc(a["title"])}</b><span class="ins-sum">{esc(a["summary"])}</span><span class="ins-meta">{mins} min read {ARROW_SVG}</span></a>')
+        keys = "".join(f"<li>{esc(t)}</li>" for t in a["takeaways"])
+        srcs = ("<p class=\"src-note\">Sources: " + "; ".join(f'<a href="{u}" target="_blank" rel="noopener">{esc(n)}</a>' for n, u in a["sources"]) + ".</p>") if a["sources"] else ""
+        paras = "".join(f"<p>{x}</p>" for x in a["paras"])
+        soft = " section--soft" if i % 2 else ""
+        arts.append(f"""
+<section class="section{soft}">
+  <article class="container prose ins-article reveal" id="{a["id"]}">
+    <span class="eyebrow">Guide {i + 1:02d} · {esc(a["tag"])}</span>
+    <h2>{esc(a["title"])}</h2>
+    <p class="ins-byline">By the Arrays Ingenieria engineering team · <time datetime="{a["date"]}">Updated {date.fromisoformat(a["date"]).strftime("%d %b %Y").lstrip("0")}</time> · {mins} min read</p>
+    <div class="ins-keys"><b>Key takeaways</b><ul>{keys}</ul></div>
+    {paras}{srcs}
+    <p class="ins-cta"><a class="btn btn--primary" href="contact.html">Talk to our engineers {ARROW_SVG}</a><a class="ins-top" href="#guides">All guides ↑</a></p>
+  </article>
+</section>""")
+        posts.append({"@type": "BlogPosting", "headline": a["title"], "description": a["summary"],
+                      "url": f"{SITE_URL}/insights.html#{a['id']}", "datePublished": a["date"], "dateModified": a["date"],
+                      "inLanguage": "en-IN", "image": f"{SITE_URL}/{img}", "keywords": a["tag"],
+                      "author": {"@id": SITE_URL + "/#organization"}, "publisher": {"@id": SITE_URL + "/#organization"},
+                      "mainEntityOfPage": f"{SITE_URL}/insights.html"})
+    ld = [{"@context": "https://schema.org", "@type": "Blog", "name": "Arrays Ingenieria Solar Insights",
+           "url": SITE_URL + "/insights.html", "publisher": {"@id": SITE_URL + "/#organization"}, "blogPost": posts}]
+    body = page_hero(img, "Industrial rooftop solar array installed by Arrays Ingenieria", "Solar Insights 2026",
+                     'Solar Power in India, <span class="text-sun">Explained</span>',
+                     "Clear, sourced guides from our ex-servicemen-led engineering team: India's 2026 solar numbers, ALMM List-II, GST at 5%, "
+                     "CAPEX vs OPEX, PM Surya Ghar, PM-KUSUM and solar for tea estates.", [("Insights", None)]) + f"""
+
+<section class="section" id="guides">
+  <div class="container">
+    <div class="section-head center reveal"><span class="eyebrow">{len(INSIGHTS)} Guides</span><h2>What's New in <span class="text-grad">Indian Solar</span></h2><p>Every figure is linked to its source. Updated for October 2026.</p></div>
+    <div class="ins-grid">{"".join(cards)}</div>
+  </div>
+</section>
+{"".join(arts)}
+
+<section class="section section--soft">
+  <div class="container">
+    <div class="section-head center reveal"><span class="eyebrow">Keep Learning</span><h2>Schemes, Glossary &amp; <span class="text-grad">Case Studies</span></h2><p>Plain-English definitions, straight answers and real projects.</p></div>
+    <div class="svc-other reveal"><a href="solar-schemes-india.html">Government Solar Schemes</a><a href="solar-glossary.html">Solar Glossary</a><a href="faq.html">FAQ</a><a href="capex-solar-epc.html">CAPEX vs OPEX</a><a href="solar-installation-commissioning.html">What is I&amp;C?</a><a href="projects.html#case-studies">Case Studies &rarr;</a></div>
+  </div>
+</section>"""
+    return page_shell("insights", body, img, "Industrial rooftop solar array installed by Arrays Ingenieria", ld)
 
 
 def render_glossary_page():
@@ -1293,7 +1368,7 @@ def render_glossary_page():
            "url": SITE_URL + "/solar-glossary.html", "publisher": {"@id": SITE_URL + "/#organization"},
            "hasDefinedTerm": [{"@type": "DefinedTerm", "name": t, "description": d,
                                "url": f"{SITE_URL}/solar-glossary.html#{slug(t)}"} for t, d in terms]}]
-    body = page_hero("assets/photos/proj-rooftop-pano.jpg", "Industrial rooftop solar array installed by Arrays Ingenieria",
+    body = page_hero("assets/photos/arrays-ingenieria-industrial-rooftop-solar-array.jpg", "Industrial rooftop solar array installed by Arrays Ingenieria",
                      "Solar Glossary", 'Solar Terms, <span class="text-sun">in Plain English</span>',
                      "The words you will meet when planning a solar plant, from CAPEX and I&amp;C to kWp and net metering.",
                      [("Insights", "insights.html"), ("Solar Glossary", None)]) + f"""
@@ -1305,7 +1380,7 @@ def render_glossary_page():
     <div class="section-cta reveal"><a class="btn btn--primary" href="faq.html">Read the FAQ {ARROW_SVG}</a><a class="btn btn--outline" href="insights.html">Solar Guides</a></div>
   </div>
 </section>"""
-    return page_shell("insights", body, "assets/photos/proj-rooftop-pano.jpg", "Rooftop solar array by Arrays Ingenieria", ld)
+    return page_shell("insights", body, "assets/photos/arrays-ingenieria-industrial-rooftop-solar-array.jpg", "Rooftop solar array by Arrays Ingenieria", ld)
 
 
 def render_clients_page():
@@ -1317,7 +1392,7 @@ def render_clients_page():
     ld = [{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Clients and partners of Arrays Ingenieria",
            "url": SITE_URL + "/clients.html", "about": {"@id": SITE_URL + "/#organization"},
            "mentions": [{"@type": "Organization", "name": n} for n, *_ in CLIENTS]}]
-    body = page_hero("assets/photos/proj-supersmelters.jpg", "Super Smelters rooftop solar plant built by Arrays Ingenieria with Tata Power Solar",
+    body = page_hero("assets/photos/arrays-ingenieria-super-smelters-1980kwp-solar-plant-asansol.jpg", "Super Smelters rooftop solar plant built by Arrays Ingenieria with Tata Power Solar",
                      "Clients &amp; Partners", 'Trusted by <span class="text-sun">India\'s Leading Names</span>',
                      "EPC majors, developers and plant owners who have engaged our veteran-led team for installation, EPC and civil works.",
                      [("Clients & Partners", None)]) + f"""
@@ -1339,18 +1414,23 @@ def render_clients_page():
     <!-- build:cases --><!-- /build:cases -->
   </div>
 </section>"""
-    return page_shell("clients", body, "assets/photos/proj-supersmelters.jpg", "Super Smelters solar plant by Arrays Ingenieria", ld)
+    return page_shell("clients", body, "assets/photos/arrays-ingenieria-super-smelters-1980kwp-solar-plant-asansol.jpg", "Super Smelters solar plant by Arrays Ingenieria", ld)
 
 
 def write_generated_pages():
     for p in PROJECTS:
         open(os.path.join(ROOT, p["file"]), "w", encoding="utf8").write(render_project_page(p))
-    for fname, render in (("faq.html", render_faq_page), ("solar-glossary.html", render_glossary_page),
+    for fname, render in (("faq.html", render_faq_page), ("solar-glossary.html", render_glossary_page), ("insights.html", render_insights_page),
                           ("clients.html", render_clients_page)):
         open(os.path.join(ROOT, fname), "w", encoding="utf8").write(render())
 
 
 # -------------------------------------------------------------- gallery ----
+GALLERY[:0] = [(src, "borpatra events projects" if ("modules" in src or "team" in src) else "borpatra events", alt, alt)
+               for src, alt in BORPATRA_ALBUM] + [
+    ("assets/photos/arrays-ingenieria-ex-servicemen-led-orangajuli-tea-estate-450kwp-solar-inauguration-team.jpg", "projects events",
+     "Orangajuli Tea Garden, Udalguri: inauguration of the 450 kWp ground-mounted on-grid solar plant, Janmashtami, 4 Sep 2026",
+     "Inauguration of the 450 kWp solar plant at Orangajuli Tea Garden, Panerihaat, Udalguri, Assam, 4 September 2026, Arrays Ingenieria (ex-servicemen-led MSME), installation partner")]
 GALLERY[:0] = [(src, "cm events projects" if "ground-mount" in src or "inaugurates" in src else "cm events", alt, alt)
                for src, alt in KOOMBER_ALBUM]
 
@@ -1382,7 +1462,7 @@ def render_gallery_page():
 <meta name="theme-color" content="#0f7a57" />
 <title>x</title>
 <meta name="keywords" content="Arrays Ingenieria gallery, Ingenieria solar photos, solar plant photos India, Assam tea estate solar, Orangajuli solar plant, Barpatra solar plant, solar EPC projects" />
-<meta property="og:image" content="{SITE_URL}/assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg" />
+<meta property="og:image" content="{SITE_URL}/assets/photos/arrays-ingenieria-ex-servicemen-led-orangajuli-tea-estate-450kwp-solar-inauguration-ribbon.jpg" />
 <meta property="og:image:alt" content="Orangajuli Tea Estate 450 kW solar plant inauguration, Assam, by Arrays Ingenieria" />
 <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -1397,7 +1477,7 @@ def render_gallery_page():
 <!-- build:header --><!-- /build:header -->
 
 <section class="page-hero">
-  <div class="page-hero__bg"><img src="assets/photos/proj-jayshree.jpg" alt="Jayshree Tea Estate 1 MW solar plant in Sonari, Assam by Arrays Ingenieria" /></div>
+  <div class="page-hero__bg"><img src="assets/photos/arrays-ingenieria-jayshree-tea-estate-1mw-ground-mount-solar-sonari-assam.jpg" alt="Jayshree Tea Estate 1 MW solar plant in Sonari, Assam by Arrays Ingenieria" /></div>
   <div class="container">
     <span class="eyebrow">Photo &amp; Video Gallery</span>
     <h1>Our Solar Work, <span class="text-sun">In Pictures</span></h1>
@@ -1471,6 +1551,26 @@ def del_attr(tag, name):
     return re.sub(rf'\s{name}="[^"]*"', "", tag)
 
 
+BRAND_DIRS = ("assets/koomber/", "assets/borpatra/", "assets/photos/", "assets/press/", "assets/news/", "assets/certs/",
+              "assets/orders/", "assets/video/")
+PLANT_NAMES = [("koomber", "Koomber Tea Estate 595 kWp solar plant"), ("borpatra", "Borpatra Tea Estate 230 kWp solar plant"),
+               ("orangajuli", "Orangajuli Tea Estate 450 kWp solar plant")]
+
+
+BRAND_SUFFIX = "; solar work by Arrays Ingenieria (Ingenieria), ex-servicemen-led MSME"
+
+
+def brand_alt(tag, src):
+    """Every photo of our work names the company, so image search leads back to us."""
+    tag = tag.replace(", by Arrays Ingenieria (Ingenieria), ex-servicemen-led MSME", "")
+    alt = re.search(r'\salt="([^"]*)"', tag)
+    if not alt or not src.startswith(BRAND_DIRS) or "Ingenieria" in alt.group(1) or not alt.group(1):
+        return tag
+    plant = next((n for k, n in PLANT_NAMES if k in src and k not in alt.group(1).lower()), "")
+    extra = f", {plant}" if plant else ""
+    return tag.replace(alt.group(0), f' alt="{alt.group(1).rstrip(".")}{extra}{BRAND_SUFFIX}"', 1)
+
+
 def process_images(body_html):
     """width/height/decoding on every local <img>; first content image is the LCP."""
     first = [True]
@@ -1489,6 +1589,7 @@ def process_images(body_html):
                 tag = set_attr(tag, "height", size[1])
         if in_chrome:
             return tag
+        tag = brand_alt(tag, src.group(1))
         tag = set_attr(tag, "decoding", "async")
         if first[0]:
             first[0] = False
@@ -1575,7 +1676,7 @@ def head_block(fname, og_image, og_alt):
 
 HEAD_TAG_RE = re.compile(
     r'^[ \t]*(?:<title>.*?</title>|<meta (?:property|name)="(?:og:[^"]+|twitter:[^"]+|description|robots)"[^>]*>'
-    r'|<link rel="canonical"[^>]*>)[ \t]*\n', re.M | re.S)
+    r'|<link rel="canonical"[^>]*>|<link rel="alternate" hreflang="[^"]*"[^>]*>)[ \t]*\n', re.M | re.S)
 
 
 def process_page(fname):
@@ -1655,7 +1756,8 @@ def process_page(fname):
 # -------------------------------------------------------- site files ----
 def write_sitemap():
     out = ['<?xml version="1.0" encoding="UTF-8"?>',
-           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">']
+           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" '
+           'xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">']
     for fname, meta in PAGES.items():
         if not meta["path"]:
             continue
@@ -1668,14 +1770,65 @@ def write_sitemap():
         out.append(f"  <url>\n    <loc>{SITE_URL}{meta['path']}</loc>\n    <lastmod>{TODAY}</lastmod>")
         for src in imgs:
             out.append(f"    <image:image><image:loc>{SITE_URL}/{src}</image:loc></image:image>")
+        for vsrc, poster, cap, dur, _ in KOOMBER_VIDEOS:
+            if vsrc in body:
+                secs = int(dur.strip("PTS"))
+                out.append(f"    <video:video><video:thumbnail_loc>{SITE_URL}/{poster}</video:thumbnail_loc>"
+                           f"<video:title>{esc(cap)}</video:title><video:description>{esc(cap + '.' + VIDEO_DESC)}</video:description>"
+                           f"<video:content_loc>{SITE_URL}/{vsrc}</video:content_loc><video:duration>{secs}</video:duration>"
+                           f"<video:publication_date>2026-10-01</video:publication_date><video:family_friendly>yes</video:family_friendly></video:video>")
         out.append("  </url>")
     out.append("</urlset>\n")
     open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf8").write("\n".join(out))
 
 
+AI_CRAWLERS = ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-SearchBot", "Claude-User", "anthropic-ai",
+               "PerplexityBot", "Perplexity-User", "Google-Extended", "Applebot", "Applebot-Extended", "Bingbot",
+               "DuckAssistBot", "CCBot", "Meta-ExternalAgent", "Amazonbot", "MistralAI-User", "cohere-ai"]
+
+
 def write_robots():
+    """Search engines and AI assistants are all welcome: being cited by them is the point."""
+    ai = "".join(f"User-agent: {b}\n" for b in AI_CRAWLERS)
     open(os.path.join(ROOT, "robots.txt"), "w", encoding="utf8").write(
-        f"User-agent: *\nAllow: /\nDisallow: /tools/\n\nSitemap: {SITE_URL}/sitemap.xml\n")
+        "# Arrays Ingenieria (Ingenieria): search engines and AI assistants may crawl and cite this site.\n"
+        f"User-agent: *\nAllow: /\nDisallow: /tools/\n\n{ai}Allow: /\nDisallow: /tools/\n\n"
+        f"Sitemap: {SITE_URL}/sitemap.xml\n# AI summary: {SITE_URL}/llms.txt\n")
+
+
+def write_llms():
+    """llms.txt: a plain-language map of the site for AI assistants (llmstxt.org)."""
+    def line(f):
+        m = PAGES[f]
+        return f"- [{m['title'].split(' | ')[0]}]({SITE_URL}{m['path']}): {m['desc']}"
+    groups = [
+        ("Company", ["about.html", "leadership.html", "ex-servicemen-led-msme.html", "quality-safety.html", "where-we-work.html",
+                     "clients.html", "achievements.html", "recognition.html", "contact.html"]),
+        ("Services", ["capex-solar-epc.html", "solar-installation-commissioning.html", "service-ground-mount.html", "service-rooftop.html",
+                      "service-epc.html", "service-piling.html", "service-civil.html", "service-om.html", "solar-for-tea-estates.html",
+                      "industries.html", "how-it-works.html"]),
+        ("Projects and case studies", ["projects.html"] + [p["file"] for p in PROJECTS] + ["gallery.html"]),
+        ("Resources", ["insights.html", "solar-schemes-india.html", "solar-glossary.html", "faq.html"]),
+    ]
+    out = ["# Arrays Ingenieria Pvt. Ltd. (INGENIERIA)", "",
+           "> Ex-servicemen-led, ISO-certified Indian MSME that delivers solar installation & commissioning (I&C), CAPEX solar EPC "
+           "and all solar civil works (pile foundations, fencing, roads, drainage) for ground-mount and rooftop plants. "
+           "Motto: \"Olive Green to Go Green\". Founder and CEO: Lt. Gen. Ashish Ranjan Prasad (Retd). Corporate office in Greater Noida (Uttar Pradesh), branch office in Madhubani (Bihar); "
+           "projects across Assam, Bihar, Jharkhand, West Bengal, Uttar Pradesh, Uttarakhand, Haryana and Karnataka.", "",
+           "Key facts:",
+           "- Does NOT manufacture solar modules or inverters, and does not run OPEX/RESCO models; it builds plants the client owns (CAPEX) "
+           "and works as installation partner to developers such as Tata Power Renewable Energy and Sustvest.",
+           "- Installation partner for the 3.11 MW Goodricke Tea Estates Solar Programme (TPREL and Sustvest) in Assam: Koomber 595 kWp "
+           "(inaugurated by Assam Chief Minister Dr Himanta Biswa Sarma on 1 October 2026), Orangajuli 450 kWp (4 September 2026) and "
+           "Borpatra 230 kWp (25 September 2026).",
+           "- Registrations: CIN U45309DL2018PTC340544; Udyam UDYAM-DL-03-0023905; ISO 9001, ISO 14001, ISO 45001.",
+           "- Contact: arraysingenieria@gmail.com, or the form at " + SITE_URL + "/contact.html", ""]
+    for title, files in groups:
+        out.append(f"## {title}")
+        out += [line(f) for f in files if f in PAGES]
+        out.append("")
+    out += ["## Optional", f"- [Sitemap]({SITE_URL}/sitemap.xml): every page, image and video", ""]
+    open(os.path.join(ROOT, "llms.txt"), "w", encoding="utf8").write("\n".join(out))
 
 
 def write_redirects():
@@ -1737,6 +1890,7 @@ def main():
     for fname in PAGES:
         process_page(fname)
     write_sitemap()
+    write_llms()
     write_robots()
     write_redirects()
     problems = check_links()
