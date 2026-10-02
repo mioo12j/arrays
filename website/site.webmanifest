@@ -1,23 +1,30 @@
 {
   "name": "Arrays Ingenieria Pvt. Ltd.",
   "short_name": "Arrays Ingenieria",
-  "description": "Developing Green Energy for the Nation, solar EPC & renewable energy solutions across India.",
+  "description": "Ex-servicemen-led solar EPC, installation & commissioning and civil works across India.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0f3d2e",
   "icons": [
     {
-      "src": "assets/img/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
     },
     {
-      "src": "assets/img/icon-512.png",
+      "src": "/assets/img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/img/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
-  ]
+  ],
+  "id": "/",
+  "lang": "en-IN"
 }

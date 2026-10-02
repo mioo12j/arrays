@@ -1,4 +1,79 @@
-# Netlify config for the Ingenieria marketing website (plain static HTML/CSS/JS, no build step).
-# In Netlify: set "Base directory" to `website`.
+# Netlify config for the Arrays Ingenieria website (static HTML/CSS/JS; tools/build.py is run before committing).
+# In Netlify: set "Base directory" to `website`. Netlify serves HTTPS only and compresses with Brotli/Gzip itself.
 [build]
   publish = "."
+
+# ---- Security headers on every response ----
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()"
+    Cross-Origin-Opener-Policy = "same-origin"
+    # Third-party hosts are used only after a visitor clicks "Show the original post" (X, Facebook, Instagram)
+    # or submits the contact form (FormSubmit).
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://platform.twitter.com https://cdn.syndication.twimg.com https://connect.facebook.net https://www.instagram.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; media-src 'self'; connect-src 'self' https://formsubmit.co https://*.facebook.com https://*.twitter.com https://*.twimg.com https://*.instagram.com; frame-src https://platform.twitter.com https://syndication.twitter.com https://www.facebook.com https://web.facebook.com https://www.instagram.com; form-action 'self' https://formsubmit.co; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; upgrade-insecure-requests"
+
+# ---- Caching ----
+# CSS and JS are versioned (?v=<content hash>) and fonts never change: cache for a year.
+[[headers]]
+  for = "/assets/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+[[headers]]
+  for = "/assets/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+[[headers]]
+  for = "/assets/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Access-Control-Allow-Origin = "*"
+# Photos and videos keep their names when replaced, so cache for 30 days, not forever.
+[[headers]]
+  for = "/assets/opt/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+[[headers]]
+  for = "/assets/photos/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+[[headers]]
+  for = "/assets/koomber/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+[[headers]]
+  for = "/assets/borpatra/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+[[headers]]
+  for = "/assets/press/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+[[headers]]
+  for = "/assets/news/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+[[headers]]
+  for = "/assets/certs/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+[[headers]]
+  for = "/assets/orders/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+[[headers]]
+  for = "/assets/leaders/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+[[headers]]
+  for = "/assets/video/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+[[headers]]
+  for = "/assets/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"

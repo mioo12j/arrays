@@ -326,8 +326,10 @@
   if (form) {
     const status = $("#formStatus");
     const COMPANY_EMAIL = "arraysingenieria@gmail.com";
+    let sending = false;
     form.addEventListener("submit", async e => {
       e.preventDefault();
+      if (sending) return; // no duplicate submissions
       const hp = form.querySelector('[name="_honey"], [name="_gotcha"]');
       if (hp && hp.value) return; // honeypot
       const name = $("#name").value.trim();
@@ -345,13 +347,19 @@
 
       // If an email endpoint is configured, submit server-side (real email, no client needed)
       if (/^https:\/\/(formspree\.io|formsubmit\.co)\//.test(endpoint)) {
+        const label = btn.innerHTML;
         try {
+          sending = true;
           btn.disabled = true;
-          status.className = "form-status ok";
+          btn.classList.add("is-loading");
+          btn.setAttribute("aria-busy", "true");
+          btn.textContent = "Sending…";
+          status.className = "form-status";
           status.textContent = "Sending your enquiry…";
           const res = await fetch(endpoint, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } });
           if (res.ok) {
-            status.textContent = "Thank you, " + name + "! Your enquiry has been sent. We'll be in touch shortly.";
+            status.className = "form-status ok";
+            status.textContent = "✓ Thank you, " + name + "! Your enquiry has been sent. We'll be in touch shortly.";
             form.reset();
           } else {
             throw new Error("send failed");
@@ -360,7 +368,11 @@
           status.className = "form-status err";
           status.textContent = "Couldn't send right now. Please email us at " + COMPANY_EMAIL + ".";
         } finally {
+          sending = false;
           btn.disabled = false;
+          btn.classList.remove("is-loading");
+          btn.removeAttribute("aria-busy");
+          btn.innerHTML = label;
         }
         return;
       }

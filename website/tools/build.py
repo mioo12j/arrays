@@ -35,14 +35,32 @@ SITE_URL = "https://arraysingenieria.netlify.app"
 KNOWN_HOSTS = re.compile(r"https?://(?:www\.)?arraysingenieria\.(?:com|netlify\.app)")
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+JS_SOURCES = ("components", "main", "calculator", "india-map-data")
+
+
 def _asset_version():
-    """Short hash of the CSS and JS: changes whenever they change, so browsers never reuse stale files."""
+    """Short hash of the CSS, fonts and JS sources: changes whenever they change, so browsers never reuse stale files."""
     import hashlib
     h = hashlib.sha1()
-    for rel in ("assets/css/style.css", "assets/js/main.js", "assets/js/components.js", "assets/js/calculator.js"):
+    for rel in ["assets/css/fonts.css", "assets/css/style.css"] + [f"assets/js/{n}.js" for n in JS_SOURCES]:
         with open(os.path.join(ROOT, rel), "rb") as fh:
             h.update(fh.read())
     return h.hexdigest()[:8]
+
+
+def write_min_assets():
+    """style.min.css (fonts + styles) and *.min.js, minified. Pages load only the minified files."""
+    try:
+        import rcssmin, rjsmin
+        cssmin, jsmin = rcssmin.cssmin, rjsmin.jsmin
+    except ImportError:  # pip install rcssmin rjsmin for real minification; this fallback only trims comments/space
+        cssmin = lambda c: re.sub(r"\s*([{};:,])\s*", r"\1", re.sub(r"/\*.*?\*/", "", c, flags=re.S))
+        jsmin = lambda j: j
+    css = "".join(open(os.path.join(ROOT, f"assets/css/{n}.css"), encoding="utf8").read() for n in ("fonts", "style"))
+    open(os.path.join(ROOT, "assets/css/style.min.css"), "w", encoding="utf8").write(cssmin(css))
+    for n in JS_SOURCES:
+        src = open(os.path.join(ROOT, f"assets/js/{n}.js"), encoding="utf8").read()
+        open(os.path.join(ROOT, f"assets/js/{n}.min.js"), "w", encoding="utf8").write(jsmin(src))
 
 
 ASSET_VERSION = _asset_version()
@@ -68,20 +86,20 @@ PAGES = {
         title="Arrays Ingenieria in the News | CM Inauguration, TV & Press",
         desc="Koomber solar plant inaugurated by Assam CM Dr Himanta Biswa Sarma; coverage on CMO Assam, The Sentinel, NE Reports, Prerna Bharati and Dainik Bhaskar."),
     "achievements.html": dict(path="/achievements.html", crumb="Achievements",
-        title="Awards & ISO Certifications | Arrays Ingenieria",
+        title="Awards, Client Certificates & ISO | Arrays Ingenieria",
         desc="Client appreciation from Jay Shree Tea, Super Smelters & Bharat Petroleum, ISO 9001, 14001 & 45001 certification and work orders won by Arrays Ingenieria."),
     "industries.html": dict(path="/industries.html", crumb="Industries",
         title="Solar for Industry, Tea Estates & Homes | Arrays Ingenieria",
         desc="Solar power for every sector in India: factories, tea estates, commercial buildings, institutions, homes and government/PSU projects by Arrays Ingenieria."),
     "insights.html": dict(path="/insights.html", crumb="Insights",
-        title="Solar Insights India 2026: Guides & Updates | Arrays Ingenieria",
+        title="Solar Insights India 2026 | Arrays Ingenieria Guides",
         desc="India's solar in 2026: 164 GW installed, ALMM List-II, GST cut to 5%, CAPEX vs OPEX, PM Surya Ghar, PM-KUSUM and solar for Assam tea estates."),
     "service-ground-mount.html": dict(path="/service-ground-mount.html", crumb="Ground-Mount Solar",
         title="Ground-Mount Solar Power Plants | Arrays Ingenieria",
         desc="Utility and industrial ground-mount solar plants designed, built and commissioned across India by Arrays Ingenieria, from piling to grid connection."),
     "service-rooftop.html": dict(path="/service-rooftop.html", crumb="Rooftop Solar",
-        title="Rooftop Solar EPC for Industry | Arrays Ingenieria",
-        desc="On-grid RCC and metal-sheet rooftop solar for factories, institutions and businesses across India, installed by Arrays Ingenieria."),
+        title="Rooftop Solar EPC for Industry in India | Arrays Ingenieria",
+        desc="On-grid RCC and metal-sheet rooftop solar for factories, institutions and businesses across India, installed and commissioned by Arrays Ingenieria."),
     "service-epc.html": dict(path="/service-epc.html", crumb="EPC Turnkey",
         title="Turnkey Solar EPC Contractor in India | Arrays Ingenieria",
         desc="Turnkey solar EPC from Arrays Ingenieria: engineering, procurement and construction under single-window responsibility, including Tata Power EPC projects."),
@@ -89,20 +107,20 @@ PAGES = {
         title="Solar Pile Foundation & Piling | Arrays Ingenieria",
         desc="Specialist solar pile-foundation and piling works by Arrays Ingenieria, proven on the 300 MW SECI park at Koppal and 5.5 MW Tata Motors, Jamshedpur."),
     "service-civil.html": dict(path="/service-civil.html", crumb="Civil & Fencing",
-        title="Solar Civil Works & Fencing | Arrays Ingenieria",
+        title="Solar Civil Works, Fencing & Walls | Arrays Ingenieria",
         desc="Solar civil works by Arrays Ingenieria: pre-cast boundary walls, RCC works and chain-link fencing, including the 14.36 MW YIAPL project in Uttar Pradesh."),
     "service-om.html": dict(path="/service-om.html", crumb="O&M & Support",
-        title="Solar O&M Services in India | Arrays Ingenieria",
+        title="Solar O&M and Maintenance Services | Arrays Ingenieria",
         desc="Solar plant operations & maintenance, statutory compliance and lifecycle support from Arrays Ingenieria to keep every plant at peak output."),
-    "privacy.html": dict(path="/privacy.html", crumb="Privacy Policy",
-        title="Privacy Policy | Arrays Ingenieria Pvt. Ltd.",
-        desc="How Arrays Ingenieria Pvt. Ltd. collects, uses and protects the information you share with us through this website."),
+    "privacy-policy.html": dict(path="/privacy-policy.html", crumb="Privacy Policy",
+        title="Privacy Policy (DPDP, GDPR, CCPA) | Arrays Ingenieria",
+        desc="How Arrays Ingenieria Pvt. Ltd. handles the details you send through our contact form: what we collect, why, how long we keep it, and your rights."),
     "terms.html": dict(path="/terms.html", crumb="Terms of Use",
-        title="Terms of Use | Arrays Ingenieria Pvt. Ltd.",
-        desc="The terms governing your use of the Arrays Ingenieria Pvt. Ltd. website and its content."),
+        title="Terms of Use and Legal Notices | Arrays Ingenieria Pvt. Ltd.",
+        desc="Terms for using the Arrays Ingenieria website: copyright in our brand and content, permitted use, scraping, liability, governing law and legal notices."),
     "404.html": dict(path=None, crumb=None,
-        title="Page Not Found | Arrays Ingenieria",
-        desc="The page you were looking for could not be found. Explore Arrays Ingenieria's solar projects, services and news."),
+        title="Page Not Found (404) | Arrays Ingenieria Solar EPC India",
+        desc="Sorry, this page could not be found. Explore Arrays Ingenieria's solar projects, services, case studies and news, or contact our engineering team."),
 }
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from content import (PROJECTS, FAQ, GLOSSARY, CLIENTS, LEADER_QUOTES, NATIONAL_FACTS, SCHEMES, TIMELINE,  # noqa: E402
@@ -122,37 +140,59 @@ PAGES.update({
         title="Solar EPC FAQs: CAPEX, I&C & Civil Works | Arrays Ingenieria",
         desc="Answers on CAPEX solar, installation & commissioning, civil works, DG synchronisation, net-metering and working with Arrays Ingenieria."),
     "clients.html": dict(path="/clients.html", crumb="Clients & Partners",
-        title="Clients & Partners | Arrays Ingenieria Solar EPC",
+        title="Clients & Partners | Arrays Ingenieria Solar EPC India",
         desc="Arrays Ingenieria's clients and partners: Tata Power, Jay Shree Tea (BK Birla Group), Goodricke, Sustvest, Super Smelters, Tata Motors and more."),
     "solar-glossary.html": dict(path="/solar-glossary.html", crumb="Solar Glossary",
         title="Solar Glossary: EPC, CAPEX, I&C Terms | Arrays Ingenieria",
-        desc="Plain-English definitions of solar terms: EPC, I&C, CAPEX vs OPEX, net metering, kWp, pile foundations, DG synchronisation and more."),
+        desc="Plain-English definitions of solar terms: EPC, I&C, CAPEX vs OPEX, net metering, kWp, ALMM, pile foundations, DG synchronisation and more."),
     "ex-servicemen-led-msme.html": dict(path="/ex-servicemen-led-msme.html", crumb="Ex-Servicemen-Led MSME",
-        title="Ex-Servicemen-Led Solar MSME | Arrays Ingenieria",
+        title="Ex-Servicemen-Led Solar EPC MSME | Arrays Ingenieria",
         desc="Arrays Ingenieria is an ex-servicemen-led MSME founded by Lt. Gen. A.R. Prasad (Retd): Olive Green to Go Green, a second innings of national service."),
     "solar-schemes-india.html": dict(path="/solar-schemes-india.html", crumb="Solar Schemes in India",
         title="Government Solar Schemes in India 2026 | Arrays Ingenieria",
         desc="Solar schemes in India 2026: PM Surya Ghar, PM-KUSUM deadlines, ALMM List-II, GST at 5%, Assam tea-garden solar, depreciation and net metering."),
     "leadership.html": dict(path="/leadership.html", crumb="Message from the Leadership",
-        title="Message from the Leadership | Arrays Ingenieria",
+        title="Message from the Leadership | Arrays Ingenieria Solar",
         desc="A message from Lt. Gen. A.R. Prasad (Retd), AVSM, VSM, ADC, Ph.D, Chief Executive Officer of Arrays Ingenieria, the ex-servicemen-led solar MSME."),
     "how-it-works.html": dict(path="/how-it-works.html", crumb="How It Works",
         title="How It Works: Your Solar Project | Arrays Ingenieria",
         desc="How a solar project with Arrays Ingenieria works: how solar makes power, CAPEX vs I&C, each step from site survey to commissioning, and who owns what."),
     "quality-safety.html": dict(path="/quality-safety.html", crumb="Quality & Safety",
-        title="Quality, Safety & Environment | Arrays Ingenieria",
+        title="Quality, Safety & Environment (ISO) | Arrays Ingenieria",
         desc="ISO 9001, ISO 14001 and ISO 45001 certified: how Arrays Ingenieria's veteran-led teams build solar plants safely, to quality and with care for the site."),
     "where-we-work.html": dict(path="/where-we-work.html", crumb="Where We Work",
         title="Where We Work: Solar Projects by State | Arrays Ingenieria",
-        desc="Arrays Ingenieria's solar projects across Assam, West Bengal, Bihar, Jharkhand, Uttar Pradesh, Uttarakhand, Haryana and Karnataka."),
+        desc="Arrays Ingenieria's solar projects across Assam, West Bengal, Bihar, Jharkhand, Uttar Pradesh, Uttarakhand, Haryana and Karnataka, state by state."),
     "contact.html": dict(path="/contact.html", crumb="Contact",
         title="Contact Arrays Ingenieria | Solar EPC, Greater Noida",
         desc="Contact Arrays Ingenieria for solar EPC, installation & commissioning or civil works. Corporate office Greater Noida, branch office Madhubani, Bihar."),
 })
 for _p in PROJECTS:
     PAGES[_p["file"]] = dict(path="/" + _p["file"], crumb=_p["short"], parent="projects", title=_p["title"], desc=_p["desc"])
-PARENTS = {"services": ("Services", "/#services"), "projects": ("Projects", "/projects.html"),
-           "industries": ("Industries", "/industries.html")}
+
+
+def write_page(fname, html_text):
+    os.makedirs(os.path.dirname(page_path(fname)), exist_ok=True)
+    open(page_path(fname), "w", encoding="utf8").write(html_text)
+
+
+def page_url(fname):
+    """Clean, folder-style URL of a page: /about/ (no .html, always a trailing slash)."""
+    return "/" if fname == "index.html" else "/" + fname[:-5] + "/"
+
+
+def page_path(fname):
+    """Where a page lives on disk: about.html -> about/index.html, so the server needs no rewrites."""
+    if fname in ("index.html", "404.html"):
+        return os.path.join(ROOT, fname)
+    return os.path.join(ROOT, fname[:-5], "index.html")
+
+
+for _f, _m in PAGES.items():
+    if _m["path"]:
+        _m["path"] = page_url(_f)
+PARENTS = {"services": ("Services", "/#services"), "projects": ("Projects", "/projects/"),
+           "industries": ("Industries", "/industries/")}
 SERVICE_PAGES = [p for p in PAGES if p.startswith("service-")]
 for _p in SERVICE_PAGES:
     PAGES[_p].setdefault("parent", "services")
@@ -685,7 +725,7 @@ FOOTER = f"""<section class="cta-strip" aria-label="Contact Arrays Ingenieria">
       </div>
       <div class="footer__bottom">
         <span>© <span id="year">{date.today().year}</span> Arrays Ingenieria Pvt. Ltd. All rights reserved.</span>
-        <span class="footer-legal"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a><a href="gallery.html">Gallery</a></span>
+        <span class="footer-legal"><a href="privacy-policy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a><a href="gallery.html">Gallery</a></span>
         <span class="made">Developing Green Energy for the Nation 🌱</span>
       </div>
     </div>
@@ -803,14 +843,17 @@ def social_embed(platform, url, name, handle, text, iso):
             f'<span class="se-foot"><time datetime="{iso}">{when}</time><a href="{url}" target="_blank" rel="noopener">View on {PLATFORM_NAME[platform]}</a></span>')
     if platform == "X":
         tw = url.replace("https://x.com/", "https://twitter.com/") + "?ref_src=twsrc%5Etfw"
-        inner = f'<blockquote class="twitter-tweet se-card" data-dnt="true" data-conversation="none"><p lang="en" dir="ltr">{card}</p><a href="{tw}"></a></blockquote>'
+        inner = f'<blockquote class="se-card" data-embed-class="twitter-tweet" data-dnt="true" data-conversation="none"><p lang="en" dir="ltr">{card}</p><a href="{tw}"></a></blockquote>'
     elif platform == "Facebook":
-        inner = (f'<div class="fb-post" data-href="{url}" data-width="500" data-show-text="true">'
+        inner = (f'<div data-embed-class="fb-post" data-href="{url}" data-width="500" data-show-text="true">'
                  f'<blockquote cite="{url}" class="fb-xfbml-parse-ignore se-card">{card}</blockquote></div>')
     else:
-        inner = (f'<blockquote class="instagram-media se-card" data-instgrm-permalink="{url}" data-instgrm-version="14" '
+        inner = (f'<blockquote class="se-card" data-embed-class="instagram-media" data-instgrm-permalink="{url}" data-instgrm-version="14" '
                  f'data-instgrm-captioned>{card}</blockquote>')
-    return f'<div class="se reveal" data-platform="{platform.lower()}">{inner}</div>'
+    # Click-to-load: no third-party script, cookie or request until the visitor asks for the original post.
+    load = (f'<button type="button" class="se-load" data-load-embed>Show the original post'
+            f'<small>Loads content and cookies from {PLATFORM_NAME[platform]}</small></button>')
+    return f'<div class="se reveal" data-platform="{platform.lower()}">{inner}{load}</div>'
 
 
 def embed_items(ids=None):
@@ -991,7 +1034,8 @@ KOOMBER_VIDEOS = [
 
 
 def render_koomber_videos():
-    items = "".join(f'<figure class="kv kv--{o} reveal" data-d="{i}"><video poster="{poster}" muted loop playsinline autoplay preload="metadata" '
+    dims = {poster: image_size(os.path.join(ROOT, poster)) or (16, 9) for _, poster, _, _, _ in KOOMBER_VIDEOS}
+    items = "".join(f'<figure class="kv kv--{o} reveal" data-d="{i}"><video poster="{poster}" width="{dims[poster][0]}" height="{dims[poster][1]}" muted loop playsinline autoplay preload="metadata" '
                     f'aria-label="{esc(cap)}"><source src="{src}" type="video/mp4" /><source src="{src[:-4]}.webm" type="video/webm" /></video><figcaption>{esc(cap)}</figcaption></figure>'
                     for i, (src, poster, cap, _, o) in enumerate(KOOMBER_VIDEOS))
     return f'<div class="kv-grid">{items}</div>'
@@ -1419,10 +1463,10 @@ def render_clients_page():
 
 def write_generated_pages():
     for p in PROJECTS:
-        open(os.path.join(ROOT, p["file"]), "w", encoding="utf8").write(render_project_page(p))
+        write_page(p["file"], render_project_page(p))
     for fname, render in (("faq.html", render_faq_page), ("solar-glossary.html", render_glossary_page), ("insights.html", render_insights_page),
                           ("clients.html", render_clients_page)):
-        open(os.path.join(ROOT, fname), "w", encoding="utf8").write(render())
+        write_page(fname, render())
 
 
 # -------------------------------------------------------------- gallery ----
@@ -1563,6 +1607,7 @@ BRAND_SUFFIX = "; solar work by Arrays Ingenieria (Ingenieria), ex-servicemen-le
 def brand_alt(tag, src):
     """Every photo of our work names the company, so image search leads back to us."""
     tag = tag.replace(", by Arrays Ingenieria (Ingenieria), ex-servicemen-led MSME", "")
+    src = src.lstrip("/")
     alt = re.search(r'\salt="([^"]*)"', tag)
     if not alt or not src.startswith(BRAND_DIRS) or "Ingenieria" in alt.group(1) or not alt.group(1):
         return tag
@@ -1571,9 +1616,87 @@ def brand_alt(tag, src):
     return tag.replace(alt.group(0), f' alt="{alt.group(1).rstrip(".")}{extra}{BRAND_SUFFIX}"', 1)
 
 
+def fix_heading_levels(body_html):
+    """Headings never skip a level (h2 -> h4). A skipped heading is demoted to the next level and keeps
+    its look through the .hs class, so the outline is correct without changing the design."""
+    prev = [1]
+
+    def fix(m):
+        lvl, attrs = int(m.group(1)), m.group(2)
+        if lvl > prev[0] + 1:
+            new = prev[0] + 1
+            attrs = re.sub(r'class="([^"]*)"', r'class="\1 hs"', attrs) if 'class="' in attrs else attrs + ' class="hs"'
+            prev[0] = new
+            return f"<h{new}{attrs}>", new, lvl
+        prev[0] = lvl
+        return m.group(0), lvl, lvl
+
+    out, stack = [], []
+    pos = 0
+    for m in re.finditer(r"<h([1-6])(\s[^>]*)?>|</h([1-6])>", body_html):
+        out.append(body_html[pos:m.start()])
+        if m.group(1):
+            tag, new, old = fix(re.match(r"<h([1-6])((?:\s[^>]*)?)>", m.group(0)))
+            stack.append(new)
+            out.append(tag)
+        else:
+            out.append(f"</h{stack.pop() if stack else m.group(3)}>")
+        pos = m.end()
+    out.append(body_html[pos:])
+    return "".join(out)
+
+
+def add_main(body_html):
+    """Wrap the page content between the header and footer in <main>, with a skip link."""
+    body_html = re.sub(r'<main id="main">\n?', "", body_html)
+    body_html = re.sub(r"\n*</main>\n", "\n", body_html)
+    body_html = body_html.replace('<a class="skip-link" href="#main">Skip to content</a>\n', "")
+    body_html = body_html.replace("<!-- /build:header -->", '<!-- /build:header -->\n<main id="main">', 1)
+    body_html = re.sub(r"(<main id=\"main\">)\n+", r"\1\n", body_html)
+    body_html = re.sub(r"\n*<!-- build:footer -->", "\n</main>\n<!-- build:footer -->", body_html, count=1)
+    return body_html.replace("<!-- build:header -->", '<a class="skip-link" href="#main">Skip to content</a>\n<!-- build:header -->', 1)
+
+
+WEBP_DIRS = ("assets/photos/", "assets/koomber/", "assets/borpatra/", "assets/press/", "assets/news/", "assets/certs/",
+             "assets/orders/", "assets/leaders/", "assets/video/")
+WEBP_WIDTHS = (480, 960, 1600)
+SIZES_FULL = "100vw"
+SIZES_CARD = "(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw"
+
+
+def webp_set(rel):
+    """Responsive WebP copies of a photo under assets/opt/ (made once, refreshed when the source changes).
+    Returns [(url, width)] or [] when the image is not a photo we optimise."""
+    rel = rel.lstrip("/").split("?")[0]
+    if not rel.startswith(WEBP_DIRS) or not rel.lower().endswith((".jpg", ".jpeg", ".png")):
+        return []
+    src = os.path.join(ROOT, rel)
+    if not os.path.isfile(src):
+        return []
+    size = image_size(src)
+    if not size:
+        return []
+    widths = [w for w in WEBP_WIDTHS if w < size[0]] + [min(size[0], WEBP_WIDTHS[-1])]
+    out = []
+    for w in sorted(set(widths)):
+        dst_rel = "assets/opt/" + rel[len("assets/"):].rsplit(".", 1)[0] + f"-{w}.webp"
+        dst = os.path.join(ROOT, dst_rel)
+        if not os.path.isfile(dst) or os.path.getmtime(dst) < os.path.getmtime(src):
+            from PIL import Image, ImageOps
+            os.makedirs(os.path.dirname(dst), exist_ok=True)
+            im = ImageOps.exif_transpose(Image.open(src)).convert("RGB")
+            if im.width > w:
+                im = im.resize((w, round(im.height * w / im.width)), Image.LANCZOS)
+            im.save(dst, "WEBP", quality=78, method=6)
+        out.append(("/" + dst_rel, w))
+    return out
+
+
 def process_images(body_html):
-    """width/height/decoding on every local <img>; first content image is the LCP."""
+    """Every local <img>: width/height (no layout shift), async decoding, lazy loading below the fold,
+    and a WebP srcset in a <picture>. The first content image is the LCP: eager, high priority."""
     first = [True]
+    body_html = re.sub(r'<picture class="rp">(?:<source[^>]*>)*(<img\b[^>]*>)</picture>', r"\1", body_html)
 
     def fix(m):
         tag = m.group(0)
@@ -1581,8 +1704,8 @@ def process_images(body_html):
         if not src:
             return tag
         path = os.path.join(ROOT, src.group(1).lstrip("/").split("?")[0])
-        in_chrome = "brand-mark" in tag
-        if os.path.isfile(path) and not in_chrome and not re.search(r'\swidth="', tag):
+        in_chrome = "brand-mark" in tag or "brand-logo" in tag
+        if os.path.isfile(path) and not re.search(r'\swidth="', tag):
             size = image_size(path)
             if size:
                 tag = set_attr(tag, "width", size[0])
@@ -1591,16 +1714,55 @@ def process_images(body_html):
             return tag
         tag = brand_alt(tag, src.group(1))
         tag = set_attr(tag, "decoding", "async")
-        if first[0]:
+        hero = first[0]
+        if hero:
             first[0] = False
-            tag = del_attr(tag, "loading")
+            tag = set_attr(tag, "loading", "eager")
             tag = set_attr(tag, "fetchpriority", "high")
         else:
             tag = del_attr(tag, "fetchpriority")
             tag = set_attr(tag, "loading", "lazy")
-        return tag
+        variants = webp_set(src.group(1))
+        if not variants:
+            return tag
+        full = hero or 'class="slide' in body_html[max(0, m.start() - 120):m.start()]
+        srcset = ", ".join(f"{u} {w}w" for u, w in variants)
+        sizes = SIZES_FULL if full else SIZES_CARD
+        return f'<picture class="rp"><source type="image/webp" srcset="{srcset}" sizes="{sizes}" />{tag}</picture>'
 
     return re.sub(r"<img\b[^>]*>", fix, body_html)
+
+
+def hero_preload(body_html):
+    """<link rel=preload> for the LCP image, matching the srcset the browser will pick."""
+    m = re.search(r'<picture class="rp"><source type="image/webp" srcset="([^"]+)" sizes="([^"]+)" /><img[^>]*fetchpriority="high"', body_html)
+    if m:
+        return f'<link rel="preload" as="image" type="image/webp" imagesrcset="{m.group(1)}" imagesizes="{m.group(2)}" fetchpriority="high" />'
+    m = re.search(r'<img[^>]*fetchpriority="high"[^>]*>', body_html)
+    if m:
+        src = re.search(r'src="([^"]+)"', m.group(0)).group(1)
+        return f'<link rel="preload" as="image" href="{src}" fetchpriority="high" />'
+    return ""
+
+
+FONT_PRELOADS = ('<link rel="preload" href="/assets/fonts/plus-jakarta-sans-var-latin.woff2" as="font" type="font/woff2" crossorigin />\n'
+                 '<link rel="preload" href="/assets/fonts/poppins-700-latin.woff2" as="font" type="font/woff2" crossorigin />\n')
+
+
+def optimise_head_and_scripts(text):
+    """Self-hosted fonts and minified assets; every script deferred; LCP image and fonts preloaded."""
+    head, body = text.split("</head>", 1)
+    head = re.sub(r'<link rel="preconnect" href="https://fonts\.(?:googleapis|gstatic)\.com"[^>]*>\n', "", head)
+    head = re.sub(r'<link href="https://fonts\.googleapis\.com/[^"]*" rel="stylesheet" />\n', "", head)
+    head = re.sub(r'<link rel="preload"[^>]*>\n', "", head)
+    head = re.sub(r'(<link rel="stylesheet" href="/?assets/css/style(?:\.min)?\.css[^"]*" />\n)',
+                  lambda m: hero_preload(body) + "\n" + FONT_PRELOADS + m.group(1) if hero_preload(body) else FONT_PRELOADS + m.group(1), head, count=1)
+    head = head.replace("\n\n<link rel=\"preload\"", "\n<link rel=\"preload\"")
+    text = head + "</head>" + body
+    text = re.sub(r"assets/css/style(?:\.min)?\.css", "assets/css/style.min.css", text)
+    text = re.sub(r"assets/js/(" + "|".join(JS_SOURCES) + r")(?:\.min)?\.js", r"assets/js/\1.min.js", text)
+    text = re.sub(r'<script src="(/assets/js/[^"]+)"(?![^>]*\bdefer)([^>]*)></script>', r'<script src="\1"\2 defer></script>', text)
+    return text
 
 
 def replace_block(text, name, content):
@@ -1613,15 +1775,21 @@ def replace_block(text, name, content):
 
 
 def normalise_links(text):
-    pages = {p[:-5] for p in PAGES}
-    # index.html / index.html#x -> / and /#x
-    text = re.sub(r'href=(["\'])(?:\./)?index\.html(#[^"\']*)?\1', lambda m: f'href="/{m.group(2) or ""}"', text)
-    # /about, /about#x -> about.html
-    def ext(m):
-        name, frag = m.group(2), m.group(3) or ""
-        return f'href="{name}.html{frag}"' if name in pages and name != "index" else m.group(0)
-    text = re.sub(r'href=(["\'])/([a-z0-9-]+)(#[^"\']*)?\1', ext, text)
-    # remaining single-quoted internal hrefs -> double quotes (consistency)
+    """Every internal link points at the clean URL (/about/#x); every asset path is root-absolute."""
+    pages = {p[:-5] for p in PAGES if p not in ("404.html",)}
+    def page_link(m):
+        q, name, frag = m.group(1), m.group(2), m.group(3) or ""
+        if name == "index":
+            return f'href="/{frag}"'
+        return f'href="/{name}/{frag}"' if name in pages else m.group(0)
+    # about.html, /about.html, ./about.html, /about, /about/  (+ #fragment)
+    text = re.sub(r'href=(["\'])(?:\./|/)?([a-z0-9-]+)(?:\.html|/)?(#[^"\']*)?\1',
+                  lambda m: page_link(m) if (m.group(2) in pages or m.group(2) == "index") else m.group(0), text)
+    # absolute site URLs in structured data and meta
+    text = re.sub(re.escape(SITE_URL) + r'/([a-z0-9-]+)\.html', lambda m: f"{SITE_URL}/" if m.group(1) == "index" else (f"{SITE_URL}/{m.group(1)}/" if m.group(1) in pages else m.group(0)), text)
+    # relative asset paths -> root-absolute, so they work from /about/
+    text = re.sub(r'(\s(?:src|href|data-full|poster|srcset)=")(assets/|site\.webmanifest|llms\.txt|sitemap\.xml)', r'\1/\2', text)
+    text = re.sub(r"url\((['\"]?)assets/", r"url(\1/assets/", text)
     text = re.sub(r"href='([^']*)'", r'href="\1"', text)
     return text
 
@@ -1637,6 +1805,11 @@ def breadcrumb_ld(fname):
     return {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": items}
 
 
+# Google Search Console: paste the content="..." value of the google-site-verification meta tag here
+# (or verify by DNS instead and leave it empty), then submit /sitemap.xml in Search Console.
+GSC_VERIFICATION = ""
+
+
 def head_block(fname, og_image, og_alt):
     meta = PAGES[fname]
     e = lambda s: html.escape(s, quote=True)
@@ -1648,6 +1821,7 @@ def head_block(fname, og_image, og_alt):
     url = SITE_URL + meta["path"]
     lines += [
         '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />',
+        *([f'<meta name="google-site-verification" content="{GSC_VERIFICATION}" />'] if GSC_VERIFICATION and fname == "index.html" else []),
         f'<link rel="canonical" href="{url}" />',
         f'<link rel="alternate" hreflang="en-IN" href="{url}" />',
         f'<link rel="alternate" hreflang="x-default" href="{url}" />',
@@ -1659,7 +1833,7 @@ def head_block(fname, og_image, og_alt):
         f'<meta property="og:description" content="{e(meta["desc"])}" />',
         f'<meta property="og:image" content="{og_image}" />',
     ]
-    size = image_size(os.path.join(ROOT, og_image.replace(SITE_URL + "/", "")))
+    size = image_size(os.path.join(ROOT, og_image.replace(SITE_URL + "/", "").lstrip("/")))
     if size:
         lines += [f'<meta property="og:image:width" content="{size[0]}" />',
                   f'<meta property="og:image:height" content="{size[1]}" />']
@@ -1676,11 +1850,11 @@ def head_block(fname, og_image, og_alt):
 
 HEAD_TAG_RE = re.compile(
     r'^[ \t]*(?:<title>.*?</title>|<meta (?:property|name)="(?:og:[^"]+|twitter:[^"]+|description|robots)"[^>]*>'
-    r'|<link rel="canonical"[^>]*>|<link rel="alternate" hreflang="[^"]*"[^>]*>)[ \t]*\n', re.M | re.S)
+    r'|<meta name="google-site-verification"[^>]*>|<link rel="canonical"[^>]*>|<link rel="alternate" hreflang="[^"]*"[^>]*>)[ \t]*\n', re.M | re.S)
 
 
 def process_page(fname):
-    path = os.path.join(ROOT, fname)
+    path = page_path(fname)
     text = open(path, encoding="utf8").read()
     text = KNOWN_HOSTS.sub(SITE_URL, text)
     page_key = re.search(r'<body data-page="([^"]+)"', text).group(1)
@@ -1700,16 +1874,18 @@ def process_page(fname):
     og_img = re.search(r'<meta property="og:image" content="([^"]+)"', head)
     og_alt = re.search(r'<meta property="og:image:alt" content="([^"]*)"', head)
     hero = re.search(r'<img[^>]*src="([^"]+)"[^>]*alt="([^"]*)"', body.split("</header>", 1)[-1])
-    og_image = og_img.group(1) if og_img else f"{SITE_URL}/{hero.group(1)}"
+    og_image = og_img.group(1) if og_img else f"{SITE_URL}/{hero.group(1).lstrip('/')}"
     alt = html.unescape(og_alt.group(1)) if og_alt else ""
     if not alt or alt.startswith("Ingenieria, veteran-led solar EPC"):
         alt = html.unescape(hero.group(2)) if hero and hero.group(1) in og_image else f"{BRAND}, veteran-led solar EPC company in India"
     head = HEAD_TAG_RE.sub("", head)
     head = re.sub(r'(<meta name="viewport"[^>]*>\n)', lambda m: m.group(1) + head_block(fname, og_image, alt) + "\n", head, count=1)
     head = head.replace("/assets/img/logo.svg", "/assets/img/logo.png").replace("/assets/img/logo-mark.svg", "/assets/img/logo.png")
-    head = re.sub(r'<link rel="icon"[^>]*>\n(?:<link rel="apple-touch-icon"[^>]*>\n)?',
-                  '<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png" />\n'
-                  '<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png" />\n', head, count=1)
+    head = re.sub(r'(?:<link rel="(?:icon|apple-touch-icon|manifest)"[^>]*>\n)+',
+                  '<link rel="icon" href="/favicon.ico" sizes="48x48" />\n'
+                  '<link rel="icon" href="/favicon.svg" type="image/svg+xml" />\n'
+                  '<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png" />\n'
+                  '<link rel="manifest" href="/site.webmanifest" />\n', head, count=1)
 
     def link_provider(m):
         data = json.loads(m.group(2))
@@ -1728,23 +1904,21 @@ def process_page(fname):
 
     # official social embeds: load each platform's script once, only where needed
     text = re.sub(r'<!-- embeds -->.*?<!-- /embeds -->\n', '', text, flags=re.S)
-    need = [k for k, marker in (("X", 'class="twitter-tweet'), ("Facebook", 'class="fb-post"'), ("Instagram", 'class="instagram-media'))
-            if marker in text]
-    if need:
-        text = text.replace("</body>", "<!-- embeds -->" + "".join(EMBED_SCRIPTS[k] for k in need) + "<!-- /embeds -->\n</body>", 1)
+    # (platform scripts are loaded on demand by components.js: see social_embed)
 
     # links, asset versions, scripts
     text = normalise_links(text)
     text = re.sub(r"\?v=[0-9a-f]+", f"?v={ASSET_VERSION}", text)
     if 'id="indiaMap"' not in text:
-        text = re.sub(r'<script src="assets/js/india-map-data\.js[^"]*"></script>\n', "", text)
+        text = re.sub(r'<script src="/?assets/js/india-map-data(?:\.min)?\.js[^"]*"[^>]*></script>\n', "", text)
 
     # images
     head, body = text.split("</head>", 1)
     # the header logo is chrome; the hero is the first image after </header>
     pre, sep, post = body.partition("</header>")
-    body = pre + sep + process_images(post) if sep else process_images(body)
-    text = head + "</head>" + body
+    body = pre + sep + fix_heading_levels(process_images(post)) if sep else process_images(body)
+    body = add_main(body)
+    text = optimise_head_and_scripts(head + "</head>" + body)
 
     # 404 is served at arbitrary depths: make its URLs root-absolute
     if fname == "404.html":
@@ -1761,10 +1935,10 @@ def write_sitemap():
     for fname, meta in PAGES.items():
         if not meta["path"]:
             continue
-        text = open(os.path.join(ROOT, fname), encoding="utf8").read()
+        text = open(page_path(fname), encoding="utf8").read()
         body = text.split("</header>", 1)[-1]
         imgs = []
-        for src in re.findall(r'(?:src|data-full)="(assets/[^"]+\.(?:jpe?g|png|webp))"', body):
+        for src in re.findall(r'(?:src|data-full)="/?(assets/[^"]+\.(?:jpe?g|png|webp))"', body):
             if src not in imgs:
                 imgs.append(src)
         out.append(f"  <url>\n    <loc>{SITE_URL}{meta['path']}</loc>\n    <lastmod>{TODAY}</lastmod>")
@@ -1822,7 +1996,7 @@ def write_llms():
            "(inaugurated by Assam Chief Minister Dr Himanta Biswa Sarma on 1 October 2026), Orangajuli 450 kWp (4 September 2026) and "
            "Borpatra 230 kWp (25 September 2026).",
            "- Registrations: CIN U45309DL2018PTC340544; Udyam UDYAM-DL-03-0023905; ISO 9001, ISO 14001, ISO 45001.",
-           "- Contact: arraysingenieria@gmail.com, or the form at " + SITE_URL + "/contact.html", ""]
+           "- Contact: arraysingenieria@gmail.com, or the form at " + SITE_URL + "/contact/", ""]
     for title, files in groups:
         out.append(f"## {title}")
         out += [line(f) for f in files if f in PAGES]
@@ -1832,12 +2006,15 @@ def write_llms():
 
 
 def write_redirects():
-    lines = ["# One URL per page: extensionless paths 301 to the canonical .html URL (generated by tools/build.py)"]
+    """Old .html and extensionless addresses 301 to the one clean URL. The .html files no longer
+    exist, so these rules never shadow real content and cannot loop."""
+    lines = ["# Generated by tools/build.py: every old address 301s to the page's one clean URL (/about/)."]
     for fname, meta in PAGES.items():
         if meta["path"] and fname != "index.html":
-            lines.append(f"/{fname[:-5]}  {meta['path']}  301")
-    lines.append("/index  /  301")
-    lines.append("/tools/*  /404.html  404!")
+            lines.append(f"/{fname}  {meta['path']}  301")
+    lines += ["/index.html  /  301", "/index  /  301",
+              "/privacy.html  /privacy-policy/  301", "/privacy  /privacy-policy/  301", "/privacy/  /privacy-policy/  301",
+              "/tools/*  /404.html  404!"]
     open(os.path.join(ROOT, "_redirects"), "w", encoding="utf8").write("\n".join(lines) + "\n")
 
 
@@ -1845,23 +2022,27 @@ def write_redirects():
 def check_links():
     ids, problems = {}, []
     for fname in PAGES:
-        t = open(os.path.join(ROOT, fname), encoding="utf8").read()
-        ids[fname] = set(re.findall(r'\sid="([^"]+)"', t))
+        t = open(page_path(fname), encoding="utf8").read()
+        ids[fname] = set(re.findall(r'\sid="([^"]+)"', open(page_path(fname), encoding="utf8").read()))
     for fname in PAGES:
-        t = open(os.path.join(ROOT, fname), encoding="utf8").read()
+        t = open(page_path(fname), encoding="utf8").read()
         t = re.sub(r"<script\b(?![^>]*\bsrc=)[^>]*>.*?</script>", "", t, flags=re.S)
         for attr, url in re.findall(r'\s(href|src|data-full)="([^"]*)"', t):
             if re.match(r"(https?:|mailto:|tel:|data:|javascript:)", url) or url == "":
                 continue
             base, _, frag = url.partition("#")
-            base = base.split("?")[0].lstrip("/")
-            target = base or (fname if url.startswith("#") else "index.html")
-            if not os.path.isfile(os.path.join(ROOT, target)):
+            base = base.split("?")[0]
+            if base.endswith(".html") or (base and not base.startswith("/")):
+                problems.append(f"{fname}: link not in clean form {url}")
+                continue
+            if base in ("", "/") or base.endswith("/"):
+                target = fname if url.startswith("#") else ("index.html" if base in ("", "/") else base.strip("/") + ".html")
+                if target not in PAGES:
+                    problems.append(f"{fname}: page not in PAGES {url}")
+                elif frag and frag not in ids.get(target, set()):
+                    problems.append(f"{fname}: missing anchor {url}")
+            elif not os.path.isfile(os.path.join(ROOT, base.lstrip("/"))):
                 problems.append(f"{fname}: missing file {url}")
-            elif frag and target.endswith(".html") and frag not in ids.get(target, set()):
-                problems.append(f"{fname}: missing anchor {url}")
-            if base.endswith(".html") and base not in PAGES:
-                problems.append(f"{fname}: page not in PAGES {url}")
     css = open(os.path.join(ROOT, "assets/css/style.css"), encoding="utf8").read()
     for url in re.findall(r"url\(['\"]?([^'\")]+)", css):
         if not url.startswith(("data:", "http")) and not os.path.isfile(os.path.join(ROOT, "assets/css", url)):
@@ -1870,12 +2051,27 @@ def check_links():
     for m in re.finditer(r"rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\.\d+\s*\)", css):
         problems.append(f"style.css: malformed colour {m.group(0)}")
     for fname in PAGES:
-        t = open(os.path.join(ROOT, fname), encoding="utf8").read()
+        t = open(page_path(fname), encoding="utf8").read()
         for tag in re.findall(r"<img\b[^>]*>", t):
             if not re.search(r'\salt="[^"]+"', tag):
                 problems.append(f"{fname}: <img> without alt: {tag[:90]}")
         if len(re.findall(r"<h1\b", t)) != 1:
             problems.append(f"{fname}: expected exactly one <h1>")
+        title = html.unescape(re.search(r"<title>(.*?)</title>", t).group(1))
+        desc = html.unescape(re.search(r'<meta name="description" content="([^"]*)"', t).group(1))
+        if not 50 <= len(title) <= 60:
+            problems.append(f"{fname}: title is {len(title)} chars (want 50-60)")
+        if not 135 <= len(desc) <= 155:
+            problems.append(f"{fname}: description is {len(desc)} chars (want 135-155)")
+        prev = 1
+        for lvl in re.findall(r"<h([1-6])\b", t.split("</header>", 1)[-1]):
+            if int(lvl) > prev + 1:
+                problems.append(f"{fname}: heading jumps from h{prev} to h{lvl}")
+            prev = int(lvl)
+        if t.count('<link rel="canonical"') != (1 if PAGES[fname]["path"] else 0):
+            problems.append(f"{fname}: canonical tag count")
+        if "<main" not in t:
+            problems.append(f"{fname}: no <main> landmark")
         for m in re.findall(r'<script type="application/ld\+json"[^>]*>(.*?)</script>', t, re.S):
             try:
                 json.loads(m)
@@ -1885,7 +2081,8 @@ def check_links():
 
 
 def main():
-    open(os.path.join(ROOT, "gallery.html"), "w", encoding="utf8").write(render_gallery_page())
+    write_min_assets()
+    write_page("gallery.html", render_gallery_page())
     write_generated_pages()
     for fname in PAGES:
         process_page(fname)
