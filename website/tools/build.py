@@ -967,6 +967,27 @@ def render_timeline():
     return '<ol class="timeline" data-timeline>' + "".join(items) + "</ol>"
 
 
+KOOMBER_VIDEOS = [
+    ("assets/video/koomber-cm-inauguration-solar-plant-1.mp4", "assets/video/koomber-cm-inauguration-solar-plant-1.jpg",
+     "The Chief Minister of Assam cuts the ribbon at the 595 kWp Koomber solar plant", "PT12S", "portrait"),
+    ("assets/video/koomber-cm-inauguration-solar-plant-2.mp4", "assets/video/koomber-cm-inauguration-solar-plant-2.jpg",
+     "The inauguration ceremony at the Koomber Tea Estate solar plant, 1 October 2026", "PT12S", "landscape"),
+]
+
+
+def render_koomber_videos():
+    items = "".join(f'<figure class="kv kv--{o} reveal" data-d="{i}"><video poster="{poster}" muted loop playsinline autoplay preload="metadata" '
+                    f'aria-label="{esc(cap)}"><source src="{src}" type="video/mp4" /><source src="{src[:-4]}.webm" type="video/webm" /></video><figcaption>{esc(cap)}</figcaption></figure>'
+                    for i, (src, poster, cap, _, o) in enumerate(KOOMBER_VIDEOS))
+    return f'<div class="kv-grid">{items}</div>'
+
+
+def koomber_video_ld():
+    return [{"@context": "https://schema.org", "@type": "VideoObject", "name": cap, "description": cap,
+             "contentUrl": f"{SITE_URL}/{src}", "thumbnailUrl": f"{SITE_URL}/{poster}", "uploadDate": "2026-10-01",
+             "duration": dur, "publisher": {"@id": SITE_URL + "/#organization"}} for src, poster, cap, dur, _ in KOOMBER_VIDEOS]
+
+
 def render_cm_showcase():
     case = "project-koomber-tea-estate-595kwp-solar-cm-inauguration.html"
     pics = KOOMBER_ALBUM[:4]
@@ -991,7 +1012,9 @@ def render_cm_showcase():
         <div class="cm-chips"><span>Shared and reported by</span>{chips}</div>
         <div class="cm-cta"><a class="btn btn--sun" href="{case}">See the inauguration {ARROW_SVG}</a><a class="btn btn--ghost" href="{case}#album">Photo album ({len(KOOMBER_ALBUM)})</a></div>
       </div>
-    </div>"""
+    </div>
+    <div class="kv-head reveal"><span class="cm-kicker">Watch</span><b>The inauguration on video</b></div>
+    {render_koomber_videos()}"""
 
 
 BLOCKS = {
@@ -1007,6 +1030,7 @@ BLOCKS = {
     "schemes": render_schemes,
     "timeline": render_timeline,
     "cm-showcase": render_cm_showcase,
+    "koomber-videos": render_koomber_videos,
     "press-official": render_official,
     "panchamrit": render_panchamrit,
 }
@@ -1146,6 +1170,13 @@ def render_project_page(p):
   </div>
 </section>"""
     if p.get("album"):
+        extra += f"""
+<section class="section section--news" id="videos">
+  <div class="container">
+    <div class="section-head center reveal"><span class="eyebrow">Video</span><h2>The Inauguration <span class="text-sun">on Video</span></h2><p>The Chief Minister of Assam inaugurates the plant, 1 October 2026.</p></div>
+    {render_koomber_videos()}
+  </div>
+</section>"""
         figs = "\n".join(f'      <figure class="g-item reveal" data-full="{src}" data-gallery="album" data-caption="{esc(alt)}"><img src="{src}" alt="{esc(alt)}" /><figcaption>{esc(alt)}</figcaption></figure>' for src, alt in p["album"])
         extra += f"""
 <section class="section section--soft" id="album">
@@ -1209,6 +1240,7 @@ def render_project_page(p):
         ld[0]["citation"] = [c.get("url") or c["links"][0][1] for c in links if c.get("url") or c.get("links")]
         ld[0]["subjectOf"] = [u for c in links for _, u in (c.get("links") or []) + (c.get("also") or [])]
     if p.get("album"):
+        ld.extend(koomber_video_ld())
         ld.append({"@context": "https://schema.org", "@type": "Event", "name": p["name"],
                    "startDate": "2026-10-01", "eventStatus": "https://schema.org/EventScheduled",
                    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
@@ -1387,6 +1419,9 @@ def render_gallery_page():
 <section class="section section--soft" id="videos">
   <div class="container">
     <div class="section-head center reveal"><span class="eyebrow">Videos</span><h2>Our Work <span class="text-grad">on Video</span></h2><p>News video coverage of our solar power plants in Assam.</p></div>
+    <h3 class="kv-sub reveal">The Chief Minister's inauguration at Koomber</h3>
+    {render_koomber_videos()}
+    <h3 class="kv-sub reveal">News channel reports</h3>
     <!-- build:videos --><!-- /build:videos -->
     <div class="section-cta reveal"><a class="btn btn--primary" href="recognition.html">All News &amp; Recognition {ARROW_SVG}</a></div>
   </div>
