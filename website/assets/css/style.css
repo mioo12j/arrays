@@ -1686,3 +1686,35 @@ html, body { overflow-x: clip; }
 @media (max-width: 900px) { .cm-show { grid-template-columns: 1fr; } .cm-mosaic { height: 360px; } }
 @media (max-width: 520px) { .cm-mosaic { height: 280px; grid-template-columns: 1fr 1fr; } }
 .cp-x { background: #000; }
+
+/* Official social posts: platform embeds, with a post-style card until they load */
+.se-wall { columns: 3 320px; column-gap: 20px; }
+.se { break-inside: avoid; margin-bottom: 20px; display: flex; justify-content: center; }
+.se > * { width: 100%; max-width: 520px; }
+.se iframe { max-width: 100% !important; }
+.se .twitter-tweet, .se .instagram-media { margin: 0 auto !important; }
+.se-card { display: block; margin: 0; padding: 18px 18px 14px; border-radius: 16px; background: #fff; border: 1px solid #cfd9de; box-shadow: var(--shadow-sm); font-style: normal; color: #0f1419; text-align: left; }
+.se-card p { margin: 0; }
+.se-card > a:empty { display: none; }
+.se-head { display: flex; align-items: center; gap: 10px; }
+.se-ava { flex: 0 0 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--grad-sun); color: #3d2c00; font-family: var(--head); font-weight: 800; font-size: 13px; }
+.se-who { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
+.se-who b { font-size: 15px; font-family: var(--head); }
+.se-who small { color: #536471; font-size: 13.5px; }
+.se-logo { margin-left: auto; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; color: #fff; }
+.se-logo svg { width: 18px; height: 18px; }
+.se-logo--x { background: #000; }
+.se-logo--facebook { background: #1877F2; }
+.se-logo--instagram { background: linear-gradient(45deg,#f09433,#dc2743,#bc1888); }
+.se-text { display: block; margin: 12px 0; font-size: 15.5px; line-height: 1.5; white-space: normal; }
+.se-foot { display: flex; justify-content: space-between; gap: 10px; padding-top: 10px; border-top: 1px solid #eff3f4; font-size: 13px; color: #536471; }
+.se-foot a { font-weight: 700; color: #1d9bf0; text-decoration: none; }
+[data-platform="facebook"] .se-foot a { color: #1877F2; }
+[data-platform="instagram"] .se-foot a { color: #dc2743; }
+.section--news .se-card { border-color: transparent; }
+/* home showcase chips: real brand buttons */
+.cm-chip { color: #fff; border: 0; }
+.cm-chip[href*="x.com"] { background: #000; }
+.cm-chip[href*="facebook.com"] { background: #1877F2; }
+.cm-chip[href*="instagram.com"] { background: linear-gradient(45deg,#f09433,#dc2743,#bc1888); }
+.cm-chip[href*="sentinelassam"] { background: #c8102e; }

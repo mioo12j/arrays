@@ -8,13 +8,9 @@
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/koomber/cm-cuts-ribbon-595kwp-solar-plant-koomber.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/koomber/arrays-ingenieria-welcomes-cm-with-assamese-gamosa.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/koomber/gamosa-welcome-cm-arrays-ingenieria.jpg</image:loc></image:image>
-    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg</image:loc></image:image>
-    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/leaders/narendra-modi.jpg</image:loc></image:image>
-    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/leaders/rajnath-singh.jpg</image:loc></image:image>
-    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/leaders/himanta-biswa-sarma.jpg</image:loc></image:image>
-    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/leaders/amit-shah.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-manjushree.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/how-photo.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/orangajuli-450kw-solar-inauguration-assam.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-dcm-hisar.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-rooftop-pano.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-seci.jpg</image:loc></image:image>
@@ -28,6 +24,8 @@
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-ramnagar.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-earthing.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-yiapl.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/koomber/koomber-tea-estate-595kwp-ground-mount-solar-plant.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/koomber/cm-tours-koomber-solar-plant-with-arrays-ingenieria.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/photos/proj-assam-rooftop.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/press/ceo-president.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/press/ceo-president-flowers.jpg</image:loc></image:image>
@@ -375,6 +373,16 @@
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/leaders/rajnath-singh.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/leaders/himanta-biswa-sarma.jpg</image:loc></image:image>
     <image:image><image:loc>https://arraysingenieria.netlify.app/assets/leaders/amit-shah.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://arraysingenieria.netlify.app/leadership.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/press/ceo-defcom.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/press/ceo-president.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/press/ceo-modi.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/press/ceo-rajnath.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/koomber/arrays-ingenieria-welcome-banner-lt-gen-prasad.jpg</image:loc></image:image>
+    <image:image><image:loc>https://arraysingenieria.netlify.app/assets/press/ceo-office.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://arraysingenieria.netlify.app/how-it-works.html</loc>

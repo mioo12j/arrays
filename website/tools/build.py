@@ -133,6 +133,9 @@ PAGES.update({
     "solar-schemes-india.html": dict(path="/solar-schemes-india.html", crumb="Solar Schemes in India",
         title="Government Solar Schemes in India 2026 | Arrays Ingenieria",
         desc="PM Surya Ghar, PM-KUSUM, Assam's tea-garden solar policy, accelerated depreciation and net metering, with official sources and leaders' statements."),
+    "leadership.html": dict(path="/leadership.html", crumb="Message from the Leadership",
+        title="Message from the Leadership | Arrays Ingenieria",
+        desc="A message from Lt. Gen. A.R. Prasad (Retd), AVSM, VSM, ADC, Ph.D, Chief Executive Officer of Arrays Ingenieria, the ex-servicemen-led solar MSME."),
     "how-it-works.html": dict(path="/how-it-works.html", crumb="How It Works",
         title="How It Works: Your Solar Project | Arrays Ingenieria",
         desc="How a solar project with Arrays Ingenieria works: how solar makes power, CAPEX vs I&C, each step from site survey to commissioning, and who owns what."),
@@ -345,6 +348,9 @@ COVERAGE = [
          quote="It also aligns with the government's efforts to promote its Green Assam mission and increase the adoption of "
                "sustainable energy solutions.",
          url="https://www.sentinelassam.com/breakingnews/assam-himanta-biswa-sarma-inaugurates-595-kwp-solar-plant-at-koomber-tea-estate",
+         social_text="Assam Chief Minister Dr Himanta Biswa Sarma on Thursday inaugurated a 595 kWp ground-mounted on-grid solar "
+                     "power plant at Koomber Tea Estate in Cachar district, marking another step towards promoting clean energy in "
+                     "the state's tea industry.",
          also=[("Instagram", "https://www.instagram.com/p/Dd89-ViDQcG/"),
                ("Facebook", "https://www.facebook.com/100066523279937/posts/pfbid05Ug3kevPqUdUBp7ZyFbD8Eix3hYRzu78MVR8yNixHt17o5B3cShMNFXW1o4Mw1Y8l/")],
          img="assets/koomber/cm-inaugurates-595kwp-solar-plant-ribbon-cutting.jpg",
@@ -484,7 +490,7 @@ PLATFORM_ICON = {
 # Top-level menu: (label, href, page keys that light it up, dropdown items or None)
 NAV = [
     ("About", "about.html", {"about", "clients", "achievements"}, [
-        ("About Us", "about.html"), ("Ex-Servicemen-Led MSME", "ex-servicemen-led-msme.html"),
+        ("About Us", "about.html"), ("Message from the Leadership", "leadership.html"), ("Ex-Servicemen-Led MSME", "ex-servicemen-led-msme.html"),
         ("Quality & Safety", "quality-safety.html"), ("Clients & Partners", "clients.html"), ("Achievements", "achievements.html")]),
     ("Services", "/#services", {"services", "industries"}, [
         ("CAPEX Solar EPC", "capex-solar-epc.html"), ("Installation & Commissioning", "solar-installation-commissioning.html"),
@@ -553,6 +559,7 @@ FOOTER = f"""<footer class="footer">
           <h2 class="footer__h">Explore</h2>
           <ul>
             <li><a href="about.html">About Us</a></li>
+            <li><a href="leadership.html">Message from the Leadership</a></li>
             <li><a href="ex-servicemen-led-msme.html">Ex-Servicemen-Led MSME</a></li>
             <li><a href="how-it-works.html">How It Works</a></li>
             <li><a href="quality-safety.html">Quality &amp; Safety</a></li>
@@ -694,13 +701,51 @@ def client_post(c, with_id=True, tag="our client"):
       </article>"""
 
 
-def official_post(c, with_id=True):
-    return client_post(c, with_id, tag=c.get("handle", "")).replace('class="client-post', 'class="client-post official-post', 1)
+EMBED_SCRIPTS = {
+    "X": '<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>',
+    "Facebook": '<div id="fb-root"></div><script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&amp;version=v19.0"></script>',
+    "Instagram": '<script async src="https://www.instagram.com/embed.js"></script>',
+}
+PLATFORM_NAME = {"X": "X", "Facebook": "Facebook", "Instagram": "Instagram"}
+
+
+def social_embed(platform, url, name, handle, text, iso):
+    """The platform's official embed; the inner markup is a post-style card shown until (or if) the embed loads."""
+    when = fmt_date(iso)
+    card = (f'<span class="se-head"><span class="se-ava">{initials(name)}</span><span class="se-who"><b>{esc(name)}</b>'
+            f'<small>{esc(handle)}</small></span><span class="se-logo se-logo--{platform.lower()}">{PLATFORM_ICON[platform]}</span></span>'
+            f'<span class="se-text">{esc(text)}</span>'
+            f'<span class="se-foot"><time datetime="{iso}">{when}</time><a href="{url}" target="_blank" rel="noopener">View on {PLATFORM_NAME[platform]}</a></span>')
+    if platform == "X":
+        tw = url.replace("https://x.com/", "https://twitter.com/") + "?ref_src=twsrc%5Etfw"
+        inner = f'<blockquote class="twitter-tweet se-card" data-dnt="true" data-conversation="none"><p lang="en" dir="ltr">{card}</p><a href="{tw}"></a></blockquote>'
+    elif platform == "Facebook":
+        inner = (f'<div class="fb-post" data-href="{url}" data-width="500" data-show-text="true">'
+                 f'<blockquote cite="{url}" class="fb-xfbml-parse-ignore se-card">{card}</blockquote></div>')
+    else:
+        inner = (f'<blockquote class="instagram-media se-card" data-instgrm-permalink="{url}" data-instgrm-version="14" '
+                 f'data-instgrm-captioned>{card}</blockquote>')
+    return f'<div class="se reveal" data-platform="{platform.lower()}">{inner}</div>'
+
+
+def embed_items(ids=None):
+    out = []
+    for c in COVERAGE:
+        if ids and c["id"] not in ids:
+            continue
+        if c["kind"] == "official":
+            for platform, url in c["links"]:
+                out.append((platform, url, c["outlet"], c["handle"], c["quote"], c["date"]))
+        elif c.get("social_text"):
+            for platform, url in c.get("also", []):
+                out.append((platform, url, c["outlet"], "thesentineldigital" if platform == "Instagram" else c["outlet"], c["social_text"], c["date"]))
+    return out
 
 
 def render_official(ids=None, with_ids=True):
-    items = [c for c in cov("official") if not ids or c["id"] in ids]
-    return '<div class="client-posts">\n      ' + "\n      ".join(official_post(c, with_ids) for c in items) + "\n    </div>"
+    ids = ids or [c["id"] for c in COVERAGE if c["kind"] == "official" or c.get("social_text")]
+    items = embed_items(ids)
+    return '<div class="se-wall">\n      ' + "\n      ".join(social_embed(*i) for i in items) + "\n    </div>"
 
 
 def render_clients():
@@ -723,7 +768,7 @@ def render_featured_inner():
     national = "".join(f'<li><a href="recognition.html#national-tv"><span class="fi-tv">TV</span>{n}</a></li>' for n in NATIONAL_TV)
     return f"""<div class="featured-in reveal">
       <div class="fi-row"><span class="fi-label">Our work in the news</span><ul class="fi-list">{featured_list()}</ul></div>
-      <div class="fi-row"><span class="fi-label">Shared by official handles</span><ul class="fi-list">{"".join(f'<li><a href="recognition.html#{c["id"]}"><span class="fi-tv fi-off">OFFICIAL</span>{esc(c["outlet"])}</a></li>' for c in cov("official"))}</ul></div>
+      <div class="fi-row"><span class="fi-label">Shared by official handles</span><ul class="fi-list">{"".join(f'<li><a href="recognition.html#official-handles"><span class="fi-tv fi-off">OFFICIAL</span>{esc(c["outlet"])}</a></li>' for c in cov("official"))}</ul></div>
       <div class="fi-row"><span class="fi-label">Our founder on national TV</span><ul class="fi-list">{national}</ul></div>
     </div>"""
 
@@ -1017,8 +1062,8 @@ def render_project_page(p):
         extra += f"""
 <section class="section section--news" id="official">
   <div class="container">
-    <div class="section-head center reveal"><span class="eyebrow">On Official Handles</span><h2>Announced by the <span class="text-sun">Chief Minister's Office</span></h2><p>The inauguration as posted by the Chief Minister's Office and MLA Kaushik Rai, quoted word for word with links to the original posts.</p></div>
-    {render_official(p["official"], with_ids=False)}
+    <div class="section-head center reveal"><span class="eyebrow">On Official Handles</span><h2>As Posted on <span class="text-sun">Official Handles</span></h2><p>The inauguration as posted by the Chief Minister's Office, MLA Kaushik Rai and The Sentinel, shown as the original posts.</p></div>
+    {render_official(p["official"] + p["coverage"], with_ids=False)}
   </div>
 </section>"""
     if p.get("people"):
@@ -1474,6 +1519,13 @@ def process_page(fname):
         head += ('<script type="application/ld+json" data-build="coverage">\n'
                  + json.dumps(coverage_ld(), ensure_ascii=False, indent=2) + "\n</script>\n")
     text = head + "</head>" + body
+
+    # official social embeds: load each platform's script once, only where needed
+    text = re.sub(r'<!-- embeds -->.*?<!-- /embeds -->\n', '', text, flags=re.S)
+    need = [k for k, marker in (("X", 'class="twitter-tweet'), ("Facebook", 'class="fb-post"'), ("Instagram", 'class="instagram-media'))
+            if marker in text]
+    if need:
+        text = text.replace("</body>", "<!-- embeds -->" + "".join(EMBED_SCRIPTS[k] for k in need) + "<!-- /embeds -->\n</body>", 1)
 
     # links, asset versions, scripts
     text = normalise_links(text)
