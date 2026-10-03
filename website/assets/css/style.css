@@ -1814,3 +1814,14 @@ figure.testi { margin: 0; } .testi blockquote { margin: 0; }
 .legal-toc a:hover { border-color: var(--green-400); color: var(--green-600); }
 .legal-box { background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(251,191,36,.10)); border-left: 4px solid var(--gold-400); border-radius: 14px; padding: 18px 22px 4px; margin: 6px 0 18px; }
 .section-head p a { color: var(--green-600); text-decoration: underline; text-underline-offset: 3px; }
+/* YouTube facade card */
+.tv-card--yt { cursor: default; }
+.yt-facade { display: block; width: 100%; padding: 0; border: 0; cursor: pointer; background: #000; font: inherit; }
+.yt-note { position: absolute; right: 12px; bottom: 12px; font-size: 11.5px; font-weight: 600; color: #fff; background: rgba(0,0,0,.55); padding: 4px 9px; border-radius: 999px; }
+.yt-frame { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; background: #000; }
+.tv-card--yt .tv-go { text-decoration: none; }
+.tv-orig { display: block; font-size: 14px; color: var(--muted); margin: -2px 0 8px; }
+.tv-more { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 10px; font-size: 13px; font-weight: 600; }
+.tv-more a { display: inline-flex; align-items: center; gap: 6px; color: var(--green-600); }
+.tv-more svg { width: 15px; height: 15px; }
+.tv-grid--yt { grid-template-columns: minmax(0, 720px); justify-content: center; margin-top: 8px; }

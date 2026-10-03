@@ -658,8 +658,10 @@ PROJECTS.insert(0, dict(
     album_lead="%d photos from Koomber Tea Estate, 1 October 2026." % len(KOOMBER_ALBUM),
     videos=True,
     people=KOOMBER_PEOPLE,
-    docs=[("assets/certs/goodricke-appreciation-koomber-595kwp-arrays-ingenieria.jpg", "Goodricke certificate of appreciation: installation & commissioning of the 595 kWp plant at Koomber Tea Garden, Silchar")],
-    coverage=["sentinel-koomber"],
+    docs=[("assets/certs/goodricke-appreciation-koomber-595kwp-arrays-ingenieria.jpg", "Goodricke certificate of appreciation: installation & commissioning of the 595 kWp plant at Koomber Tea Garden, Silchar"),
+          ("assets/news/arrays-ingenieria-koomber-595kwp-solar-cm-inauguration-prerna-bharati.jpg", "Prerna Bharati, 2 Oct 2026: Arrays Ingenieria welcomes the Chief Minister at the Koomber inauguration"),
+          ("assets/news/arrays-ingenieria-koomber-595kwp-solar-cm-inauguration-azad-sipahi.jpg", "Azad Sipahi, Ranchi, 3 Oct 2026: solar plant inaugurated at Koomber tea garden")],
+    coverage=["sentinel-koomber", "prerana-bharati-koomber-video", "prerna-bharati-koomber", "azad-sipahi-koomber"],
     official=["cmo-assam-koomber", "kaushik-rai-koomber"],
     services=["solar-installation-commissioning.html", "service-ground-mount.html", "solar-for-tea-estates.html"],
     impact=dict(

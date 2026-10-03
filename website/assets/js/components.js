@@ -110,3 +110,20 @@
       .catch(() => { btn.disabled = false; btn.firstChild.textContent = "Could not load the post. Use the link above."; });
   });
 })();
+
+/* ---------- YouTube facade: the player loads only when the visitor presses play ---------- */
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".yt-facade");
+  if (!btn) return;
+  const id = btn.dataset.yt;
+  if (!/^[\w-]{11}$/.test(id)) return;
+  const frame = document.createElement("iframe");
+  frame.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1&rel=0";
+  frame.title = btn.getAttribute("aria-label") || "YouTube video";
+  frame.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share";
+  frame.allowFullscreen = true;
+  frame.referrerPolicy = "strict-origin-when-cross-origin";
+  frame.className = "yt-frame";
+  btn.replaceWith(frame);
+  frame.focus();
+});

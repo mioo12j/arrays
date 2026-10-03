@@ -263,6 +263,12 @@ GALLERY = [
      "Solar power plant commissioning ceremony, Arrays Ingenieria"),
     ("assets/press/arrays-ingenieria-solar-project-ground-breaking-ceremony.jpg", "events", "Ground-breaking ceremony for a solar project",
      "Ground-breaking ceremony for an Arrays Ingenieria solar project"),
+    ("assets/news/arrays-ingenieria-koomber-595kwp-solar-cm-inauguration-prerna-bharati.jpg", "media cm",
+     "Prerna Bharati, 2 Oct 2026: Arrays Ingenieria welcomes the Chief Minister at the Koomber solar plant inauguration",
+     "Prerna Bharati Hindi newspaper report on the 595 kWp Koomber Tea Garden solar plant inauguration with Arrays Ingenieria"),
+    ("assets/news/arrays-ingenieria-koomber-595kwp-solar-cm-inauguration-azad-sipahi.jpg", "media cm",
+     "Azad Sipahi, Ranchi, 3 Oct 2026: solar power plant inaugurated at Assam's Koomber tea garden",
+     "Azad Sipahi Hindi newspaper report on the Koomber Tea Garden solar plant inauguration with Arrays Ingenieria"),
     ("assets/news/prerna-bharati-orangajuli-450kw-solar-ingenieria.jpg", "media",
      "Prerna Bharati, 5 Sep 2026: veteran-led Arrays Ingenieria commissions 450 kW solar plant at Orangajuli Tea Estate, Assam",
      "Prerna Bharati Hindi newspaper report on the 450 kW solar plant built by Arrays Ingenieria at Orangajuli Tea Estate, Udalguri, Assam"),
@@ -353,6 +359,18 @@ GALLERY = [
 # the source; keep them that way. kind: tv | online | print | client.
 # date: ISO (YYYY-MM-DD or YYYY-MM) or None when the source shows no date.
 COVERAGE = [
+    dict(id="prerana-bharati-koomber-video", kind="tv", outlet="Prerana Bharati Digital (PBNN)", place="Silchar, Assam",
+         platform="YouTube", date="2026-10", youtube="XYA1zfqmqlU",
+         headline="595 kW solar plant inaugurated at Koomber tea garden",
+         original="कूम्बर चाय बागान में 595 किलो वाट सौर संयंत्र का उद्घाटन",
+         summary="Prerana Bharati's news video on the Chief Minister of Assam inaugurating the 595 kWp ground-mounted, on-grid "
+                 "solar plant at Koomber Tea Garden, installed by Arrays Ingenieria under the 3.11 MW Goodricke Tea Estates Solar "
+                 "Programme.",
+         url="https://www.youtube.com/watch?v=XYA1zfqmqlU",
+         also=[("Facebook", "https://www.facebook.com/story.php?story_fbid=1502310741932902&id=100064619714592", "Video on Facebook"),
+               ("YouTube", "https://www.youtube.com/@preranabhartidigital", "Prerana Bharati on YouTube")],
+         img="assets/news/arrays-ingenieria-koomber-595kwp-solar-cm-inauguration-prerana-bharati-video.jpg",
+         alt="Prerana Bharati news video: 595 kWp Koomber Tea Garden solar plant, built by Arrays Ingenieria, inaugurated by the Chief Minister of Assam"),
     dict(id="ne-reports-orangajuli", kind="tv", outlet="NE Reports", place="Dibrugarh, Assam", platform="Facebook",
          date="2026-09",
          headline="Janmashtami launch: 450 kW solar plant at Orangajuli Tea Estate, Udalguri",
@@ -402,6 +420,26 @@ COVERAGE = [
                ("Facebook", "https://www.facebook.com/100066523279937/posts/pfbid05Ug3kevPqUdUBp7ZyFbD8Eix3hYRzu78MVR8yNixHt17o5B3cShMNFXW1o4Mw1Y8l/")],
          img="assets/koomber/arrays-ingenieria-ex-servicemen-led-koomber-tea-estate-595kwp-solar-cm-inaugurates-595kwp-solar-plant-ribbon-cutting.jpg",
          alt="Chief Minister Dr Himanta Biswa Sarma inaugurates the 595 kWp Koomber solar plant, reported by The Sentinel"),
+    dict(id="prerna-bharati-koomber", kind="print", outlet="Prerna Bharati", place="Silchar, Assam", lang="hi",
+         date="2026-10-02",
+         headline="Arrays Ingenieria welcomes Chief Minister Dr Himanta Biswa Sarma at the Koomber tea garden solar plant inauguration",
+         original="ऐरेज़ इंजीनिरिया ने कूम्बर चाय बागान सौर संयंत्र उद्घाटन पर माननीय मुख्यमंत्री डॉ. हिमंत विश्वशर्मा का किया स्वागत",
+         summary="In print and online: on behalf of CEO Lt. Gen. A.R. Prasad (Retd), Shri Ranveer Singh welcomed the Chief Minister "
+                 "with a traditional Assamese gamosa at the 595 kWp plant, which Arrays Ingenieria installed with a team including "
+                 "ex-servicemen Shri Birendra and Shri Dinesh. The paper notes the company's motto, \"From Olive Green to Go Green\".",
+         url="https://www.preranabharati.com/%E0%A4%90%E0%A4%B0%E0%A5%87%E0%A4%9C%E0%A4%BC-%E0%A4%87%E0%A4%82%E0%A4%9C%E0%A5%80%E0%A4%A8%E0%A4%BF%E0%A4%B0%E0%A4%BF%E0%A4%AF%E0%A4%BE-%E0%A4%A8%E0%A5%87-%E0%A4%95%E0%A5%82%E0%A4%AE%E0%A5%8D%E0%A4%AC%E0%A4%B0-%E0%A4%9A%E0%A4%BE%E0%A4%AF-%E0%A4%AC%E0%A4%BE%E0%A4%97%E0%A4%BE%E0%A4%A8-%E0%A4%B8%E0%A5%8C%E0%A4%B0-%E0%A4%B8%E0%A4%82%E0%A4%AF%E0%A4%82%E0%A4%A4%E0%A5%8D%E0%A4%B0-%E0%A4%89%E0%A4%A6%E0%A5%8D%E0%A4%98%E0%A4%BE%E0%A4%9F%E0%A4%A8-%E0%A4%AA%E0%A4%B0-%E0%A4%AE%E0%A4%BE%E0%A4%A8%E0%A4%A8%E0%A5%80%E0%A4%AF-%E0%A4%AE%E0%A5%81%E0%A4%96%E0%A5%8D%E0%A4%AF%E0%A4%AE%E0%A4%82%E0%A4%A4%E0%A5%8D%E0%A4%B0%E0%A5%80-%E0%A4%A1%E0%A5%89.-%E0%A4%B9%E0%A4%BF%E0%A4%AE%E0%A4%82%E0%A4%A4-%E0%A4%B5%E0%A4%BF%E0%A4%B6%E0%A5%8D%E0%A4%B5%E0%A4%B6%E0%A4%B0%E0%A5%8D%E0%A4%AE%E0%A4%BE-%E0%A4%95%E0%A4%BE-%E0%A4%95%E0%A4%BF%E0%A4%AF%E0%A4%BE-%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%BE%E0%A4%97%E0%A4%A4/",
+         also=[("Facebook", "https://www.facebook.com/preranabharatisilchar", "Prerana Bharati on Facebook")],
+         img="assets/news/arrays-ingenieria-koomber-595kwp-solar-cm-inauguration-prerna-bharati.jpg",
+         alt="Prerna Bharati report: Arrays Ingenieria welcomes the Chief Minister of Assam at the 595 kWp Koomber solar plant inauguration"),
+    dict(id="azad-sipahi-koomber", kind="print", outlet="Azad Sipahi", place="Ranchi, Jharkhand", lang="hi",
+         date="2026-10-03",
+         headline="Solar power plant inaugurated at Assam's Koomber tea garden",
+         original="असम के कूंबर चाय बागान में सौर ऊर्जा संयंत्र का उद्घाटन",
+         summary="The Ranchi Hindi daily reports from Guwahati that the Chief Minister of Assam inaugurated the 595 kWp grid-connected "
+                 "solar plant at Koomber, that Arrays Ingenieria welcomed him with a traditional gamosa, and that the company, set "
+                 "up by ex-servicemen, was the installation partner alongside Tata Power Solar, Goodricke and Sustvest.",
+         img="assets/news/arrays-ingenieria-koomber-595kwp-solar-cm-inauguration-azad-sipahi.jpg",
+         alt="Azad Sipahi Hindi newspaper report on the 595 kWp Koomber Tea Garden solar plant inauguration with Arrays Ingenieria"),
     dict(id="cmo-assam-koomber", kind="official", outlet="Chief Minister's Office, Assam", handle="@CMOfficeAssam",
          place="Official handle of the Chief Minister of Assam", date="2026-10-01",
          headline="HCM inaugurates 595 kWp solar plant at Koomber Tea Estate",
@@ -594,6 +632,7 @@ PLATFORM_ICON = {
     "X": '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.68l7.73-8.84L1.25 2.25h6.83l4.71 6.23zm-1.16 17.52h1.83L7.08 4.13H5.12z"/></svg>',
     "Instagram": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>',
     "Facebook": FB_SVG,
+    "YouTube": '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6z"/></svg>',
     "LinkedIn": '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>',
 }
 
@@ -753,7 +792,39 @@ def by_date(items):
     return sorted(items, key=lambda c: c["date"] or "0000", reverse=True)
 
 
+def yt_card(c, lead=False, with_id=True):
+    """A YouTube report as a lightweight facade: a local thumbnail and a play button. YouTube's player (and its cookies)
+    loads only when the visitor presses play, from the privacy-enhanced youtube-nocookie.com domain."""
+    ident = f' id="{c["id"]}"' if with_id else ""
+    cls = "tv-card tv-card--yt reveal" + (" tv-card--lead" if lead else "")
+    links = "".join(f'<a href="{u}" target="_blank" rel="noopener">{PLATFORM_ICON[n]} {esc(item[2] if len(item) > 2 else n)}</a>'
+                    for item in c.get("also", []) for n, u in [item[:2]])
+    orig = f'<span class="tv-orig" lang="hi">{esc(c["original"])}</span>' if c.get("original") else ""
+    return f"""<article class="{cls}"{ident}>
+        <button type="button" class="tv-thumb yt-facade" data-yt="{c['youtube']}" aria-label="Play the video: {esc(c['headline'])} ({esc(c['outlet'])}, loads YouTube)">
+          <img src="{c['img']}" alt="{esc(c['alt'])}" /><span class="tv-onair"><i></i>News video</span><span class="vc-play">{PLAY_SVG}</span><span class="yt-note">Plays from YouTube</span>
+        </button>
+        <span class="tv-body">
+          <span class="tv-outlet"><span class="tv-mono">PB</span><span><b>{esc(c['outlet'])}</b><small>{esc(c['place'])} · on {c['platform']}</small></span></span>
+          <h3 class="tv-title">{esc(c['headline'])}</h3>{orig}
+          <span class="tv-sum">{esc(c['summary'])}</span>
+          <span class="tv-foot">{time_tag(c['date'])}<a class="tv-go" href="{c['url']}" target="_blank" rel="noopener">Watch on YouTube {EXT_SVG}</a></span>
+          <span class="tv-more">{links}</span>
+        </span>
+      </article>"""
+
+
+def yt_block(ids):
+    vids = [c for c in COVERAGE if c["id"] in ids and c.get("youtube")]
+    if not vids:
+        return ""
+    return ('\n    <div class="kv-head reveal"><span class="cm-kicker">In the news</span><b>On YouTube</b></div>\n    <div class="tv-grid tv-grid--yt">'
+            + "".join(yt_card(c, with_id=False) for c in vids) + "</div>")
+
+
 def tv_card(c, lead=False, with_id=True):
+    if c.get("youtube"):
+        return yt_card(c, lead, with_id)
     img = c.get("img") or c["bg"]
     tile = "" if c.get("img") else f'<span class="tv-tile"><b>{esc(c["outlet"])}</b><small>News report · {esc(c["place"])}</small></span>'
     cls = "tv-card reveal" + (" tv-card--lead" if lead else "") + ("" if c.get("img") else " tv-card--tile")
@@ -792,8 +863,9 @@ def press_item(c):
         actions.append(f'<a class="press-link" href="{c["url"]}" target="_blank" rel="noopener">Read on {esc(c["outlet"])} {EXT_SVG}</a>')
     else:
         actions.append(f'<span class="press-link" data-full="{c["img"]}" data-gallery="press-read" data-caption="{cap}" tabindex="0" role="button">Read the clipping</span>')
-    for n, u in c.get("also", []):
-        actions.append(f'<a class="press-link" href="{u}" target="_blank" rel="noopener">{PLATFORM_ICON[n]} {n}</a>')
+    for item in c.get("also", []):
+        n, u, label = item[0], item[1], (item[2] if len(item) > 2 else item[0])
+        actions.append(f'<a class="press-link" href="{u}" target="_blank" rel="noopener">{PLATFORM_ICON[n]} {esc(label)}</a>')
     if c.get("extra"):
         actions.append(f'<span class="press-link" data-full="{c["extra"]}" data-gallery="press-read" data-caption="{cap} (print edition)" tabindex="0" role="button">See the printed page</span>')
     src = f'<span class="press-kind">{KIND_LABEL[c["kind"]]}</span><b>{esc(c["outlet"])}</b><span>{esc(c["place"])}</span>{time_tag(c["date"])}'
@@ -865,7 +937,9 @@ def embed_items(ids=None):
             for platform, url in c["links"]:
                 out.append((platform, url, c["outlet"], c["handle"], c["quote"], c["date"]))
         elif c.get("social_text"):
-            for platform, url in c.get("also", []):
+            for platform, url, *_ in c.get("also", []):
+                if platform not in ("X", "Facebook", "Instagram") or "/story.php" in url or url.count("/") <= 3:
+                    continue
                 out.append((platform, url, c["outlet"], "thesentineldigital" if platform == "Instagram" else c["outlet"], c["social_text"], c["date"]))
     return out
 
@@ -935,6 +1009,11 @@ def coverage_ld():
             node = {"@type": "SocialMediaPosting", "headline": c["headline"], "url": c["links"][0][1],
                     "sameAs": [u for _, u in c["links"][1:]] or None, "author": {"@type": "Organization", "name": c["outlet"]},
                     "articleBody": c["quote"], "about": org}
+        elif c.get("youtube"):
+            node = {"@type": "VideoObject", "name": c.get("original") or c["headline"], "alternativeHeadline": c["headline"],
+                    "description": c["summary"], "url": c["url"], "embedUrl": f"https://www.youtube-nocookie.com/embed/{c['youtube']}",
+                    "thumbnailUrl": f"{SITE_URL}/{c['img']}", "uploadDate": c["date"], "publisher": publisher, "about": org,
+                    "inLanguage": "hi"}
         elif c["kind"] == "tv":
             node = {"@type": "CreativeWork", "genre": "News report (video)", "name": c["headline"], "url": c["url"],
                     "publisher": publisher, "description": c["summary"], "about": org}
@@ -949,7 +1028,7 @@ def coverage_ld():
             node["datePublished"] = c["date"]
         items.append({k: v for k, v in node.items() if v is not None})
     return {"@context": "https://schema.org", "@type": "CollectionPage",
-            "name": "Arrays Ingenieria in the news", "url": SITE_URL + "/recognition.html",
+            "name": "Arrays Ingenieria in the news", "url": SITE_URL + "/recognition/",
             "about": org, "mainEntity": {"@type": "ItemList", "numberOfItems": len(items),
             "itemListElement": [{"@type": "ListItem", "position": i + 1, "item": it} for i, it in enumerate(items)]}}
 
@@ -1240,7 +1319,7 @@ def render_project_page(p):
 <section class="section section--news" id="videos">
   <div class="container">
     <div class="section-head center reveal"><span class="eyebrow">Video</span><h2>The Inauguration <span class="text-sun">on Video</span></h2><p>The Chief Minister of Assam inaugurates the plant, 1 October 2026.</p></div>
-    {render_koomber_videos()}
+    {render_koomber_videos()}{yt_block(p["coverage"])}
   </div>
 </section>"""
     if p.get("album"):
@@ -1305,8 +1384,13 @@ def render_project_page(p):
     links = [c for c in COVERAGE if c["id"] in p["coverage"] + p.get("official", [])]
     if links:
         ld[0]["citation"] = [c.get("url") or c["links"][0][1] for c in links if c.get("url") or c.get("links")]
-        ld[0]["subjectOf"] = [u for c in links for _, u in (c.get("links") or []) + (c.get("also") or [])]
+        ld[0]["subjectOf"] = [u for c in links for _, u, *_ in (c.get("links") or []) + (c.get("also") or [])]
     if p.get("album"):
+        ld.append({"@context": "https://schema.org", "@type": "ImageGallery", "name": f"{p['name']}: inauguration photos",
+                   "url": f"{SITE_URL}{page_url(p['file'])}#album", "creator": {"@id": SITE_URL + "/#organization"},
+                   "image": [{"@type": "ImageObject", "contentUrl": f"{SITE_URL}/{src}", "caption": alt,
+                              "creator": {"@id": SITE_URL + "/#organization"}} for src, alt in p["album"]]})
+    if p.get("videos"):
         ld.extend(koomber_video_ld())
         ld.append({"@context": "https://schema.org", "@type": "Event", "name": p["name"],
                    "startDate": "2026-10-01", "eventStatus": "https://schema.org/EventScheduled",
@@ -1944,6 +2028,12 @@ def write_sitemap():
         out.append(f"  <url>\n    <loc>{SITE_URL}{meta['path']}</loc>\n    <lastmod>{TODAY}</lastmod>")
         for src in imgs:
             out.append(f"    <image:image><image:loc>{SITE_URL}/{src}</image:loc></image:image>")
+        for c in COVERAGE:
+            if c.get("youtube") and f'data-yt="{c["youtube"]}"' in body:
+                out.append(f"    <video:video><video:thumbnail_loc>{SITE_URL}/{c['img']}</video:thumbnail_loc>"
+                           f"<video:title>{esc(c.get('original') or c['headline'])}</video:title><video:description>{esc(c['summary'])}</video:description>"
+                           f"<video:player_loc>https://www.youtube-nocookie.com/embed/{c['youtube']}</video:player_loc>"
+                           f"<video:family_friendly>yes</video:family_friendly></video:video>")
         for vsrc, poster, cap, dur, _ in KOOMBER_VIDEOS:
             if vsrc in body:
                 secs = int(dur.strip("PTS"))

@@ -15,7 +15,7 @@
     Cross-Origin-Opener-Policy = "same-origin"
     # Third-party hosts are used only after a visitor clicks "Show the original post" (X, Facebook, Instagram)
     # or submits the contact form (FormSubmit).
-    Content-Security-Policy = "default-src 'self'; script-src 'self' https://platform.twitter.com https://cdn.syndication.twimg.com https://connect.facebook.net https://www.instagram.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; media-src 'self'; connect-src 'self' https://formsubmit.co https://*.facebook.com https://*.twitter.com https://*.twimg.com https://*.instagram.com; frame-src https://platform.twitter.com https://syndication.twitter.com https://www.facebook.com https://web.facebook.com https://www.instagram.com; form-action 'self' https://formsubmit.co; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; upgrade-insecure-requests"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://platform.twitter.com https://cdn.syndication.twimg.com https://connect.facebook.net https://www.instagram.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; media-src 'self'; connect-src 'self' https://formsubmit.co https://*.facebook.com https://*.twitter.com https://*.twimg.com https://*.instagram.com; frame-src https://www.youtube-nocookie.com https://platform.twitter.com https://syndication.twitter.com https://www.facebook.com https://web.facebook.com https://www.instagram.com; form-action 'self' https://formsubmit.co; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; upgrade-insecure-requests"
 
 # ---- Caching ----
 # CSS and JS are versioned (?v=<content hash>) and fonts never change: cache for a year.
