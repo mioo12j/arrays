@@ -393,6 +393,13 @@ COVERAGE = [
          url="https://www.facebook.com/61564147994036/videos/122210117936471599/",
          img="assets/news/arrays-ingenieria-borpatra-230kwp-solar-news-axom-report.jpg",
          alt="News Axom TV report on the 230 kW Borpatra solar plant built by Arrays Ingenieria"),
+    dict(id="news-axom-koomber", kind="tv", outlet="News Axom", place="Nagaon, Assam", platform="Facebook", date="2026-10",
+         headline="Video report: the Koomber Tea Estate solar plant inauguration",
+         summary="News Axom's video report from the inauguration of the 595 kWp solar plant at Koomber Tea Estate, which Arrays "
+                 "Ingenieria installed, opened by the Chief Minister of Assam.",
+         url="https://www.facebook.com/61564147994036/videos/122210688668471599/",
+         img="assets/koomber/arrays-ingenieria-ex-servicemen-led-koomber-tea-estate-595kwp-solar-cm-cuts-ribbon-595kwp-solar-plant.jpg",
+         alt="The Chief Minister of Assam cuts the ribbon at the Koomber solar plant built by Arrays Ingenieria, covered by News Axom"),
     dict(id="sentinel-jayshree", kind="online", outlet="The Sentinel", place="Assam", platform="sentinelassam.com",
          date="2025-05-22",
          headline="Assam: AIPL commissions 1 MW solar power plant at Jayshree Tea Estate",
@@ -440,6 +447,30 @@ COVERAGE = [
                  "up by ex-servicemen, was the installation partner alongside Tata Power Solar, Goodricke and Sustvest.",
          img="assets/news/arrays-ingenieria-koomber-595kwp-solar-cm-inauguration-azad-sipahi.jpg",
          alt="Azad Sipahi Hindi newspaper report on the 595 kWp Koomber Tea Garden solar plant inauguration with Arrays Ingenieria"),
+    dict(id="hindusthan-samachar-koomber", kind="online", outlet="Hindusthan Samachar", place="Cachar, Assam (national news agency)",
+         platform="hindusthansamachar.in", lang="hi", date="2026-10-01",
+         headline="Chief Minister inaugurates 595 kWp ground-mounted on-grid solar plant in Assam",
+         original="असम में 595 केवीपी ग्राउंड -माउंटेड ऑन-ग्रिड सौर ऊर्जा संयंत्र का मुख्यमंत्री ने किया उद्घाटन",
+         summary="The national news agency reports the Chief Minister's inauguration at Koomber Tea Garden, Cachar: Arrays Ingenieria "
+                 "was the installation partner alongside Tata Power Solar, Goodricke and Sustvest; Shri Ranveer Singh welcomed the "
+                 "Chief Minister with a traditional gamosa on behalf of CEO Lt. Gen. A.R. Prasad (Retd); and the plant was built by the "
+                 "company's team, including ex-servicemen Birendra and Dinesh.",
+         quote="ऐरेज इंजीनिरिया पूर्व सैनिकों द्वारा स्थापित एक एमएसएमई है। कंपनी का ध्येय वाक्य फ्रॉम ऑलिव ग्रीन टू गो ग्रीन है।",
+         quote_lang="hi",
+         url="https://www.hindusthansamachar.in/Encyc/2026/10/1/ASSAM-KACHHAR-CM-INAUGURATES-SOLAR-POWER-PLANT.php",
+         img="assets/koomber/arrays-ingenieria-ex-servicemen-led-koomber-tea-estate-595kwp-solar-welcomes-cm-with-assamese-gamosa.jpg",
+         alt="Arrays Ingenieria welcomes the Chief Minister of Assam with a gamosa at Koomber, as reported by Hindusthan Samachar"),
+    dict(id="india-today-ne-koomber", kind="online", outlet="India Today NE", place="Guwahati, Assam", platform="indiatodayne.in",
+         lang="en", date="2026-10-01",
+         headline="Assam CM inaugurates 595 kWp Solar Power Plant at Koomber Tea Estate",
+         summary="India Today's North East edition reports the Chief Minister's inauguration of the 595 kWp ground-mounted, on-grid "
+                 "plant at Koomber Tea Estate, part of the 3.11 MW Goodricke Tea Estates Solar Programme, the plant Arrays Ingenieria "
+                 "installed as installation partner.",
+         quote="The initiative is expected to strengthen the use of renewable energy in the tea industry, a key sector of Assam's "
+               "economy, while supporting the state's efforts to advance its Green Assam mission.",
+         url="https://www.indiatodayne.in/assam/story/assam-cm-inaugurates-595-kwp-solar-power-plant-at-koomber-tea-estate-1457597-2026-10-01",
+         img="assets/koomber/arrays-ingenieria-ex-servicemen-led-koomber-tea-estate-595kwp-ground-mount-solar-plant.jpg",
+         alt="The 595 kWp Koomber Tea Estate solar plant built by Arrays Ingenieria, reported by India Today NE"),
     dict(id="cmo-assam-koomber", kind="official", outlet="Chief Minister's Office, Assam", handle="@CMOfficeAssam",
          place="Official handle of the Chief Minister of Assam", date="2026-10-01",
          headline="HCM inaugurates 595 kWp solar plant at Koomber Tea Estate",
@@ -856,7 +887,8 @@ def press_item(c):
                  f'aria-label="View the {esc(c["outlet"])} clipping full size"><img src="{c["img"]}" alt="{esc(c["alt"])}" />'
                  f'<span class="press-zoom">View clipping</span></div>')
     orig = f'\n          <p class="press-orig" lang="{c.get("lang", "hi")}">{esc(c["original"])}</p>' if c.get("original") else ""
-    quote = (f'\n          <blockquote class="press-quote"><p>“{esc(c["quote"])}”</p><cite>{esc(c["outlet"])}</cite></blockquote>'
+    qlang = f' lang="{c["quote_lang"]}"' if c.get("quote_lang") else ""
+    quote = (f'\n          <blockquote class="press-quote"{qlang}><p>“{esc(c["quote"])}”</p><cite>{esc(c["outlet"])}</cite></blockquote>'
              if c.get("quote") else "")
     actions = []
     if c.get("url"):
