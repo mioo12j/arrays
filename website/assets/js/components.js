@@ -133,3 +133,22 @@ document.addEventListener("click", (e) => {
   btn.replaceWith(frame);
   frame.focus();
 });
+
+/* ---------- key numbers: shrink a number to fit its card (large accessibility text, narrow phones) ---------- */
+(function () {
+  const nums = document.querySelectorAll(".stat-card .num");
+  if (!nums.length) return;
+  function fit() {
+    nums.forEach((n) => {
+      n.style.fontSize = "";
+      const box = n.parentElement;
+      const room = box.clientWidth - 16;
+      let size = parseFloat(getComputedStyle(n).fontSize);
+      while (n.scrollWidth > room && size > 14) { size -= 1; n.style.fontSize = size + "px"; }
+    });
+  }
+  window.addEventListener("load", fit);
+  window.addEventListener("resize", fit);
+  // the count-up animation changes the digits; refit once it has finished
+  setTimeout(fit, 2500);
+})();
