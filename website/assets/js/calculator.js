@@ -78,6 +78,8 @@
       " trees</b> every year, your clean-energy contribution to the nation.";
 
     $("calcResults").hidden = false;
+    const q = $("calcQuote");
+    if (q) q.href = "/free-solar-quote/?bill=" + Math.round(bill) + "&tariff=" + tariff + (isRes ? "&segment=home" : "");
   }
 
   $("calcBtn").addEventListener("click", compute);

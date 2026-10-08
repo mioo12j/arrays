@@ -1604,29 +1604,63 @@ def render_clients_page():
     return page_shell("clients", body, "assets/photos/arrays-ingenieria-super-smelters-1980kwp-solar-plant-asansol.jpg", "Super Smelters solar plant by Arrays Ingenieria", ld)
 
 
-QUOTE_SERVICES = [
-    ("capex", "Own a solar plant (CAPEX)", "Rooftop or ground-mount, designed, built and commissioned for you to own."),
-    ("ic", "Installation & commissioning", "For EPC companies and developers: we install, test and commission."),
-    ("civil", "Civil works & piling", "Pile foundations, fencing, roads, drainage and boundary walls."),
-    ("tea", "Solar for a tea estate", "Ground-mount, on-grid plants with DG synchronisation and APDCL approvals."),
-    ("om", "O&M for an existing plant", "Maintenance and support to keep a plant at peak output."),
-    ("other", "Something else", "Tell us in the last step."),
+QUOTE_SEGMENTS = [
+    ("industry", "Factory or industry", "Plants, warehouses, smelters, processing units",
+     '<path d="M3 21V10l6 4V10l6 4V6l6 4v11z"/><path d="M7 17h2M13 17h2"/>'),
+    ("tea", "Tea estate", "Tea gardens and factories in Assam and beyond",
+     '<path d="M12 21c-5-3-8-7-8-11 4 0 7 2 8 5 1-3 4-5 8-5 0 4-3 8-8 11z"/><path d="M12 21v-6"/>'),
+    ("commercial", "Commercial building", "Offices, hospitals, schools, hotels, fuel stations",
+     '<path d="M4 21V4h10v17M14 9h6v12"/><path d="M8 8h2M8 12h2M8 16h2"/>'),
+    ("epc", "EPC company or developer", "You need an installation, civil or piling partner",
+     '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>'),
+    ("home", "Home", "A rooftop system for your house",
+     '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>'),
+    ("other", "Something else", "Government, institution or anything else",
+     '<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"/>'),
 ]
+QUOTE_SERVICES = ["Complete solar plant (design, supply, build, commission)", "Installation & commissioning only",
+                  "Pile foundations & civil works", "Fencing, roads & drainage", "O&M for an existing plant", "Advice: not sure yet"]
+QUOTE_STATES = ["Assam", "Arunachal Pradesh", "Meghalaya", "Tripura", "Mizoram", "Manipur", "Nagaland", "Sikkim", "West Bengal",
+                "Bihar", "Jharkhand", "Odisha", "Uttar Pradesh", "Uttarakhand", "Delhi", "Haryana", "Punjab", "Himachal Pradesh",
+                "Jammu & Kashmir", "Ladakh", "Rajasthan", "Gujarat", "Maharashtra", "Goa", "Madhya Pradesh", "Chhattisgarh",
+                "Karnataka", "Kerala", "Tamil Nadu", "Andhra Pradesh", "Telangana", "Puducherry", "Chandigarh",
+                "Andaman & Nicobar Islands", "Dadra & Nagar Haveli and Daman & Diu", "Lakshadweep"]
 
 
 def render_quote_page():
     hero = "assets/koomber/arrays-ingenieria-ex-servicemen-led-koomber-tea-estate-595kwp-solar-cm-inaugurates-595kwp-solar-plant-ribbon-cutting.jpg"
-    svc = "".join(f'''<label class="q-opt"><input type="radio" name="service" value="{esc(t)}" required{" checked" if i == 0 else ""} />
-            <span class="q-opt__box"><b>{esc(t)}</b><small>{esc(d)}</small></span></label>''' for i, (_, t, d) in enumerate(QUOTE_SERVICES))
-    def sel(name, label, opts, req=False):
+
+    def cards(name, items, cls="q-opt", typ="radio", req=True):
+        return "".join(
+            f'<label class="{cls}"><input type="{typ}" name="{name}" value="{esc(v)}"{" required" if req and typ == "radio" else ""} />'
+            f'<span class="q-opt__box">{b}</span></label>' for v, b in items)
+
+    def sel(name, label, opts, req=False, hint=""):
         o = "".join(f"<option>{esc(x)}</option>" for x in opts)
         return (f'<div class="field"><label for="q-{name}">{label}{" *" if req else ""}</label><select id="q-{name}" name="{name}"'
-                f'{" required" if req else ""}><option value="">Select…</option>{o}</select></div>')
+                f'{" required" if req else ""}><option value="">Select…</option>{o}</select>{hint}</div>')
+
+    seg_cards = cards("segment", [(t, f'<span class="q-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+                                     f'stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">{ic}</svg></span>'
+                                     f'<b>{esc(t)}</b><small>{esc(d)}</small>') for k, t, d, ic in QUOTE_SEGMENTS], "q-opt q-seg")
+    seg_keys = "".join(f'<input type="hidden" disabled data-seg-key="{esc(t)}" value="{k}" />' for k, t, _, _ in QUOTE_SEGMENTS)
+    svc_cards = cards("services", [(x, f"<b>{esc(x)}</b>") for x in QUOTE_SERVICES], "q-opt q-chk", "checkbox")
+    own = cards("ownership", [
+        ("Buy and own it (CAPEX)", "<b>Buy and own it</b><small>Lowest lifetime cost; all savings and tax benefits are yours.</small>"),
+        ("Pay per unit, no investment (OPEX)", "<b>No upfront investment</b><small>A developer owns the plant; you buy power at a fixed tariff. We connect you with our partners.</small>"),
+        ("Not sure, advise me", "<b>Not sure yet</b><small>Our engineer will compare both for you.</small>")])
+    timeline = cards("timeline", [(x, f"<b>{esc(x)}</b>") for x in
+                                  ["Within 1 month", "In 1 to 3 months", "In 3 to 6 months", "In 6 to 12 months", "Just exploring"]], "q-opt q-pill")
+    chips = "".join(f'<button type="button" class="q-chip" data-bill="{v}">{l}</button>'
+                    for v, l in [(50000, "Rs 50k"), (200000, "Rs 2 lakh"), (500000, "Rs 5 lakh"), (1000000, "Rs 10 lakh+")])
     rai = next(c for c in COVERAGE if c["id"] == "kaushik-rai-koomber")
+    tick = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>'
+
     body = page_hero(hero, "The Chief Minister of Assam inaugurates the 595 kWp Koomber solar plant installed by Arrays Ingenieria",
-                     "Free Solar Quote", 'Your Solar Plant, <span class="text-sun">Quoted Free</span>',
-                     "Three quick questions. An engineer from our ex-servicemen-led team reviews your site and sends a clear, "
-                     "no-obligation proposal.", [("Free Solar Quote", None)]) + f"""
+                     "Free Solar Quote · Takes about 1 minute",
+                     'See What Solar Can <span class="text-sun">Save You</span>',
+                     "Answer a few quick questions, see an instant savings estimate, and get a free, no-obligation proposal from "
+                     "the ex-servicemen-led team trusted by Tata Power, Goodricke and Jay Shree Tea.", [("Free Solar Quote", None)]) + f"""
 
 <section class="section quote-section">
   <div class="container quote-grid">
@@ -1636,49 +1670,114 @@ def render_quote_page():
       <input type="hidden" name="_subject" value="Free solar quote request, Arrays Ingenieria website" />
       <input type="hidden" name="_captcha" value="false" />
       <input type="hidden" name="_template" value="table" />
-      <ol class="q-progress" aria-hidden="true"><li class="on"><span>1</span>Project</li><li><span>2</span>Site</li><li><span>3</span>Contact</li></ol>
+      <input type="hidden" name="lead_score" value="" />
+      <input type="hidden" name="estimate_kwp" value="" />
+      <input type="hidden" name="estimate_monthly_savings" value="" />
+      <input type="hidden" name="source" value="" />
+      {seg_keys}
+
+      <div class="q-top">
+        <div class="q-bar" aria-hidden="true"><span class="q-bar__fill"></span></div>
+        <p class="q-count" aria-live="polite"><b class="q-pct">10%</b> done · <span class="q-steptxt">Step 1 of 6</span></p>
+      </div>
 
       <fieldset class="q-step" data-step="1">
-        <legend>What do you need?</legend>
-        <div class="q-opts">{svc}</div>
-        <div class="q-nav"><span></span><button type="button" class="btn btn--primary" data-next>Next: your site {ARROW_SVG}</button></div>
+        <legend>Who is the solar plant for?</legend>
+        <p class="q-sub">Pick one. It helps us send the right engineer.</p>
+        <div class="q-opts q-opts--3">{seg_cards}</div>
+        <div class="q-nav"><span></span><button type="button" class="btn btn--primary" data-next>Continue {ARROW_SVG}</button></div>
       </fieldset>
 
       <fieldset class="q-step" data-step="2">
-        <legend>Tell us about the site</legend>
-        <div class="field"><label for="q-location">Site location *</label><input type="text" id="q-location" name="location" placeholder="City / district, State" maxlength="120" required /></div>
-        <div class="field-row">
-          {sel("site_type", "Where will the panels go?", ["Factory or building rooftop", "Open land (ground-mount)", "Tea estate land", "Not sure yet"])}
-          {sel("bill", "Monthly electricity bill", ["Below Rs 50,000", "Rs 50,000 to 2 lakh", "Rs 2 lakh to 10 lakh", "Above Rs 10 lakh", "Not sure"])}
-        </div>
-        <div class="field-row">
-          <div class="field"><label for="q-size">Roof / land area or capacity</label><input type="text" id="q-size" name="size" placeholder="e.g. 5,000 sq ft, 2 acres or 500 kW" maxlength="80" /></div>
-          {sel("timeline", "When do you want to start?", ["Within 3 months", "3 to 6 months", "6 to 12 months", "Just exploring"])}
-        </div>
-        <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--primary" data-next>Next: your details {ARROW_SVG}</button></div>
+        <legend>What do you need from us?</legend>
+        <p class="q-proof" data-proof hidden></p>
+        <p class="q-sub">Tick all that apply.</p>
+        <div class="q-opts">{svc_cards}</div>
+        <p class="q-label">How would you like to pay for it?</p>
+        <div class="q-opts q-opts--3">{own}</div>
+        <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--primary" data-next>Continue {ARROW_SVG}</button></div>
       </fieldset>
 
       <fieldset class="q-step" data-step="3">
-        <legend>Where should we send your quote?</legend>
+        <legend>Where is the site?</legend>
+        <div class="field-row">
+          {sel("state", "State", QUOTE_STATES, True)}
+          <div class="field"><label for="q-city">City / district *</label><input type="text" id="q-city" name="city" placeholder="e.g. Sonari, Charaideo" maxlength="80" required /></div>
+        </div>
+        <div class="field-row">
+          {sel("site_type", "Where will the panels go?", ["RCC (concrete) rooftop", "Metal-sheet rooftop", "Open land (ground-mount)", "Carport / parking", "Not sure yet"])}
+          <div class="field"><label for="q-area">Free area available</label><div class="q-inline"><input type="number" id="q-area" name="area" min="0" step="any" inputmode="decimal" placeholder="e.g. 20000" /><select name="area_unit" aria-label="Area unit"><option>sq ft</option><option>sq m</option><option>acres</option><option>bigha</option></select></div></div>
+        </div>
+        <div class="field"><label for="q-capacity">Capacity in mind (optional)</label><div class="q-inline"><input type="number" id="q-capacity" name="capacity_kw" min="0" step="any" inputmode="decimal" placeholder="If you already know it" /><span class="q-unit">kWp</span></div></div>
+        <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--primary" data-next>Continue {ARROW_SVG}</button></div>
+      </fieldset>
+
+      <fieldset class="q-step" data-step="4">
+        <legend>How much power do you use?</legend>
+        <p class="q-sub">Your bill lets us size the plant and estimate your savings right now.</p>
+        <div class="field"><label for="q-bill">Average monthly electricity bill *</label><div class="q-inline q-money"><span class="q-unit">Rs</span><input type="number" id="q-bill" name="monthly_bill" min="1000" step="any" inputmode="numeric" placeholder="e.g. 200000" required /></div>
+          <div class="q-chips" aria-label="Quick picks">{chips}</div></div>
+        <div class="field-row">
+          <div class="field"><label for="q-tariff">Tariff per unit (if known)</label><div class="q-inline q-money"><span class="q-unit">Rs</span><input type="number" id="q-tariff" name="tariff" min="1" max="30" step="0.1" inputmode="decimal" placeholder="8" /></div></div>
+          {sel("connection", "Grid connection", ["LT (low tension)", "HT (high tension)", "Not sure"])}
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="q-load">Sanctioned load (optional)</label><div class="q-inline"><input type="number" id="q-load" name="sanctioned_load" min="0" step="any" inputmode="decimal" placeholder="e.g. 500" /><select name="load_unit" aria-label="Load unit"><option>kW</option><option>kVA</option></select></div></div>
+          {sel("dg", "Do you run diesel generators?", ["Yes, regularly", "Only as backup", "No"])}
+        </div>
+        <div class="q-estimate" id="qEstimate" hidden>
+          <p class="q-est__kicker">Your instant estimate</p>
+          <div class="q-est__grid">
+            <div><b data-est="size">-</b><span>Plant size</span></div>
+            <div><b data-est="save">-</b><span>Savings per month</span></div>
+            <div><b data-est="payback">-</b><span>Payback</span></div>
+            <div><b data-est="co2">-</b><span>CO2 avoided a year</span></div>
+          </div>
+          <p class="q-est__loss" data-est="loss"></p>
+          <p class="q-est__note">Indicative only, from standard assumptions. Your free proposal will be based on your actual site.</p>
+        </div>
+        <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--primary" data-next>Continue {ARROW_SVG}</button></div>
+      </fieldset>
+
+      <fieldset class="q-step" data-step="5">
+        <legend>When would you like to start?</legend>
+        <div class="q-opts q-opts--pills">{timeline}</div>
+        <div class="field-row">
+          {sel("funding", "How will it be funded?", ["Own funds", "Bank or green loan", "Need financing options", "Not decided yet"])}
+          {sel("role", "Your role", ["Owner / Director", "Plant or energy manager", "Engineer / consultant", "Purchase / procurement", "Other"])}
+        </div>
+        <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--primary" data-next>Last step {ARROW_SVG}</button></div>
+      </fieldset>
+
+      <fieldset class="q-step" data-step="6">
+        <legend>Where should we send your free quote?</legend>
+        <div class="q-summary" id="qSummary" hidden></div>
         <div class="field-row">
           <div class="field"><label for="q-name">Full name *</label><input type="text" id="q-name" name="name" autocomplete="name" maxlength="100" required /></div>
           <div class="field"><label for="q-company">Company / estate</label><input type="text" id="q-company" name="company" autocomplete="organization" maxlength="120" /></div>
         </div>
         <div class="field-row">
-          <div class="field"><label for="q-phone">Phone *</label><input type="tel" id="q-phone" name="phone" placeholder="+91 " autocomplete="tel" inputmode="tel" pattern="[0-9+\\(\\)\\s\\-]{{7,20}}" title="Phone number: 7 to 20 digits, spaces, +, - or brackets" maxlength="20" required /></div>
-          <div class="field"><label for="q-email">Email *</label><input type="email" id="q-email" name="email" autocomplete="email" maxlength="254" required /></div>
+          <div class="field"><label for="q-phone">Mobile number *</label><input type="tel" id="q-phone" name="phone" placeholder="+91 " autocomplete="tel" inputmode="tel" pattern="[0-9+\\(\\)\\s\\-]{{7,20}}" title="Phone number: 7 to 20 digits, spaces, +, - or brackets" maxlength="20" required /></div>
+          <div class="field"><label for="q-email">Work email *</label><input type="email" id="q-email" name="email" autocomplete="email" maxlength="254" required /></div>
         </div>
-        <div class="field"><label for="q-message">Anything else we should know?</label><textarea id="q-message" name="message" maxlength="2000" placeholder="Load, existing DG sets, grid connection, preferred module makes…"></textarea></div>
+        <div class="field-row">
+          {sel("contact_by", "Best way to reach you", ["Phone call", "WhatsApp", "Email"])}
+          {sel("best_time", "Best time to call", ["Morning (9 to 12)", "Afternoon (12 to 4)", "Evening (4 to 7)", "Any time"])}
+        </div>
+        <div class="field"><label for="q-message">Anything else? (optional)</label><textarea id="q-message" name="message" maxlength="2000" placeholder="Existing plant, roof condition, deadlines, preferred module makes…"></textarea></div>
+        {sel("heard_from", "How did you hear about us?", ["Google search", "News or TV", "Facebook / X / Instagram", "LinkedIn", "A client or colleague", "Event or exhibition", "Other"])}
         <p class="form-consent">By submitting this form, you agree to our <a href="/privacy-policy/">Privacy Policy</a>. We use your details only to prepare your quote and never add you to a mailing list.</p>
-        <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="submit" class="btn btn--sun">Get My Free Quote {ARROW_SVG}</button></div>
+        <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="submit" class="btn btn--sun q-submit">Send Me My Free Quote {ARROW_SVG}</button></div>
+        <ul class="q-assure"><li>{tick}Free</li><li>{tick}No obligation</li><li>{tick}Your number is never shared</li></ul>
         <div class="form-status" id="quoteStatus" role="status"></div>
       </fieldset>
 
       <div class="q-done" id="quoteDone" hidden>
         <span class="q-done__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
-        <h2>Thank you, your request is in.</h2>
-        <p>Our engineering team will review your site details and get back to you with next steps. For anything urgent, email <a href="mailto:arraysingenieria@gmail.com">arraysingenieria@gmail.com</a>.</p>
-        <div class="q-nav q-nav--center"><a class="btn btn--outline" href="/projects/">See our projects</a><a class="btn btn--primary" href="/">Back to home</a></div>
+        <h2>Thank you<span data-done-name></span>! Your request is in.</h2>
+        <p>An engineer from our team will study your details and contact you to plan the next step. Meanwhile, see what we have built for others.</p>
+        <ol class="q-done__next"><li><b>Review</b>We study your site, load and goals.</li><li><b>Call &amp; survey</b>We talk, and survey the site where needed.</li><li><b>Proposal</b>Plant size, scope and price, with no obligation.</li></ol>
+        <div class="q-nav q-nav--center"><a class="btn btn--outline" href="/projects/">See our projects</a><a class="btn btn--primary" href="/project-koomber-tea-estate-595kwp-solar-cm-inauguration/">Koomber: inaugurated by the CM</a></div>
       </div>
     </form>
 
