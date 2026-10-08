@@ -2,6 +2,15 @@
    Six short steps, a live progress bar, a proof point matched to the visitor's choice, an instant savings
    estimate, a summary of their answers, and a lead score in the email subject for the sales team.
    Without JavaScript every step shows and the form posts normally. */
+/* A form service can answer HTTP 200 and still refuse the message (FormSubmit sends {"success":"false"}, for example
+   before the inbox has been activated). Only an explicit success in the JSON body counts as sent. */
+async function formAccepted(res) {
+  let data = null;
+  try { data = await res.json(); } catch (e) { data = null; }
+  const ok = res.ok && data && (data.success === true || data.success === "true" || data.ok === true);
+  return { ok: !!ok, message: data && typeof data.message === "string" ? data.message : "" };
+}
+
 (function () {
   const form = document.getElementById("quoteForm");
   if (!form) return;
@@ -59,16 +68,20 @@
     if (Math.abs(window.scrollY - top) > 40) window.scrollTo({ top, behavior: "smooth" });
   }
 
+  /* "tick at least one service": the error lives on the first box but is re-evaluated from the whole group,
+     so ticking ANY box clears it (it used to clear only when the first box itself changed) */
+  const svc = $$('input[name="services"]');
+  function serviceCheck() {
+    const ok = svc.some((b) => b.checked);
+    svc[0].setCustomValidity(ok ? "" : "Please tick at least one option.");
+    return ok;
+  }
+  svc.forEach((b) => b.addEventListener("change", serviceCheck));
+
   function valid(step) {
+    if (step.dataset.step === "2" && !serviceCheck()) { svc[0].reportValidity(); return false; }
     for (const el of $$("input, select, textarea", step)) {
       if (!el.checkValidity()) { el.reportValidity(); return false; }
-    }
-    if (step.dataset.step === "2" && !$$('input[name="services"]:checked').length) {
-      const first = $('input[name="services"]');
-      first.setCustomValidity("Please tick at least one option.");
-      first.reportValidity();
-      first.addEventListener("change", () => first.setCustomValidity(""), { once: true });
-      return false;
     }
     return true;
   }
@@ -188,7 +201,8 @@
     btn.textContent = "Sending…";
     try {
       const res = await fetch(form.dataset.endpoint, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } });
-      if (!res.ok) throw new Error("send failed");
+      const result = await formAccepted(res);
+      if (!result.ok) throw new Error(result.message || "send failed");
       steps.forEach((s) => { s.hidden = true; });
       $(".q-top").hidden = true;
       const first = ($("#q-name").value || "").trim().split(" ")[0];
@@ -197,7 +211,7 @@
       done.scrollIntoView({ behavior: "smooth", block: "center" });
     } catch (err) {
       status.className = "form-status err";
-      status.textContent = "Couldn't send right now. Please email us at arraysingenieria@gmail.com.";
+      status.textContent = "Your request was not sent. Your answers are still here: please try again, or email us at arraysingenieria@gmail.com.";
     } finally {
       sending = false;
       btn.disabled = false;

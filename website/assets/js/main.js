@@ -1,3 +1,12 @@
+/* A form service can answer HTTP 200 and still refuse the message (FormSubmit sends {"success":"false"}, for example
+   before the inbox has been activated). Only an explicit success in the JSON body counts as sent. */
+async function formAccepted(res) {
+  let data = null;
+  try { data = await res.json(); } catch (e) { data = null; }
+  const ok = res.ok && data && (data.success === true || data.success === "true" || data.ok === true);
+  return { ok: !!ok, message: data && typeof data.message === "string" ? data.message : "" };
+}
+
 /* ===========================================================
    ARRAYS INGENIERIA, page interactions
    =========================================================== */
@@ -207,47 +216,76 @@
     start();
   });
 
-  /* ---------- Lightbox ---------- */
+  /* ---------- Lightbox (accessible photo viewer) ---------- */
   const triggers = $$("[data-full]");
   if (triggers.length) {
     const lb = document.createElement("div");
     lb.className = "lightbox";
+    lb.setAttribute("role", "dialog");
+    lb.setAttribute("aria-modal", "true");
+    lb.setAttribute("aria-label", "Photo viewer");
+    lb.setAttribute("aria-describedby", "lbCaption");
     lb.innerHTML = `
-      <button class="lb-close" aria-label="Close">&times;</button>
-      <button class="lb-nav lb-prev" aria-label="Previous">&#8249;</button>
-      <figure class="lb-stage"><img alt="" /><figcaption></figcaption></figure>
-      <button class="lb-nav lb-next" aria-label="Next">&#8250;</button>`;
+      <button type="button" class="lb-close" aria-label="Close photo viewer">&times;</button>
+      <button type="button" class="lb-nav lb-prev" aria-label="Previous photo">&#8249;</button>
+      <figure class="lb-stage"><img alt="" /><figcaption id="lbCaption" aria-live="polite"></figcaption></figure>
+      <button type="button" class="lb-nav lb-next" aria-label="Next photo">&#8250;</button>`;
+    lb.inert = true; // closed: nothing inside can be focused
     document.body.appendChild(lb);
     const img = $("img", lb), cap = $("figcaption", lb);
-    let group = [], pos = 0;
+    const buttons = () => $$("button", lb).filter(b => !b.hidden);
+    let group = [], pos = 0, opener = null;
     const render = () => {
       const t = group[pos];
       img.src = t.dataset.full;
       const thumb = t.tagName === "IMG" ? t : $("img", t);
       img.alt = (thumb && thumb.alt) || "";
       cap.textContent = t.dataset.caption || img.alt;
+      const many = group.length > 1;
+      $(".lb-prev", lb).hidden = !many;
+      $(".lb-next", lb).hidden = !many;
     };
     const open = t => {
       const g = t.dataset.gallery;
       // only step through items the current filter is showing
       group = g ? triggers.filter(x => x.dataset.gallery === g && x.offsetParent !== null) : [t];
+      if (!group.includes(t)) group = [t];
       pos = group.indexOf(t);
+      opener = t;
       render();
+      lb.inert = false;
       lb.classList.add("open");
       document.body.style.overflow = "hidden";
+      $(".lb-close", lb).focus();
     };
-    const close = () => { lb.classList.remove("open"); document.body.style.overflow = ""; };
+    const close = () => {
+      lb.classList.remove("open");
+      lb.inert = true;
+      document.body.style.overflow = "";
+      if (opener && document.contains(opener)) opener.focus(); // back to the photo the visitor opened
+    };
     const move = d => { pos = (pos + d + group.length) % group.length; render(); };
     triggers.forEach(t => {
       t.style.cursor = "zoom-in";
+      // photos that are not links or buttons become keyboard-operable buttons
+      // ...unless the card already holds its own link (e.g. "Read the case study"): a button may not contain links
+      if (!t.matches("a, button") && !t.querySelector("a[href], button, [tabindex]")) {
+        if (!t.hasAttribute("tabindex")) t.tabIndex = 0;
+        if (!t.getAttribute("role")) t.setAttribute("role", "button");
+        if (!t.getAttribute("aria-label")) {
+          const thumb = t.tagName === "IMG" ? t : $("img", t);
+          const label = t.dataset.caption || (thumb && thumb.alt) || "photo";
+          t.setAttribute("aria-label", "View larger: " + label);
+        }
+        t.addEventListener("keydown", e => {
+          if (e.target !== t) return;
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(t); }
+        });
+      }
       t.addEventListener("click", e => {
         if (e.target.closest("a") && e.target.closest("a") !== t) return; // a link inside the card navigates
         if (t.tagName !== "A") e.preventDefault();
         open(t);
-      });
-      // keyboard access for non-link triggers (clippings marked role="button")
-      if (t.getAttribute("role") === "button") t.addEventListener("keydown", e => {
-        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(t); }
       });
     });
     $(".lb-close", lb).addEventListener("click", close);
@@ -256,9 +294,17 @@
     lb.addEventListener("click", e => { if (e.target === lb) close(); });
     document.addEventListener("keydown", e => {
       if (!lb.classList.contains("open")) return;
-      if (e.key === "Escape") close();
-      if (e.key === "ArrowLeft") move(-1);
-      if (e.key === "ArrowRight") move(1);
+      if (e.key === "Escape") { e.preventDefault(); close(); return; }
+      if (e.key === "ArrowLeft" && group.length > 1) move(-1);
+      if (e.key === "ArrowRight" && group.length > 1) move(1);
+      if (e.key === "Tab") { // keep focus inside the dialog
+        const b = buttons();
+        if (!b.length) return;
+        const first = b[0], last = b[b.length - 1];
+        const inside = lb.contains(document.activeElement);
+        if (e.shiftKey && (document.activeElement === first || !inside)) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && (document.activeElement === last || !inside)) { e.preventDefault(); first.focus(); }
+      }
     });
   }
 
@@ -357,16 +403,14 @@
           status.className = "form-status";
           status.textContent = "Sending your enquiry…";
           const res = await fetch(endpoint, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } });
-          if (res.ok) {
-            status.className = "form-status ok";
-            status.textContent = "✓ Thank you, " + name + "! Your enquiry has been sent. We'll be in touch shortly.";
-            form.reset();
-          } else {
-            throw new Error("send failed");
-          }
+          const result = await formAccepted(res);
+          if (!result.ok) throw new Error(result.message || "send failed");
+          status.className = "form-status ok";
+          status.textContent = "✓ Thank you, " + name + "! Your enquiry has been sent. We'll be in touch shortly.";
+          form.reset(); // only once the service has confirmed it; on failure the visitor's details stay in the form
         } catch (err) {
           status.className = "form-status err";
-          status.textContent = "Couldn't send right now. Please email us at " + COMPANY_EMAIL + ".";
+          status.textContent = "Your enquiry was not sent. Your details are still in the form: please try again, or email us at " + COMPANY_EMAIL + ".";
         } finally {
           sending = false;
           btn.disabled = false;

@@ -31,6 +31,16 @@
       const open = links.classList.toggle("open");
       toggle.classList.toggle("open", open);
       toggle.setAttribute("aria-expanded", String(open));
+      // keyboard users land on the first menu link (the panel comes before the button in the page)
+      if (open) requestAnimationFrame(() => { const f = links.querySelector("a"); if (f) f.focus({ preventScroll: true }); });
+    });
+    // Escape closes the open menu and returns focus to the menu button
+    document.addEventListener("keydown", e => {
+      if (e.key !== "Escape" || !links.classList.contains("open")) return;
+      links.classList.remove("open");
+      toggle.classList.remove("open");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.focus();
     });
     links.querySelectorAll("a").forEach(a =>
       a.addEventListener("click", () => {

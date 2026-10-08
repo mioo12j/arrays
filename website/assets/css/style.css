@@ -13,7 +13,7 @@
   --green-900: #07261b;
   --green-800: #0f3d2e;
   --green-700: #115e43;
-  --green-600: #059669;
+  --green-600: #047857; /* AA contrast for small text on white and mint (was #059669) */
   --green-500: #10b981;
   --green-400: #34d399;
   --green-300: #6ee7b7;
@@ -25,7 +25,7 @@
 
   --ink:      #0c1f17;
   --body:     #3f5249;
-  --muted:    #6b7d74;
+  --muted:    #55655d; /* AA contrast for small text (was #6b7d74) */
   --line:     #e3ece7;
   --bg:       #ffffff;
   --bg-soft:  #f4faf7;
@@ -1978,3 +1978,21 @@ body[data-page="quote"] .cta-strip, body[data-page="quote"] .contact-dock { disp
   .q-done__next { grid-template-columns: 1fr; }
   .q-inline select { max-width: 42%; }
 }
+.calc-error { margin: 10px 0 0; padding: 10px 14px; border-radius: 10px; background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; font-size: 14px; font-weight: 600; }
+/* ---- Keyboard: a closed slide-down menu (tablet and phone) cannot take focus ---- */
+@media (max-width: 1180px) {
+  .nav-links { visibility: hidden; transition: transform .3s, opacity .3s, visibility 0s linear .3s; }
+  .nav-links.open { visibility: visible; transition: transform .3s, opacity .3s, visibility 0s; }
+}
+/* visible focus ring for photos that open the viewer */
+[data-full][role="button"]:focus-visible { outline: 3px solid var(--green-600); outline-offset: 3px; }
+.lightbox .lb-nav[hidden] { display: none; }
+/* ---- AA contrast fixes found by axe ---- */
+.stat-card .num .suffix, .metrics-badges b i { color: #b45309; }            /* gold on white: 2.1 -> 5.0 */
+.cm-chip[href*="facebook.com"] { background: #1458c4; }                       /* white on FB blue: 4.2 -> 6.2 */
+.cm-section:not(.section--news) .cm-kicker, .kv-head .cm-kicker { color: #92400e; background: #fef3c7; border-color: #fcd34d; }
+.se-foot a { color: #0b5394; }                                                /* platform blues on white: 2.9 -> 7.6 */
+[data-platform="facebook"] .se-foot a { color: #1458c4; }
+[data-platform="instagram"] .se-foot a { color: #b0173a; }
+.cmp-wrap:focus-visible { outline: 3px solid var(--green-600); outline-offset: 3px; }
+.cp-facebook { background: #1458c4 !important; }

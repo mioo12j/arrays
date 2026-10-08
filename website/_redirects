@@ -44,4 +44,4 @@
 /privacy.html  /privacy-policy/  301
 /privacy  /privacy-policy/  301
 /privacy/  /privacy-policy/  301
-/tools/*  /404.html  404!
+/tools/*  /  301

@@ -69,21 +69,18 @@ Add an entry to `COVERAGE` in `tools/build.py`. It appears on the News & Media p
 the "featured in" strips and the structured data. Then run the build.
 
 ## Domain
-`SITE_URL` in `tools/build.py` is **https://arraysingenieria.com**. It is used only where search engines
-and social networks need a full address: canonical tags, `og:`/`twitter:` tags, structured data,
-`sitemap.xml`, `robots.txt` and `llms.txt`. Every link between pages, image and script is root-relative
-(`/about/`, `/assets/...`), so the site works on any host: locally, on the netlify.app address, and on
-the domain. The build fails if a page link or image ever uses the full domain.
+`SITE_URL` in `tools/build.py` is the site's public address, used only where search engines and social
+networks need a full URL: canonical tags, `og:`/`twitter:` tags, structured data, `sitemap.xml`,
+`robots.txt` and `llms.txt`. It must be an address that loads. Today that is the Cloudflare Pages
+address **https://arrays-9mj.pages.dev**. Every link between pages, image and script is root-relative
+(`/about/`, `/assets/...`), so the site works on any host; the build fails if a page link uses a full domain.
 
-When the domain is bought:
-1. In Netlify: Domain management, Add a domain, `arraysingenieria.com`, and follow its DNS steps.
-   Add `www.arraysingenieria.com` too and keep `arraysingenieria.com` as the primary domain; Netlify then
-   301-redirects www and HTTP to it and issues the HTTPS certificate.
-2. Once the domain loads over HTTPS, add this line at the top of `_redirects` (via `write_redirects()` in
-   `tools/build.py`) so the old address sends visitors and Google to the domain:
-   `https://arraysingenieria.netlify.app/*  https://arraysingenieria.com/:splat  301!`
-   Do not add it before the domain works, or the netlify.app address will redirect to a dead site.
-3. In Google Search Console, add the domain property and submit `https://arraysingenieria.com/sitemap.xml`.
+When `arraysingenieria.com` is bought:
+1. In Cloudflare Pages, open the project, go to Custom domains and add `arraysingenieria.com` (and
+   `www.arraysingenieria.com`); Cloudflare sets up DNS and HTTPS.
+2. Once https://arraysingenieria.com loads, set `SITE_URL = "https://arraysingenieria.com"`, run
+   `python3 tools/build.py`, commit and push.
+3. In Google Search Console, add the domain and submit `https://arraysingenieria.com/sitemap.xml`.
 
 ## Run locally
     python3 tools/serve.py          # then open http://localhost:8766/

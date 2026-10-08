@@ -3,5 +3,5 @@ User-agent: *
 Allow: /
 Disallow: /tools/
 
-Sitemap: https://arraysingenieria.com/sitemap.xml
-# Plain-language summary of the site: https://arraysingenieria.com/llms.txt
+Sitemap: https://arrays-9mj.pages.dev/sitemap.xml
+# Plain-language summary of the site: https://arrays-9mj.pages.dev/llms.txt

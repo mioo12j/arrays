@@ -23,9 +23,36 @@
 
   let last = null;
 
+  // Plain-language error under the button; results stay hidden until the inputs make sense.
+  function calcError(msg) {
+    let el = $("calcError");
+    if (!el) {
+      el = document.createElement("p");
+      el.id = "calcError";
+      el.className = "calc-error";
+      el.setAttribute("role", "alert");
+      $("calcBtn").insertAdjacentElement("afterend", el);
+    }
+    el.textContent = msg;
+    el.hidden = !msg;
+  }
+
   function compute() {
-    const bill = +$("calcBill").value || 0;
-    const tariff = Math.max(1, +$("calcTariff").value || 8);
+    const billRaw = $("calcBill").value.trim();
+    const tariffRaw = $("calcTariff").value.trim();
+    const bill = +billRaw;
+    const tariff = tariffRaw === "" ? 8 : +tariffRaw;
+    let problem = "";
+    if (!billRaw || !isFinite(bill) || bill < 500) problem = "Enter your average monthly electricity bill (at least ₹500).";
+    else if (bill > 1e8) problem = "That bill looks too high. Please check the amount.";
+    else if (!isFinite(tariff) || tariff < 1 || tariff > 30) problem = "Enter a tariff between ₹1 and ₹30 per unit.";
+    if (problem) {
+      calcError(problem);
+      $("calcResults").hidden = true;
+      last = null;
+      return false;
+    }
+    calcError("");
     const sun = +$("calcSun").value || 4.3;
     const typeEl = $("calcType");
     const costPer = +typeEl.value || 52000;
@@ -84,13 +111,13 @@
 
   $("calcBtn").addEventListener("click", compute);
   ["calcBill", "calcTariff", "calcSun", "calcType", "calcSubsidy"].forEach(id =>
-    $(id).addEventListener("change", () => { if (!$("calcResults").hidden) compute(); }));
+    $(id).addEventListener("change", () => { if (!$("calcResults").hidden || $("calcError")) compute(); }));
   ["calcBill", "calcTariff"].forEach(id =>
     $(id).addEventListener("keydown", e => { if (e.key === "Enter") compute(); }));
 
   /* ---------------- 2-page PDF report ---------------- */
   function buildPdf() {
-    if (!last) compute();
+    if (!last && compute() === false) return null;
     if (!(window.jspdf && window.jspdf.jsPDF)) return null;
     const d = last;
     const doc = new window.jspdf.jsPDF({ unit: "pt", format: "a4" });
@@ -251,7 +278,10 @@
 
   $("calcPdf").addEventListener("click", function () {
     const doc = buildPdf();
-    if (!doc) { alert("Preparing report… please click again in a moment."); return; }
+    if (!doc) {
+      if (last) alert("Preparing report… please click again in a moment."); // inputs are fine, the PDF library is still loading
+      return; // otherwise the input error is already shown under the button
+    }
     doc.save("Ingenieria-Solar-Estimate.pdf");
   });
   window.__buildPdf = buildPdf;
