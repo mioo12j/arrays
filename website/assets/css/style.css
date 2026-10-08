@@ -1825,3 +1825,29 @@ figure.testi { margin: 0; } .testi blockquote { margin: 0; }
 .tv-more a { display: inline-flex; align-items: center; gap: 6px; color: var(--green-600); }
 .tv-more svg { width: 15px; height: 15px; }
 .tv-grid--yt { grid-template-columns: minmax(0, 720px); justify-content: center; margin-top: 8px; }
+/* Mission & Vision (home) */
+.mv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.mv-card { position: relative; overflow: hidden; padding: 34px 32px; border-radius: 24px; background: #fff; border: 1.5px solid var(--line); box-shadow: var(--shadow-sm); }
+.mv-card::after { content: ""; position: absolute; width: 180px; height: 180px; right: -60px; top: -60px; border-radius: 50%; background: rgba(16,185,129,.10); }
+.mv-card--alt::after { background: rgba(251,191,36,.16); }
+.mv-card h3 { font-size: 22px; margin: 16px 0 10px; }
+.mv-card p { line-height: 1.75; margin: 0; position: relative; z-index: 1; }
+.mv-ic { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; background: var(--grad-green); color: #fff; position: relative; z-index: 1; }
+.mv-card--alt .mv-ic { background: var(--grad-sun); color: #3d2c00; }
+.mv-ic svg { width: 26px; height: 26px; }
+.mv-values { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 26px; }
+.mv-values span { padding: 8px 16px; border-radius: 999px; background: rgba(16,185,129,.10); color: var(--green-700); font-weight: 600; font-size: 14px; }
+@media (max-width: 760px) { .mv-grid { grid-template-columns: 1fr; } .mv-card { padding: 26px 22px; } }
+/* ---- Phones: fewer, smaller photos on the home page ---- */
+@media (max-width: 700px) {
+  #work-gallery .gallery-grid { columns: 2; column-gap: 10px; }
+  #work-gallery .gallery-grid .g-item { margin-bottom: 10px; border-radius: 10px; }
+  #work-gallery .gallery-grid .g-item:nth-child(n+7) { display: none; }
+  #work-gallery .gallery-grid .g-item .g-cap { display: none; }
+  .achievements-home .cert-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .achievements-home .cert-card:nth-child(n+5) { display: none; }
+  .achievements-home .cert-card h4, .achievements-home .cert-card .hs { font-size: 13.5px; }
+  .achievements-home .cert-card p { font-size: 12.5px; }
+  .cm-mosaic { height: 240px; }
+  .slideshow.ratio { aspect-ratio: 4 / 3; }
+}
