@@ -35,7 +35,7 @@ SITE_URL = "https://arraysingenieria.com"
 KNOWN_HOSTS = re.compile(r"https?://(?:www\.)?arraysingenieria\.(?:com|netlify\.app)")
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-JS_SOURCES = ("components", "main", "calculator", "india-map-data")
+JS_SOURCES = ("components", "main", "calculator", "india-map-data", "quote")
 
 
 def _asset_version():
@@ -163,6 +163,9 @@ PAGES.update({
     "where-we-work.html": dict(path="/where-we-work.html", crumb="Where We Work",
         title="Where We Work: Solar Projects by State | Arrays Ingenieria",
         desc="Arrays Ingenieria's solar projects across Assam, West Bengal, Bihar, Jharkhand, Uttar Pradesh, Uttarakhand, Haryana and Karnataka, state by state."),
+    "free-solar-quote.html": dict(path="/free-solar-quote.html", crumb="Free Solar Quote",
+        title="Get a Free Solar Quote | Arrays Ingenieria Solar EPC",
+        desc="Free, no-obligation solar quote from Arrays Ingenieria: CAPEX solar EPC, installation & commissioning and civil works. Three quick questions, one engineer."),
     "contact.html": dict(path="/contact.html", crumb="Contact",
         title="Contact Arrays Ingenieria | Solar EPC, Greater Noida",
         desc="Contact Arrays Ingenieria for solar EPC, installation & commissioning or civil works. Corporate office Greater Noida, branch office Madhubani, Bihar."),
@@ -725,10 +728,10 @@ def render_header(page_key, fname=""):
       <a href="/" class="brand" aria-label="Arrays Ingenieria, home">
         <img src="assets/img/logo-wordmark.svg" alt="INGENIERIA, Arrays Ingenieria Pvt. Ltd." class="brand-logo" width="690" height="72" />
       </a>
-      <nav class="nav-links" id="navLinks" aria-label="Primary">{links}<a class="nav-quote" href="contact.html">Get a Free Quote</a></nav>
+      <nav class="nav-links" id="navLinks" aria-label="Primary">{links}<a class="nav-quote" href="free-solar-quote.html">Get a Free Quote</a></nav>
       <div class="nav-cta">
         <a href="projects.html" class="btn btn--outline">Our Work</a>
-        <a href="contact.html" class="btn btn--primary">Get a Quote</a>
+        <a href="free-solar-quote.html" class="btn btn--primary">Get a Quote</a>
         <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
           <span></span><span></span><span></span>
         </button>
@@ -742,7 +745,7 @@ FOOTER = f"""<section class="cta-strip" aria-label="Contact Arrays Ingenieria">
       <div class="cta-strip__txt"><span class="eyebrow">Talk to an engineer</span><h2>Planning a solar plant? <span class="text-sun">Let's build it together.</span></h2>
         <p>CAPEX solar EPC, installation &amp; commissioning and civil works, delivered by an ex-servicemen-led team across India. Tell us about your site and an engineer will get back to you.</p></div>
       <div class="cta-strip__btns">
-        <a class="btn btn--sun" href="contact.html">Get a Free Quote {ARROW_SVG}</a>
+        <a class="btn btn--sun" href="free-solar-quote.html">Get a Free Quote {ARROW_SVG}</a>
         <a class="btn btn--ghost" href="mailto:arraysingenieria@gmail.com?subject=Solar%20project%20enquiry">Email arraysingenieria@gmail.com</a>
       </div>
     </div>
@@ -816,7 +819,7 @@ FOOTER = f"""<section class="cta-strip" aria-label="Contact Arrays Ingenieria">
 
   <nav class="contact-dock" aria-label="Quick contact">
     <a class="cd-mail" href="mailto:arraysingenieria@gmail.com?subject=Solar%20project%20enquiry" aria-label="Email Arrays Ingenieria"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>Email us</span></a>
-    <a class="cd-quote" href="contact.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span>Free solar quote</span></a>
+    <a class="cd-quote" href="free-solar-quote.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span>Free solar quote</span></a>
   </nav>
   <button class="to-top" id="toTop" aria-label="Back to top">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
@@ -1404,7 +1407,7 @@ def render_project_page(p):
       <div class="aside-card cta">
         <h2 class="aside-h">Planning a similar project?</h2>
         <p>Talk to our veteran-led team about EPC, installation &amp; commissioning or civil works.</p>
-        <a class="btn btn--sun" href="contact.html" style="width:100%;">Get a Free Quote</a>
+        <a class="btn btn--sun" href="free-solar-quote.html" style="width:100%;">Get a Free Quote</a>
       </div>
     </aside>
   </div>
@@ -1601,10 +1604,120 @@ def render_clients_page():
     return page_shell("clients", body, "assets/photos/arrays-ingenieria-super-smelters-1980kwp-solar-plant-asansol.jpg", "Super Smelters solar plant by Arrays Ingenieria", ld)
 
 
+QUOTE_SERVICES = [
+    ("capex", "Own a solar plant (CAPEX)", "Rooftop or ground-mount, designed, built and commissioned for you to own."),
+    ("ic", "Installation & commissioning", "For EPC companies and developers: we install, test and commission."),
+    ("civil", "Civil works & piling", "Pile foundations, fencing, roads, drainage and boundary walls."),
+    ("tea", "Solar for a tea estate", "Ground-mount, on-grid plants with DG synchronisation and APDCL approvals."),
+    ("om", "O&M for an existing plant", "Maintenance and support to keep a plant at peak output."),
+    ("other", "Something else", "Tell us in the last step."),
+]
+
+
+def render_quote_page():
+    hero = "assets/koomber/arrays-ingenieria-ex-servicemen-led-koomber-tea-estate-595kwp-solar-cm-inaugurates-595kwp-solar-plant-ribbon-cutting.jpg"
+    svc = "".join(f'''<label class="q-opt"><input type="radio" name="service" value="{esc(t)}" required{" checked" if i == 0 else ""} />
+            <span class="q-opt__box"><b>{esc(t)}</b><small>{esc(d)}</small></span></label>''' for i, (_, t, d) in enumerate(QUOTE_SERVICES))
+    def sel(name, label, opts, req=False):
+        o = "".join(f"<option>{esc(x)}</option>" for x in opts)
+        return (f'<div class="field"><label for="q-{name}">{label}{" *" if req else ""}</label><select id="q-{name}" name="{name}"'
+                f'{" required" if req else ""}><option value="">Select…</option>{o}</select></div>')
+    rai = next(c for c in COVERAGE if c["id"] == "kaushik-rai-koomber")
+    body = page_hero(hero, "The Chief Minister of Assam inaugurates the 595 kWp Koomber solar plant installed by Arrays Ingenieria",
+                     "Free Solar Quote", 'Your Solar Plant, <span class="text-sun">Quoted Free</span>',
+                     "Three quick questions. An engineer from our ex-servicemen-led team reviews your site and sends a clear, "
+                     "no-obligation proposal.", [("Free Solar Quote", None)]) + f"""
+
+<section class="section quote-section">
+  <div class="container quote-grid">
+    <form class="form-card quote-form reveal" id="quoteForm" action="https://formsubmit.co/arraysingenieria@gmail.com" method="POST"
+          data-endpoint="https://formsubmit.co/ajax/arraysingenieria@gmail.com">
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <input type="hidden" name="_subject" value="Free solar quote request, Arrays Ingenieria website" />
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_template" value="table" />
+      <ol class="q-progress" aria-hidden="true"><li class="on"><span>1</span>Project</li><li><span>2</span>Site</li><li><span>3</span>Contact</li></ol>
+
+      <fieldset class="q-step" data-step="1">
+        <legend>What do you need?</legend>
+        <div class="q-opts">{svc}</div>
+        <div class="q-nav"><span></span><button type="button" class="btn btn--primary" data-next>Next: your site {ARROW_SVG}</button></div>
+      </fieldset>
+
+      <fieldset class="q-step" data-step="2">
+        <legend>Tell us about the site</legend>
+        <div class="field"><label for="q-location">Site location *</label><input type="text" id="q-location" name="location" placeholder="City / district, State" maxlength="120" required /></div>
+        <div class="field-row">
+          {sel("site_type", "Where will the panels go?", ["Factory or building rooftop", "Open land (ground-mount)", "Tea estate land", "Not sure yet"])}
+          {sel("bill", "Monthly electricity bill", ["Below Rs 50,000", "Rs 50,000 to 2 lakh", "Rs 2 lakh to 10 lakh", "Above Rs 10 lakh", "Not sure"])}
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="q-size">Roof / land area or capacity</label><input type="text" id="q-size" name="size" placeholder="e.g. 5,000 sq ft, 2 acres or 500 kW" maxlength="80" /></div>
+          {sel("timeline", "When do you want to start?", ["Within 3 months", "3 to 6 months", "6 to 12 months", "Just exploring"])}
+        </div>
+        <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--primary" data-next>Next: your details {ARROW_SVG}</button></div>
+      </fieldset>
+
+      <fieldset class="q-step" data-step="3">
+        <legend>Where should we send your quote?</legend>
+        <div class="field-row">
+          <div class="field"><label for="q-name">Full name *</label><input type="text" id="q-name" name="name" autocomplete="name" maxlength="100" required /></div>
+          <div class="field"><label for="q-company">Company / estate</label><input type="text" id="q-company" name="company" autocomplete="organization" maxlength="120" /></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="q-phone">Phone *</label><input type="tel" id="q-phone" name="phone" placeholder="+91 " autocomplete="tel" inputmode="tel" pattern="[0-9+\\(\\)\\s\\-]{{7,20}}" title="Phone number: 7 to 20 digits, spaces, +, - or brackets" maxlength="20" required /></div>
+          <div class="field"><label for="q-email">Email *</label><input type="email" id="q-email" name="email" autocomplete="email" maxlength="254" required /></div>
+        </div>
+        <div class="field"><label for="q-message">Anything else we should know?</label><textarea id="q-message" name="message" maxlength="2000" placeholder="Load, existing DG sets, grid connection, preferred module makes…"></textarea></div>
+        <p class="form-consent">By submitting this form, you agree to our <a href="/privacy-policy/">Privacy Policy</a>. We use your details only to prepare your quote and never add you to a mailing list.</p>
+        <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="submit" class="btn btn--sun">Get My Free Quote {ARROW_SVG}</button></div>
+        <div class="form-status" id="quoteStatus" role="status"></div>
+      </fieldset>
+
+      <div class="q-done" id="quoteDone" hidden>
+        <span class="q-done__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+        <h2>Thank you, your request is in.</h2>
+        <p>Our engineering team will review your site details and get back to you with next steps. For anything urgent, email <a href="mailto:arraysingenieria@gmail.com">arraysingenieria@gmail.com</a>.</p>
+        <div class="q-nav q-nav--center"><a class="btn btn--outline" href="/projects/">See our projects</a><a class="btn btn--primary" href="/">Back to home</a></div>
+      </div>
+    </form>
+
+    <aside class="quote-trust reveal" data-d="1">
+      <figure class="qt-photo"><img src="{hero}" alt="Chief Minister Dr Himanta Biswa Sarma inaugurates the 595 kWp Koomber Tea Estate solar plant installed by Arrays Ingenieria" />
+        <figcaption><b>Inaugurated by the Chief Minister of Assam</b>595 kWp at Koomber Tea Estate, 1 October 2026</figcaption></figure>
+      <ul class="qt-points">
+        <li><b>Ex-servicemen-led MSME</b>Military discipline on every site, led by Lt. Gen. A.R. Prasad (Retd).</li>
+        <li><b>ISO 9001 · 14001 · 45001</b>Quality, environment and safety systems, certified.</li>
+        <li><b>Trusted by industry</b>Tata Power, Goodricke, Jay Shree Tea, Sustvest, Super Smelters.</li>
+        <li><b>19 on-grid plants in Assam's tea gardens</b>Including Koomber, Orangajuli and Borpatra in 2026.</li>
+      </ul>
+      <blockquote class="cm-quote qt-quote"><p>“{esc(rai['quote'])}”</p><cite>{esc(rai['outlet'])}</cite></blockquote>
+    </aside>
+  </div>
+</section>
+
+<section class="section section--soft">
+  <div class="container">
+    <div class="section-head center reveal"><span class="eyebrow">What Happens Next</span><h2>From Request to <span class="text-grad">Proposal</span></h2></div>
+    <ol class="proc-steps q-next">
+      <li class="reveal" data-d="0"><span class="st-n">1</span><div><b>We review your request</b><p>An engineer studies your site, load and goals.</p></div></li>
+      <li class="reveal" data-d="1"><span class="st-n">2</span><div><b>We talk and survey</b><p>A call to understand your needs, then a site survey where needed.</p></div></li>
+      <li class="reveal" data-d="2"><span class="st-n">3</span><div><b>You get a clear proposal</b><p>Plant size, scope of work and price, with no obligation.</p></div></li>
+    </ol>
+    <div class="section-cta reveal"><a class="btn btn--outline" href="/how-it-works/">How a project runs</a><a class="btn btn--outline" href="/faq/">Questions? Read the FAQ</a></div>
+  </div>
+</section>
+<script src="assets/js/quote.js?v={ASSET_VERSION}"></script>"""
+    ld = [{"@context": "https://schema.org", "@type": "ContactPage", "name": "Get a free solar quote",
+           "url": SITE_URL + page_url("free-solar-quote.html"), "about": {"@id": SITE_URL + "/#organization"},
+           "potentialAction": {"@type": "QuoteAction", "agent": {"@type": "Person"}, "object": {"@id": SITE_URL + "/#organization"}}}]
+    return page_shell("quote", body, hero, "Arrays Ingenieria: the 595 kWp Koomber solar plant inaugurated by the Chief Minister of Assam", ld)
+
+
 def write_generated_pages():
     for p in PROJECTS:
         write_page(p["file"], render_project_page(p))
-    for fname, render in (("faq.html", render_faq_page), ("solar-glossary.html", render_glossary_page), ("insights.html", render_insights_page),
+    for fname, render in (("free-solar-quote.html", render_quote_page), ("faq.html", render_faq_page), ("solar-glossary.html", render_glossary_page), ("insights.html", render_insights_page),
                           ("clients.html", render_clients_page)):
         write_page(fname, render())
 
