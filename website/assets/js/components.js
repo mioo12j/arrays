@@ -67,9 +67,10 @@
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 })();
 
-/* ---------- social posts: click-to-load facade ----------
-   The page shows a post-style card. Only when a visitor clicks "Show the original post" do we load
-   that platform's script (and its cookies), and only that post is turned into the official embed. */
+/* ---------- social posts: the platforms' official embeds ----------
+   Each post is first shown as a post-style card (so the page is never empty). As the visitor scrolls
+   near it, the platform's script loads once and the card is replaced by the original post from
+   X, Facebook or Instagram. If the platform is blocked or offline, the card simply stays. */
 (function () {
   const SRC = {
     x: "https://platform.twitter.com/widgets.js",
@@ -97,18 +98,23 @@
     if (p === "facebook" && window.FB) window.FB.XFBML.parse(wrap);
     if (p === "instagram" && window.instgrm) window.instgrm.Embeds.process();
   }
-  document.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-load-embed]");
-    if (!btn) return;
-    const wrap = btn.closest(".se");
-    const p = wrap && wrap.dataset.platform;
-    if (!SRC[p]) return;
+  function show(wrap) {
+    const p = wrap.dataset.platform;
+    if (!SRC[p] || wrap.dataset.embedded) return;
+    wrap.dataset.embedded = "1";
     wrap.querySelectorAll("[data-embed-class]").forEach((el) => el.classList.add(el.dataset.embedClass));
-    btn.disabled = true;
-    btn.firstChild.textContent = "Loading the original post…";
-    load(p).then(() => { render(p, wrap); btn.remove(); })
-      .catch(() => { btn.disabled = false; btn.firstChild.textContent = "Could not load the post. Use the link above."; });
-  });
+    load(p).then(() => render(p, wrap)).catch(() => {});
+  }
+  const posts = document.querySelectorAll(".se[data-platform]");
+  if (!posts.length) return;
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { if (en.isIntersecting) { io.unobserve(en.target); show(en.target); } });
+    }, { rootMargin: "600px 0px" });
+    posts.forEach((el) => io.observe(el));
+  } else {
+    posts.forEach(show);
+  }
 })();
 
 /* ---------- YouTube facade: the player loads only when the visitor presses play ---------- */
