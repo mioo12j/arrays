@@ -126,7 +126,7 @@ PAGES = {
 }
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from content import (PROJECTS, FAQ, GLOSSARY, CLIENTS, LEADER_QUOTES, NATIONAL_FACTS, SCHEMES, TIMELINE,  # noqa: E402
-                     PANCHAMRIT, PANCHAMRIT_URL, STATES, KOOMBER_ALBUM, BORPATRA_ALBUM, INSIGHTS, TRACK_RECORD)
+                     PANCHAMRIT, PANCHAMRIT_URL, STATES, KOOMBER_ALBUM, BORPATRA_ALBUM, INSIGHTS, TRACK_RECORD, TRACK_SUMMARY)
 
 PAGES.update({
     "capex-solar-epc.html": dict(path="/capex-solar-epc.html", crumb="CAPEX Solar EPC", parent="services",
@@ -1237,9 +1237,11 @@ def render_cm_showcase(videos=True):
 def render_track_record():
     rows = "".join(f"<tr><td>{esc(y)}</td><th scope=\"row\">{esc(site)}</th><td>{esc(cap)}</td><td>{esc(st)}</td><td>{esc(scope)}</td><td>{esc(by)}</td></tr>"
                    for y, site, cap, st, scope, by in sorted(TRACK_RECORD, key=lambda r: r[0][:4], reverse=True))
-    return f"""<div class="tr-wrap reveal" tabindex="0" role="region" aria-label="Work experience table">
+    summary = "".join(f'<div><b>{esc(n)}</b><span>{esc(l)}</span></div>' for n, l in TRACK_SUMMARY)
+    return f"""<div class="tr-sum reveal">{summary}</div>
+    <div class="tr-wrap reveal" tabindex="0" role="region" aria-label="Work experience table">
       <table class="tr-table">
-        <caption>Work experience from purchase orders, 2021-2026. TPSSL: Tata Power Solar Systems Ltd. TPREL: Tata Power Renewable Energy Ltd.</caption>
+        <caption>Work experience from all 181 purchase orders, 2021-2026, one row per site. TPSSL: Tata Power Solar Systems Ltd. TPREL: Tata Power Renewable Energy Ltd.</caption>
         <thead><tr><th scope="col">Year</th><th scope="col">Site</th><th scope="col">Capacity</th><th scope="col">State</th><th scope="col">Our scope</th><th scope="col">Ordered by</th></tr></thead>
         <tbody>{rows}</tbody>
       </table>
@@ -2380,7 +2382,7 @@ def write_llms():
     out = ["# Arrays Ingenieria Pvt. Ltd. (INGENIERIA)", "",
            "> Ex-servicemen-led, ISO-certified Indian MSME that delivers solar installation & commissioning (I&C), CAPEX solar EPC "
            "and all solar civil works (pile foundations, fencing, roads, drainage) for ground-mount and rooftop plants. "
-           "Motto: \"Olive Green to Go Green\". Founder and CEO: Lt. Gen. Ashish Ranjan Prasad (Retd). Corporate office in Greater Noida (Uttar Pradesh), offices in New Delhi and Madhubani (Bihar); GSTINs 07AARCA4610L1ZG (Delhi), 09AARCA4610L1ZC (UP), 10AARCA4610L1ZT (Bihar); "
+           "Motto: \"Olive Green to Go Green\". Founder and CEO: Lt. Gen. Ashish Ranjan Prasad (Retd). Corporate office in Greater Noida (Uttar Pradesh), branch office in Madhubani (Bihar); "
            "projects across Assam, Bihar, Jharkhand, West Bengal, Uttar Pradesh, Uttarakhand, Haryana and Karnataka.", "",
            "Key facts:",
            "- Does NOT manufacture solar modules or inverters, and does not run OPEX/RESCO models; it builds plants the client owns (CAPEX) "
