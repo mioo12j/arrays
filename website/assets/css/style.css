@@ -1988,7 +1988,8 @@ body[data-page="quote"] .cta-strip, body[data-page="quote"] .contact-dock { disp
 [data-full][role="button"]:focus-visible { outline: 3px solid var(--green-600); outline-offset: 3px; }
 .lightbox .lb-nav[hidden] { display: none; }
 /* ---- AA contrast fixes found by axe ---- */
-.stat-card .num .suffix, .metrics-badges b i { color: #b45309; }            /* gold on white: 2.1 -> 5.0 */
+.stat-card .num .suffix, .metrics-badges b i { color: #b8860b; }            /* true gold, 3.25:1 on white: passes for large bold text */
+.metrics-badges b i { font-size: 19px; }                                        /* large bold text, so the gold stays readable */
 .cm-chip[href*="facebook.com"] { background: #1458c4; }                       /* white on FB blue: 4.2 -> 6.2 */
 .cm-section:not(.section--news) .cm-kicker, .kv-head .cm-kicker { color: #92400e; background: #fef3c7; border-color: #fcd34d; }
 .se-foot a { color: #0b5394; }                                                /* platform blues on white: 2.9 -> 7.6 */
@@ -1996,3 +1997,43 @@ body[data-page="quote"] .cta-strip, body[data-page="quote"] .contact-dock { disp
 [data-platform="instagram"] .se-foot a { color: #b0173a; }
 .cmp-wrap:focus-visible { outline: 3px solid var(--green-600); outline-offset: 3px; }
 .cp-facebook { background: #1458c4 !important; }
+
+/* ---- Home "In the News": video reports first, then press and client quotes ---- */
+.home-videos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; align-items: stretch; }
+.home-videos .tv-card { flex-direction: column; box-shadow: var(--shadow); }
+.home-videos .tv-card .tv-thumb { flex: none; aspect-ratio: 16/9; min-height: 0; }
+.home-videos .tv-card .vc-play { width: 60px; height: 60px; margin: -30px 0 0 -30px; }
+.home-quotes { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin: 22px 0 30px; }
+@media (max-width: 1024px) { .home-videos { grid-template-columns: 1fr 1fr; } .home-videos .tv-card:first-child { grid-column: 1 / -1; } }
+@media (max-width: 680px) { .home-videos, .home-quotes { grid-template-columns: 1fr; } .home-videos .tv-card:first-child { grid-column: auto; } }
+/* a soft placeholder while photos decode, never a black box */
+.cm-pic { background: linear-gradient(135deg, #dfe9e3, #c9dbd1); }
+.tv-thumb { background: linear-gradient(135deg, #1d5a43, #2f7d5f); }
+.project__overlay h3 a { color: inherit; text-decoration: none; }
+.project__overlay h3 a::after { content: ""; position: absolute; inset: 0; }   /* whole card clickable */
+/* the impact card follows the white "How We Work" section: no second band of empty space above it */
+.section.impact-section { padding-top: 0; }
+/* key numbers: one band, revealed together so the four cards always line up */
+.section.stats { padding-block: clamp(36px, 5vw, 56px); }
+.stats__grid { align-items: stretch; }
+.stat-card { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.home-clips { margin-top: 26px; }
+.hc-title { font-family: var(--head); font-weight: 700; font-size: 13px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--green-700); margin: 0 0 12px; }
+.hc-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.hc-clip { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-sm); color: inherit; text-decoration: none; transition: transform .3s, box-shadow .3s; }
+.hc-clip:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.hc-img { display: block; aspect-ratio: 4/3; overflow: hidden; background: #f3efe6; }
+.hc-img img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.hc-cap { display: flex; justify-content: space-between; gap: 8px; padding: 10px 12px; font-size: 12.5px; color: var(--muted); }
+.hc-cap b { color: var(--ink, #0f2a1f); font-size: 13px; }
+@media (max-width: 900px) { .hc-row { grid-template-columns: repeat(2, 1fr); } }
+/* ---- Projects: work-experience table ---- */
+.tr-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; background: #fff; box-shadow: var(--shadow-sm); }
+.tr-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 760px; }
+.tr-table caption { caption-side: bottom; text-align: left; padding: 12px 16px; font-size: 12.5px; color: var(--muted); }
+.tr-table th, .tr-table td { padding: 11px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+.tr-table thead th { background: var(--green-700, #065f46); color: #fff; font-family: var(--head); font-size: 12.5px; letter-spacing: .4px; text-transform: uppercase; white-space: nowrap; }
+.tr-table tbody th { font-weight: 700; color: #0f2a1f; }
+.tr-table tbody tr:nth-child(even) { background: #f6faf8; }
+.tr-table td:first-child { white-space: nowrap; font-weight: 600; color: var(--green-600); }
+.metrics-badges b i { color: #a87d00; }                                        /* deeper gold: the badge sits on a tinted panel */

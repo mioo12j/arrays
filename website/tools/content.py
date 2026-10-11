@@ -118,6 +118,12 @@ PROJECTS = [
         docs=[("assets/certs/goodricke-appreciation-borpatra-230kwp-arrays-ingenieria.jpg", "Goodricke certificate of appreciation: installation & commissioning of the 230 kWp plant at Borpatra Tea Garden"),
               ("assets/news/northeast-chronicle-borpatra-230kwp-solar-arrays-ingenieria.jpg", "Northeast Chronicle, 27 Sep 2026"),
               ("assets/news/dainik-purvoday-borpatra-230kw-solar-arrays-ingenieria.jpg", "Dainik Purvoday, 26 Sep 2026"),
+              ("assets/news/prerna-bharati-borpatra-230kw-solar-arrays-ingenieria.jpg", "Prerna Bharati, 26 Sep 2026"),
+              ("assets/news/purvanchal-prahari-borpatra-230kw-solar-arrays-ingenieria.jpg", "Purvanchal Prahari, 26 Sep 2026"),
+              ("assets/news/swarajati-borpatra-230kwp-solar-arrays-ingenieria.jpg", "Swarajati, 27 Sep 2026"),
+              ("assets/news/dainik-janambhumi-borpatra-solar-arrays-ingenieria.jpg", "Dainik Janambhumi, 27 Sep 2026"),
+              ("assets/news/janambhumi-borpatra-230kw-solar-arrays-ingenieria.jpg", "Janambhumi (online), 26 Sep 2026"),
+              ("assets/news/niyamiya-barta-borpatra-solar-arrays-ingenieria.jpg", "Niyomiya Barta, 27 Sep 2026"),
               ("assets/news/arrays-ingenieria-borpatra-230kwp-tata-power-media-monitor.jpg", "Listed in Tata Power / TPREL media monitoring, 27 Sep 2026")],
         coverage=["northeast-chronicle-borpatra", "barpatra-230kw", "prerna-bharati-borpatra", "purvanchal-prahari-borpatra", "swarajati-borpatra", "dainik-janambhumi-borpatra", "niyomiya-barta-borpatra", "janambhumi-online-borpatra", "sonari-live", "news-axom"],
         services=["solar-installation-commissioning.html", "service-epc.html", "solar-for-tea-estates.html"],
@@ -335,7 +341,7 @@ FAQ = [
      "including those of Jay Shree Tea (BK Birla Group) and Goodricke Group."),
     ("Where in India do you work?",
      "Across India. Our projects span Assam, West Bengal, Bihar, Jharkhand, Uttar Pradesh, Uttarakhand, Haryana and Karnataka. Our "
-     "corporate office is in Greater Noida, Uttar Pradesh, with a branch office in Madhubani, Bihar."),
+     "corporate office is in Greater Noida, Uttar Pradesh, with offices in New Delhi and in Madhubani, Bihar."),
     ("Who runs Arrays Ingenieria?",
      "The company was founded in 2018 by Lt. Gen. Ashish Ranjan Prasad (Retd), AVSM, VSM, ADC, former Signal Officer-in-Chief of the "
      "Indian Army, and is run by ex-servicemen who bring military discipline, safety and timeliness to every site."),
@@ -384,11 +390,11 @@ GLOSSARY = [
 # ------------------------------------------------------------- clients ----
 # name, relationship, what we did, project files
 CLIENTS = [
-    ("Tata Power Renewable Energy Ltd. / Tata Power Solar", "EPC partner",
-     "Pile foundations for the 300 MW SECI project at Koppal, civil works for the 10 MW DCM Textile plant, piling and civil works for "
-     "Tata Motors' 5.5 MW plant, and implementation of tea-estate and industrial plants built under Tata Power's EPC contracts.",
-     ["project-seci-300mw-koppal-pile-foundation.html", "project-dcm-hisar-10mw-solar-civil-works.html",
-      "project-tata-motors-jamshedpur-5-5mw-solar-piling.html", "project-super-smelters-1980kwp-rooftop-solar.html"]),
+    ("Tata Power Renewable Energy Ltd. / Tata Power Solar Systems Ltd.", "EPC partner",
+     "Our longest-running client: well over a hundred purchase orders since 2021 for installation & commissioning, BOS works, piling, "
+     "civil works, module cleaning systems and CEIG approvals, on rooftop and ground-mount plants from Assam to Odisha, Haryana and Uttar Pradesh.",
+     ["project-super-smelters-1980kwp-rooftop-solar.html", "project-amalgamated-plantations-assam-tea-estates-solar.html",
+      "project-tata-motors-jamshedpur-5-5mw-solar-piling.html", "project-dcm-hisar-10mw-solar-civil-works.html"]),
     ("Jay Shree Tea & Industries Ltd. (BK Birla Group)", "Client",
      "1035 kWp across Towkok and Manjushree Tea Estates, and solar plants at the Dewan, Labac and Burtoll gardens of the Dewan Group of Tea Estates.",
      ["project-jayshree-tea-1mw-solar-assam.html"]),
@@ -409,9 +415,20 @@ CLIENTS = [
     ("SECI", "Project", "Pile foundations on the 300 MW SECI solar project at Koppal, Karnataka, for Tata Power.",
      ["project-seci-300mw-koppal-pile-foundation.html"]),
     ("Bharat Petroleum", "Client", "An RCC rooftop on-grid solar plant, recognised with a certificate of appreciation.", []),
-    ("Tata Steel", "Plant owner", "A solar project at Noamundi, Jharkhand.", []),
-    ("Amalgamated Plantations (APPL)", "Plant owner", "A solar project at Kakajan Tea Estate, Assam.", []),
-    ("YIAPL", "Client", "Supply, civil works and chain-link fencing for a 14.36 MW solar project in Uttar Pradesh.",
+    ("Tata Steel", "Plant owner", "A solar project at Noamundi, and ballast lifting hooks and module cleaning for the floating solar plant at Jamshedpur.", []),
+    ("Amalgamated Plantations (APPL)", "Plant owner", "Piling, BOS works and installation & commissioning of ground-mount plants at tea estates across Assam, about 5 MW, 2022-2026.",
+     ["project-amalgamated-plantations-assam-tea-estates-solar.html"]),
+    ("Rossell India Ltd.", "Plant owner", "Ground-mount plants at the Kharikatia, Nagrijuli, Romai and Dikom tea estates in Assam, piled, installed and commissioned by us.",
+     ["project-rossell-india-assam-tea-estates-solar.html"]),
+    ("Balaji Action Buildwell", "Plant owner", "Installation & commissioning, BOS, civil works and CEIG approvals for a 4000.32 kWp project at Sitarganj, Uttarakhand.",
+     ["project-balaji-action-sitarganj-4mwp-solar.html"]),
+    ("SRMB Steel", "Plant owner", "Rooftop I&C and BOS works for three phases at Durgapur, West Bengal: 1895.4 kWp, 1060 kWp and 1.69 MWp.",
+     ["project-srmb-steel-durgapur-rooftop-solar.html"]),
+    ("Apar Industries", "Plant owner", "Installation & commissioning, skylight safety mesh and CEIG approval for a 1.2 MWp sheet-roof plant at Jharsuguda, Odisha.",
+     ["project-apar-industries-jharsuguda-1-2mwp-rooftop-solar.html"]),
+    ("Tata Croma, RSPL and A K Automatics", "Plant owners", "Rooftop installation & commissioning: 500 kWp at Gurugram, 417 kWp at Roorkee and 531 kWp at Rohtak, 2024-2025.", []),
+    ("Pernod Ricard India", "Plant owner", "Piling, installation & commissioning and CEIG approval for a 250 kW ground-mount plant at Behror, Rajasthan.", []),
+    ("YIAPL (Noida International Airport)", "Plant owner", "Pile foundations and chain-link fencing for the 14.36 MW solar project at Noida International Airport.",
      ["project-yiapl-14-36mw-solar-civil-fencing.html"]),
 ]
 
@@ -582,6 +599,7 @@ STATES = [
 
 BP = "assets/borpatra/arrays-ingenieria-ex-servicemen-led-borpatra-tea-estate-230kwp-solar-"
 BORPATRA_ALBUM = [
+    (BP + "inauguration-poster.jpg", "Official poster for the inauguration of the 230 kWp ground-mounted on-grid solar power plant at Borpatra Tea Estate, 25 September 2026: Tata Power Solar, Goodricke, Sustvest and Arrays Ingenieria (installation partner)"),
     (BP + "inauguration-team.jpg", "Inauguration of the 230 kWp Borpatra Tea Estate solar plant, 25 September 2026: the team at the banner and AC distribution board, Arrays Ingenieria (ex-servicemen-led) installation partner"),
     (BP + "inauguration-banner-gate.jpg", "Borpatra Tea Estate gate with the banner for the inauguration of the 230 kWp ground-mounted on-grid solar power plant, 25 September 2026, Tata Power Solar, Goodricke, Sustvest and Arrays Ingenieria"),
     (BP + "inverter-puja.jpg", "Puja at Inverter-2 of the 230 kWp Borpatra Tea Estate solar plant before the inauguration, installed by Arrays Ingenieria"),
@@ -938,3 +956,241 @@ GLOSSARY += [
     ("Puja (commissioning ceremony)", "A traditional prayer held at a new plant, as at the inverters of the "
                                       "Borpatra Tea Estate solar plant at its inauguration in September 2026."),
 ]
+
+
+# ------------------------------------------------- purchase-order record ----
+# From the SAP Ariba purchase orders issued to Arrays Ingenieria by Tata Power Solar
+# Systems Ltd. (TPSSL) and Tata Power Renewable Energy Ltd. (TPREL), 2021-2026, under the
+# company's Delhi, Uttar Pradesh and Bihar GST registrations. Order values are left out.
+TPSSL = "Tata Power Solar Systems Ltd."
+TPREL = "Tata Power Renewable Energy Ltd."
+GENERIC_GROUND = "assets/photos/arrays-ingenieria-utility-scale-ground-mount-solar-power-plant.jpg"
+GENERIC_ROOF = "assets/photos/arrays-ingenieria-industrial-rooftop-solar-array.jpg"
+
+
+def _project(file):
+    return next(p for p in PROJECTS if p["file"] == file)
+
+
+_p = _project("project-super-smelters-1980kwp-rooftop-solar.html")
+_p.update(partner=f"{TPSSL} (EPC)", role="Installation & commissioning, BOS works and module cleaning system", year="2024",
+          scope=["Installation & commissioning of the 1980 kW sheet-roof plant", "Balance-of-system (BOS) materials and additional cabling",
+                 "Cable trays and earth excavation", "Earthing strip and self-drilling fasteners",
+                 "Module cleaning system: supply and services", "Testing and commissioning"])
+_p["body"].append("Tata Power Solar's purchase orders of 2024 set out the scope: installation & commissioning of the 1980 kW sheet-roof "
+                  "plant, the BOS materials and additional cabling, cable trays and earth excavation, the earthing strip, and the supply "
+                  "and service of the module cleaning system.")
+
+_p = _project("project-tata-motors-jamshedpur-5-5mw-solar-piling.html")
+_p.update(name="Tata Motors, Jamshedpur: Piling, Civil Works and I&C for 5.5 MW Solar",
+          title="5.5 MW Solar Piling & I&C, Tata Motors | Arrays Ingenieria",
+          desc="Case study: piling, civil works, installation & commissioning and a pre-cast boundary wall for the 5.5 MW Tata Motors solar plant at Jojobera, Jamshedpur.",
+          role="Piling, civil works, installation & commissioning", year="2023-2024",
+          scope=["Pile foundations (300 mm dia, 1.8 m deep) and pull-out tests", "Land development and a pre-cast boundary wall",
+                 "Installation & commissioning of the 5.579 MWp plant at Jojobera Yard", "Module cleaning system",
+                 "Gate fabrication, temporary water supply and statutory liaison"])
+_p["body"].append("Further orders followed through 2023 and 2024: land development, pull-out tests on the piles, gate fabrication, a "
+                  "temporary water supply, liaison with government offices and, from December 2023, the installation & commissioning of "
+                  "the 5.579 MWp plant at Jojobera Yard together with its module cleaning system.")
+
+_p = _project("project-dcm-hisar-10mw-solar-civil-works.html")
+_p.update(name="DCM Textile, Hisar: Civil Works, Piling and I&C for Solar",
+          title="DCM Hisar Solar Civil Works & I&C | Arrays Ingenieria",
+          desc="Case study: civil works for the 10 MW plant, I&C of the 2.1 MW rooftop plant and piling and I&C of a 500 kWp ground-mount plant at DCM Textile, Hisar.",
+          role="Civil works, piling, installation & commissioning", year="2021-2026",
+          scope=["Civil works and pile foundations for the 10 MW ground-mount plant", "Installation & commissioning of the 2.1 MW rooftop plant",
+                 "Canopy erection and conventional earthing", "CEIG approval and module cleaning system",
+                 "Piling and I&C of a 500 kWp ground-mount plant (2025-26)"])
+_p["body"] += ["DCM has been a repeat site. In 2022 Tata Power Solar engaged Arrays Ingenieria for the installation & commissioning of the "
+               "2.1 MW rooftop plant at Hisar, with its CEIG approval, module cleaning system, canopy and conventional earthing.",
+               "In 2025-26 the company piled, installed and commissioned a further 500 kWp ground-mount plant at DCM Textile for Tata "
+               "Power Renewable Energy."]
+
+_p = _project("project-yiapl-14-36mw-solar-civil-fencing.html")
+_p.update(name="Noida International Airport (YIAPL): 14.36 MW Solar, Piling & Fencing",
+          title="14.36 MW Solar at Noida Airport (YIAPL) | Arrays Ingenieria",
+          desc="Case study: pile foundations and chain-link fencing by Arrays Ingenieria for the 14.36 MW YIAPL solar project at Noida International Airport, Tata Power.",
+          location="Noida International Airport, Gautam Buddh Nagar, Uttar Pradesh",
+          client="YIAPL (Yamuna International Airport Pvt. Ltd.)", partner=f"{TPREL} (EPC)",
+          role="Pile foundations, supply, civil works & fencing", year="2025",
+          scope=["Pile foundations, 300 mm diameter, 1.8 m to 2.3 m deep", "Supply, civil work and erection of chain-link fencing (about 6.25 km tentative length)",
+                 "All manpower, machinery and material for the fencing"])
+_p["intro"] = ("Pile foundations and chain-link perimeter fencing for the 14.36 MW solar power project of YIAPL, the company building "
+               "Noida International Airport in Uttar Pradesh.")
+_p["body"] = ["Tata Power Renewable Energy issued Arrays Ingenieria service orders in 2025 for the construction of pile foundations "
+              "(300 mm diameter, 1.8 m to 2.3 m deep) and for the supply, civil work and erection of chain-link fencing, with a "
+              "tentative fence length of about 6.25 km, at the 14.36 MW YIAPL solar power project.",
+              "A plant of this size needs its foundations in and its perimeter secured before installation crews can move in. The "
+              "orders were placed with the company's Uttar Pradesh unit in Greater Noida, close to the site."]
+
+_p = _project("project-tcpl-vaishali-319kwp-rooftop-solar.html")
+_p.update(partner=f"{TPSSL} (EPC)", role="Installation & commissioning, BOS works and module cleaning system",
+          scope=["Installation & commissioning of the 319.06 kW sheet-roof plant", "BOS materials, cable glands and lugs",
+                 "Module cleaning system services", "Grid connection"])
+_p["body"].insert(1, "Tata Power Solar's purchase orders of 2024 cover the installation & commissioning of the 319.06 kW sheet-roof plant, "
+                     "its BOS materials, cable glands and lugs, and the module cleaning system services.")
+
+PROJECTS += [
+    dict(
+        file="project-amalgamated-plantations-assam-tea-estates-solar.html",
+        name="Amalgamated Plantations, Assam: Solar Across Tea Estates",
+        short="Amalgamated Plantations, Assam · about 5 MW",
+        title="Amalgamated Plantations Tea Estate Solar | Arrays Ingenieria",
+        desc="Case study: piling, BOS works and installation & commissioning of ground-mount solar plants at Amalgamated Plantations tea estates in Assam for Tata Power.",
+        capacity="About 5 MW across tea estates (3.8 MWp piled at 11 sites)", kind="Ground-mount, on-grid, multi-site",
+        location="Chubwa, Kakajan, Powai, Nonoi, Diffloo, Nahortoli, Naharkatia, Namrup, Borhat and other estates, Assam",
+        client="Amalgamated Plantations Pvt. Ltd. (APPL)", partner=f"{TPSSL} / {TPREL} (EPC)",
+        role="Pile foundations, BOS works, installation & commissioning, module cleaning", year="2022-2026",
+        cat="ground", tag="Tea Estates · Multi-Site I&C",
+        hero="assets/photos/arrays-ingenieria-appl-kakajan-tea-estate-solar-assam.jpg",
+        hero_alt="Solar plant at APPL's Kakajan Tea Estate, Assam, built with Arrays Ingenieria",
+        intro="Ground-mount solar plants at the tea estates of Amalgamated Plantations (APPL) across Assam: foundations, balance of "
+              "system, installation and commissioning, estate by estate.",
+        body=["From 2022 Tata Power engaged Arrays Ingenieria on the Amalgamated Plantations programme in Assam's tea belt. The first "
+              "orders covered BOS works for the plantation sites and the shifting of material from the central warehouse to each estate.",
+              "In 2023 the company built pile foundations (300 mm diameter, 2.7 m long) for 11 sites totalling 3.8 MWp, and installed "
+              "and commissioned the ground-mount plants at Chubwa (499 kWp), Kakajan (741 kWp) and Powai (750 kWp).",
+              "Phase 2 followed in 2024: installation & commissioning at Nonoi (374 kW) and Diffloo (360 kW), orders for Nahortoli "
+              "(482 kW), RHRC (122 kW), Achabam (272 kW), Naharkatia (440 kW), Namrup (408 kW) and Borhat (347 kW), and a module "
+              "cleaning service across the programme.",
+              "In 2026 the company carried out BOS works, piling and material transport on the 2862 kWp Amalgamated project for "
+              "SolarGridX Ventures (Sustvest)."],
+        scope=["Pile foundations, 300 mm diameter, 2.7 m long, at 11 sites (3.8 MWp)", "Earth pits, equipment foundations and module mounting structures",
+               "Installation & commissioning of the ground-mount plants", "BOS materials: cables, glands and lugs",
+               "Module cleaning system service", "Material shifting from the central warehouse to each estate"],
+        photos=[("assets/photos/arrays-ingenieria-appl-kakajan-tea-estate-solar-assam.jpg", "Solar plant at APPL's Kakajan Tea Estate, Assam, built with Arrays Ingenieria")],
+        docs=[], coverage=[],
+        services=["solar-installation-commissioning.html", "service-piling.html", "service-ground-mount.html", "solar-for-tea-estates.html"],
+    ),
+    dict(
+        file="project-rossell-india-assam-tea-estates-solar.html",
+        name="Rossell India Tea Estates, Assam: Ground-Mount Solar I&C",
+        short="Rossell India, Assam · 4 tea estates",
+        title="Rossell India Tea Estate Solar Plants | Arrays Ingenieria",
+        desc="Case study: piling, BOS works and installation & commissioning of ground-mount solar plants at four Rossell India tea estates in Assam, for Tata Power.",
+        capacity="302 kW, 493.24 kWp, 170.51 kWp and 367 kW", kind="Ground-mount, on-grid",
+        location="Kharikatia, Nagrijuli, Romai and Dikom Tea Estates, Assam",
+        client="Rossell India Ltd.", partner=f"{TPSSL} / {TPREL} (EPC)",
+        role="Pile foundations, BOS works, installation & commissioning, module cleaning", year="2023-2026",
+        cat="ground", tag="Tea Estates · Ground-Mount I&C",
+        hero=GENERIC_GROUND, hero_alt="Ground-mount solar plant built by Arrays Ingenieria (representative photo)",
+        intro="Four ground-mount solar plants for Rossell India's tea estates in Assam, each built from the foundations up to "
+              "commissioning by Arrays Ingenieria for Tata Power.",
+        body=["Kharikatia Tea Estate (302 kW, 2023) came first: pile construction, installation & commissioning of the ground-mount "
+              "plant and its BOS works.",
+              "At Nagrijuli Tea Estate the company piled the site in 2024 and installed and commissioned the 493.24 kWp plant in "
+              "2025, with its BOS materials, additional cabling and module cleaning system. Romai Tea Estate (170.51 kWp) followed "
+              "the same pattern in 2025, and in 2026 the company piled, supplied BOS materials for, and installed and commissioned "
+              "the 367 kW plant at Dikom Tea Estate."],
+        scope=["Pile foundations", "Earth pits, equipment foundations and module mounting structures",
+               "Installation & commissioning of each ground-mount plant", "BOS materials, inverter stands and additional cabling",
+               "Module cleaning system services"],
+        photos=[], docs=[], coverage=[],
+        services=["solar-installation-commissioning.html", "service-piling.html", "service-ground-mount.html", "solar-for-tea-estates.html"],
+    ),
+    dict(
+        file="project-balaji-action-sitarganj-4mwp-solar.html",
+        name="Balaji Action Buildwell, Sitarganj: 4 MWp Solar I&C",
+        short="Balaji Action, Uttarakhand · 4 MWp",
+        title="4 MWp Solar I&C, Balaji Action Sitarganj | Arrays Ingenieria",
+        desc="Case study: installation & commissioning, BOS, civil works and CEIG approvals for the 4000.32 kWp Balaji Action Buildwell solar project, Sitarganj.",
+        capacity="4000.32 kWp (3 MWp sheet roof plus ground-mount)", kind="Industrial rooftop and ground-mount",
+        location="Sitarganj, Uttarakhand", client="Balaji Action Buildwell Pvt. Ltd.", partner=f"{TPSSL} (EPC)",
+        role="Installation & commissioning, BOS, civil works and approvals", year="2022-2023",
+        cat="rooftop", tag="Industrial · Rooftop I&C",
+        hero="assets/photos/arrays-ingenieria-balaji-action-tesa-sitarganj-rooftop-solar.jpg",
+        hero_alt="Balaji Action Buildwell rooftop solar plant at Sitarganj, Uttarakhand, by Arrays Ingenieria",
+        intro="A 4000.32 kWp solar project for Balaji Action Buildwell at Sitarganj, Uttarakhand: a 3 MWp sheet-roof plant plus "
+              "ground-mount capacity, installed and commissioned by Arrays Ingenieria for Tata Power Solar.",
+        body=["Tata Power Solar's 2022 orders gave Arrays Ingenieria the installation & commissioning of the 3 MWp sheet-roof plant, the "
+              "rooftop BOS services for the full 4000.32 kWp, civil work and pile foundations for the ground-mount portion, a labour "
+              "colony for the site crew, and the CEIG approvals.",
+              "Additional orders in 2023 covered further I&C work, an ITB canopy, additional cable trays, fire extinguishers and sand "
+              "buckets, and cable lugs: the details that take a large plant from installed to inspected and handed over."],
+        scope=["Installation & commissioning of the 3 MWp sheet-roof plant", "Rooftop BOS services for the 4000.32 kWp project",
+               "Civil work and pile foundations for the ground-mount portion", "CEIG approvals", "ITB canopy, cable trays and fire safety equipment",
+               "Labour colony for the site crew"],
+        photos=[("assets/photos/arrays-ingenieria-balaji-action-tesa-sitarganj-rooftop-solar.jpg", "Balaji Action Buildwell rooftop solar plant at Sitarganj, Uttarakhand, by Arrays Ingenieria")],
+        docs=[], coverage=[],
+        services=["solar-installation-commissioning.html", "service-rooftop.html", "service-civil.html"],
+    ),
+    dict(
+        file="project-srmb-steel-durgapur-rooftop-solar.html",
+        name="SRMB Steel, Durgapur: Rooftop Solar I&C in Three Phases",
+        short="SRMB Steel, West Bengal · 3 phases",
+        title="SRMB Steel Durgapur Rooftop Solar I&C | Arrays Ingenieria",
+        desc="Case study: installation & commissioning and BOS works for SRMB Steel's 1895.4 kWp, 1060 kWp and 1.69 MWp sheet-roof solar plants at Durgapur, West Bengal.",
+        capacity="1895.4 kWp, 1060 kWp and 1.69 MWp", kind="Industrial sheet roof",
+        location="Durgapur, West Bengal", client="SRMB Steel (SRMB Srijan Ltd.)", partner=f"{TPSSL} (EPC)",
+        role="Installation & commissioning, BOS works, module cleaning", year="2022-2023",
+        cat="rooftop", tag="Industrial · Rooftop I&C",
+        hero=GENERIC_ROOF, hero_alt="Industrial rooftop solar array installed by Arrays Ingenieria (representative photo)",
+        intro="Three rooftop solar phases on the sheet roofs of SRMB Steel's plant at Durgapur, West Bengal, built by Arrays Ingenieria "
+              "for Tata Power Solar.",
+        body=["In 2022 Tata Power Solar placed orders with Arrays Ingenieria for the installation & commissioning of the 1895.4 kWp "
+              "sheet-roof plant and of the 1060 kWp Phase 2 plant, and for the rooftop BOS services of the 1.69 MWp Phase III.",
+              "The scope ran from earth pits and equipment foundations to module mounting structures, cabling, testing and "
+              "commissioning, followed by the module cleaning service and the cable glands and lugs for each phase in 2023."],
+        scope=["Earth pits and equipment foundations (ACDB, inverters, ITB)", "Module mounting structure installation",
+               "Installation & commissioning of the 1895.4 kWp and 1060 kWp plants", "Rooftop BOS services for the 1.69 MWp Phase III",
+               "Module cleaning system service", "Module shifting"],
+        photos=[], docs=[], coverage=[],
+        services=["solar-installation-commissioning.html", "service-rooftop.html"],
+    ),
+    dict(
+        file="project-apar-industries-jharsuguda-1-2mwp-rooftop-solar.html",
+        name="Apar Industries, Jharsuguda: 1.2 MWp Rooftop Solar I&C",
+        short="Apar Industries, Odisha · 1.2 MWp",
+        title="1.2 MWp Rooftop Solar, Apar Industries | Arrays Ingenieria",
+        desc="Case study: installation & commissioning, BOS, skylight safety mesh and CEIG approval for the 1.2 MWp Apar Industries sheet-roof solar plant, Jharsuguda.",
+        capacity="1.2 MWp (1203 kWp)", kind="Industrial sheet roof", location="Jharsuguda, Odisha",
+        client="Apar Industries Ltd.", partner=f"{TPSSL} (EPC)",
+        role="Installation & commissioning, BOS, safety mesh and CEIG approval", year="2023",
+        cat="rooftop", tag="Industrial · Rooftop I&C",
+        hero="assets/photos/arrays-ingenieria-rooftop-solar-installation-clean-power.jpg",
+        hero_alt="Rooftop solar installation by Arrays Ingenieria (representative photo)",
+        intro="A 1.2 MWp solar plant on the sheet roofs of Apar Industries at Jharsuguda, Odisha, installed and commissioned by "
+              "Arrays Ingenieria for Tata Power Solar.",
+        body=["Tata Power Solar's 2023 orders covered the installation & commissioning of the 1.2 MWp sheet-roof plant, its rooftop "
+              "BOS services, and the fabrication, supply and installation of skylight safety mesh across the roof.",
+              "Arrays Ingenieria also handled the CEIG approval and liaison for the 1203 kWp plant, and supplied the earthing strip, "
+              "RS485 communication cable and cable glands later in the year."],
+        scope=["Installation & commissioning of the 1.2 MWp sheet-roof plant", "Rooftop BOS services",
+               "Fabrication, supply and installation of skylight safety mesh", "CEIG approval and liaison",
+               "Earthing strip, RS485 cable and cable glands"],
+        photos=[], docs=[], coverage=[],
+        services=["solar-installation-commissioning.html", "service-rooftop.html"],
+    ),
+]
+
+# Work-experience record: one row per site, from the purchase orders (year, site, capacity, state, scope, ordered by).
+TRACK_RECORD = [
+    ("2021-26", "DCM Textile, Hisar", "10 MW, 2.1 MW and 500 kWp", "Haryana", "Civil works, piling, I&C, CEIG approval, module cleaning", "TPSSL / TPREL"),
+    ("2022-23", "Pernod Ricard India, Behror", "250 kW ground-mount", "Rajasthan", "Piling, I&C, BOS, CEIG approval, module cleaning", "TPSSL"),
+    ("2022-23", "Balaji Action Buildwell, Sitarganj", "4000.32 kWp", "Uttarakhand", "I&C, BOS, civil works and piling, CEIG approvals", "TPSSL"),
+    ("2022-23", "SRMB Steel, Durgapur", "1895.4 kWp, 1060 kWp, 1.69 MWp", "West Bengal", "Rooftop I&C, BOS, module cleaning", "TPSSL"),
+    ("2022-26", "Amalgamated Plantations (APPL) tea estates", "About 5 MW, 12+ estates", "Assam", "Piling, I&C, BOS, module cleaning, logistics", "TPSSL / TPREL"),
+    ("2022-23", "Tata Steel, Jamshedpur (floating solar)", "", "Jharkhand", "Ballast lifting hooks, module cleaning system", "TPSSL"),
+    ("2024", "RSSB, Bhati, Chhatarpur", "96 kW", "Delhi", "BOS cabling, module cleaning", "TPSSL / TPREL"),
+    ("2023", "Apar Industries, Jharsuguda", "1.2 MWp", "Odisha", "Rooftop I&C, BOS, skylight mesh, CEIG approval", "TPSSL"),
+    ("2023", "Goodyear (North Region)", "1000.845 kWp", "", "BOS supply, transport and installation", "TPSSL / TPREL"),
+    ("2023", "Singhania Tea Estate, Jalpaiguri", "400 kW ground-mount", "West Bengal", "Pile foundations and civil works", "TPSSL"),
+    ("2023", "Special Bureau rooftops, Kolkata, Patna and Agartala", "28.16, 14.08 and 15.515 kWp", "WB, Bihar, Tripura", "Rooftop BOS services", "TPSSL"),
+    ("2023", "TCPL, Siliguri", "24 kWp", "West Bengal", "Rooftop BOS, module cleaning", "TPSSL"),
+    ("2023-24", "Tata Motors, Jojobera Yard, Jamshedpur", "5.579 MWp", "Jharkhand", "Piling, civil works, boundary wall, I&C, module cleaning", "TPSSL / TPREL"),
+    ("2023-26", "Rossell India tea estates", "302 kW, 493.24 kWp, 170.51 kWp, 367 kW", "Assam", "Piling, I&C, BOS, module cleaning", "TPSSL / TPREL"),
+    ("2024", "Tata Consumer Products (TCPL), Vaishali", "319.06 kW", "Bihar", "Rooftop I&C, BOS, module cleaning", "TPSSL"),
+    ("2024", "Tata Croma, Gurugram", "500 kWp", "Haryana", "Rooftop I&C, BOS, skylight mesh, module cleaning", "TPSSL / TPREL"),
+    ("2024", "RSPL, Roorkee", "417 kWp", "Uttarakhand", "Rooftop I&C, BOS, skylight mesh, module cleaning", "TPSSL / TPREL"),
+    ("2024", "Super Smelters, Jamuria", "1980 kW", "West Bengal", "Rooftop I&C, BOS, cable trays, module cleaning", "TPSSL / TPREL"),
+    ("2024-25", "A K Automatics, Rohtak", "531 kWp", "Haryana", "Rooftop I&C, BOS, module cleaning", "TPSSL / TPREL"),
+    ("2025", "YIAPL, Noida International Airport", "14.36 MW", "Uttar Pradesh", "Pile foundations, chain-link fencing", "TPREL"),
+    ("2026", "Luhit Tea Estate, Golaghat", "488 kWp", "Assam", "I&C with BOS services", "TPREL"),
+    ("2026", "Amalgamated project for SolarGridX (Sustvest)", "2862 kWp", "Assam", "BOS works, piling, transport", "TPREL"),
+    ("2026", "Orangajuli Tea Estate (Goodricke)", "450 kW", "Assam", "BOS: earthing pits", "TPREL"),
+]
+
+# Case-study order: the Chief Minister's inauguration, then installation & commissioning work, then piling and civil works.
+_ORDER = ["koomber", "jayshree", "orangajuli", "barpatra", "super-smelters", "amalgamated", "rossell", "balaji", "srmb", "apar",
+          "tcpl", "assam-1711", "tata-motors", "dcm", "yiapl", "seci"]
+PROJECTS.sort(key=lambda p: next(i for i, k in enumerate(_ORDER) if k in p["file"]))

@@ -126,7 +126,7 @@ PAGES = {
 }
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from content import (PROJECTS, FAQ, GLOSSARY, CLIENTS, LEADER_QUOTES, NATIONAL_FACTS, SCHEMES, TIMELINE,  # noqa: E402
-                     PANCHAMRIT, PANCHAMRIT_URL, STATES, KOOMBER_ALBUM, BORPATRA_ALBUM, INSIGHTS)
+                     PANCHAMRIT, PANCHAMRIT_URL, STATES, KOOMBER_ALBUM, BORPATRA_ALBUM, INSIGHTS, TRACK_RECORD)
 
 PAGES.update({
     "capex-solar-epc.html": dict(path="/capex-solar-epc.html", crumb="CAPEX Solar EPC", parent="services",
@@ -805,6 +805,7 @@ FOOTER = f"""<section class="cta-strip" aria-label="Contact Arrays Ingenieria">
           <p>
             <b>CIN:</b> U45309DL2018PTC340544<br/>
             <b>PAN:</b> AARCA4610L<br/>
+            <b>GST (Delhi):</b> 07AARCA4610L1ZG<br/>
             <b>GST (UP):</b> 09AARCA4610L1ZC<br/>
             <b>GST (Bihar):</b> 10AARCA4610L1ZT<br/>
             <b>Udyam:</b> UDYAM-DL-03-0023905
@@ -851,7 +852,7 @@ def yt_card(c, lead=False, with_id=True):
     orig = f'<span class="tv-orig" lang="hi">{esc(c["original"])}</span>' if c.get("original") else ""
     return f"""<article class="{cls}"{ident}>
         <button type="button" class="tv-thumb yt-facade" data-yt="{c['youtube']}" aria-label="Play the video: {esc(c['headline'])} ({esc(c['outlet'])}, loads YouTube)">
-          <img src="{c['img']}" alt="{esc(c['alt'])}" /><span class="tv-onair"><i></i>News video</span><span class="vc-play">{PLAY_SVG}</span><span class="yt-note">Plays from YouTube</span>
+          <img src="{c['img']}" alt="{esc(c['alt'])}" data-eager="1" /><span class="tv-onair"><i></i>News video</span><span class="vc-play">{PLAY_SVG}</span><span class="yt-note">Plays from YouTube</span>
         </button>
         <span class="tv-body">
           <span class="tv-outlet"><span class="tv-mono">PB</span><span><b>{esc(c['outlet'])}</b><small>{esc(c['place'])} · on {c['platform']}</small></span></span>
@@ -871,7 +872,7 @@ def yt_block(ids):
             + "".join(yt_card(c, with_id=False) for c in vids) + "</div>")
 
 
-def tv_card(c, lead=False, with_id=True):
+def tv_card(c, lead=False, with_id=True, eager=False):
     if c.get("youtube"):
         return yt_card(c, lead, with_id)
     img = c.get("img") or c["bg"]
@@ -879,7 +880,7 @@ def tv_card(c, lead=False, with_id=True):
     cls = "tv-card reveal" + (" tv-card--lead" if lead else "") + ("" if c.get("img") else " tv-card--tile")
     ident = f' id="{c["id"]}"' if with_id else ""
     return f"""<a class="{cls}"{ident} href="{c['url']}" target="_blank" rel="noopener">
-        <span class="tv-thumb"><img src="{img}" alt="{esc(c['alt'])}" />{tile}<span class="tv-onair"><i></i>News channel</span><span class="vc-play">{PLAY_SVG}</span></span>
+        <span class="tv-thumb"><img src="{img}" alt="{esc(c['alt'])}"{' data-eager="1"' if eager else ''} />{tile}<span class="tv-onair"><i></i>News channel</span><span class="vc-play">{PLAY_SVG}</span></span>
         <span class="tv-body">
           <span class="tv-outlet"><span class="tv-mono">{initials(c['outlet'])}</span><span><b>{esc(c['outlet'])}</b><small>{esc(c['place'])} · on {c['platform']}</small></span></span>
           <h3 class="tv-title">{esc(c['headline'])}</h3>
@@ -1031,8 +1032,22 @@ def render_press_band():
 </section>"""
 
 
+def home_clips():
+    """Newspaper clippings for the home page: the Chief Minister's inauguration first, then the other inaugurations."""
+    prints = [c for c in cov("print") if c.get("img")]
+    rank = lambda c: 0 if "koomber" in c["id"] else 1 if ("borpatra" in c["id"] or "barpatra" in c["id"] or "orangajuli" in c["id"]) else 2
+    return sorted(prints, key=rank)[:8]
+
+
+def clip_card(c):
+    return (f'<a class="hc-clip" href="recognition.html#{c["id"]}"><span class="hc-img"><img src="{c["img"]}" alt="{esc(c["outlet"])} newspaper clipping: {esc(c["headline"])}" /></span>'
+            f'<span class="hc-cap"><b>{esc(c["outlet"])}</b>{time_tag(c["date"])}</span></a>')
+
+
 def render_home_news():
-    lead = cov("tv")[0]
+    """Video reports first (each with its thumbnail), then what the press and clients wrote, then the outlet lists."""
+    videos = [c for c in cov("tv") if c.get("img")]
+    videos = sorted(videos, key=lambda c: (not c.get("youtube"), "koomber" not in c["id"]))[:3]
     sentinel = next(c for c in COVERAGE if c["kind"] == "online")
     client = by_date(cov("client"))[-1]
     def quote_card(c, label, d):
@@ -1040,12 +1055,18 @@ def render_home_news():
                 f'<span class="qc-src"><span class="press-kind">{label}</span><b>{esc(c["outlet"])}</b>{time_tag(c["date"])}</span>'
                 f'<span class="qc-head">{esc(c["headline"])}</span>'
                 f'<blockquote><p>“{esc(c["quote"])}”</p></blockquote><span class="qc-go">Read the coverage {ARROW_SVG}</span></a>')
-    return f"""{render_featured_inner()}
-    <div class="home-news">
-      {tv_card(lead, lead=False, with_id=False)}
+    return f"""<div class="home-videos">
+      {"".join(tv_card(c, lead=False, with_id=False, eager=True) for c in videos)}
+    </div>
+    <div class="home-clips">
+      <p class="hc-title">From the newspapers</p>
+      <div class="hc-row">{"".join(clip_card(c) for c in home_clips())}</div>
+    </div>
+    <div class="home-quotes">
       {quote_card(sentinel, KIND_LABEL['online'], 1)}
       {quote_card(client, KIND_LABEL['client'], 2)}
-    </div>"""
+    </div>
+    {render_featured_inner()}"""
 
 
 def coverage_ld():
@@ -1183,7 +1204,7 @@ def koomber_video_ld():
 def render_cm_showcase(videos=True):
     case = "project-koomber-tea-estate-595kwp-solar-cm-inauguration.html"
     pics = KOOMBER_ALBUM[:4]
-    mosaic = "".join(f'<div class="cm-pic cm-pic--{i}" data-full="{src}" data-gallery="cm-show" data-caption="{esc(alt)}"><img src="{src}" alt="{esc(alt)}" /></div>'
+    mosaic = "".join(f'<div class="cm-pic cm-pic--{i}" data-full="{src}" data-gallery="cm-show" data-caption="{esc(alt)}"><img src="{src}" alt="{esc(alt)}" data-eager="1" /></div>'
                      for i, (src, alt) in enumerate(pics))
     chips = "".join(f'<a class="cm-chip" href="{u}" target="_blank" rel="noopener">{PLATFORM_ICON.get(n, "")}<span>{esc(lbl)}</span></a>' for lbl, n, u in [
         ("CM's Office on X", "X", "https://x.com/CMOfficeAssam/status/2105545750054928662"),
@@ -1213,7 +1234,20 @@ def render_cm_showcase(videos=True):
     {render_koomber_videos()}""" if videos else "")
 
 
+def render_track_record():
+    rows = "".join(f"<tr><td>{esc(y)}</td><th scope=\"row\">{esc(site)}</th><td>{esc(cap)}</td><td>{esc(st)}</td><td>{esc(scope)}</td><td>{esc(by)}</td></tr>"
+                   for y, site, cap, st, scope, by in sorted(TRACK_RECORD, key=lambda r: r[0][:4], reverse=True))
+    return f"""<div class="tr-wrap reveal" tabindex="0" role="region" aria-label="Work experience table">
+      <table class="tr-table">
+        <caption>Work experience from purchase orders, 2021-2026. TPSSL: Tata Power Solar Systems Ltd. TPREL: Tata Power Renewable Energy Ltd.</caption>
+        <thead><tr><th scope="col">Year</th><th scope="col">Site</th><th scope="col">Capacity</th><th scope="col">State</th><th scope="col">Our scope</th><th scope="col">Ordered by</th></tr></thead>
+        <tbody>{rows}</tbody>
+      </table>
+    </div>"""
+
+
 BLOCKS = {
+    "track-record": render_track_record,
     "press-tv": lambda: render_tv(),
     "press-print": render_press,
     "press-clients": render_clients,
@@ -1292,7 +1326,7 @@ def page_label(fname):
 
 
 def case_card(p, d=0):
-    img, alt = p["photos"][0]
+    img, alt = p["photos"][0] if p["photos"] else (p["hero"], p.get("hero_alt") or p["name"])
     return (f'<a class="case-card reveal" data-d="{d % 3}" href="{p["file"]}"><span class="cc-img"><img src="{img}" alt="{esc(alt)}" /></span>'
             f'<span class="cc-body"><span class="cc-tag">{esc(p["tag"])}</span><b>{esc(p["name"])}</b>'
             f'<span class="cc-meta">{esc(p["capacity"])} · {esc(p["location"])}</span>'
@@ -1826,6 +1860,8 @@ def write_generated_pages():
 # -------------------------------------------------------------- gallery ----
 GALLERY[:0] = [(src, "borpatra events projects" if ("modules" in src or "team" in src) else "borpatra events", alt, alt)
                for src, alt in BORPATRA_ALBUM] + [
+    (c["img"], "borpatra media", f'{c["outlet"]}: {c["headline"]}', f'{c["outlet"]} report on the 230 kWp Borpatra Tea Estate solar plant by Arrays Ingenieria')
+    for c in COVERAGE if c["kind"] == "print" and c.get("img") and "borpatra" in c["id"]] + [
     ("assets/photos/arrays-ingenieria-ex-servicemen-led-orangajuli-tea-estate-450kwp-solar-inauguration-team.jpg", "projects events",
      "Orangajuli Tea Garden, Udalguri: inauguration of the 450 kWp ground-mounted on-grid solar plant, Janmashtami, 4 Sep 2026",
      "Inauguration of the 450 kWp solar plant at Orangajuli Tea Garden, Panerihaat, Udalguri, Assam, 4 September 2026, Arrays Ingenieria (ex-servicemen-led MSME), installation partner")]
@@ -2073,6 +2109,9 @@ def process_images(body_html):
             first[0] = False
             tag = set_attr(tag, "loading", "eager")
             tag = set_attr(tag, "fetchpriority", "high")
+        elif "data-eager" in tag:  # key photos further down (CM mosaic, video thumbnails): never left blank while lazy-loading
+            tag = del_attr(del_attr(tag, "data-eager"), "fetchpriority")
+            tag = set_attr(tag, "loading", "eager")
         else:
             tag = del_attr(tag, "fetchpriority")
             tag = set_attr(tag, "loading", "lazy")
@@ -2341,7 +2380,7 @@ def write_llms():
     out = ["# Arrays Ingenieria Pvt. Ltd. (INGENIERIA)", "",
            "> Ex-servicemen-led, ISO-certified Indian MSME that delivers solar installation & commissioning (I&C), CAPEX solar EPC "
            "and all solar civil works (pile foundations, fencing, roads, drainage) for ground-mount and rooftop plants. "
-           "Motto: \"Olive Green to Go Green\". Founder and CEO: Lt. Gen. Ashish Ranjan Prasad (Retd). Corporate office in Greater Noida (Uttar Pradesh), branch office in Madhubani (Bihar); "
+           "Motto: \"Olive Green to Go Green\". Founder and CEO: Lt. Gen. Ashish Ranjan Prasad (Retd). Corporate office in Greater Noida (Uttar Pradesh), offices in New Delhi and Madhubani (Bihar); GSTINs 07AARCA4610L1ZG (Delhi), 09AARCA4610L1ZC (UP), 10AARCA4610L1ZT (Bihar); "
            "projects across Assam, Bihar, Jharkhand, West Bengal, Uttar Pradesh, Uttarakhand, Haryana and Karnataka.", "",
            "Key facts:",
            "- Does NOT manufacture solar modules or inverters, and does not run OPEX/RESCO models; it builds plants the client owns (CAPEX) "
