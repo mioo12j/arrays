@@ -2661,7 +2661,7 @@ We collect personal data only when you choose to contact us. Our contact form as
 
 Our [free solar quote](https://arraysingenieria.com/free-solar-quote/) form also asks about your project, so we can prepare a proposal: who the plant is for, the services you need, how you would like to pay for it, the site's state, city, type and area, your monthly electricity bill and tariff, grid connection, sanctioned load and diesel generators, when you want to start, how it will be funded, your role, your company, how and when you prefer to be contacted, and how you heard about us. It also records which website or campaign link brought you to the form (for example a Google search), and an indicative plant size and savings estimate worked out in your browser from your bill. On the quote form the required answers are: who the plant is for; at least one service; the state and city or district of the site; when you want to start; and your name, phone and email. For a new solar plant we also require how you would like to pay for it and your monthly electricity bill, because we cannot size a plant or estimate savings without them. For operation and maintenance, piling, civil or installation-only requests we do not ask for your bill or payment choice; we ask instead for a short description of the plant and the work. Everything else on the form is optional.
 
-If you email us directly, we receive your email address and whatever your email contains. We do not run user accounts, analytics, advertising or tracking of any kind. Like every website host, our host keeps short-lived technical server logs (such as IP address, browser type and the page requested) to deliver the site and keep it secure.
+If you email us directly, we receive your email address and whatever your email contains. We do not run user accounts, advertising or tracking of individuals. We use Cloudflare Web Analytics to count page visits in aggregate; it sets no cookies and does not identify you. Like every website host, our host keeps short-lived technical server logs (such as IP address, browser type and the page requested) to deliver the site and keep it secure.
 
 ## 3. Why we use it
 
@@ -2679,7 +2679,7 @@ These providers may process data on servers outside India, including in the Unit
 
 ## 5. Cookies and embedded posts
 
-**Arrays Ingenieria itself sets no cookies** and uses no analytics, advertising or tracking of its own. Our fonts, images and scripts are served from our own site.
+**Arrays Ingenieria itself sets no cookies** and uses no advertising or tracking of its own. Visit counts come from [Cloudflare Web Analytics](https://www.cloudflare.com/web-analytics/), which works without cookies and without identifying visitors. Our fonts, images and scripts are served from our own site.
 
 Our [News & Media](https://arraysingenieria.com/recognition/) page and the [Koomber case study](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/) show original posts from **X (Twitter), Facebook and Instagram**. When you scroll to them, your browser loads each post directly from that platform, which may set its own cookies and receive your IP address under its own privacy policy ([X](https://x.com/en/privacy), [Facebook and Instagram](https://www.facebook.com/privacy/policy/)). News videos from YouTube load only when you press play, from YouTube's privacy-enhanced youtube-nocookie.com player. You can block third-party cookies in your browser settings; the posts will then still appear as text cards with links to the originals.
 

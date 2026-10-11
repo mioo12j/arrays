@@ -93,18 +93,22 @@
     loading[p] = new Promise((resolve, reject) => {
       if (p === "facebook") {
         if (!document.getElementById("fb-root")) { const r = document.createElement("div"); r.id = "fb-root"; document.body.prepend(r); }
-        window.fbAsyncInit = () => { window.FB.init({ xfbml: false, version: "v19.0" }); resolve(); };
+        window.fbAsyncInit = () => { window.FB.init({ xfbml: false, version: "v24.0" }); resolve(); };
       }
       const s = document.createElement("script");
       s.src = SRC[p]; s.async = true; s.crossOrigin = "anonymous";
       if (p !== "facebook") s.onload = () => resolve();
-      s.onerror = reject;
+      s.onerror = () => { delete loading[p]; reject(new Error("blocked: " + p)); }; // allow a retry later
       document.body.appendChild(s);
     });
     return loading[p];
   }
   function render(p, wrap) {
-    if (p === "x" && window.twttr && window.twttr.widgets) window.twttr.widgets.load(wrap);
+    // X: widgets.js finishes setting itself up after its onload; twttr.ready waits for that
+    if (p === "x" && window.twttr) {
+      if (window.twttr.ready) window.twttr.ready((t) => t.widgets.load(wrap));
+      else if (window.twttr.widgets) window.twttr.widgets.load(wrap);
+    }
     if (p === "facebook" && window.FB) window.FB.XFBML.parse(wrap);
     if (p === "instagram" && window.instgrm) window.instgrm.Embeds.process();
   }
@@ -113,13 +117,13 @@
     if (!SRC[p] || wrap.dataset.embedded) return;
     wrap.dataset.embedded = "1";
     wrap.querySelectorAll("[data-embed-class]").forEach((el) => el.classList.add(el.dataset.embedClass));
-    load(p).then(() => render(p, wrap)).catch(() => {});
+    load(p).then(() => render(p, wrap)).catch(() => { delete wrap.dataset.embedded; }); // card stays; retried on next scroll-in
   }
   const posts = document.querySelectorAll(".se[data-platform]");
   if (!posts.length) return;
   if ("IntersectionObserver" in window) {
     const io = new IntersectionObserver((entries) => {
-      entries.forEach((en) => { if (en.isIntersecting) { io.unobserve(en.target); show(en.target); } });
+      entries.forEach((en) => { if (en.isIntersecting) show(en.target); });
     }, { rootMargin: "600px 0px" });
     posts.forEach((el) => io.observe(el));
   } else {
