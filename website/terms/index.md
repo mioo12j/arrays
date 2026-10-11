@@ -46,7 +46,7 @@ We work to keep this website accurate and available, but we provide it "as is" a
 
 ## 8. Governing law
 
-These terms are governed by the laws of India. Any dispute about them or about this website is subject to the jurisdiction of the courts with authority over our registered office in Delhi.
+These terms are governed by the laws of India. Any dispute about them or about this website is subject to the jurisdiction of the competent courts in India.
 
 ## 9. Contact and legal notices
 

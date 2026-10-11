@@ -564,7 +564,7 @@ SCHEMES = [
 # (date label, iso, title, text, link)
 TIMELINE = [
     ("Oct 2018", "2018-10", "Company founded",
-     "Arrays Ingenieria Pvt. Ltd. is incorporated in New Delhi. Founded by Lt. Gen. Ashish Ranjan Prasad (Retd), it sets out to give fellow veterans a second innings in green energy.", "about.html"),
+     "Arrays Ingenieria Pvt. Ltd. is incorporated. Founded by Lt. Gen. Ashish Ranjan Prasad (Retd), it sets out to give fellow veterans a second innings in green energy.", "about.html"),
     ("Jun 2021", "2021-06", "First Tata Power work order",
      "Civil works for the 9979 kWp (10 MW) solar plant at DCM Textile, Hisar.", "project-dcm-hisar-10mw-solar-civil-works.html"),
     ("Jul 2023", "2023-07", "Tata Motors, Jamshedpur",

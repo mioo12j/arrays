@@ -702,7 +702,7 @@ Yes, we manage the complete process: structural & shadow analysis, DISCOM liaiso
 
 Which areas of India do you serve?
 
-We work **Pan-India**, with completed and ongoing projects across Haryana, Delhi NCR, Rajasthan, Uttarakhand, Uttar Pradesh, Bihar, Jharkhand, West Bengal, Odisha, Assam and Karnataka, operated from our Greater Noida (UP) corporate office and Madhubani (Bihar) branch.
+We work **Pan-India**, from tea estates in Assam to industrial rooftops and utility-scale ground-mount plants, operated from our Greater Noida (UP) corporate office and Madhubani (Bihar) branch.
 
 Why choose a veteran-led solar company?
 
