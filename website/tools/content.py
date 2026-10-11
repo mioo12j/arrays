@@ -399,8 +399,8 @@ CLIENTS = [
      "1035 kWp across Towkok and Manjushree Tea Estates, and solar plants at the Dewan, Labac and Burtoll gardens of the Dewan Group of Tea Estates.",
      ["project-jayshree-tea-1mw-solar-assam.html"]),
     ("Goodricke Group", "Plant owner",
-     "Solar plants at Koomber (595 kWp, inaugurated by the Chief Minister of Assam), Orangajuli (450 kW) and Barpatra (230 kW) Tea Estates under the 3.11 MW programme with Tata Power Renewable Energy and Sustvest.",
-     ["project-koomber-tea-estate-595kwp-solar-cm-inauguration.html", "project-orangajuli-tea-estate-450kw-solar.html", "project-barpatra-tea-estate-230kw-solar.html"]),
+     "Solar plants at Koomber (595 kWp, inaugurated by the Chief Minister of Assam), Orangajuli (450 kW) and Barpatra (230 kW) Tea Estates under the 3.11 MW programme with Tata Power Renewable Energy and Sustvest, and the 400 kWp plant at Harmutty Tea Estate, North Lakhimpur; Goodricke has issued certificates of appreciation for Koomber, Borpatra and Harmutty.",
+     ["project-koomber-tea-estate-595kwp-solar-cm-inauguration.html", "project-orangajuli-tea-estate-450kw-solar.html", "project-barpatra-tea-estate-230kw-solar.html", "project-harmutty-tea-estate-400kwp-solar.html"]),
     ("Sustvest (SolarGridX Ventures Pvt. Ltd.)", "Developer partner",
      "Supply of components and installation & commissioning of a 1711.66 kWp on-grid project in Assam, and the Goodricke tea-estate programme.",
      ["project-assam-1711kwp-on-grid-solar.html"]),
@@ -485,47 +485,80 @@ NATIONAL_FACTS = [
 # -------------------------------------------------------------- schemes ----
 # (title, who it is for, points, how we fit in, source name, source url)
 SCHEMES = [
-    ("PM Surya Ghar: Muft Bijli Yojana", "Homes",
-     ["Launched by the Prime Minister on 13 February 2024; approved by the Union Cabinet on 29 February 2024 with an outlay of Rs 75,021 crore",
-      "Central financial assistance of 60% of system cost for 2 kW and 40% of the additional cost between 2 and 3 kW, capped at 3 kW",
-      "At benchmark prices: Rs 30,000 for 1 kW, Rs 60,000 for 2 kW and Rs 78,000 for 3 kW or more",
-      "Collateral-free loans of around 7% for residential systems up to 3 kW; applications through the National Portal",
-      "Target: 75 lakh households with rooftop solar by December 2026, on the way to 1 crore"],
-     "The scheme is aimed at households. Our focus is commercial, industrial and tea-estate plants, which fall outside it.",
-     "PIB", "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2268992"),
+    # (title, who, points, where we fit, source name, source url, in-depth guide, status in October 2026)
+    ("PM Surya Ghar: Muft Bijli Yojana", "Homes & housing societies",
+     ["Launched on 13 February 2024; approved by the Union Cabinet on 29 February 2024 with an outlay of Rs 75,021 crore",
+      "Central subsidy: Rs 30,000 for 1 kW, Rs 60,000 for 2 kW and Rs 78,000 for 3 kW or more",
+      "Housing societies and RWAs: Rs 18,000 per kW for common facilities, up to 500 kW",
+      "Collateral-free loans of around 7% for home systems up to 3 kW; Indian-made (DCR) modules and a registered vendor required",
+      "Target: 75 lakh households by December 2026, on the way to 1 crore"],
+     "The scheme is aimed at homes. For businesses the equivalent levers are depreciation, 5% GST and net metering, which our CAPEX plants are built around.",
+     "PIB", "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2268992", "pm-surya-ghar-subsidy.html", "Open; apply on pmsuryaghar.gov.in"),
     ("PM-KUSUM", "Farmers, cooperatives, panchayats, FPOs",
-     ["Launched in March 2019 and scaled up in January 2024",
-      "Component A: decentralised ground- or stilt-mounted grid-connected solar plants of up to 2 MW on farmers' land, with the power bought by DISCOMs at a pre-fixed tariff",
-      "Component B: standalone solar agriculture pumps in off-grid areas",
-      "Component C: solarisation of grid-connected agriculture pumps, individually or at feeder level",
-      "2026 update: financial closure for Component A and C projects extended to 30 November 2026; completion by 31 March 2027 (Energetica India)"],
-     "Component A plants are ground-mount plants of up to 2 MW: the pile foundations, civil works, installation and commissioning we do every day.",
-     "PIB, 6 Aug 2024", "https://pib.gov.in/PressReleasePage.aspx?PRID=2042069"),
+     ["Component A: grid-connected solar plants of 500 kW to 2 MW on farmers' land, power bought by the DISCOM",
+      "Component B: standalone solar pumps, with 30% central support (50% in the North-East, hill states and islands) plus state support",
+      "Component C: solarisation of grid-connected pumps, individually or by whole feeders",
+      "Financial closure for Components A and C extended to 30 November 2026; completion by 31 March 2027, with no further extension",
+      "PM-KUSUM 2.0, with about 10 GW for agri-photovoltaics, announced but not yet notified"],
+     "Component A and feeder-level plants are ground-mount plants: the piling, fencing, civil works, installation and commissioning we do every day.",
+     "Energetica India", "https://energetica-india.net/news/mnre-extends-pm-kusum-financial-closure-deadline-to-nov-30", "pm-kusum-scheme.html", "Closing: complete by 31 Mar 2027"),
     ("Solar in Assam's tea gardens", "Tea estates in Assam",
-     ["The Chief Minister of Assam has announced that tea garden owners may use up to 5% of their land for solar generation",
-      "Assam's target is 6,000 MW of installed green energy capacity by 2030"],
-     "We have built 19 on-grid plants in Assam's tea gardens and know the estates, the land, DG synchronisation and APDCL approvals.",
-     "Himanta Biswa Sarma, 22 Sep 2026", "https://himantabiswa.substack.com/p/rewriting-assams-energy-future"),
+     ["Tea garden owners may use up to 5% of their land for solar generation, as announced by the Chief Minister",
+      "Assam's goal: 6,000 MW of installed green energy capacity by 2030; its solar policy targets about 3,500 MW of solar",
+      "Clean-energy incentives for tea, coffee and rubber units buying from APDCL have included annual energy banking"],
+     "We have built ground-mount plants across Assam's tea gardens, from Koomber (inaugurated by the Chief Minister) to Harmutty, with DG synchronisation and APDCL approvals.",
+     "Himanta Biswa Sarma, 22 Sep 2026", "https://himantabiswa.substack.com/p/rewriting-assams-energy-future", "solar-for-assam-tea-estates-guide.html", "In force; check APDCL for current terms"),
     ("Accelerated depreciation", "Businesses that own their plant",
-     ["A business that owns a solar plant can depreciate it faster than ordinary assets under the Income Tax Act, lowering tax in the early years",
-      "Available only when you own the plant, which is why it matters for the CAPEX model"],
-     "Every plant we build on the CAPEX model belongs to the client, so the benefit is theirs. Check the current rate with your tax adviser.",
-     "Income Tax Act, 1961", ""),
-    ("Net metering", "Grid-connected consumers",
-     ["Power exported to the grid is offset against power drawn, under the rules of your state DISCOM and electricity regulator"],
-     "We handle the net-metering application and inspections; at Barpatra Tea Estate we obtained the approvals from APDCL.",
-     "State electricity regulations", ""),
+     ["Solar power generating systems are depreciated at 40% a year on the written-down value",
+      "The Income-tax Act, 2025 applies from 1 April 2026; the 40% rate for qualifying solar assets is reported to continue",
+      "Half the year's depreciation if the plant is used for less than 180 days in its first year"],
+     "Every plant we build on the CAPEX model belongs to the client, so the depreciation is theirs. Confirm the position with your chartered accountant.",
+     "Taxguru: Income-tax Act, 2025", "https://taxguru.in/income-tax/depreciation-income-tax-act-2025-section-34-rates-provisions.html", "accelerated-depreciation-solar.html", "Available to business owners"),
+    ("GST on solar at 5%", "Everyone buying a solar plant",
+     ["The 56th GST Council cut GST on solar cells, modules and specified devices from 12% to 5%, effective 22 September 2025",
+      "EPC contracts: 70% goods at 5% and 30% services at 18%, about 8.9% overall",
+      "The Andhra Pradesh High Court upheld the 70:30 method for a solar EPC contract in December 2025"],
+     "We set out supply and services clearly in every CAPEX quotation, so the tax treatment is transparent from the start.",
+     "pv magazine India, 4 Sep 2025", "https://www.pv-magazine-india.com/2025/09/04/gst-on-solar-cells-modules-cut-to-5/", "gst-on-solar-india.html", "In force"),
+    ("Net metering and time-of-day tariffs", "Grid-connected consumers",
+     ["Net metering up to 500 kW or the sanctioned load, whichever is lower, under the national consumer rules; states set the details",
+      "Above that, net billing or gross metering",
+      "Time-of-day tariffs make solar hours cheaper and evening peaks dearer",
+      "Draft amendment of March 2026 proposes charges above 5 kW and storage above 500 kW; check whether it has been notified"],
+     "We handle net-metering applications, inspections and CEIG approvals; at Borpatra Tea Estate we obtained the approvals from APDCL.",
+     "Mercom India", "https://www.mercomindia.com/government-proposes-amendments-to-electricity-consumer-rights-rules", "net-metering-india.html", "In force; 2026 changes in draft"),
+    ("Green Energy Open Access", "Consumers of 100 kW and more",
+     ["Buy green power from an off-site plant from 100 kW of load (down from 1 MW); captive consumers have no minimum",
+      "Connections in the same electricity division can be aggregated (2023 amendment)",
+      "Single-window applications on the national GOAR portal, with deemed approval if not decided in time",
+      "The ISTS charges waiver ended for projects commissioned after 30 June 2025 and is phasing out in steps"],
+     "Captive and open-access plants are ground-mount plants: we do the piling, civil works, fencing and installation & commissioning.",
+     "GOAR portal", "https://greenopenaccess.in/", "green-energy-open-access.html", "In force; state charges vary"),
     ("ALMM List-I and List-II", "Projects covered by the ALMM order",
-     ["MNRE's Approved List of Models and Manufacturers sets which solar modules may be used in covered projects (List-I)",
-      "From 1 June 2026, List-II for solar PV cells applies: covered projects must use List-I modules made with List-II cells",
-      "Projects whose bid deadline fell on or before the order are exempt from the cell requirement"],
-     "We are not a manufacturer, so we specify the ALMM-listed or client-approved makes each project requires and keep the documents.",
-     "PIB: MNRE amends ALMM Order 2019", "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2082901"),
-    ("GST on solar cut to 5%", "Everyone buying a solar plant",
-     ["The 56th GST Council, on 3 September 2025, cut GST on solar cells, modules and other renewable-energy devices from 12% to 5%",
-      "Effective from 22 September 2025"],
-     "Lower tax on equipment lowers the upfront cost of a CAPEX plant. Confirm how GST applies to your EPC contract with your tax adviser.",
-     "pv magazine India, 4 Sep 2025", "https://www.pv-magazine-india.com/2025/09/04/gst-on-solar-cells-modules-cut-to-5/"),
+     ["List-I sets which solar modules may be used in covered projects",
+      "From 1 June 2026, List-II for solar cells applies: covered projects need List-I modules made with List-II cells",
+      "Exemptions for projects whose bid deadline was before the amendment, and for net-metering and open-access projects commissioned before 1 June 2026",
+      "A List-III for wafers is reported for June 2028"],
+     "We do not manufacture modules, so we specify the ALMM-listed or client-approved makes each project needs and keep the documents.",
+     "PIB", "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2082901", "almm-list-ii-solar-cells.html", "In force from 1 June 2026"),
+    ("Customs duty on modules and cells", "Anyone importing equipment",
+     ["Budget 2025-26: BCD on modules cut to 20% with a 20% AIDC (about 40% combined); on cells to 20% with 7.5% AIDC",
+      "Budget 2026-27 left the headline rates unchanged and removed duty on a solar-glass input",
+      "Anti-dumping duty on Chinese-origin cells and modules recommended in September 2025; check the current notification"],
+     "For most C&I and scheme projects the route is now Indian ALMM modules; we compare options and paperwork before you commit.",
+     "Energetica India", "https://www.energetica-india.net/news/union-budget-2025-26-solar-cells-and-modules-duty-cut-to-20-percent", "solar-import-duty-india.html", "In force"),
+    ("BIS Quality Control Order", "Every plant: modules, inverters, batteries",
+     ["Solar Systems, Devices and Components Goods Order, 2025, notified 27 January 2025",
+      "Modules, solar inverters and storage batteries must meet Indian Standards and carry the BIS mark",
+      "Inverters above 200 kW given extra time on self-certification, reportedly to the end of 2026"],
+     "We check BIS and ALMM documents for every component on site and hand them over with the test reports.",
+     "PIB", "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2097219", "solar-quality-standards-bis-cea.html", "In force"),
+    ("Storage with solar", "Utility tenders and large prosumers",
+     ["Power Ministry advisory (Feb 2025): two-hour co-located storage equal to 10% of capacity in future solar tenders",
+      "Viability gap funding for battery storage; a second tranche of about Rs 5,400 crore announced in 2025",
+      "ISTS waiver for co-located BESS commissioned by 30 June 2028"],
+     "We build the solar side and can plan for storage; for most C&I owners a plant sized to daytime load pays back fastest.",
+     "pv magazine India", "https://www.pv-magazine-india.com/2025/02/20/power-ministry-mandates-co-locating-energy-storage-with-solar-projects/", "battery-storage-with-solar.html", "Advisory for future tenders"),
 ]
 
 # ------------------------------------------------------------- timeline ----
@@ -1190,10 +1223,49 @@ TRACK_RECORD = [
     ("2026", "Monokholi and Kadamba Tea Estates", "220 kWp and 234 kWp", "Assam", "I&C with BOS services"),
     ("2026", "Amalgamated project for SolarGridX (Sustvest)", "2862 kWp", "Assam", "BOS works, piling, transport"),
     ("2026", "Orangajuli Tea Estate (Goodricke)", "450 kW", "Assam", "BOS: earthing pits"),
+    ("2026", "Harmutty Tea Estate (Goodricke), North Lakhimpur", "400 kWp", "Assam", "Installation & commissioning; inaugurated 7 Oct 2026"),
 ]
 
+HM = "assets/harmutty/arrays-ingenieria-ex-servicemen-led-harmutty-tea-estate-400kwp-solar-"
+PROJECTS.append(dict(
+    file="project-harmutty-tea-estate-400kwp-solar.html",
+    name="Harmutty Tea Estate: 400 kWp Ground-Mounted Solar Plant",
+    short="Harmutty Tea Estate, Assam · 400 kWp",
+    title="400 kWp Solar, Harmutty Tea Estate Assam | Arrays Ingenieria",
+    desc="Case study: installation and commissioning of the 400 kWp ground-mounted on-grid solar plant at Goodricke's Harmutty Tea Estate, inaugurated 7 Oct 2026.",
+    capacity="400 kWp", kind="Ground-mounted, on-grid", location="Harmutty, Laluk, North Lakhimpur district, Assam 784160",
+    client="Harmutty Tea Estate (Goodricke Group)", partner="Jointly developed by Tata Power Solar, Goodricke and Sustvest",
+    role="Implementing partner: installation & commissioning", year="2026 (inaugurated 7 October 2026)",
+    cat="ground", tag="Tea Estate · Ground-Mount I&C",
+    hero=HM + "ground-mount-array-inauguration-banner.jpg",
+    intro="Installation and commissioning of the 400 kWp ground-mounted, on-grid solar power plant at Goodricke's Harmutty Tea Estate "
+          "in Laluk, North Lakhimpur, on the north bank of the Brahmaputra in Assam, inaugurated on 7 October 2026.",
+    body=["The plant was jointly developed by Tata Power Solar, Goodricke (\"The Tea People\") and Sustvest, the same partners behind the "
+          "Goodricke tea-estate solar plants at Koomber, Orangajuli and Borpatra. Arrays Ingenieria was the implementing partner for "
+          "installation and commissioning, as the inauguration banner records.",
+          "The 400 kWp array stands on fixed ground-mounted structures beside the tea bushes near Harmutty Tea Factory, feeding an AC "
+          "distribution board that connects the plant to the estate's supply. The earthing pits are numbered and tagged with their test "
+          "date and measured resistance, as we do on every plant, so the estate team can keep up the annual tests.",
+          "The plant was inaugurated on 7 October 2026, a week after the Chief Minister of Assam opened our Koomber plant. "
+          "The inauguration banner sets it in the national and state context: supporting India's Solar Mission, advancing the Prime "
+          "Minister's Panchamrit goals and contributing to Assam's green-energy growth vision.",
+          "Goodricke then presented Arrays Ingenieria with a certificate of appreciation for the installation and commissioning, "
+          "acknowledging the team's professionalism, technical expertise and commitment, and its dedication, engineering excellence and "
+          "meticulous approach throughout the execution of the project."],
+    scope=["Installation of the 400 kWp ground-mounted module mounting structures and modules",
+           "DC cabling, inverters and the AC distribution board (ACDB)", "Earthing pits with tested and tagged resistance values",
+           "Grid connection (on-grid) and testing", "Commissioning and handover for the inauguration on 7 October 2026"],
+    photos=[(HM + "ground-mount-array-inauguration-banner.jpg", "The 400 kWp ground-mounted solar array at Harmutty Tea Estate, North Lakhimpur, Assam, with the inauguration banner, installed and commissioned by Arrays Ingenieria"),
+            (HM + "acdb-inauguration-ribbon.jpg", "AC distribution board of the 400 kWp Harmutty Tea Estate solar plant decorated with ribbon and banana plants for the inauguration, 7 October 2026"),
+            (HM + "inauguration-banner.jpg", "Inauguration banner of the 400 kWp ground-mounted on-grid solar plant at Harmutty Tea Estate, 7 October 2026: Tata Power Solar, Goodricke, Sustvest and Ingenieria (installation & commissioning)"),
+            (HM + "certificate-of-appreciation-handover.jpg", "Goodricke's certificate of appreciation for the 400 kWp Harmutty Tea Estate solar plant handed to Arrays Ingenieria at the tea estate office")],
+    docs=[("assets/certs/goodricke-appreciation-harmutty-400kwp-arrays-ingenieria.jpg", "Goodricke certificate of appreciation: installation & commissioning of the 400 kWp ground-mounted on-grid plant at Harmutty Tea Estate")],
+    coverage=[],
+    services=["solar-installation-commissioning.html", "service-ground-mount.html", "solar-for-tea-estates.html"],
+))
+
 # Case-study order: the Chief Minister's inauguration, then installation & commissioning work, then piling and civil works.
-_ORDER = ["koomber", "jayshree", "orangajuli", "barpatra", "super-smelters", "amalgamated", "rossell", "balaji", "srmb", "apar",
+_ORDER = ["koomber", "jayshree", "orangajuli", "barpatra", "harmutty", "super-smelters", "amalgamated", "rossell", "balaji", "srmb", "apar",
           "tcpl", "assam-1711", "tata-motors", "dcm", "yiapl", "seci"]
 PROJECTS.sort(key=lambda p: next(i for i, k in enumerate(_ORDER) if k in p["file"]))
 
@@ -1211,3 +1283,118 @@ _p["body"] = ["Tata Power Renewable Energy Ltd. (TPREL) issued Arrays Ingenieria
               "trenching and laying the cable routes.",
               "Pile foundations carry the module mounting structures of a ground-mount plant, so their depth, alignment and levels "
               "decide how the rest of the plant goes up. Arrays Ingenieria's veteran-led site teams work to the EPC's specifications and schedule."]
+
+# ------------------------------------------------ case-study detail ----
+# Timelines (month of each order), on-site challenges and the I&C scope, for the solar case studies.
+_project("project-amalgamated-plantations-assam-tea-estates-solar.html").update(
+    ic_scope="ground",
+    phases=[("Aug-Nov 2022", "BOS services and logistics", "Balance-of-system services for the plantation sites, and shifting of material from the central warehouse to Chubwa, Kakajan and Powai."),
+            ("Nov 2022", "Installation & commissioning, phase 1", "Ground-mount plants at Chubwa (499 kWp), Kakajan (741 kWp) and Powai (750 kWp)."),
+            ("Dec 2022", "Pile foundations", "Augered piles, 300 mm diameter, for the plantation plants."),
+            ("Mar 2023", "Equipment foundations", "Material and labour for ACDB foundations at Kakajan and Powai, and further material shifting."),
+            ("Sep-Oct 2023", "Phase 2 begins", "I&C at Nonoi (374 kW) and Diffloo (360 kW); orders for Nahortoli, RHRC, Achabam, Naharkatia, Namrup and Borhat; cable glands and lugs."),
+            ("Oct 2023", "Piling at 11 sites", "Pile foundations, 300 mm diameter and 2.7 m long, for 11 sites totalling 3.8 MWp."),
+            ("Jan 2024", "Module cleaning", "Module cleaning service across the programme."),
+            ("Mar-Aug 2024", "BOS completion and support", "Glands and lugs at Diffloo, Naharkatia, Nonoi, Nahortoli, Namrup and Borhat; module shifting between estates and module replacement support."),
+            ("2026", "2862 kWp project for SolarGridX", "Transport of materials, BOS works and piling on the 2862 kWp Amalgamated project for SolarGridX Ventures (Sustvest).")],
+    detail=[("Many estates, one standard", "With a dozen estates spread across Upper Assam, the job was as much logistics as engineering: material moved from a central warehouse, crews rotated between gardens, and every site was built and documented the same way."),
+            ("Soil and monsoon", "Tea-garden land is soft and wet for much of the year. Augered piles sized for each site, and equipment raised on proper foundations, keep the plants stable and dry through Assam's monsoon."),
+            ("Working inside live estates", "Plants sit near factories, labour lines and plantation roads. Work was planned around the plucking season and estate traffic, with safety lines and posters on every site.")])
+
+_project("project-rossell-india-assam-tea-estates-solar.html").update(
+    ic_scope="ground",
+    phases=[("Mar-Apr 2023", "Kharikatia Tea Estate, 302 kW", "Installation & commissioning of the ground-mount plant, pile construction and rooftop-services BOS."),
+            ("Sep 2023", "Kharikatia close-out", "Cable glands and final BOS items."),
+            ("Oct-Nov 2024", "Nagrijuli Tea Estate, 493.24 kWp", "Installation & commissioning, BOS materials, pile foundations and module cleaning services."),
+            ("Dec 2024-Jan 2025", "Nagrijuli additions", "Additional BOS cabling."),
+            ("Jan-Apr 2025", "Romai Tea Estate, 170.51 kWp", "BOS materials, pile foundations, installation & commissioning, module cleaning, inverter stands and additional BOS."),
+            ("Dec 2025-Feb 2026", "Dikom Tea Estate, 367 kW", "Installation & commissioning, piling services and BOS materials.")],
+    detail=[("Four estates, four sizes", "From 170 kWp at Romai to 493 kWp at Nagrijuli, each plant was sized to the estate's load and land, but built to the same EPC specification and checklists."),
+            ("Repeat client, rising scale", "Rossell's estates came back for a second, third and fourth plant between 2023 and 2026, each time with the full chain of piling, BOS, I&C and cleaning."),
+            ("Foundations first", "Piling was done ahead of installation on every estate, so structures went up level and true on soft tea-garden soil.")])
+
+_project("project-balaji-action-sitarganj-4mwp-solar.html").update(
+    ic_scope="rooftop",
+    phases=[("May 2022", "Rooftop services for 4000.32 kWp", "BOS services for the full project."),
+            ("Jun 2022", "Labour colony", "Construction of a labour colony for the site crew."),
+            ("Jul 2022", "I&C and approvals", "Installation & commissioning of the 3 MWp sheet-roof plant; CEIG approvals for the 4 MWp project."),
+            ("Aug-Sep 2022", "Safety and ground-mount civil works", "Portable fire extinguishers and sand buckets; civil and pile foundations for the 3 MWp ground-mount portion."),
+            ("Dec 2022-Feb 2023", "BOS completion", "Further rooftop services, cable lugs and additional cable trays."),
+            ("Mar 2023", "Final works", "ITB canopy and additional I&C works.")],
+    detail=[("Four megawatts on one site", "A large sheet-roof plant plus a ground-mount portion meant two very different jobs, height work and piling, running in parallel on one industrial campus."),
+            ("A camp for the crew", "With a large crew on site for months, a proper labour colony was part of the scope: decent living conditions are part of working safely."),
+            ("Approvals as part of the job", "CEIG approvals for the whole 4 MWp project were in our scope, so inspection was planned into the schedule rather than added at the end.")])
+
+_project("project-srmb-steel-durgapur-rooftop-solar.html").update(
+    ic_scope="rooftop",
+    phases=[("Dec 2021", "1895.4 kWp sheet-roof plant", "Installation & commissioning order for the first and largest phase."),
+            ("Jun-Jul 2022", "Rooftop services", "BOS services for the 1895.4 kWp phase and for Phase III (1.69 MWp)."),
+            ("Aug 2022", "Phase 2: 1060 kWp", "Installation & commissioning of the 1060 kWp sheet-roof plant and its module cleaning system."),
+            ("Nov 2022", "Module shifting", "Module shifting work at the 1.615 MW SRMB Srijan plant."),
+            ("Mar 2023", "Close-out", "Cable glands and lugs for the 1.06 MWp and 1.895 MWp phases.")],
+    detail=[("Steel-plant roofs", "Steel-plant sheds are high, hot and busy. Lifting material safely to the roof, lifelines and skylight protection came before any module went up."),
+            ("Phase after phase", "Three phases on one campus over two years meant matching each new phase to the earlier ones, from string layouts to labelling."),
+            ("Cleaning built in", "Industrial dust makes cleaning essential, so the module cleaning system was installed and commissioned with the plant.")])
+
+_project("project-apar-industries-jharsuguda-1-2mwp-rooftop-solar.html").update(
+    ic_scope="rooftop",
+    phases=[("Feb 2023", "Installation & commissioning", "I&C of the 1.2 MWp sheet-roof plant and its rooftop BOS services."),
+            ("Mar 2023", "Skylight safety mesh", "Fabrication, supply and installation of skylight guard mesh across the roof."),
+            ("Jun 2023", "Communication and earthing", "Earthing strip and RS485 communication cable."),
+            ("Jul 2023", "CEIG approval", "CEIG approval and liaison for the 1203 kWp plant."),
+            ("Aug-Sep 2023", "Close-out", "Additional skylight mesh and cable glands.")],
+    detail=[("Safety over translucent sheets", "The roof had many skylight sheets. Fabricated guard mesh over them protects installers and, for years afterwards, the cleaning crews."),
+            ("Inspection-ready", "With the CEIG approval in our scope, test records and drawings were prepared to the inspector's formats from the start."),
+            ("Monitoring", "RS485 communication cabling links the inverters to monitoring, so the owner can see the plant's output every day.")])
+
+_project("project-super-smelters-1980kwp-rooftop-solar.html").update(
+    ic_scope="rooftop",
+    phases=[("Apr 2024", "Installation & commissioning", "I&C of the 1980 kW sheet-roof plant, its BOS materials and additional cable, and the module cleaning system."),
+            ("Jun 2024", "Fixings", "Self-drilling screws for the sheet-roof structures."),
+            ("Jul 2024", "Cable trays and excavation", "Additional cable-tray services and earth excavation."),
+            ("Aug 2024", "Earthing strip", "Earthing strip for the plant."),
+            ("Inauguration", "Plant inaugurated", "Inaugurated by Super Smelters' director, with Lt. Gen. Ashish Ranjan Prasad (Retd) present; Super Smelters issued a letter of appreciation.")])
+
+_project("project-tcpl-vaishali-319kwp-rooftop-solar.html").update(
+    ic_scope="rooftop",
+    phases=[("Mar 2024", "Installation & commissioning", "I&C of the 319.06 kW sheet-roof plant, its BOS materials and module cleaning services."),
+            ("Apr 2024", "In the news", "Dainik Bhaskar's Hajipur edition reported the plant on 3 April 2024."),
+            ("May 2024", "Close-out", "Cable glands and lugs.")])
+
+_project("project-tata-motors-jamshedpur-5-5mw-solar-piling.html").update(
+    ic_scope="ground",
+    phases=[("Feb 2023", "Pre-cast boundary wall", "Supply, civil work and erection of the pre-cast boundary wall."),
+            ("Apr 2023", "Pull-out tests and cleaning", "Pull-out tests on the piles; module cleaning system for the plant."),
+            ("Jun 2023", "Land development", "Land development for the plant."),
+            ("Jul 2023", "Piling and civil work", "Pile foundations, 300 mm diameter and 1.8 m deep, and civil works for the 5.579 MWp plant at Jojobera Yard."),
+            ("Sep 2023", "Installation & commissioning", "I&C of the 5.579 MWp plant; gate fabrication and installation."),
+            ("Oct 2023-Feb 2024", "Site services and liaison", "Temporary water supply, and liaison with government offices and local bodies.")],
+    detail=[("A complete site package", "From land development and the boundary wall to piling, installation and liaison, almost every site trade on this plant was in our hands."),
+            ("Proving the piles", "Pull-out tests confirmed that the piles would hold the structures against wind uplift before installation began."),
+            ("Inside an industrial yard", "Working within Tata Motors' Jojobera Yard meant strict access, safety and housekeeping rules throughout.")])
+
+_project("project-dcm-hisar-10mw-solar-civil-works.html").update(
+    phases=[("Jun-Sep 2021", "10 MW civil works", "Civil works and pile foundations with pile caps for the 9979 kWp ground-mount plant, and electrical equipment foundations."),
+            ("Apr-Jun 2022", "2.1 MW rooftop I&C", "Installation & commissioning of the 2.1 MW rooftop plant, its module cleaning system and CEIG approval."),
+            ("Aug-Dec 2022", "BOS, canopy and earthing", "Rooftop BOS services, canopy installation and conventional earthing for the 2.1 MWp plant."),
+            ("Sep 2023", "Close-out", "Hardware, glands and lugs."),
+            ("Aug-Dec 2025", "500 kWp ground-mount", "BOS, installation & commissioning and piling for a further 500.96 kWp ground-mount plant.")],
+    detail=[("A repeat site over five years", "DCM Textile's Hisar mill brought us back for civil works, a rooftop plant and a ground-mount plant between 2021 and 2025."),
+            ("Haryana's hard ground", "Pile foundations with pile caps were designed for the site's soil and wind loads."),
+            ("Inspection and safety", "CEIG approval and conventional earthing were part of the rooftop scope, so the plant was handed over inspection-ready.")])
+
+_project("project-seci-300mw-koppal-pile-foundation.html").update(
+    phases=[("17 Feb 2025", "Outline agreement", "Agreement for the construction of pile foundations at the 300 MW SECI project, Koppal."),
+            ("Mar 2025", "Piling", "Augered piles, 300 mm diameter and about 1.75 m deep."),
+            ("Apr-Jul 2025", "DC installation", "Loading and installing modules on 112-module interior and exterior trackers, string combiner boxes, cable terminations and trenching."),
+            ("Jul 2025", "Further piling", "Pile foundations, 300 mm diameter and 1.7 m deep, with extra items.")],
+    detail=[("Scale", "Utility-scale piling means thousands of piles set to tight tolerances of position, depth and level, every day, for weeks."),
+            ("Trackers", "Tracker structures demand accurate piles: a misaligned pile stops a tracker row from moving freely."),
+            ("From civil to electrical", "Moving from piling to DC installation on the same project shows how one veteran-led team can cover several trades on a large site.")])
+
+_project("project-yiapl-14-36mw-solar-civil-fencing.html").update(
+    phases=[("Mar 2025", "Pile foundations", "Construction of pile foundations, 300 mm diameter, 1.8 m, 2 m and 2.3 m deep."),
+            ("Jun 2025", "Chain-link fencing", "Supply, civil work and erection of chain-link fencing, tentative length about 6.25 km.")],
+    detail=[("An airport site", "Work at Noida International Airport runs under strict access and safety control, with every crew and vehicle accounted for."),
+            ("Kilometres of fence", "Around 6.25 km of chain-link fencing means steady, surveyed progress: posts set in concrete, mesh tensioned, gates aligned."),
+            ("Piles to suit the ground", "Three pile depths were used, matched to the ground conditions across the 14.36 MW site.")])

@@ -431,3 +431,45 @@ async function formAccepted(res) {
     });
   }
 })();
+
+/* ---------- Long-form guides: reading progress, active contents link, topic filter ---------- */
+(function () {
+  const body = document.querySelector(".art-body");
+  if (body) {
+    const bar = document.querySelector(".read-progress span");
+    const onScroll = () => {
+      const r = body.getBoundingClientRect();
+      const total = r.height - window.innerHeight * 0.6;
+      const done = Math.min(1, Math.max(0, -r.top / (total > 0 ? total : 1)));
+      if (bar) bar.style.width = (done * 100).toFixed(1) + "%";
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    const links = [...document.querySelectorAll(".art-toc a")];
+    const map = new Map(links.map((a) => [a.getAttribute("href").slice(1), a]));
+    if ("IntersectionObserver" in window && links.length) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          links.forEach((a) => { a.classList.remove("is-active"); a.removeAttribute("aria-current"); });
+          const a = map.get(e.target.id);
+          if (a) { a.classList.add("is-active"); a.setAttribute("aria-current", "true"); }
+        });
+      }, { rootMargin: "-20% 0px -70% 0px" });
+      document.querySelectorAll(".art-sec[id]").forEach((s) => io.observe(s));
+    }
+    // on phones the contents list starts folded so the article comes first
+    const det = document.querySelector(".art-toc details");
+    if (det && window.matchMedia("(max-width: 1024px)").matches) det.open = false;
+  }
+  const grid = document.querySelector("[data-art-grid]");
+  if (grid) {
+    const btns = [...document.querySelectorAll("[data-art-filter]")];
+    btns.forEach((b) => b.addEventListener("click", () => {
+      const f = b.dataset.artFilter;
+      btns.forEach((x) => { x.classList.toggle("active", x === b); x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      grid.querySelectorAll(".art-card").forEach((c) => c.classList.toggle("is-hidden", f !== "all" && c.dataset.tag !== f));
+    }));
+    btns.forEach((x) => x.setAttribute("aria-pressed", x.classList.contains("active") ? "true" : "false"));
+  }
+})();

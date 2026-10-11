@@ -127,6 +127,7 @@ PAGES = {
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from content import (PROJECTS, FAQ, GLOSSARY, CLIENTS, LEADER_QUOTES, NATIONAL_FACTS, SCHEMES, TIMELINE,  # noqa: E402
                      PANCHAMRIT, PANCHAMRIT_URL, STATES, KOOMBER_ALBUM, BORPATRA_ALBUM, INSIGHTS, TRACK_RECORD)
+from articles import ARTICLES  # noqa: E402  long-form guides, one page each
 
 PAGES.update({
     "capex-solar-epc.html": dict(path="/capex-solar-epc.html", crumb="CAPEX Solar EPC", parent="services",
@@ -174,6 +175,9 @@ PAGES.update({
 })
 for _p in PROJECTS:
     PAGES[_p["file"]] = dict(path="/" + _p["file"], crumb=_p["short"], parent="projects", title=_p["title"], desc=_p["desc"])
+for _a in ARTICLES:
+    PAGES[_a["file"]] = dict(path="/" + _a["file"], crumb=_a["short"], parent="insights", title=_a["seo_title"], desc=_a["desc"],
+                             kind="article", published=_a["date"], modified=_a["updated"], section=_a["tag"])
 
 
 def write_page(fname, html_text):
@@ -197,7 +201,7 @@ for _f, _m in PAGES.items():
     if _m["path"]:
         _m["path"] = page_url(_f)
 PARENTS = {"services": ("Services", "/#services"), "projects": ("Projects", "/projects/"),
-           "industries": ("Industries", "/industries/")}
+           "industries": ("Industries", "/industries/"), "insights": ("Insights", "/insights/")}
 SERVICE_PAGES = [p for p in PAGES if p.startswith("service-")]
 for _p in SERVICE_PAGES:
     PAGES[_p].setdefault("parent", "services")
@@ -334,6 +338,18 @@ GALLERY = [
     ("assets/certs/goodricke-appreciation-koomber-595kwp-arrays-ingenieria.jpg", "certificates cm",
      "Goodricke: Certificate of Appreciation, installation & commissioning of 595 kWp at Koomber Tea Garden",
      "Goodricke certificate of appreciation to Arrays Ingenieria for the 595 kWp Koomber Tea Garden solar plant"),
+    ("assets/harmutty/arrays-ingenieria-ex-servicemen-led-harmutty-tea-estate-400kwp-solar-ground-mount-array-inauguration-banner.jpg", "projects events",
+     "Harmutty Tea Estate, North Lakhimpur: 400 kWp ground-mounted on-grid solar plant, inaugurated 7 Oct 2026",
+     "The 400 kWp ground-mounted solar array at Harmutty Tea Estate, North Lakhimpur, Assam, installed and commissioned by Arrays Ingenieria"),
+    ("assets/harmutty/arrays-ingenieria-ex-servicemen-led-harmutty-tea-estate-400kwp-solar-acdb-inauguration-ribbon.jpg", "events",
+     "Harmutty Tea Estate: the plant's AC distribution board ready for the inauguration, 7 Oct 2026",
+     "AC distribution board of the 400 kWp Harmutty Tea Estate solar plant decorated for the inauguration"),
+    ("assets/harmutty/arrays-ingenieria-ex-servicemen-led-harmutty-tea-estate-400kwp-solar-certificate-of-appreciation-handover.jpg", "events certificates",
+     "Harmutty Tea Estate: Goodricke's certificate of appreciation handed to Arrays Ingenieria",
+     "Goodricke's certificate of appreciation for the 400 kWp Harmutty solar plant handed to Arrays Ingenieria"),
+    ("assets/certs/goodricke-appreciation-harmutty-400kwp-arrays-ingenieria.jpg", "certificates",
+     "Goodricke: Certificate of Appreciation, installation & commissioning of 400 kWp at Harmutty Tea Estate",
+     "Goodricke certificate of appreciation to Arrays Ingenieria for the 400 kWp Harmutty Tea Estate solar plant, North Lakhimpur, Assam"),
     ("assets/certs/goodricke-appreciation-borpatra-230kwp-arrays-ingenieria.jpg", "certificates",
      "Goodricke: Certificate of Appreciation, installation & commissioning of 230 kWp at Borpatra Tea Garden",
      "Goodricke certificate of appreciation to Arrays Ingenieria for the 230 kWp Borpatra Tea Garden solar plant"),
@@ -667,7 +683,7 @@ def time_tag(iso):
 
 
 def cov(kind):
-    return [c for c in COVERAGE if c["kind"] == kind]
+    return by_date([c for c in COVERAGE if c["kind"] == kind])
 
 
 PLAY_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>'
@@ -838,8 +854,26 @@ def initials(name):
     return "".join(w[0] for w in re.findall(r"[A-Za-z]+", name) if w[0].isupper())[:3]
 
 
+# Site-wide order for news and photos: the Chief Minister's inauguration first, then the other plant inaugurations,
+# then everything else about our plants, and coverage of our leadership last. Newest first within each group.
+INAUGURATION_KEYS = ("harmutty", "borpatra", "barpatra", "orangajuli", "supersmelters", "super-smelters", "jayshree", "towkok")
+LEADER_KEYS = ("prasad", "founder", "ceo", "national-tv", "leadership")
+
+
+def news_rank(c):
+    text = (c["id"] + " " + c.get("headline", "")).lower()
+    if "koomber" in text:
+        return 0
+    if any(k in text for k in INAUGURATION_KEYS):
+        return 1
+    if any(k in text for k in LEADER_KEYS):
+        return 3
+    return 2
+
+
 def by_date(items):
-    return sorted(items, key=lambda c: c["date"] or "0000", reverse=True)
+    newest = sorted(items, key=lambda c: c["date"] or "0000", reverse=True)
+    return sorted(newest, key=news_rank)
 
 
 def yt_card(c, lead=False, with_id=True):
@@ -1049,7 +1083,7 @@ def render_home_news():
     videos = [c for c in cov("tv") if c.get("img")]
     videos = sorted(videos, key=lambda c: (not c.get("youtube"), "koomber" not in c["id"]))[:3]
     sentinel = next(c for c in COVERAGE if c["kind"] == "online")
-    client = by_date(cov("client"))[-1]
+    client = min(cov("client"), key=lambda c: c["date"] or "9999")
     def quote_card(c, label, d):
         return (f'<a class="quote-card reveal" data-d="{d}" href="recognition.html#{c["id"]}">'
                 f'<span class="qc-src"><span class="press-kind">{label}</span><b>{esc(c["outlet"])}</b>{time_tag(c["date"])}</span>'
@@ -1146,14 +1180,26 @@ def render_national_facts():
 
 
 def render_schemes():
+    nav = "".join(f'<a href="#scheme-{art_slug(t)}">{esc(t)}</a>' for t, *_ in SCHEMES)
     cards = []
-    for i, (title, who, points, fit, src, url) in enumerate(SCHEMES):
+    for i, (title, who, points, fit, src, url, guide, status) in enumerate(SCHEMES):
         pts = "".join(f"<li>{esc(p)}</li>" for p in points)
         source = (f'<a class="sc-src" href="{url}" target="_blank" rel="noopener">Source: {esc(src)} {EXT_SVG}</a>' if url
                   else f'<span class="sc-src">Source: {esc(src)}</span>')
-        cards.append(f'<article class="scheme-card reveal" data-d="{i % 3}"><span class="sc-who">{esc(who)}</span><h3>{esc(title)}</h3>'
-                     f'<ul>{pts}</ul><p class="sc-fit"><b>Where we fit:</b> {esc(fit)}</p>{source}</article>')
-    return '<div class="scheme-grid">' + "".join(cards) + "</div>"
+        cards.append(f'<article class="scheme-card reveal" id="scheme-{art_slug(title)}" data-d="{i % 3}"><span class="sc-who">{esc(who)}</span><h3>{esc(title)}</h3>'
+                     f'<span class="sc-status">{esc(status)}</span><ul>{pts}</ul><p class="sc-fit"><b>Where we fit:</b> {esc(fit)}</p>'
+                     f'<a class="sc-guide" href="{guide}">Read the full guide {ARROW_SVG}</a>{source}</article>')
+    rows = "".join(f'<tr><th scope="row"><a href="#scheme-{art_slug(t)}">{esc(t)}</a></th><td>{esc(who)}</td><td>{esc(status)}</td><td><a href="{guide}">Guide</a></td></tr>'
+                   for t, who, _p, _f, _s, _u, guide, status in SCHEMES)
+    table = (f'<div class="cmp-wrap reveal" tabindex="0" role="region" aria-label="Schemes at a glance"><table class="cmp-table">'
+             f'<caption class="sr-only">Solar schemes and policies at a glance, October 2026</caption>'
+             f'<thead><tr><th scope="col">Scheme or policy</th><th scope="col">For</th><th scope="col">Status (Oct 2026)</th><th scope="col">In depth</th></tr></thead><tbody>{rows}</tbody></table></div>')
+    return (f'<nav class="sc-nav reveal" aria-label="Jump to a scheme">{nav}</nav>{table}'
+            f'<div class="scheme-grid">' + "".join(cards) + "</div>")
+
+
+def render_scheme_guides():
+    return '<div class="art-grid-cards">' + "".join(art_card(a, i) for i, a in enumerate(ARTICLES)) + "</div>"
 
 
 def render_panchamrit():
@@ -1245,7 +1291,27 @@ def render_track_record():
     </div>"""
 
 
+
+# Partners strip: EPC majors and developers first, then the plant owners we have built for (all documented on the site).
+PARTNERS = ["Tata Power Renewable Energy", "Tata Power Solar", "Goodricke", "Sustvest", "Jay Shree Tea (BK Birla Group)",
+            "Tata Motors", "Tata Steel", "Tata Consumer Products", "Super Smelters", "DCM Textile", "SECI", "Noida International Airport (YIAPL)",
+            "Apar Industries", "Rossell India", "Amalgamated Plantations", "SRMB Steel", "Bharat Petroleum"]
+
+
+def render_partners():
+    names = "".join(f"<span>{esc(n)}</span>" for n in PARTNERS)
+    plain = ", ".join(PARTNERS)
+    return f"""<section class="partners" id="partners" aria-label="Clients and partners">
+  <div class="container"><p class="partners__label">Trusted by India's leading EPC majors, developers and plant owners</p><p class="sr-only">Clients and partners: {esc(plain)}.</p></div>
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">{names}</div>
+    <div class="marquee__track">{names}</div>
+  </div>
+</section>"""
+
+
 BLOCKS = {
+    "partners": render_partners,
     "track-record": render_track_record,
     "press-tv": lambda: render_tv(),
     "press-print": render_press,
@@ -1257,6 +1323,8 @@ BLOCKS = {
     "leader-grid": render_leader_grid,
     "national-facts": render_national_facts,
     "schemes": render_schemes,
+    "scheme-guides": render_scheme_guides,
+    "guides-home": lambda: '<div class="art-grid-cards">' + "".join(art_card(a, i) for i, a in enumerate(ARTICLES[:6])) + "</div>",
     "timeline": render_timeline,
     "cm-showcase": render_cm_showcase,
     "cm-showcase-home": lambda: render_cm_showcase(videos=False),
@@ -1345,6 +1413,65 @@ def coverage_mini(ids):
             out.append(f'<a class="cov-mini" href="recognition.html#{c["id"]}"><span class="press-kind">{KIND_LABEL[c["kind"]]}</span>'
                        f'<b>{esc(c["outlet"])}</b>{time_tag(c["date"])}<span class="cov-h">{esc(c["headline"])}</span></a>')
     return "".join(out)
+
+
+# Standard installation & commissioning scope on our I&C contracts with EPC majors, grouped for reading.
+IC_SCOPE = {
+    "ground": [
+        ("Civil works", ["Earth-pit chambers and covers (RCC/PCC)", "Foundations for inverters, ACDB, ITB and accessories", "Cable trenches", "Cube tests to validate concrete strength"]),
+        ("Mechanical", ["Module mounting structure installation", "Module installation and interconnection", "Canopies for wall-mounted inverters and junction boxes"]),
+        ("DC side", ["String wiring from modules to inverters, tagged and identified", "DC cables in conduit or tray", "MC4 connectors crimped male and female", "Array junction boxes"]),
+        ("AC side and protection", ["Inverters and inverter terminal boxes", "AC distribution board (ACDB)", "LT AC cables in trays to the approved layout", "Reverse power relays installed and commissioned"]),
+        ("Earthing and lightning", ["Earth electrodes and pits", "Earthing strips for structures, inverters and ACDB, including welding", "Lightning arrestors"]),
+        ("Monitoring and cleaning", ["Data monitoring system (SCADA / power manager)", "Module cleaning system with pump and motor", "DWC pipe for RS485 communication cable"]),
+        ("Safety and handover", ["Safety lines and safety posters", "Material unloading, storage under covers and care until handover", "Third-party validation of tools where required", "Testing, commissioning and handover"]),
+    ],
+    "rooftop": [
+        ("Civil works", ["Earth-pit chambers and covers (RCC/PCC)", "Foundations for inverters, ACDB, ITB and accessories", "Cable trenches at ground level"]),
+        ("Mechanical", ["Lifting and handling of all material to the roof", "Module mounting structure installation on the sheet roof", "Module installation and interconnection", "Canopies for wall-mounted inverters and junction boxes"]),
+        ("DC side", ["String wiring from modules to inverters, tagged and identified", "DC cables in conduit or tray", "MC4 connectors crimped male and female", "Array junction boxes"]),
+        ("AC side and protection", ["Inverters and inverter terminal boxes", "AC distribution board (ACDB)", "LT AC cables in trays to the approved layout", "Reverse power relays installed and commissioned"]),
+        ("Earthing and lightning", ["Earth electrodes and pits", "Earthing strips for structures, inverters and ACDB, including welding", "Lightning arrestors"]),
+        ("Roof safety and access", ["Skylight safety mesh", "Walkways and hand rails", "Safety lifelines for workers", "Scaffolding for installation"]),
+        ("Monitoring, cleaning and handover", ["Data monitoring system (SCADA / power manager)", "Module cleaning system with pump and motor", "Safety posters, storage under covers and care until handover", "Testing, commissioning and handover"]),
+    ],
+}
+
+
+def render_project_detail(p):
+    out = ""
+    if p.get("phases"):
+        items = "".join(f'<li class="tl-item tl-{"l" if i % 2 == 0 else "r"} reveal"><span class="tl-dot" aria-hidden="true"></span>'
+                        f'<div class="tl-card"><time>{esc(w)}</time><h3>{esc(t)}</h3><p>{esc(x)}</p></div></li>'
+                        for i, (w, t, x) in enumerate(p["phases"]))
+        out += f"""
+<section class="section">
+  <div class="container">
+    <div class="section-head center reveal"><span class="eyebrow">Project Timeline</span><h2>How the Project <span class="text-grad">Unfolded</span></h2><p>The work, stage by stage, as it was ordered and delivered.</p></div>
+    <ol class="timeline" data-timeline>{items}</ol>
+  </div>
+</section>"""
+    if p.get("detail"):
+        cards = "".join(f'<div class="pd-card reveal" data-d="{i % 3}"><h3>{esc(h)}</h3><p>{esc(t)}</p></div>' for i, (h, t) in enumerate(p["detail"]))
+        out += f"""
+<section class="section section--soft">
+  <div class="container">
+    <div class="section-head center reveal"><span class="eyebrow">On Site</span><h2>Challenges and <span class="text-grad">How We Handled Them</span></h2></div>
+    <div class="pd-grid">{cards}</div>
+  </div>
+</section>"""
+    if p.get("ic_scope"):
+        groups = "".join(f'<div class="ic-group reveal" data-d="{i % 3}"><h3>{esc(g)}</h3><ul>' + "".join(f"<li>{esc(x)}</li>" for x in items) + "</ul></div>"
+                         for i, (g, items) in enumerate(IC_SCOPE[p["ic_scope"]]))
+        out += f"""
+<section class="section">
+  <div class="container">
+    <div class="section-head center reveal"><span class="eyebrow">Installation &amp; Commissioning</span><h2>What Our I&amp;C Scope <span class="text-grad">Covered</span></h2><p>The standard {"rooftop" if p["ic_scope"] == "rooftop" else "ground-mount"} installation &amp; commissioning scope we deliver to EPC majors' specifications, after the mandatory quality and safety training and contractor safety sign-off.</p></div>
+    <div class="ic-grid">{groups}</div>
+    <div class="section-cta reveal"><a class="btn btn--outline" href="solar-plant-commissioning-checklist.html">The full commissioning checklist</a><a class="btn btn--primary" href="solar-installation-commissioning.html">Our I&amp;C service {ARROW_SVG}</a></div>
+  </div>
+</section>"""
+    return out
 
 
 def render_project_page(p):
@@ -1447,7 +1574,7 @@ def render_project_page(p):
     </aside>
   </div>
 </section>
-{impact}{extra}{docs}
+{impact}{render_project_detail(p)}{extra}{docs}
 <section class="section">
   <div class="container">
     <div class="section-head center reveal"><span class="eyebrow">Related</span><h2>Services Used on <span class="text-grad">This Project</span></h2></div>
@@ -1518,53 +1645,176 @@ def render_faq_page():
     return page_shell("faq", body, "assets/photos/arrays-ingenieria-towkok-tea-estate-535kwp-ground-mount-solar-assam.jpg", "Towkok Tea Estate solar plant by Arrays Ingenieria", ld)
 
 
-def render_insights_page():
-    img = "assets/photos/arrays-ingenieria-industrial-rooftop-solar-array.jpg"
-    cards, arts, posts = [], [], []
-    for i, a in enumerate(INSIGHTS):
-        words = len(re.sub(r"<[^>]+>", " ", " ".join(a["paras"])).split())
-        mins = max(2, round(words / 200))
-        cards.append(f'<a class="ins-card reveal" data-d="{i % 3}" href="#{a["id"]}"><span class="ins-tag">{esc(a["tag"])}</span>'
-                     f'<b>{esc(a["title"])}</b><span class="ins-sum">{esc(a["summary"])}</span><span class="ins-meta">{mins} min read {ARROW_SVG}</span></a>')
-        keys = "".join(f"<li>{esc(t)}</li>" for t in a["takeaways"])
-        srcs = ("<p class=\"src-note\">Sources: " + "; ".join(f'<a href="{u}" target="_blank" rel="noopener">{esc(n)}</a>' for n, u in a["sources"]) + ".</p>") if a["sources"] else ""
-        paras = "".join(f"<p>{x}</p>" for x in a["paras"])
-        soft = " section--soft" if i % 2 else ""
-        arts.append(f"""
-<section class="section{soft}">
-  <article class="container prose ins-article reveal" id="{a["id"]}">
-    <span class="eyebrow">Guide {i + 1:02d} · {esc(a["tag"])}</span>
-    <h2>{esc(a["title"])}</h2>
-    <p class="ins-byline">By the Arrays Ingenieria engineering team · <time datetime="{a["date"]}">Updated {date.fromisoformat(a["date"]).strftime("%d %b %Y").lstrip("0")}</time> · {mins} min read</p>
-    <div class="ins-keys"><b>Key takeaways</b><ul>{keys}</ul></div>
-    {paras}{srcs}
-    <p class="ins-cta"><a class="btn btn--primary" href="contact.html">Talk to our engineers {ARROW_SVG}</a><a class="ins-top" href="#guides">All guides ↑</a></p>
-  </article>
-</section>""")
-        posts.append({"@type": "BlogPosting", "headline": a["title"], "description": a["summary"],
-                      "url": f"{SITE_URL}/insights.html#{a['id']}", "datePublished": a["date"], "dateModified": a["date"],
-                      "inLanguage": "en-IN", "image": f"{SITE_URL}/{img}", "keywords": a["tag"],
-                      "author": {"@id": SITE_URL + "/#organization"}, "publisher": {"@id": SITE_URL + "/#organization"},
-                      "mainEntityOfPage": f"{SITE_URL}/insights.html"})
-    ld = [{"@context": "https://schema.org", "@type": "Blog", "name": "Arrays Ingenieria Solar Insights",
-           "url": SITE_URL + "/insights.html", "publisher": {"@id": SITE_URL + "/#organization"}, "blogPost": posts}]
-    body = page_hero(img, "Industrial rooftop solar array installed by Arrays Ingenieria", "Solar Insights 2026",
-                     'Solar Power in India, <span class="text-sun">Explained</span>',
-                     "Clear, sourced guides from our ex-servicemen-led engineering team: India's 2026 solar numbers, ALMM List-II, GST at 5%, "
-                     "CAPEX vs OPEX, PM Surya Ghar, PM-KUSUM and solar for tea estates.", [("Insights", None)]) + f"""
+# ------------------------------------------------------------ articles ----
+def art_slug(text):
+    return re.sub(r"[^a-z0-9]+", "-", re.sub(r"<[^>]+>", "", text).lower()).strip("-")[:60]
 
-<section class="section" id="guides">
+
+def art_words(a):
+    def flat(b):
+        if isinstance(b, str):
+            return b
+        return " ".join(flat(x) if isinstance(x, (str, tuple, list)) else "" for x in b[1:])
+    txt = " ".join(flat(b) for sec in a["sections"] for b in sec["blocks"]) + " " + " ".join(q + " " + ans for q, ans in a["faq"])
+    return len(re.sub(r"<[^>]+>", " ", txt).split())
+
+
+def art_block(b):
+    """One block of an article body. A plain string is a paragraph (it may contain inline HTML)."""
+    if isinstance(b, str):
+        return f"\n        <p>{b}</p>"
+    kind = b[0]
+    if kind == "h3":
+        return f'\n        <h3 id="{art_slug(b[1])}">{b[1]}</h3>'
+    if kind in ("ul", "ol"):
+        return f"\n        <{kind} class=\"art-list\">" + "".join(f"<li>{x}</li>" for x in b[1]) + f"</{kind}>"
+    if kind == "table":
+        _, caption, head, rows = b
+        th = "".join(f'<th scope="col">{h}</th>' for h in head)
+        trs = "".join("<tr>" + "".join((f'<th scope="row">{c}</th>' if i == 0 else f"<td>{c}</td>") for i, c in enumerate(r)) + "</tr>" for r in rows)
+        return (f'\n        <div class="art-table" tabindex="0" role="region" aria-label="{esc(re.sub("<[^>]+>", "", caption))}"><table>'
+                f"<caption>{caption}</caption><thead><tr>{th}</tr></thead><tbody>{trs}</tbody></table></div>")
+    if kind == "note":
+        _, title, text = b
+        return f'\n        <aside class="art-note"><b>{title}</b><p>{text}</p></aside>'
+    if kind == "warn":
+        _, title, text = b
+        return f'\n        <aside class="art-note art-note--warn"><b>{title}</b><p>{text}</p></aside>'
+    if kind == "fig":
+        _, src, alt, cap = b
+        return (f'\n        <figure class="art-fig" data-full="{src}" data-gallery="article" data-caption="{esc(cap)}">'
+                f'<img src="{src}" alt="{esc(alt)}" /><figcaption>{cap}</figcaption></figure>')
+    if kind == "yt":
+        c = next(x for x in COVERAGE if x["id"] == b[1])
+        return '\n        <div class="art-video">' + yt_card(c, with_id=False) + "</div>"
+    if kind == "stats":
+        return '\n        <div class="art-stats">' + "".join(f"<div><b>{n}</b><span>{l}</span></div>" for n, l in b[1]) + "</div>"
+    if kind == "steps":
+        return '\n        <ol class="art-steps">' + "".join(f"<li><b>{t}</b><span>{x}</span></li>" for t, x in b[1]) + "</ol>"
+    if kind == "quote":
+        _, text, cite = b
+        return f"\n        <blockquote class=\"art-quote\"><p>{text}</p><cite>{cite}</cite></blockquote>"
+    if kind == "cta":
+        return (f'\n        <div class="art-cta"><p>{b[1]}</p><a class="btn btn--sun" href="free-solar-quote.html">Get a free solar quote {ARROW_SVG}</a></div>')
+    raise ValueError(f"unknown article block {kind}")
+
+
+def art_card(a, d=0, cls="art-card"):
+    return (f'<a class="{cls} reveal" data-d="{d % 3}" href="{a["file"]}" data-tag="{art_slug(a["tag"])}"><span class="ac-img"><img src="{a["hero"][0]}" alt="{esc(a["hero"][1])}" /></span>'
+            f'<span class="ac-body"><span class="ins-tag">{esc(a["tag"])}</span><b>{esc(a["title"])}</b><span class="ins-sum">{esc(a["summary"])}</span>'
+            f'<span class="ins-meta">{max(3, round(art_words(a) / 220))} min read · Updated {fmt_date(a["updated"])} {ARROW_SVG}</span></span></a>')
+
+
+def render_article_page(a):
+    words = art_words(a)
+    mins = max(3, round(words / 220))
+    toc = "".join(f'<li><a href="#{art_slug(sec["h"])}">{sec["h"]}</a></li>' for sec in a["sections"])
+    toc += '<li><a href="#faq">Frequently asked questions</a></li><li><a href="#sources">Sources</a></li>'
+    keys = "".join(f"<li>{t}</li>" for t in a["takeaways"])
+    secs = "".join(f'\n      <section class="art-sec" id="{art_slug(sec["h"])}">\n        <h2>{sec["h"]}</h2>'
+                   + "".join(art_block(b) for b in sec["blocks"]) + "\n      </section>" for sec in a["sections"])
+    faq = "".join(f'<details class="faq"><summary>{esc(q)}</summary><div class="faq-a">{ans}</div></details>' for q, ans in a["faq"])
+    srcs = "".join(f'<li><a href="{u}" target="_blank" rel="noopener">{esc(n)}</a></li>' for n, u in a["sources"])
+    related = [x for x in ARTICLES if x["file"] in a.get("related", [])] or [x for x in ARTICLES if x["tag"] == a["tag"] and x is not a]
+    related = (related + [x for x in ARTICLES if x is not a and x not in related])[:3]
+    cases = [p for p in PROJECTS if p["file"] in a.get("cases", [])][:3]
+    services = "".join(f'<a href="{f}">{esc(page_label(f))}</a>' for f in a.get("services", []))
+    cases_html = ""
+    if cases:
+        cases_html = f"""
+<section class="section section--soft">
   <div class="container">
-    <div class="section-head center reveal"><span class="eyebrow">{len(INSIGHTS)} Guides</span><h2>What's New in <span class="text-grad">Indian Solar</span></h2><p>Every figure is linked to its source. Updated for October 2026.</p></div>
-    <div class="ins-grid">{"".join(cards)}</div>
+    <div class="section-head center reveal"><span class="eyebrow">From Our Sites</span><h2>Case Studies <span class="text-grad">on This Topic</span></h2><p>Real plants our veteran-led crews have built, with the scope of work in detail.</p></div>
+    <div class="case-grid">{"".join(case_card(p, i) for i, p in enumerate(cases))}</div>
+  </div>
+</section>"""
+    plain = lambda t: html.unescape(re.sub(r"<[^>]+>", "", t))
+    ld = [{"@context": "https://schema.org", "@type": "Article", "headline": a["title"], "description": a["desc"],
+           "image": [f"{SITE_URL}/{a['hero'][0]}"], "datePublished": a["date"], "dateModified": a["updated"],
+           "author": {"@type": "Organization", "name": "Arrays Ingenieria engineering team", "url": SITE_URL + "/about/"},
+           "publisher": {"@id": SITE_URL + "/#organization"}, "mainEntityOfPage": SITE_URL + page_url(a["file"]),
+           "articleSection": a["tag"], "keywords": ", ".join(a.get("keywords", [])), "wordCount": words, "inLanguage": "en-IN",
+           "about": [{"@type": "Thing", "name": k} for k in a.get("keywords", [])[:5]],
+           "citation": [u for _, u in a["sources"]]},
+          {"@context": "https://schema.org", "@type": "FAQPage",
+           "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": plain(ans)}} for q, ans in a["faq"]]}]
+    for sec in a["sections"]:
+        for b in sec["blocks"]:
+            if not isinstance(b, str) and b[0] == "yt":
+                c = next(x for x in COVERAGE if x["id"] == b[1])
+                ld.append({"@context": "https://schema.org", "@type": "VideoObject", "name": c.get("original") or c["headline"],
+                           "description": c["summary"], "thumbnailUrl": f"{SITE_URL}/{c['img']}", "uploadDate": c["date"],
+                           "embedUrl": f"https://www.youtube-nocookie.com/embed/{c['youtube']}", "url": c["url"]})
+    body = page_hero(a["hero"][0], a["hero"][1], f"Guide · {esc(a['tag'])}", a["title"], esc(a["summary"]),
+                     [("Insights", "insights.html"), (a["short"], None)]) + f"""
+<div class="read-progress" aria-hidden="true"><span></span></div>
+<section class="section art-wrap">
+  <div class="container art-grid">
+    <aside class="art-toc" aria-label="On this page">
+      <details open><summary>On this page</summary><ol>{toc}</ol></details>
+    </aside>
+    <article class="art-body prose">
+      <p class="art-byline">By the <a href="about.html">Arrays Ingenieria engineering team</a> · <time datetime="{a['updated']}">Updated {fmt_date(a['updated'])}</time> · {mins} min read</p>
+      <div class="ins-keys"><b>Key takeaways</b><ul>{keys}</ul></div>{secs}
+      <section class="art-sec" id="faq">
+        <h2>Frequently asked questions</h2>
+        <div class="faq-list">{faq}</div>
+      </section>
+      <section class="art-sec" id="sources">
+        <h2>Sources</h2>
+        <ol class="art-sources">{srcs}</ol>
+        <p class="art-disclaimer">This guide explains public policy in plain language for planning purposes. Rules, rates and deadlines change: confirm the current position with the notifying authority, your DISCOM and your tax adviser before you commit. Last checked {fmt_date(a['updated'])}.</p>
+      </section>
+      <div class="art-author"><img src="assets/img/logo-wordmark.svg" alt="Ingenieria wordmark, Arrays Ingenieria" width="160" height="40" /><p><b>About the authors.</b> Arrays Ingenieria is an ex-servicemen-led solar EPC and installation &amp; commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. <a href="ex-servicemen-led-msme.html">Our story</a> · <a href="projects.html">Our projects</a></p></div>
+      {f'<div class="svc-other art-services">{services}</div>' if services else ''}
+    </article>
   </div>
 </section>
-{"".join(arts)}
+{cases_html}
+<section class="section">
+  <div class="container">
+    <div class="section-head center reveal"><span class="eyebrow">Keep Reading</span><h2>Related <span class="text-grad">Guides</span></h2></div>
+    <div class="art-grid-cards">{"".join(art_card(x, i) for i, x in enumerate(related))}</div>
+    <div class="section-cta reveal"><a class="btn btn--outline" href="insights.html">All solar guides</a><a class="btn btn--primary" href="solar-schemes-india.html">Government solar schemes {ARROW_SVG}</a></div>
+  </div>
+</section>"""
+    return page_shell("insights", body, a["hero"][0], a["hero"][1], ld)
+
+
+def render_insights_page():
+    img = "assets/photos/arrays-ingenieria-industrial-rooftop-solar-array.jpg"
+    tags = []
+    for a in ARTICLES:
+        if a["tag"] not in tags:
+            tags.append(a["tag"])
+    filters = '<button class="filter active" data-art-filter="all">All guides</button>' + "".join(
+        f'<button class="filter" data-art-filter="{art_slug(t)}">{esc(t)}</button>' for t in tags)
+    lead, rest = ARTICLES[0], ARTICLES[1:]
+    # old one-page anchors (insights/#gst-on-solar-5-percent) still land on the right card
+    anchors = "".join(f'<span id="{old}" class="anchor-alias"></span>' for a in ARTICLES for old in a.get("old_ids", []))
+    ld = [{"@context": "https://schema.org", "@type": "Blog", "name": "Arrays Ingenieria Solar Insights", "url": SITE_URL + "/insights/",
+           "publisher": {"@id": SITE_URL + "/#organization"},
+           "blogPost": [{"@type": "BlogPosting", "headline": a["title"], "description": a["desc"], "url": SITE_URL + page_url(a["file"]),
+                         "datePublished": a["date"], "dateModified": a["updated"], "image": f"{SITE_URL}/{a['hero'][0]}",
+                         "author": {"@id": SITE_URL + "/#organization"}, "publisher": {"@id": SITE_URL + "/#organization"}} for a in ARTICLES]}]
+    body = page_hero(img, "Industrial rooftop solar array installed by Arrays Ingenieria", "Solar Insights 2026",
+                     'Solar Power in India, <span class="text-sun">Explained</span>',
+                     f"{len(ARTICLES)} in-depth guides from our ex-servicemen-led engineering team on India's solar policy, taxes, schemes, standards "
+                     "and how to build a plant that pays back. Updated for October 2026, every figure linked to its source.", [("Insights", None)]) + f"""
+
+<section class="section" id="guides">
+  <div class="container">{anchors}
+    <a class="art-feature reveal" href="{lead['file']}"><span class="af-img"><img src="{lead['hero'][0]}" alt="{esc(lead['hero'][1])}" /></span>
+      <span class="af-body"><span class="ins-tag">Latest · {esc(lead['tag'])}</span><b>{esc(lead['title'])}</b><span>{esc(lead['summary'])}</span><span class="btn btn--primary">Read the guide {ARROW_SVG}</span></span></a>
+    <div class="filters reveal" role="group" aria-label="Filter guides by topic">{filters}</div>
+    <div class="art-grid-cards" data-art-grid>{"".join(art_card(a, i) for i, a in enumerate(rest))}</div>
+  </div>
+</section>
 
 <section class="section section--soft">
   <div class="container">
     <div class="section-head center reveal"><span class="eyebrow">Keep Learning</span><h2>Schemes, Glossary &amp; <span class="text-grad">Case Studies</span></h2><p>Plain-English definitions, straight answers and real projects.</p></div>
-    <div class="svc-other reveal"><a href="solar-schemes-india.html">Government Solar Schemes</a><a href="solar-glossary.html">Solar Glossary</a><a href="faq.html">FAQ</a><a href="capex-solar-epc.html">CAPEX vs OPEX</a><a href="solar-installation-commissioning.html">What is I&amp;C?</a><a href="projects.html#case-studies">Case Studies &rarr;</a></div>
+    <div class="svc-other reveal"><a href="solar-schemes-india.html">Government Solar Schemes</a><a href="solar-glossary.html">Solar Glossary</a><a href="faq.html">FAQ</a><a href="capex-solar-epc.html">CAPEX Solar EPC</a><a href="solar-installation-commissioning.html">What is I&amp;C?</a><a href="projects.html#case-studies">Case Studies &rarr;</a></div>
   </div>
 </section>"""
     return page_shell("insights", body, img, "Industrial rooftop solar array installed by Arrays Ingenieria", ld)
@@ -1618,6 +1868,7 @@ def render_clients_page():
                      "Clients &amp; Partners", 'Trusted by <span class="text-sun">India\'s Leading Names</span>',
                      "EPC majors, developers and plant owners who have engaged our veteran-led team for installation, EPC and civil works.",
                      [("Clients & Partners", None)]) + f"""
+<!-- build:partners --><!-- /build:partners -->
 
 <section class="section">
   <div class="container">
@@ -1851,6 +2102,8 @@ def render_quote_page():
 def write_generated_pages():
     for p in PROJECTS:
         write_page(p["file"], render_project_page(p))
+    for a in ARTICLES:
+        write_page(a["file"], render_article_page(a))
     for fname, render in (("free-solar-quote.html", render_quote_page), ("faq.html", render_faq_page), ("solar-glossary.html", render_glossary_page), ("insights.html", render_insights_page),
                           ("clients.html", render_clients_page)):
         write_page(fname, render())
@@ -1866,6 +2119,29 @@ GALLERY[:0] = [(src, "borpatra events projects" if ("modules" in src or "team" i
      "Inauguration of the 450 kWp solar plant at Orangajuli Tea Garden, Panerihaat, Udalguri, Assam, 4 September 2026, Arrays Ingenieria (ex-servicemen-led MSME), installation partner")]
 GALLERY[:0] = [(src, "cm events projects" if "ground-mount" in src or "inaugurates" in src else "cm events", alt, alt)
                for src, alt in KOOMBER_ALBUM]
+
+
+def media_rank(item):
+    """CM inauguration, other inaugurations (newest plant first), plant photos, news clippings, certificates,
+    work orders, and leadership photos last."""
+    src, cats = item[0].lower(), item[1].split()
+    plant = next((i for i, k in enumerate(("koomber", "harmutty", "borpatra", "orangajuli", "super-smelters")) if k in src), 9)
+    if "leadership" in cats or any(k in src for k in ("ceo-", "founder", "lt-gen", "leadership-")):
+        return (6, plant)
+    if "orders" in cats:
+        return (5, plant)
+    if "certificates" in cats and "events" not in cats:
+        return (4, plant)
+    if "media" in cats:
+        return (3, plant)
+    if "cm" in cats:
+        return (0, plant)
+    if "events" in cats or "inauguration" in src or "ceremony" in src:
+        return (1, plant)
+    return (2, plant)
+
+
+GALLERY.sort(key=media_rank)
 
 
 def render_gallery_page():
@@ -2217,7 +2493,10 @@ def head_block(fname, og_image, og_alt):
         f'<link rel="canonical" href="{url}" />',
         f'<link rel="alternate" hreflang="en-IN" href="{url}" />',
         f'<link rel="alternate" hreflang="x-default" href="{url}" />',
-        '<meta property="og:type" content="website" />',
+        '<meta property="og:type" content="article" />' if meta.get("kind") == "article" else '<meta property="og:type" content="website" />',
+        *([f'<meta property="article:published_time" content="{meta["published"]}" />',
+           f'<meta property="article:modified_time" content="{meta["modified"]}" />',
+           f'<meta property="article:section" content="{e(meta["section"])}" />'] if meta.get("kind") == "article" else []),
         f'<meta property="og:site_name" content="{BRAND}" />',
         '<meta property="og:locale" content="en_IN" />',
         f'<meta property="og:url" content="{url}" />',
@@ -2241,8 +2520,11 @@ def head_block(fname, og_image, og_alt):
 
 
 HEAD_TAG_RE = re.compile(
-    r'^[ \t]*(?:<title>.*?</title>|<meta (?:property|name)="(?:og:[^"]+|twitter:[^"]+|description|robots)"[^>]*>'
+    r'^[ \t]*(?:<title>.*?</title>|<meta (?:property|name)="(?:og:[^"]+|twitter:[^"]+|article:[^"]+|description|robots)"[^>]*>'
     r'|<meta name="google-site-verification"[^>]*>|<link rel="canonical"[^>]*>|<link rel="alternate" hreflang="[^"]*"[^>]*>)[ \t]*\n', re.M | re.S)
+
+
+OG_BRAND = "assets/img/arrays-ingenieria-olive-green-to-go-green-og.jpg"
 
 
 def process_page(fname):
@@ -2270,6 +2552,10 @@ def process_page(fname):
     alt = html.unescape(og_alt.group(1)) if og_alt else ""
     if not alt or alt.startswith("Ingenieria, veteran-led solar EPC"):
         alt = html.unescape(hero.group(2)) if hero and hero.group(1) in og_image else f"{BRAND}, veteran-led solar EPC company in India"
+    # brand share image (1200 x 630) everywhere except guides and case studies, which share their own photo
+    if PAGES[fname].get("kind") != "article" and PAGES[fname].get("parent") != "projects":
+        og_image = f"{SITE_URL}/{OG_BRAND}"
+        alt = "Arrays Ingenieria Private Limited, ex-servicemen-led solar EPC: Olive Green to Go Green"
     head = HEAD_TAG_RE.sub("", head)
     head = re.sub(r'(<meta name="viewport"[^>]*>\n)', lambda m: m.group(1) + head_block(fname, og_image, alt) + "\n", head, count=1)
     head = head.replace("/assets/img/logo.svg", "/assets/img/logo.png").replace("/assets/img/logo-mark.svg", "/assets/img/logo.png")
@@ -2375,6 +2661,7 @@ def write_llms():
                       "industries.html", "how-it-works.html"]),
         ("Projects and case studies", ["projects.html"] + [p["file"] for p in PROJECTS] + ["gallery.html"]),
         ("Resources", ["insights.html", "solar-schemes-india.html", "solar-glossary.html", "faq.html"]),
+        ("Solar guides (2026)", [a["file"] for a in ARTICLES]),
     ]
     out = ["# Arrays Ingenieria Pvt. Ltd. (INGENIERIA)", "",
            "> Ex-servicemen-led, ISO-certified Indian MSME that delivers solar installation & commissioning (I&C), CAPEX solar EPC "
