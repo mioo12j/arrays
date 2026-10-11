@@ -1,7 +1,7 @@
 ---
 title: Ex-Servicemen-Led Solar EPC MSME | Arrays Ingenieria
 description: Arrays Ingenieria is an ex-servicemen-led MSME founded by Lt. Gen. A.R. Prasad (Retd): Olive Green to Go Green, a second innings of national service.
-url: https://arrays-9mj.pages.dev/ex-servicemen-led-msme/
+url: https://arraysingenieria.com/ex-servicemen-led-msme/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -20,9 +20,9 @@ Arrays Ingenieria was founded in 2018 by **Lieutenant General Ashish Ranjan Pras
 
 The press describes us the same way. Hub Network calls the company "an Ex-Servicemen-led MSME"; The Sentinel writes of "a disciplined, mission-driven transition from OG (Olive Green-the military uniform) to GG (Go Green-renewable energy)".
 
-Under our organisational motto **"Olive Green to Go Green"**, we bring military-grade discipline and engineering precision to deploying critical clean-energy infrastructure. For our team of veterans, working in renewable energy is a **"second innings of national service"**, contributing directly to sustainable nation-building, and to India's [Panchamrit](https://arrays-9mj.pages.dev/solar-schemes-india/#panchamrit) climate commitments.
+Under our organisational motto **"Olive Green to Go Green"**, we bring military-grade discipline and engineering precision to deploying critical clean-energy infrastructure. For our team of veterans, working in renewable energy is a **"second innings of national service"**, contributing directly to sustainable nation-building, and to India's [Panchamrit](https://arraysingenieria.com/solar-schemes-india/#panchamrit) climate commitments.
 
-Today we build solar plants across India: installation & commissioning, full EPC and all civil works, on the CAPEX model, for clients from [Tata Power and Jay Shree Tea to Goodricke and Sustvest](https://arrays-9mj.pages.dev/clients/).
+Today we build solar plants across India: installation & commissioning, full EPC and all civil works, on the CAPEX model, for clients from [Tata Power and Jay Shree Tea to Goodricke and Sustvest](https://arraysingenieria.com/clients/).
 
 ## At a glance
 
@@ -42,7 +42,7 @@ Certified: **ISO 9001, 14001, 45001**
 
 Talk to our team about your next solar project.
 
-[Get a Free Quote](https://arrays-9mj.pages.dev/contact/)
+[Get a Free Quote](https://arraysingenieria.com/contact/)
 
 19
 
@@ -104,7 +104,7 @@ AVSM, VSM, ADC, Ph.D · Founder & Chief Executive Officer
 - Former Signal Officer-in-Chief and Senior Colonel Commandant of the Corps of Signals
 - Keynote speaker at DEFCOM India, and a defence commentator on India Today, Aaj Tak and India TV
 
-Sources: [Jharkhand State News, 1 Aug 2016](https://jharkhandstatenews.com/article/top-stories/964/major-general-ashish-ranjan-prasad-becomes-lt-general); [The Sentinel, 22 May 2025](https://arrays-9mj.pages.dev/recognition/#sentinel-jayshree).
+Sources: [Jharkhand State News, 1 Aug 2016](https://jharkhandstatenews.com/article/top-stories/964/major-general-ashish-ranjan-prasad-becomes-lt-general); [The Sentinel, 22 May 2025](https://arraysingenieria.com/recognition/#sentinel-jayshree).
 
 The Nation on Its Veterans
 
@@ -126,49 +126,49 @@ What Others Say
 
 “For Arrays Ingenieria, the project also reflects its 'Olive Green to Go Green' philosophy.”
 
-Read the coverage](https://arrays-9mj.pages.dev/recognition/#hub-network-orangajuli)[Online news: **The Sentinel**22 May 2025
+Read the coverage](https://arraysingenieria.com/recognition/#hub-network-orangajuli)[Online news: **The Sentinel**22 May 2025
 
 “Arrays Ingenieria is a unique MSME founded by ex-servicemen, symbolizing a disciplined, mission-driven transition from OG (Olive Green-the military uniform) to GG (Go Green-renewable energy).”
 
-Read the coverage](https://arrays-9mj.pages.dev/recognition/#sentinel-jayshree)[Client post: **Jay Shree Tea & Industries Ltd.**24 Nov 2025
+Read the coverage](https://arraysingenieria.com/recognition/#sentinel-jayshree)[Client post: **Jay Shree Tea & Industries Ltd.**24 Nov 2025
 
 “The solar power systems were executed by Arrays Ingenieria Private Limited (AIPL), an organisation established and operated by ex-servicemen, under Tata Power's EPC contract. Their precision, discipline and commitment to excellence ensured seamless implementation across all three locations.”
 
-Read the coverage](https://arrays-9mj.pages.dev/recognition/#jayshree-dewan)
+Read the coverage](https://arraysingenieria.com/recognition/#jayshree-dewan)
 
 Our work in the news
 
-- [TVPrerana Bharati Digital (PBNN)](https://arrays-9mj.pages.dev/recognition/#prerana-bharati-koomber-video)
-- [TVNews Axom](https://arrays-9mj.pages.dev/recognition/#news-axom-koomber)
-- [TVNE Reports](https://arrays-9mj.pages.dev/recognition/#ne-reports-orangajuli)
-- [TVSonari Live](https://arrays-9mj.pages.dev/recognition/#sonari-live)
-- [Azad Sipahi](https://arrays-9mj.pages.dev/recognition/#azad-sipahi-koomber)
-- [Prerna Bharati](https://arrays-9mj.pages.dev/recognition/#prerna-bharati-koomber)
-- [The Sentinel](https://arrays-9mj.pages.dev/recognition/#sentinel-koomber)
-- [Hindusthan Samachar](https://arrays-9mj.pages.dev/recognition/#hindusthan-samachar-koomber)
-- [India Today NE](https://arrays-9mj.pages.dev/recognition/#india-today-ne-koomber)
-- [Northeast Chronicle](https://arrays-9mj.pages.dev/recognition/#northeast-chronicle-borpatra)
-- [Swarajati](https://arrays-9mj.pages.dev/recognition/#swarajati-borpatra)
-- [Dainik Janambhumi](https://arrays-9mj.pages.dev/recognition/#dainik-janambhumi-borpatra)
-- [Niyomiya Barta](https://arrays-9mj.pages.dev/recognition/#niyomiya-barta-borpatra)
-- [Dainik Purvoday](https://arrays-9mj.pages.dev/recognition/#barpatra-230kw)
-- [Purvanchal Prahari](https://arrays-9mj.pages.dev/recognition/#purvanchal-prahari-borpatra)
-- [Janambhumi (online)](https://arrays-9mj.pages.dev/recognition/#janambhumi-online-borpatra)
-- [Hub Network](https://arrays-9mj.pages.dev/recognition/#hub-network-orangajuli)
-- [Sanmarg](https://arrays-9mj.pages.dev/recognition/#sanmarg-supersmelters)
-- [Dainik Bhaskar](https://arrays-9mj.pages.dev/recognition/#bhaskar-tcpl)
+- [TVPrerana Bharati Digital (PBNN)](https://arraysingenieria.com/recognition/#prerana-bharati-koomber-video)
+- [TVNews Axom](https://arraysingenieria.com/recognition/#news-axom-koomber)
+- [TVNE Reports](https://arraysingenieria.com/recognition/#ne-reports-orangajuli)
+- [TVSonari Live](https://arraysingenieria.com/recognition/#sonari-live)
+- [Azad Sipahi](https://arraysingenieria.com/recognition/#azad-sipahi-koomber)
+- [Prerna Bharati](https://arraysingenieria.com/recognition/#prerna-bharati-koomber)
+- [The Sentinel](https://arraysingenieria.com/recognition/#sentinel-koomber)
+- [Hindusthan Samachar](https://arraysingenieria.com/recognition/#hindusthan-samachar-koomber)
+- [India Today NE](https://arraysingenieria.com/recognition/#india-today-ne-koomber)
+- [Northeast Chronicle](https://arraysingenieria.com/recognition/#northeast-chronicle-borpatra)
+- [Swarajati](https://arraysingenieria.com/recognition/#swarajati-borpatra)
+- [Dainik Janambhumi](https://arraysingenieria.com/recognition/#dainik-janambhumi-borpatra)
+- [Niyomiya Barta](https://arraysingenieria.com/recognition/#niyomiya-barta-borpatra)
+- [Dainik Purvoday](https://arraysingenieria.com/recognition/#barpatra-230kw)
+- [Purvanchal Prahari](https://arraysingenieria.com/recognition/#purvanchal-prahari-borpatra)
+- [Janambhumi (online)](https://arraysingenieria.com/recognition/#janambhumi-online-borpatra)
+- [Hub Network](https://arraysingenieria.com/recognition/#hub-network-orangajuli)
+- [Sanmarg](https://arraysingenieria.com/recognition/#sanmarg-supersmelters)
+- [Dainik Bhaskar](https://arraysingenieria.com/recognition/#bhaskar-tcpl)
 
 Shared by official handles
 
-- [OFFICIALChief Minister's Office, Assam](https://arrays-9mj.pages.dev/recognition/#official-handles)
-- [OFFICIALShri Kaushik Rai, MLA, Lakhipur](https://arrays-9mj.pages.dev/recognition/#official-handles)
-- [OFFICIALShri Rajdeep Goala, MLA, Udharbond](https://arrays-9mj.pages.dev/recognition/#official-handles)
+- [OFFICIALChief Minister's Office, Assam](https://arraysingenieria.com/recognition/#official-handles)
+- [OFFICIALShri Kaushik Rai, MLA, Lakhipur](https://arraysingenieria.com/recognition/#official-handles)
+- [OFFICIALShri Rajdeep Goala, MLA, Udharbond](https://arraysingenieria.com/recognition/#official-handles)
 
 Our founder on national TV
 
-- [TVIndia Today](https://arrays-9mj.pages.dev/recognition/#national-tv)
-- [TVAaj Tak](https://arrays-9mj.pages.dev/recognition/#national-tv)
-- [TVIndia TV](https://arrays-9mj.pages.dev/recognition/#national-tv)
+- [TVIndia Today](https://arraysingenieria.com/recognition/#national-tv)
+- [TVAaj Tak](https://arraysingenieria.com/recognition/#national-tv)
+- [TVIndia TV](https://arraysingenieria.com/recognition/#national-tv)
 
 Get Started
 
@@ -176,4 +176,4 @@ Get Started
 
 EPC, installation & commissioning or civil works, anywhere in India.
 
-[Talk to Us](https://arrays-9mj.pages.dev/contact/)[See Our Case Studies](https://arrays-9mj.pages.dev/projects/#case-studies)
+[Talk to Us](https://arraysingenieria.com/contact/)[See Our Case Studies](https://arraysingenieria.com/projects/#case-studies)

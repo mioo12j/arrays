@@ -1,7 +1,7 @@
 ---
 title: Solar for Assam Tea Estates: 2026 Guide | Arrays Ingenieria
 description: Why Assam's tea estates are going solar: the 2026 policy, the 5% land rule, DG synchronisation, APDCL approvals and lessons from our tea plants.
-url: https://arrays-9mj.pages.dev/solar-for-assam-tea-estates-guide/
+url: https://arraysingenieria.com/solar-for-assam-tea-estates-guide/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -22,7 +22,7 @@ On this page
 - Frequently asked questions
 - Sources
 
-By the [Arrays Ingenieria engineering team](https://arrays-9mj.pages.dev/about/) · Updated 11 Oct 2026 · 3 min read
+By the [Arrays Ingenieria engineering team](https://arraysingenieria.com/about/) · Updated 11 Oct 2026 · 3 min read
 
 **Key takeaways**
 
@@ -105,7 +105,7 @@ Some of our tea-estate plants in Assam
 
 Running a tea estate in Assam or the Dooars? Let us look at your factory load and your land.
 
-[Get a free solar quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a free solar quote](https://arraysingenieria.com/free-solar-quote/)
 
 ## Frequently asked questions
 
@@ -135,9 +135,9 @@ Most estates we work with install between about 200 kWp and 600 kWp, sized to th
 
 This guide explains public policy in plain language for planning purposes. Rules, rates and deadlines change: confirm the current position with the notifying authority, your DISCOM and your tax adviser before you commit. Last checked 11 Oct 2026.
 
-**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arrays-9mj.pages.dev/ex-servicemen-led-msme/) · [Our projects](https://arrays-9mj.pages.dev/projects/)
+**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arraysingenieria.com/ex-servicemen-led-msme/) · [Our projects](https://arraysingenieria.com/projects/)
 
-[Solar for Tea Estates](https://arrays-9mj.pages.dev/solar-for-tea-estates/)[Ground-Mount Solar](https://arrays-9mj.pages.dev/service-ground-mount/)[Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/)
+[Solar for Tea Estates](https://arraysingenieria.com/solar-for-tea-estates/)[Ground-Mount Solar](https://arraysingenieria.com/service-ground-mount/)[Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/)
 
 From Our Sites
 
@@ -145,12 +145,12 @@ From Our Sites
 
 Real plants our veteran-led crews have built, with the scope of work in detail.
 
-[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arrays-9mj.pages.dev/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arrays-9mj.pages.dev/project-jayshree-tea-1mw-solar-assam/)[Tea Estate · Ground-Mount I&C: **Harmutty Tea Estate: 400 kWp Ground-Mounted Solar Plant**400 kWp · Harmutty, Laluk, North Lakhimpur district, Assam 784160Read the case study](https://arrays-9mj.pages.dev/project-harmutty-tea-estate-400kwp-solar/)
+[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arraysingenieria.com/project-jayshree-tea-1mw-solar-assam/)[Tea Estate · Ground-Mount I&C: **Harmutty Tea Estate: 400 kWp Ground-Mounted Solar Plant**400 kWp · Harmutty, Laluk, North Lakhimpur district, Assam 784160Read the case study](https://arraysingenieria.com/project-harmutty-tea-estate-400kwp-solar/)
 
 Keep Reading
 
 ## Related Guides
 
-[Business Models: **CAPEX vs OPEX (RESCO) Solar: Which Model Suits Your Business?**Own your solar plant and keep every unit, or pay a developer per unit with no upfront cost? A side-by-side comparison of CAPEX and OPEX solar, with the numbers that decide it.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/capex-vs-opex-solar/)[Grid & Regulation: **Net Metering in India (2026): Net Billing, Gross Metering, ToD Tariffs and the Draft 2026 Rules**How your solar plant connects to the DISCOM and how exported units are paid for: net metering, net billing and gross metering, the 500 kW rule, time-of-day tariffs, the draft 2026 amendments, and the step-by-step approval process.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/net-metering-india/)[System Design: **Rooftop vs Ground-Mount Solar: Which Is Right for Your Site?**Use the roof you already have, or build on land? A practical comparison of rooftop and ground-mount solar: cost, space, structure, safety, foundations, approvals and maintenance.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/rooftop-vs-ground-mount-solar/)
+[Business Models: **CAPEX vs OPEX (RESCO) Solar: Which Model Suits Your Business?**Own your solar plant and keep every unit, or pay a developer per unit with no upfront cost? A side-by-side comparison of CAPEX and OPEX solar, with the numbers that decide it.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/capex-vs-opex-solar/)[Grid & Regulation: **Net Metering in India (2026): Net Billing, Gross Metering, ToD Tariffs and the Draft 2026 Rules**How your solar plant connects to the DISCOM and how exported units are paid for: net metering, net billing and gross metering, the 500 kW rule, time-of-day tariffs, the draft 2026 amendments, and the step-by-step approval process.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/net-metering-india/)[System Design: **Rooftop vs Ground-Mount Solar: Which Is Right for Your Site?**Use the roof you already have, or build on land? A practical comparison of rooftop and ground-mount solar: cost, space, structure, safety, foundations, approvals and maintenance.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/rooftop-vs-ground-mount-solar/)
 
-[All solar guides](https://arrays-9mj.pages.dev/insights/)[Government solar schemes](https://arrays-9mj.pages.dev/solar-schemes-india/)
+[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

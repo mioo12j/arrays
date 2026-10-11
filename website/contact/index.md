@@ -1,7 +1,7 @@
 ---
 title: Contact Arrays Ingenieria | Solar EPC, Greater Noida
 description: Contact Arrays Ingenieria for solar EPC, installation & commissioning or civil works. Corporate office Greater Noida, branch office Madhubani, Bihar.
-url: https://arrays-9mj.pages.dev/contact/
+url: https://arraysingenieria.com/contact/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -26,7 +26,7 @@ Branch Office
 Madhubani,
 Bihar, India
 
-[**Email Us**arraysingenieria@gmail.com](mailto:arraysingenieria@gmail.com) [**Solar Calculator**Estimate your savings](https://arrays-9mj.pages.dev/#calculator)
+[**Email Us**arraysingenieria@gmail.com](mailto:arraysingenieria@gmail.com) [**Solar Calculator**Estimate your savings](https://arraysingenieria.com/#calculator)
 
 Company Details
 
@@ -50,4 +50,4 @@ Certifications: **ISO 9001:2015 · ISO 14001:2015 · ISO 45001:2018**
 
 Founded: **2018, by Lt. Gen. Ashish Ranjan Prasad (Retd)**
 
-[Read the FAQ](https://arrays-9mj.pages.dev/faq/)[Our Clients](https://arrays-9mj.pages.dev/clients/)
+[Read the FAQ](https://arraysingenieria.com/faq/)[Our Clients](https://arraysingenieria.com/clients/)

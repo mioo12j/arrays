@@ -1,7 +1,7 @@
 ---
 title: 1 MW Solar, Jay Shree Tea Estates Assam | Arrays Ingenieria
 description: Case study: 1035 kWp ground-mount solar (535 kWp Towkok + 500 kWp Manjushree) for Jay Shree Tea, BK Birla Group, in Sonari, Assam, under Tata Power's EPC.
-url: https://arrays-9mj.pages.dev/project-jayshree-tea-1mw-solar-assam/
+url: https://arraysingenieria.com/project-jayshree-tea-1mw-solar-assam/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -35,7 +35,7 @@ The plants were inaugurated on 20 May 2025. It was the first renewable-energy pr
 
 ### In the news
 
-[Online news: **The Sentinel**22 May 2025Assam: AIPL commissions 1 MW solar power plant at Jayshree Tea Estate](https://arrays-9mj.pages.dev/recognition/#sentinel-jayshree)[Client post: **Jay Shree Tea & Industries Ltd.**22 May 2025Jay Shree Tea commissions 1 MW solar plant in Assam](https://arrays-9mj.pages.dev/recognition/#jayshree-towkok)
+[Online news: **The Sentinel**22 May 2025Assam: AIPL commissions 1 MW solar power plant at Jayshree Tea Estate](https://arraysingenieria.com/recognition/#sentinel-jayshree)[Client post: **Jay Shree Tea & Industries Ltd.**22 May 2025Jay Shree Tea commissions 1 MW solar plant in Assam](https://arraysingenieria.com/recognition/#jayshree-towkok)
 
 ### Photos
 
@@ -59,7 +59,7 @@ Year: **2025 (inaugurated 20 May 2025)**
 
 Talk to our veteran-led team about EPC, installation & commissioning or civil works.
 
-[Get a Free Quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a Free Quote](https://arraysingenieria.com/free-solar-quote/)
 
 Documents
 
@@ -75,10 +75,10 @@ Related
 
 ## Services Used on This Project
 
-[CAPEX Solar EPC](https://arrays-9mj.pages.dev/capex-solar-epc/)[Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/)[Ground-Mount Solar](https://arrays-9mj.pages.dev/service-ground-mount/)[Solar for Tea Estates](https://arrays-9mj.pages.dev/solar-for-tea-estates/)[All Projects →](https://arrays-9mj.pages.dev/projects/)
+[CAPEX Solar EPC](https://arraysingenieria.com/capex-solar-epc/)[Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/)[Ground-Mount Solar](https://arraysingenieria.com/service-ground-mount/)[Solar for Tea Estates](https://arraysingenieria.com/solar-for-tea-estates/)[All Projects →](https://arraysingenieria.com/projects/)
 
 More Case Studies
 
 ## Other Projects by Arrays Ingenieria
 
-[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arrays-9mj.pages.dev/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Tea Estate · Ground-Mount: **Orangajuli Tea Estate: 450 kWp Ground-Mount Solar Plant**450 kWp · Orangajuli, Panerihaat, Udalguri district, AssamRead the case study](https://arrays-9mj.pages.dev/project-orangajuli-tea-estate-450kw-solar/)[Tea Estate · Ground-Mount: **Borpatra (Barpatra) Tea Estate: 230 kWp On-Grid Solar Plant**230 kWp · Borhat, Sivasagar district, AssamRead the case study](https://arrays-9mj.pages.dev/project-barpatra-tea-estate-230kw-solar/)
+[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Tea Estate · Ground-Mount: **Orangajuli Tea Estate: 450 kWp Ground-Mount Solar Plant**450 kWp · Orangajuli, Panerihaat, Udalguri district, AssamRead the case study](https://arraysingenieria.com/project-orangajuli-tea-estate-450kw-solar/)[Tea Estate · Ground-Mount: **Borpatra (Barpatra) Tea Estate: 230 kWp On-Grid Solar Plant**230 kWp · Borhat, Sivasagar district, AssamRead the case study](https://arraysingenieria.com/project-barpatra-tea-estate-230kw-solar/)

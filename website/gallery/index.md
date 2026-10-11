@@ -1,7 +1,7 @@
 ---
 title: Photo & Video Gallery | Arrays Ingenieria Solar Projects
 description: Photos and videos of Arrays Ingenieria solar power plants, inaugurations, awards, certifications and news coverage from Assam to Karnataka.
-url: https://arrays-9mj.pages.dev/gallery/
+url: https://arraysingenieria.com/gallery/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -256,4 +256,4 @@ Sonari Live's exclusive report on the launch of the 230 kW solar plant Arrays In
 
 News Axom TV on the 230 kW plant at Borpatra: "Important step towards decarbonization, 230 kw solar project at Barpatra." Watch the report](https://www.facebook.com/61564147994036/videos/122210117936471599/)
 
-[All News & Recognition](https://arrays-9mj.pages.dev/recognition/)
+[All News & Recognition](https://arraysingenieria.com/recognition/)

@@ -1,7 +1,7 @@
 ---
 title: Net Metering in India 2026: Rules | Arrays Ingenieria
 description: Net metering, net billing and gross metering in India in 2026: the 500 kW limit, time-of-day tariffs, the draft 2026 rules and the approval steps.
-url: https://arrays-9mj.pages.dev/net-metering-india/
+url: https://arraysingenieria.com/net-metering-india/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -22,7 +22,7 @@ On this page
 - Frequently asked questions
 - Sources
 
-By the [Arrays Ingenieria engineering team](https://arrays-9mj.pages.dev/about/) · Updated 11 Oct 2026 · 3 min read
+By the [Arrays Ingenieria engineering team](https://arraysingenieria.com/about/) · Updated 11 Oct 2026 · 3 min read
 
 **Key takeaways**
 
@@ -56,7 +56,7 @@ The 2023 amendment to the consumer rules introduced **time-of-day (ToD) tariffs*
 
 - Units you **self-consume** during the day still save money, though the saving per unit depends on your daytime rate.
 - Shifting flexible loads (pumping, chilling, batch processes, charging) into the solar hours increases savings.
-- Storage becomes more attractive where evening peak rates are high (see [battery storage with solar](https://arrays-9mj.pages.dev/battery-storage-with-solar/)).
+- Storage becomes more attractive where evening peak rates are high (see [battery storage with solar](https://arraysingenieria.com/battery-storage-with-solar/)).
 
 ## The draft 2026 amendment: what is proposed
 
@@ -84,7 +84,7 @@ The AC distribution board at the 230 kWp Borpatra Tea Estate plant. We obtained 
 
 We handle net-metering and CEIG paperwork as part of every CAPEX project. Ask us what your state requires.
 
-[Get a free solar quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a free solar quote](https://arraysingenieria.com/free-solar-quote/)
 
 ## Frequently asked questions
 
@@ -112,9 +112,9 @@ It depends on the state and capacity. The national rules set maximum timelines f
 
 This guide explains public policy in plain language for planning purposes. Rules, rates and deadlines change: confirm the current position with the notifying authority, your DISCOM and your tax adviser before you commit. Last checked 11 Oct 2026.
 
-**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arrays-9mj.pages.dev/ex-servicemen-led-msme/) · [Our projects](https://arrays-9mj.pages.dev/projects/)
+**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arraysingenieria.com/ex-servicemen-led-msme/) · [Our projects](https://arraysingenieria.com/projects/)
 
-[CAPEX Solar EPC](https://arrays-9mj.pages.dev/capex-solar-epc/)[Rooftop Solar](https://arrays-9mj.pages.dev/service-rooftop/)
+[CAPEX Solar EPC](https://arraysingenieria.com/capex-solar-epc/)[Rooftop Solar](https://arraysingenieria.com/service-rooftop/)
 
 From Our Sites
 
@@ -122,12 +122,12 @@ From Our Sites
 
 Real plants our veteran-led crews have built, with the scope of work in detail.
 
-[Tea Estate · Ground-Mount: **Borpatra (Barpatra) Tea Estate: 230 kWp On-Grid Solar Plant**230 kWp · Borhat, Sivasagar district, AssamRead the case study](https://arrays-9mj.pages.dev/project-barpatra-tea-estate-230kw-solar/)[Industrial · Rooftop: **TCPL Greenery Agro, Vaishali: 319 kWp Rooftop Solar**319 kWp · Bhagwanpur, Vaishali district, BiharRead the case study](https://arrays-9mj.pages.dev/project-tcpl-vaishali-319kwp-rooftop-solar/)
+[Tea Estate · Ground-Mount: **Borpatra (Barpatra) Tea Estate: 230 kWp On-Grid Solar Plant**230 kWp · Borhat, Sivasagar district, AssamRead the case study](https://arraysingenieria.com/project-barpatra-tea-estate-230kw-solar/)[Industrial · Rooftop: **TCPL Greenery Agro, Vaishali: 319 kWp Rooftop Solar**319 kWp · Bhagwanpur, Vaishali district, BiharRead the case study](https://arraysingenieria.com/project-tcpl-vaishali-319kwp-rooftop-solar/)
 
 Keep Reading
 
 ## Related Guides
 
-[Grid & Regulation: **Green Energy Open Access in India: Buy Solar Power from Off-Site Plants from 100 kW**Can't fit enough solar on your roof? Green Energy Open Access lets consumers from 100 kW buy power from a solar plant elsewhere. Eligibility, approvals, charges, banking, and the ISTS waiver phase-out.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/green-energy-open-access/)[Storage: **Battery Storage with Solar in India (2026): Mandates, Incentives and When It Pays**Storage is becoming part of India's solar story. The two-hour co-located storage advisory for tenders, the viability gap funding for batteries, transmission waivers, the draft rule for large prosumers, and when a battery makes sense for a business.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/battery-storage-with-solar/)[Installation & Commissioning: **Solar Plant Installation and Commissioning: The Complete Step-by-Step Checklist**What actually happens between the purchase order and the day a solar plant goes live. Every stage of installation and commissioning, the tests that prove the plant is safe, and the documents you should receive at handover.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/solar-plant-commissioning-checklist/)
+[Grid & Regulation: **Green Energy Open Access in India: Buy Solar Power from Off-Site Plants from 100 kW**Can't fit enough solar on your roof? Green Energy Open Access lets consumers from 100 kW buy power from a solar plant elsewhere. Eligibility, approvals, charges, banking, and the ISTS waiver phase-out.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/green-energy-open-access/)[Storage: **Battery Storage with Solar in India (2026): Mandates, Incentives and When It Pays**Storage is becoming part of India's solar story. The two-hour co-located storage advisory for tenders, the viability gap funding for batteries, transmission waivers, the draft rule for large prosumers, and when a battery makes sense for a business.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/battery-storage-with-solar/)[Installation & Commissioning: **Solar Plant Installation and Commissioning: The Complete Step-by-Step Checklist**What actually happens between the purchase order and the day a solar plant goes live. Every stage of installation and commissioning, the tests that prove the plant is safe, and the documents you should receive at handover.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-plant-commissioning-checklist/)
 
-[All solar guides](https://arrays-9mj.pages.dev/insights/)[Government solar schemes](https://arrays-9mj.pages.dev/solar-schemes-india/)
+[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

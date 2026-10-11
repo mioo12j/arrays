@@ -1,7 +1,7 @@
 ---
 title: CAPEX Solar EPC Company in India | Arrays Ingenieria
 description: Own your solar plant outright. Arrays Ingenieria designs, supplies, builds and commissions rooftop and ground-mount solar on the CAPEX model.
-url: https://arrays-9mj.pages.dev/capex-solar-epc/
+url: https://arraysingenieria.com/capex-solar-epc/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -12,7 +12,7 @@ CAPEX Solar EPC
 
 You invest once and own the plant outright. We design it, supply it, build it and commission it, and every unit it generates is yours.
 
-[Request a CAPEX Proposal](https://arrays-9mj.pages.dev/free-solar-quote/?service=capex) See a plant our client owns
+[Request a CAPEX Proposal](https://arraysingenieria.com/free-solar-quote/?service=capex) See a plant our client owns
 
 What CAPEX Means
 
@@ -51,7 +51,7 @@ Assurance: **ISO 9001, 14001, 45001**
 
 Talk to our veteran-led team for a free, no-obligation consultation.
 
-[Request a CAPEX Proposal](https://arrays-9mj.pages.dev/free-solar-quote/?service=capex)
+[Request a CAPEX Proposal](https://arraysingenieria.com/free-solar-quote/?service=capex)
 
 CAPEX vs OPEX
 
@@ -130,7 +130,7 @@ Proof
 
 ## A Plant Our Client Owns
 
-[Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arrays-9mj.pages.dev/project-jayshree-tea-1mw-solar-assam/)
+[Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arraysingenieria.com/project-jayshree-tea-1mw-solar-assam/)
 
 Questions
 
@@ -148,10 +148,10 @@ Can you work with our own engineers or consultant?
 
 Yes. We regularly build to specifications and approved makes set by the client or the lead EPC, such as Tata Power.
 
-[All FAQs](https://arrays-9mj.pages.dev/faq/)[Request a CAPEX Proposal](https://arrays-9mj.pages.dev/free-solar-quote/?service=capex)
+[All FAQs](https://arraysingenieria.com/faq/)[Request a CAPEX Proposal](https://arraysingenieria.com/free-solar-quote/?service=capex)
 
 Explore More
 
 ## Our Services
 
-[CAPEX Solar EPC](https://arrays-9mj.pages.dev/capex-solar-epc/)[Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/)[EPC Turnkey](https://arrays-9mj.pages.dev/service-epc/)[Pile Foundations](https://arrays-9mj.pages.dev/service-piling/)[Civil & Fencing](https://arrays-9mj.pages.dev/service-civil/)[Ground-Mount](https://arrays-9mj.pages.dev/service-ground-mount/)[Rooftop](https://arrays-9mj.pages.dev/service-rooftop/)[O&M](https://arrays-9mj.pages.dev/service-om/)[All Projects →](https://arrays-9mj.pages.dev/projects/)
+[CAPEX Solar EPC](https://arraysingenieria.com/capex-solar-epc/)[Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/)[EPC Turnkey](https://arraysingenieria.com/service-epc/)[Pile Foundations](https://arraysingenieria.com/service-piling/)[Civil & Fencing](https://arraysingenieria.com/service-civil/)[Ground-Mount](https://arraysingenieria.com/service-ground-mount/)[Rooftop](https://arraysingenieria.com/service-rooftop/)[O&M](https://arraysingenieria.com/service-om/)[All Projects →](https://arraysingenieria.com/projects/)

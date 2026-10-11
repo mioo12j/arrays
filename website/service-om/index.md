@@ -1,7 +1,7 @@
 ---
 title: Solar O&M and Maintenance Services | Arrays Ingenieria
 description: Solar plant operations & maintenance, statutory compliance and lifecycle support from Arrays Ingenieria to keep every plant at peak output.
-url: https://arrays-9mj.pages.dev/service-om/
+url: https://arraysingenieria.com/service-om/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -47,7 +47,7 @@ Response: **Rapid on-call**
 
 Talk to our veteran-led team for a free, no-obligation consultation.
 
-[Get a Free Quote](https://arrays-9mj.pages.dev/#contact)
+[Get a Free Quote](https://arraysingenieria.com/#contact)
 
 FAQ
 
@@ -105,4 +105,4 @@ Explore More
 
 ## Our Other Services
 
-[CAPEX Solar EPC](https://arrays-9mj.pages.dev/capex-solar-epc/) [Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/) [Ground-Mount](https://arrays-9mj.pages.dev/service-ground-mount/) [Rooftop](https://arrays-9mj.pages.dev/service-rooftop/) [EPC Turnkey](https://arrays-9mj.pages.dev/service-epc/) [Piling](https://arrays-9mj.pages.dev/service-piling/) [Civil & Fencing](https://arrays-9mj.pages.dev/service-civil/) [All Projects →](https://arrays-9mj.pages.dev/projects/)
+[CAPEX Solar EPC](https://arraysingenieria.com/capex-solar-epc/) [Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/) [Ground-Mount](https://arraysingenieria.com/service-ground-mount/) [Rooftop](https://arraysingenieria.com/service-rooftop/) [EPC Turnkey](https://arraysingenieria.com/service-epc/) [Piling](https://arraysingenieria.com/service-piling/) [Civil & Fencing](https://arraysingenieria.com/service-civil/) [All Projects →](https://arraysingenieria.com/projects/)

@@ -1,7 +1,7 @@
 ---
 title: Solar Installation & Commissioning Steps | Arrays Ingenieria
 description: Step by step through installing and commissioning a solar plant in India: civil works, structures, modules, cabling, earthing, tests and handover.
-url: https://arrays-9mj.pages.dev/solar-plant-commissioning-checklist/
+url: https://arraysingenieria.com/solar-plant-commissioning-checklist/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -22,7 +22,7 @@ On this page
 - Frequently asked questions
 - Sources
 
-By the [Arrays Ingenieria engineering team](https://arrays-9mj.pages.dev/about/) · Updated 11 Oct 2026 · 3 min read
+By the [Arrays Ingenieria engineering team](https://arraysingenieria.com/about/) · Updated 11 Oct 2026 · 3 min read
 
 **Key takeaways**
 
@@ -89,7 +89,7 @@ On many of our projects the installation & commissioning scope also includes col
 
 Need an installation & commissioning partner for a rooftop or ground-mount plant? Our veteran-led crews work Pan-India.
 
-[Get a free solar quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a free solar quote](https://arraysingenieria.com/free-solar-quote/)
 
 ## Frequently asked questions
 
@@ -116,9 +116,9 @@ As-built drawings, test reports, equipment and warranty documents, approvals, an
 
 This guide explains public policy in plain language for planning purposes. Rules, rates and deadlines change: confirm the current position with the notifying authority, your DISCOM and your tax adviser before you commit. Last checked 11 Oct 2026.
 
-**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arrays-9mj.pages.dev/ex-servicemen-led-msme/) · [Our projects](https://arrays-9mj.pages.dev/projects/)
+**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arraysingenieria.com/ex-servicemen-led-msme/) · [Our projects](https://arraysingenieria.com/projects/)
 
-[Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/)[Rooftop Solar](https://arrays-9mj.pages.dev/service-rooftop/)[Ground-Mount Solar](https://arrays-9mj.pages.dev/service-ground-mount/)
+[Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/)[Rooftop Solar](https://arraysingenieria.com/service-rooftop/)[Ground-Mount Solar](https://arraysingenieria.com/service-ground-mount/)
 
 From Our Sites
 
@@ -126,12 +126,12 @@ From Our Sites
 
 Real plants our veteran-led crews have built, with the scope of work in detail.
 
-[Tea Estates · Multi-Site I&C: **Amalgamated Plantations, Assam: Solar Across Tea Estates**About 5 MW across tea estates (3.8 MWp piled at 11 sites) · Chubwa, Kakajan, Powai, Nonoi, Diffloo, Nahortoli, Naharkatia, Namrup, Borhat and other estates, AssamRead the case study](https://arrays-9mj.pages.dev/project-amalgamated-plantations-assam-tea-estates-solar/)[Tea Estates · Ground-Mount I&C: **Rossell India Tea Estates, Assam: Ground-Mount Solar I&C**302 kW, 493.24 kWp, 170.51 kWp and 367 kW · Kharikatia, Nagrijuli, Romai and Dikom Tea Estates, AssamRead the case study](https://arrays-9mj.pages.dev/project-rossell-india-assam-tea-estates-solar/)[Industrial · Rooftop I&C: **SRMB Steel, Durgapur: Rooftop Solar I&C in Three Phases**1895.4 kWp, 1060 kWp and 1.69 MWp · Durgapur, West BengalRead the case study](https://arrays-9mj.pages.dev/project-srmb-steel-durgapur-rooftop-solar/)
+[Tea Estates · Multi-Site I&C: **Amalgamated Plantations, Assam: Solar Across Tea Estates**About 5 MW across tea estates (3.8 MWp piled at 11 sites) · Chubwa, Kakajan, Powai, Nonoi, Diffloo, Nahortoli, Naharkatia, Namrup, Borhat and other estates, AssamRead the case study](https://arraysingenieria.com/project-amalgamated-plantations-assam-tea-estates-solar/)[Tea Estates · Ground-Mount I&C: **Rossell India Tea Estates, Assam: Ground-Mount Solar I&C**302 kW, 493.24 kWp, 170.51 kWp and 367 kW · Kharikatia, Nagrijuli, Romai and Dikom Tea Estates, AssamRead the case study](https://arraysingenieria.com/project-rossell-india-assam-tea-estates-solar/)[Industrial · Rooftop I&C: **SRMB Steel, Durgapur: Rooftop Solar I&C in Three Phases**1895.4 kWp, 1060 kWp and 1.69 MWp · Durgapur, West BengalRead the case study](https://arraysingenieria.com/project-srmb-steel-durgapur-rooftop-solar/)
 
 Keep Reading
 
 ## Related Guides
 
-[Buyer's Guide: **How to Choose a Solar EPC and Installation Partner in India: 12 Questions to Ask**The partner you choose decides how your plant performs for 25 years. Twelve questions to ask any solar EPC or installation contractor, what good answers look like, and the red flags to walk away from.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/choose-solar-epc-partner/)[O&M: **Solar O&M and Module Cleaning: Protecting 25 Years of Returns**A solar plant has no moving parts, but it still needs care. Module cleaning, inspections, thermography, inverter and earthing checks, and a practical maintenance schedule that keeps generation where it should be.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/solar-om-module-cleaning/)[Standards & Safety: **Solar Quality and Safety Norms in India (2026): BIS, the Quality Control Order, CEA and CEIG**What makes a solar plant compliant in 2026: the BIS Quality Control Order for modules, inverters and batteries, the standards each component should meet, the Electrical Inspector's approval, and site safety.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/solar-quality-standards-bis-cea/)
+[Buyer's Guide: **How to Choose a Solar EPC and Installation Partner in India: 12 Questions to Ask**The partner you choose decides how your plant performs for 25 years. Twelve questions to ask any solar EPC or installation contractor, what good answers look like, and the red flags to walk away from.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/choose-solar-epc-partner/)[O&M: **Solar O&M and Module Cleaning: Protecting 25 Years of Returns**A solar plant has no moving parts, but it still needs care. Module cleaning, inspections, thermography, inverter and earthing checks, and a practical maintenance schedule that keeps generation where it should be.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-om-module-cleaning/)[Standards & Safety: **Solar Quality and Safety Norms in India (2026): BIS, the Quality Control Order, CEA and CEIG**What makes a solar plant compliant in 2026: the BIS Quality Control Order for modules, inverters and batteries, the standards each component should meet, the Electrical Inspector's approval, and site safety.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-quality-standards-bis-cea/)
 
-[All solar guides](https://arrays-9mj.pages.dev/insights/)[Government solar schemes](https://arrays-9mj.pages.dev/solar-schemes-india/)
+[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

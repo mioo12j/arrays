@@ -1,7 +1,7 @@
 ---
 title: SRMB Steel Durgapur Rooftop Solar I&C | Arrays Ingenieria
 description: Case study: installation & commissioning and BOS works for SRMB Steel's 1895.4 kWp, 1060 kWp and 1.69 MWp sheet-roof solar plants at Durgapur, West Bengal.
-url: https://arrays-9mj.pages.dev/project-srmb-steel-durgapur-rooftop-solar/
+url: https://arraysingenieria.com/project-srmb-steel-durgapur-rooftop-solar/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -49,7 +49,7 @@ Year: **2022-2023**
 
 Talk to our veteran-led team about EPC, installation & commissioning or civil works.
 
-[Get a Free Quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a Free Quote](https://arraysingenieria.com/free-solar-quote/)
 
 Project Timeline
 
@@ -166,16 +166,16 @@ The standard rooftop installation & commissioning scope we deliver to EPC majors
 - Safety posters, storage under covers and care until handover
 - Testing, commissioning and handover
 
-[The full commissioning checklist](https://arrays-9mj.pages.dev/solar-plant-commissioning-checklist/)[Our I&C service](https://arrays-9mj.pages.dev/solar-installation-commissioning/)
+[The full commissioning checklist](https://arraysingenieria.com/solar-plant-commissioning-checklist/)[Our I&C service](https://arraysingenieria.com/solar-installation-commissioning/)
 
 Related
 
 ## Services Used on This Project
 
-[Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/)[Rooftop Solar](https://arrays-9mj.pages.dev/service-rooftop/)[All Projects →](https://arrays-9mj.pages.dev/projects/)
+[Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/)[Rooftop Solar](https://arraysingenieria.com/service-rooftop/)[All Projects →](https://arraysingenieria.com/projects/)
 
 More Case Studies
 
 ## Other Projects by Arrays Ingenieria
 
-[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arrays-9mj.pages.dev/project-super-smelters-1980kwp-rooftop-solar/)[Industrial · Rooftop I&C: **Balaji Action Buildwell, Sitarganj: Solar I&C, BOS and Civil Works**4000.32 kWp project (as described in the BOS order) · Sitarganj, UttarakhandRead the case study](https://arrays-9mj.pages.dev/project-balaji-action-sitarganj-4mwp-solar/)[Industrial · Rooftop I&C: **Apar Industries, Jharsuguda: 1.2 MWp Rooftop Solar I&C**1.2 MWp (1203 kWp) · Jharsuguda, OdishaRead the case study](https://arrays-9mj.pages.dev/project-apar-industries-jharsuguda-1-2mwp-rooftop-solar/)
+[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arraysingenieria.com/project-super-smelters-1980kwp-rooftop-solar/)[Industrial · Rooftop I&C: **Balaji Action Buildwell, Sitarganj: Solar I&C, BOS and Civil Works**4000.32 kWp project (as described in the BOS order) · Sitarganj, UttarakhandRead the case study](https://arraysingenieria.com/project-balaji-action-sitarganj-4mwp-solar/)[Industrial · Rooftop I&C: **Apar Industries, Jharsuguda: 1.2 MWp Rooftop Solar I&C**1.2 MWp (1203 kWp) · Jharsuguda, OdishaRead the case study](https://arraysingenieria.com/project-apar-industries-jharsuguda-1-2mwp-rooftop-solar/)

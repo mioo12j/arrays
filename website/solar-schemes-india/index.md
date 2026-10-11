@@ -1,7 +1,7 @@
 ---
 title: Government Solar Schemes in India 2026 | Arrays Ingenieria
 description: Solar schemes in India 2026: PM Surya Ghar, PM-KUSUM deadlines, ALMM List-II, GST at 5%, Assam tea-garden solar, depreciation and net metering.
-url: https://arrays-9mj.pages.dev/solar-schemes-india/
+url: https://arraysingenieria.com/solar-schemes-india/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -112,7 +112,7 @@ Open; apply on pmsuryaghar.gov.in
 
 **Where we fit:** The scheme is aimed at homes. For businesses the equivalent levers are depreciation, 5% GST and net metering, which our CAPEX plants are built around.
 
-[Read the full guide](https://arrays-9mj.pages.dev/pm-surya-ghar-subsidy/)[Source: PIB](https://www.pib.gov.in/PressReleasePage.aspx?PRID=2268992)
+[Read the full guide](https://arraysingenieria.com/pm-surya-ghar-subsidy/)[Source: PIB](https://www.pib.gov.in/PressReleasePage.aspx?PRID=2268992)
 
 Farmers, cooperatives, panchayats, FPOs
 
@@ -128,7 +128,7 @@ Closing: complete by 31 Mar 2027
 
 **Where we fit:** Component A and feeder-level plants are ground-mount plants: the piling, fencing, civil works, installation and commissioning we do every day.
 
-[Read the full guide](https://arrays-9mj.pages.dev/pm-kusum-scheme/)[Source: Energetica India](https://energetica-india.net/news/mnre-extends-pm-kusum-financial-closure-deadline-to-nov-30)
+[Read the full guide](https://arraysingenieria.com/pm-kusum-scheme/)[Source: Energetica India](https://energetica-india.net/news/mnre-extends-pm-kusum-financial-closure-deadline-to-nov-30)
 
 Tea estates in Assam
 
@@ -142,7 +142,7 @@ In force; check APDCL for current terms
 
 **Where we fit:** We have built ground-mount plants across Assam's tea gardens, from Koomber (inaugurated by the Chief Minister) to Harmutty, with DG synchronisation and APDCL approvals.
 
-[Read the full guide](https://arrays-9mj.pages.dev/solar-for-assam-tea-estates-guide/)[Source: Himanta Biswa Sarma, 22 Sep 2026](https://himantabiswa.substack.com/p/rewriting-assams-energy-future)
+[Read the full guide](https://arraysingenieria.com/solar-for-assam-tea-estates-guide/)[Source: Himanta Biswa Sarma, 22 Sep 2026](https://himantabiswa.substack.com/p/rewriting-assams-energy-future)
 
 Businesses that own their plant
 
@@ -156,7 +156,7 @@ Available to business owners
 
 **Where we fit:** Every plant we build on the CAPEX model belongs to the client, so the depreciation is theirs. Confirm the position with your chartered accountant.
 
-[Read the full guide](https://arrays-9mj.pages.dev/accelerated-depreciation-solar/)[Source: Taxguru: Income-tax Act, 2025](https://taxguru.in/income-tax/depreciation-income-tax-act-2025-section-34-rates-provisions.html)
+[Read the full guide](https://arraysingenieria.com/accelerated-depreciation-solar/)[Source: Taxguru: Income-tax Act, 2025](https://taxguru.in/income-tax/depreciation-income-tax-act-2025-section-34-rates-provisions.html)
 
 Everyone buying a solar plant
 
@@ -170,7 +170,7 @@ In force
 
 **Where we fit:** We set out supply and services clearly in every CAPEX quotation, so the tax treatment is transparent from the start.
 
-[Read the full guide](https://arrays-9mj.pages.dev/gst-on-solar-india/)[Source: pv magazine India, 4 Sep 2025](https://www.pv-magazine-india.com/2025/09/04/gst-on-solar-cells-modules-cut-to-5/)
+[Read the full guide](https://arraysingenieria.com/gst-on-solar-india/)[Source: pv magazine India, 4 Sep 2025](https://www.pv-magazine-india.com/2025/09/04/gst-on-solar-cells-modules-cut-to-5/)
 
 Grid-connected consumers
 
@@ -185,7 +185,7 @@ In force; 2026 changes in draft
 
 **Where we fit:** We handle net-metering applications, inspections and CEIG approvals; at Borpatra Tea Estate we obtained the approvals from APDCL.
 
-[Read the full guide](https://arrays-9mj.pages.dev/net-metering-india/)[Source: Mercom India](https://www.mercomindia.com/government-proposes-amendments-to-electricity-consumer-rights-rules)
+[Read the full guide](https://arraysingenieria.com/net-metering-india/)[Source: Mercom India](https://www.mercomindia.com/government-proposes-amendments-to-electricity-consumer-rights-rules)
 
 Consumers of 100 kW and more
 
@@ -200,7 +200,7 @@ In force; state charges vary
 
 **Where we fit:** Captive and open-access plants are ground-mount plants: we do the piling, civil works, fencing and installation & commissioning.
 
-[Read the full guide](https://arrays-9mj.pages.dev/green-energy-open-access/)[Source: GOAR portal](https://greenopenaccess.in/)
+[Read the full guide](https://arraysingenieria.com/green-energy-open-access/)[Source: GOAR portal](https://greenopenaccess.in/)
 
 Projects covered by the ALMM order
 
@@ -215,7 +215,7 @@ In force from 1 June 2026
 
 **Where we fit:** We do not manufacture modules, so we specify the ALMM-listed or client-approved makes each project needs and keep the documents.
 
-[Read the full guide](https://arrays-9mj.pages.dev/almm-list-ii-solar-cells/)[Source: PIB](https://www.pib.gov.in/PressReleasePage.aspx?PRID=2082901)
+[Read the full guide](https://arraysingenieria.com/almm-list-ii-solar-cells/)[Source: PIB](https://www.pib.gov.in/PressReleasePage.aspx?PRID=2082901)
 
 Anyone importing equipment
 
@@ -229,7 +229,7 @@ In force
 
 **Where we fit:** For most C&I and scheme projects the route is now Indian ALMM modules; we compare options and paperwork before you commit.
 
-[Read the full guide](https://arrays-9mj.pages.dev/solar-import-duty-india/)[Source: Energetica India](https://www.energetica-india.net/news/union-budget-2025-26-solar-cells-and-modules-duty-cut-to-20-percent)
+[Read the full guide](https://arraysingenieria.com/solar-import-duty-india/)[Source: Energetica India](https://www.energetica-india.net/news/union-budget-2025-26-solar-cells-and-modules-duty-cut-to-20-percent)
 
 Every plant: modules, inverters, batteries
 
@@ -243,7 +243,7 @@ In force
 
 **Where we fit:** We check BIS and ALMM documents for every component on site and hand them over with the test reports.
 
-[Read the full guide](https://arrays-9mj.pages.dev/solar-quality-standards-bis-cea/)[Source: PIB](https://www.pib.gov.in/PressReleasePage.aspx?PRID=2097219)
+[Read the full guide](https://arraysingenieria.com/solar-quality-standards-bis-cea/)[Source: PIB](https://www.pib.gov.in/PressReleasePage.aspx?PRID=2097219)
 
 Utility tenders and large prosumers
 
@@ -257,7 +257,7 @@ Advisory for future tenders
 
 **Where we fit:** We build the solar side and can plan for storage; for most C&I owners a plant sized to daytime load pays back fastest.
 
-[Read the full guide](https://arrays-9mj.pages.dev/battery-storage-with-solar/)[Source: pv magazine India](https://www.pv-magazine-india.com/2025/02/20/power-ministry-mandates-co-locating-energy-storage-with-solar-projects/)
+[Read the full guide](https://arraysingenieria.com/battery-storage-with-solar/)[Source: pv magazine India](https://www.pv-magazine-india.com/2025/02/20/power-ministry-mandates-co-locating-energy-storage-with-solar-projects/)
 
 In-Depth Guides
 
@@ -265,7 +265,7 @@ In-Depth Guides
 
 Long-form guides with tables, worked examples, FAQs and linked sources, written by our engineering team.
 
-[Market Update: **India's Solar Capacity in 2026: 171 GW and What It Means for Your Business**MNRE data put India's solar fleet at 171.05 GW on 30 September 2026. Where the growth is, why rooftop and C&I solar are surging, and how to plan a plant in a crowded market.4 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/india-solar-capacity-2026/)[Tax: **GST on Solar in India (2026): 5% on Equipment, About 8.9% on EPC Contracts**The GST Council cut GST on solar devices from 12% to 5% from 22 September 2025. How it applies to modules, inverters and full EPC contracts, what the 70:30 rule means, and how much a plant saves.4 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/gst-on-solar-india/)[Policy: **ALMM List-I and List-II Explained: The Made-in-India Rule for Solar Modules and Cells**MNRE's Approved List of Models and Manufacturers now covers solar cells as well as modules. What List-I and List-II mean, which projects they bind, the exemptions, and how to stay compliant.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/almm-list-ii-solar-cells/)[Policy: **Solar Import Duty in India (2026): Customs on Modules and Cells, and What Budget 2026-27 Changed**Customs duty on imported solar equipment was restructured in Budget 2025-26 and adjusted again in Budget 2026-27. The rates, the reasoning, and how they shape module prices and your choice of supplier.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/solar-import-duty-india/)[Tax: **Accelerated Depreciation on Solar in India: How a Business Recovers the Cost Faster**Owning your solar plant lets you write it off at 40% a year on the written-down value. How accelerated depreciation works from April 2026 under the new Income-tax Act, the half-year rule, and a worked example.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/accelerated-depreciation-solar/)[Business Models: **CAPEX vs OPEX (RESCO) Solar: Which Model Suits Your Business?**Own your solar plant and keep every unit, or pay a developer per unit with no upfront cost? A side-by-side comparison of CAPEX and OPEX solar, with the numbers that decide it.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/capex-vs-opex-solar/)[Grid & Regulation: **Net Metering in India (2026): Net Billing, Gross Metering, ToD Tariffs and the Draft 2026 Rules**How your solar plant connects to the DISCOM and how exported units are paid for: net metering, net billing and gross metering, the 500 kW rule, time-of-day tariffs, the draft 2026 amendments, and the step-by-step approval process.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/net-metering-india/)[Grid & Regulation: **Green Energy Open Access in India: Buy Solar Power from Off-Site Plants from 100 kW**Can't fit enough solar on your roof? Green Energy Open Access lets consumers from 100 kW buy power from a solar plant elsewhere. Eligibility, approvals, charges, banking, and the ISTS waiver phase-out.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/green-energy-open-access/)[Schemes: **PM Surya Ghar: Muft Bijli Yojana 2026: Subsidy, Eligibility and How to Apply**India's rooftop solar scheme for homes: up to Rs 78,000 central subsidy, support for housing societies, low-cost loans and the national portal. What you get, who qualifies, and the steps from application to subsidy.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/pm-surya-ghar-subsidy/)[Schemes: **PM-KUSUM in 2026: Components A, B and C, New Deadlines and What Comes Next**India's farm solar scheme: up to 2 MW plants on farmers' land, standalone solar pumps and solarised feeders. What each component offers, the 2026 deadline extensions, and the proposed PM-KUSUM 2.0.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/pm-kusum-scheme/)[Tea Estates: **Solar for Assam's Tea Estates: Policy, Design and Lessons from Our Plants**Tea estates are among the best solar sites in India: daytime factory load, diesel back-up to cut and land to spare. Assam's policy, how to design for the plucking season, and what we have learnt building plants from Koomber to Harmutty.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/solar-for-assam-tea-estates-guide/)[Buyer's Guide: **How to Choose a Solar EPC and Installation Partner in India: 12 Questions to Ask**The partner you choose decides how your plant performs for 25 years. Twelve questions to ask any solar EPC or installation contractor, what good answers look like, and the red flags to walk away from.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/choose-solar-epc-partner/)[System Design: **Rooftop vs Ground-Mount Solar: Which Is Right for Your Site?**Use the roof you already have, or build on land? A practical comparison of rooftop and ground-mount solar: cost, space, structure, safety, foundations, approvals and maintenance.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/rooftop-vs-ground-mount-solar/)[O&M: **Solar O&M and Module Cleaning: Protecting 25 Years of Returns**A solar plant has no moving parts, but it still needs care. Module cleaning, inspections, thermography, inverter and earthing checks, and a practical maintenance schedule that keeps generation where it should be.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/solar-om-module-cleaning/)[Standards & Safety: **Solar Quality and Safety Norms in India (2026): BIS, the Quality Control Order, CEA and CEIG**What makes a solar plant compliant in 2026: the BIS Quality Control Order for modules, inverters and batteries, the standards each component should meet, the Electrical Inspector's approval, and site safety.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/solar-quality-standards-bis-cea/)[Storage: **Battery Storage with Solar in India (2026): Mandates, Incentives and When It Pays**Storage is becoming part of India's solar story. The two-hour co-located storage advisory for tenders, the viability gap funding for batteries, transmission waivers, the draft rule for large prosumers, and when a battery makes sense for a business.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/battery-storage-with-solar/)[Installation & Commissioning: **Solar Plant Installation and Commissioning: The Complete Step-by-Step Checklist**What actually happens between the purchase order and the day a solar plant goes live. Every stage of installation and commissioning, the tests that prove the plant is safe, and the documents you should receive at handover.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/solar-plant-commissioning-checklist/)
+[Market Update: **India's Solar Capacity in 2026: 171 GW and What It Means for Your Business**MNRE data put India's solar fleet at 171.05 GW on 30 September 2026. Where the growth is, why rooftop and C&I solar are surging, and how to plan a plant in a crowded market.4 min read · Updated 11 Oct 2026](https://arraysingenieria.com/india-solar-capacity-2026/)[Tax: **GST on Solar in India (2026): 5% on Equipment, About 8.9% on EPC Contracts**The GST Council cut GST on solar devices from 12% to 5% from 22 September 2025. How it applies to modules, inverters and full EPC contracts, what the 70:30 rule means, and how much a plant saves.4 min read · Updated 11 Oct 2026](https://arraysingenieria.com/gst-on-solar-india/)[Policy: **ALMM List-I and List-II Explained: The Made-in-India Rule for Solar Modules and Cells**MNRE's Approved List of Models and Manufacturers now covers solar cells as well as modules. What List-I and List-II mean, which projects they bind, the exemptions, and how to stay compliant.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/almm-list-ii-solar-cells/)[Policy: **Solar Import Duty in India (2026): Customs on Modules and Cells, and What Budget 2026-27 Changed**Customs duty on imported solar equipment was restructured in Budget 2025-26 and adjusted again in Budget 2026-27. The rates, the reasoning, and how they shape module prices and your choice of supplier.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-import-duty-india/)[Tax: **Accelerated Depreciation on Solar in India: How a Business Recovers the Cost Faster**Owning your solar plant lets you write it off at 40% a year on the written-down value. How accelerated depreciation works from April 2026 under the new Income-tax Act, the half-year rule, and a worked example.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/accelerated-depreciation-solar/)[Business Models: **CAPEX vs OPEX (RESCO) Solar: Which Model Suits Your Business?**Own your solar plant and keep every unit, or pay a developer per unit with no upfront cost? A side-by-side comparison of CAPEX and OPEX solar, with the numbers that decide it.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/capex-vs-opex-solar/)[Grid & Regulation: **Net Metering in India (2026): Net Billing, Gross Metering, ToD Tariffs and the Draft 2026 Rules**How your solar plant connects to the DISCOM and how exported units are paid for: net metering, net billing and gross metering, the 500 kW rule, time-of-day tariffs, the draft 2026 amendments, and the step-by-step approval process.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/net-metering-india/)[Grid & Regulation: **Green Energy Open Access in India: Buy Solar Power from Off-Site Plants from 100 kW**Can't fit enough solar on your roof? Green Energy Open Access lets consumers from 100 kW buy power from a solar plant elsewhere. Eligibility, approvals, charges, banking, and the ISTS waiver phase-out.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/green-energy-open-access/)[Schemes: **PM Surya Ghar: Muft Bijli Yojana 2026: Subsidy, Eligibility and How to Apply**India's rooftop solar scheme for homes: up to Rs 78,000 central subsidy, support for housing societies, low-cost loans and the national portal. What you get, who qualifies, and the steps from application to subsidy.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/pm-surya-ghar-subsidy/)[Schemes: **PM-KUSUM in 2026: Components A, B and C, New Deadlines and What Comes Next**India's farm solar scheme: up to 2 MW plants on farmers' land, standalone solar pumps and solarised feeders. What each component offers, the 2026 deadline extensions, and the proposed PM-KUSUM 2.0.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/pm-kusum-scheme/)[Tea Estates: **Solar for Assam's Tea Estates: Policy, Design and Lessons from Our Plants**Tea estates are among the best solar sites in India: daytime factory load, diesel back-up to cut and land to spare. Assam's policy, how to design for the plucking season, and what we have learnt building plants from Koomber to Harmutty.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-for-assam-tea-estates-guide/)[Buyer's Guide: **How to Choose a Solar EPC and Installation Partner in India: 12 Questions to Ask**The partner you choose decides how your plant performs for 25 years. Twelve questions to ask any solar EPC or installation contractor, what good answers look like, and the red flags to walk away from.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/choose-solar-epc-partner/)[System Design: **Rooftop vs Ground-Mount Solar: Which Is Right for Your Site?**Use the roof you already have, or build on land? A practical comparison of rooftop and ground-mount solar: cost, space, structure, safety, foundations, approvals and maintenance.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/rooftop-vs-ground-mount-solar/)[O&M: **Solar O&M and Module Cleaning: Protecting 25 Years of Returns**A solar plant has no moving parts, but it still needs care. Module cleaning, inspections, thermography, inverter and earthing checks, and a practical maintenance schedule that keeps generation where it should be.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-om-module-cleaning/)[Standards & Safety: **Solar Quality and Safety Norms in India (2026): BIS, the Quality Control Order, CEA and CEIG**What makes a solar plant compliant in 2026: the BIS Quality Control Order for modules, inverters and batteries, the standards each component should meet, the Electrical Inspector's approval, and site safety.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-quality-standards-bis-cea/)[Storage: **Battery Storage with Solar in India (2026): Mandates, Incentives and When It Pays**Storage is becoming part of India's solar story. The two-hour co-located storage advisory for tenders, the viability gap funding for batteries, transmission waivers, the draft rule for large prosumers, and when a battery makes sense for a business.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/battery-storage-with-solar/)[Installation & Commissioning: **Solar Plant Installation and Commissioning: The Complete Step-by-Step Checklist**What actually happens between the purchase order and the day a solar plant goes live. Every stage of installation and commissioning, the tests that prove the plant is safe, and the documents you should receive at handover.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-plant-commissioning-checklist/)
 
 Quick Guide
 
@@ -282,4 +282,4 @@ Quick Guide
 
 Scheme rules, subsidies and rates change. This page summarises official sources as of October 2026; always confirm the current terms on the official portal before you invest.
 
-[Ask Us About Your Project](https://arrays-9mj.pages.dev/contact/)[Solar Glossary](https://arrays-9mj.pages.dev/solar-glossary/)
+[Ask Us About Your Project](https://arraysingenieria.com/contact/)[Solar Glossary](https://arraysingenieria.com/solar-glossary/)

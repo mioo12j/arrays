@@ -25,7 +25,7 @@ User-agent: YouBot
 Allow: /
 Disallow: /tools/
 
-Sitemap: https://arrays-9mj.pages.dev/sitemap.xml
-# Plain-language summary for AI assistants: https://arrays-9mj.pages.dev/llms.txt
-# Full text of every page in one file: https://arrays-9mj.pages.dev/llms-full.txt
-# Guides feed: https://arrays-9mj.pages.dev/feed.xml
+Sitemap: https://arraysingenieria.com/sitemap.xml
+# Plain-language summary for AI assistants: https://arraysingenieria.com/llms.txt
+# Full text of every page in one file: https://arraysingenieria.com/llms-full.txt
+# Guides feed: https://arraysingenieria.com/feed.xml

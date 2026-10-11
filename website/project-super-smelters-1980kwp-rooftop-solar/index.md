@@ -1,7 +1,7 @@
 ---
 title: 1980.3 kWp Rooftop Solar, Super Smelters | Arrays Ingenieria
 description: Case study: a 1980.3 kWp industrial rooftop solar plant at Super Smelters Ltd., Jamuria, West Bengal, built by Arrays Ingenieria with Tata Power Solar.
-url: https://arrays-9mj.pages.dev/project-super-smelters-1980kwp-rooftop-solar/
+url: https://arraysingenieria.com/project-super-smelters-1980kwp-rooftop-solar/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -33,7 +33,7 @@ In 2024 Tata Power Solar engaged Arrays Ingenieria for the installation & commis
 
 ### In the news
 
-[Newspaper: **Sanmarg**1980.3 kWp solar plant installed for environmental protection at Super Smelters](https://arrays-9mj.pages.dev/recognition/#sanmarg-supersmelters)[Newspaper: **Hindi daily, Jamuria**1980.3 kWp rooftop solar power plant inaugurated at Super Smelters](https://arrays-9mj.pages.dev/recognition/#supersmelters-rooftop)
+[Newspaper: **Sanmarg**1980.3 kWp solar plant installed for environmental protection at Super Smelters](https://arraysingenieria.com/recognition/#sanmarg-supersmelters)[Newspaper: **Hindi daily, Jamuria**1980.3 kWp rooftop solar power plant inaugurated at Super Smelters](https://arraysingenieria.com/recognition/#supersmelters-rooftop)
 
 ### Photos
 
@@ -57,7 +57,7 @@ Year: **2024**
 
 Talk to our veteran-led team about EPC, installation & commissioning or civil works.
 
-[Get a Free Quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a Free Quote](https://arraysingenieria.com/free-solar-quote/)
 
 Project Timeline
 
@@ -158,7 +158,7 @@ The standard rooftop installation & commissioning scope we deliver to EPC majors
 - Safety posters, storage under covers and care until handover
 - Testing, commissioning and handover
 
-[The full commissioning checklist](https://arrays-9mj.pages.dev/solar-plant-commissioning-checklist/)[Our I&C service](https://arrays-9mj.pages.dev/solar-installation-commissioning/)
+[The full commissioning checklist](https://arraysingenieria.com/solar-plant-commissioning-checklist/)[Our I&C service](https://arraysingenieria.com/solar-installation-commissioning/)
 
 Documents
 
@@ -172,10 +172,10 @@ Related
 
 ## Services Used on This Project
 
-[Rooftop Solar](https://arrays-9mj.pages.dev/service-rooftop/)[Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/)[EPC Turnkey](https://arrays-9mj.pages.dev/service-epc/)[All Projects →](https://arrays-9mj.pages.dev/projects/)
+[Rooftop Solar](https://arraysingenieria.com/service-rooftop/)[Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/)[EPC Turnkey](https://arraysingenieria.com/service-epc/)[All Projects →](https://arraysingenieria.com/projects/)
 
 More Case Studies
 
 ## Other Projects by Arrays Ingenieria
 
-[Industrial · Rooftop I&C: **Balaji Action Buildwell, Sitarganj: Solar I&C, BOS and Civil Works**4000.32 kWp project (as described in the BOS order) · Sitarganj, UttarakhandRead the case study](https://arrays-9mj.pages.dev/project-balaji-action-sitarganj-4mwp-solar/)[Industrial · Rooftop I&C: **SRMB Steel, Durgapur: Rooftop Solar I&C in Three Phases**1895.4 kWp, 1060 kWp and 1.69 MWp · Durgapur, West BengalRead the case study](https://arrays-9mj.pages.dev/project-srmb-steel-durgapur-rooftop-solar/)[Industrial · Rooftop I&C: **Apar Industries, Jharsuguda: 1.2 MWp Rooftop Solar I&C**1.2 MWp (1203 kWp) · Jharsuguda, OdishaRead the case study](https://arrays-9mj.pages.dev/project-apar-industries-jharsuguda-1-2mwp-rooftop-solar/)
+[Industrial · Rooftop I&C: **Balaji Action Buildwell, Sitarganj: Solar I&C, BOS and Civil Works**4000.32 kWp project (as described in the BOS order) · Sitarganj, UttarakhandRead the case study](https://arraysingenieria.com/project-balaji-action-sitarganj-4mwp-solar/)[Industrial · Rooftop I&C: **SRMB Steel, Durgapur: Rooftop Solar I&C in Three Phases**1895.4 kWp, 1060 kWp and 1.69 MWp · Durgapur, West BengalRead the case study](https://arraysingenieria.com/project-srmb-steel-durgapur-rooftop-solar/)[Industrial · Rooftop I&C: **Apar Industries, Jharsuguda: 1.2 MWp Rooftop Solar I&C**1.2 MWp (1203 kWp) · Jharsuguda, OdishaRead the case study](https://arraysingenieria.com/project-apar-industries-jharsuguda-1-2mwp-rooftop-solar/)

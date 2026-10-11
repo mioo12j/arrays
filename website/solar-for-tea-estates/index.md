@@ -1,7 +1,7 @@
 ---
 title: Solar Power for Tea Estates in Assam | Arrays Ingenieria
 description: 19 on-grid solar plants built in Assam's tea gardens for Jay Shree Tea and Goodricke: ground-mount solar with DG sync and net-metering.
-url: https://arrays-9mj.pages.dev/solar-for-tea-estates/
+url: https://arraysingenieria.com/solar-for-tea-estates/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -31,7 +31,7 @@ Arrays Ingenieria has become one of the most active solar builders in Assam's te
 
 ### Estates we have powered
 
-[Towkok (535 kWp) and Manjushree (500 kWp)](https://arrays-9mj.pages.dev/project-jayshree-tea-1mw-solar-assam/) for Jay Shree Tea; the Dewan, Labac and Burtoll gardens of Jay Shree Tea's Dewan Group; [Orangajuli (450 kW)](https://arrays-9mj.pages.dev/project-orangajuli-tea-estate-450kw-solar/) and [Barpatra (230 kW)](https://arrays-9mj.pages.dev/project-barpatra-tea-estate-230kw-solar/) for Goodricke; and Kakajan Tea Estate for Amalgamated Plantations. Most recently, the [595 kWp plant at Koomber Tea Estate](https://arrays-9mj.pages.dev/project-koomber-tea-estate-595kwp-solar-cm-inauguration/) was inaugurated by the Chief Minister of Assam on 1 October 2026.
+[Towkok (535 kWp) and Manjushree (500 kWp)](https://arraysingenieria.com/project-jayshree-tea-1mw-solar-assam/) for Jay Shree Tea; the Dewan, Labac and Burtoll gardens of Jay Shree Tea's Dewan Group; [Orangajuli (450 kW)](https://arraysingenieria.com/project-orangajuli-tea-estate-450kw-solar/) and [Barpatra (230 kW)](https://arraysingenieria.com/project-barpatra-tea-estate-230kw-solar/) for Goodricke; and Kakajan Tea Estate for Amalgamated Plantations. Most recently, the [595 kWp plant at Koomber Tea Estate](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/) was inaugurated by the Chief Minister of Assam on 1 October 2026.
 
 ## At a glance
 
@@ -49,7 +49,7 @@ Region: **Assam & the North-East**
 
 Talk to our veteran-led team for a free, no-obligation consultation.
 
-[Get a Free Quote](https://arrays-9mj.pages.dev/contact/)
+[Get a Free Quote](https://arraysingenieria.com/contact/)
 
 In Their Words
 
@@ -57,11 +57,11 @@ In Their Words
 
 “Our sincere thanks to Lieutenant General Ashish Ranjan Prasad (Retd) and the team at Arrays Ingenieria for their partnership in bringing this vision to life.”
 
-Jay Shree Tea & Industries Ltd., [22 May 2025](https://arrays-9mj.pages.dev/recognition/#jayshree-towkok)
+Jay Shree Tea & Industries Ltd., [22 May 2025](https://arraysingenieria.com/recognition/#jayshree-towkok)
 
 “Their precision, discipline and commitment to excellence ensured seamless implementation across all three locations.”
 
-Jay Shree Tea & Industries Ltd., on the Dewan Group plants, [24 Nov 2025](https://arrays-9mj.pages.dev/recognition/#jayshree-dewan)
+Jay Shree Tea & Industries Ltd., on the Dewan Group plants, [24 Nov 2025](https://arraysingenieria.com/recognition/#jayshree-dewan)
 
 Inaugurated by the Chief Minister
 
@@ -87,7 +87,7 @@ Shri Rajdeep Goala, MLA, Udharbond, on X and Facebook
 
 Shared and reported by[CM's Office on X](https://x.com/CMOfficeAssam/status/2105545750054928662)[CM's Office on Facebook](https://www.facebook.com/cmofficeassam/photos/d41d8cd9/1422387263413542/?set=a.302403535411926)[MLA Kaushik Rai on X](https://x.com/iKaushikRai/status/2105642116089008488)[MLA Kaushik Rai on Facebook](https://www.facebook.com/100065189221572/posts/pfbid0MmznkBYfeKxNF66pmnNDk3iEFfGnY1wan7LNwMDm4316vznz3bg86ZkZwAgdjheHl/)[MLA Rajdeep Goala on X](https://x.com/RajdeepGoala14/status/2105730931860574342)[MLA Rajdeep Goala on Facebook](https://www.facebook.com/100063684971835/posts/1732055695593913/)[The Sentinel](https://www.sentinelassam.com/breakingnews/assam-himanta-biswa-sarma-inaugurates-595-kwp-solar-plant-at-koomber-tea-estate)[The Sentinel on Instagram](https://www.instagram.com/p/Dd89-ViDQcG/)[The Sentinel on Facebook](https://www.facebook.com/100066523279937/posts/pfbid05Ug3kevPqUdUBp7ZyFbD8Eix3hYRzu78MVR8yNixHt17o5B3cShMNFXW1o4Mw1Y8l/)
 
-[See the inauguration](https://arrays-9mj.pages.dev/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Photo album (20)](https://arrays-9mj.pages.dev/project-koomber-tea-estate-595kwp-solar-cm-inauguration/#album)
+[See the inauguration](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Photo album (20)](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/#album)
 
 Watch: **The inauguration on video**
 
@@ -105,47 +105,47 @@ It also advances Assam Chief Minister Dr Himanta Biswa Sarma's target of 6,000 M
 
 Sources: [PM's national statement at COP26, PIB, 1 Nov 2021](https://pib.gov.in/PressReleasePage.aspx?PRID=1768712); [Himanta Biswa Sarma, 22 Sep 2026](https://himantabiswa.substack.com/p/rewriting-assams-energy-future).
 
-[Panchamrit & Solar Schemes](https://arrays-9mj.pages.dev/solar-schemes-india/#panchamrit)
+[Panchamrit & Solar Schemes](https://arraysingenieria.com/solar-schemes-india/#panchamrit)
 
 Case Studies
 
 ## Tea-Estate Projects
 
-[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arrays-9mj.pages.dev/project-koomber-tea-estate-595kwp-solar-cm-inauguration/) [Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arrays-9mj.pages.dev/project-jayshree-tea-1mw-solar-assam/) [Tea Estate · Ground-Mount: **Orangajuli Tea Estate: 450 kWp Ground-Mount Solar Plant**450 kWp · Orangajuli, Panerihaat, Udalguri district, AssamRead the case study](https://arrays-9mj.pages.dev/project-orangajuli-tea-estate-450kw-solar/) [Tea Estate · Ground-Mount: **Borpatra (Barpatra) Tea Estate: 230 kWp On-Grid Solar Plant**230 kWp · Borhat, Sivasagar district, AssamRead the case study](https://arrays-9mj.pages.dev/project-barpatra-tea-estate-230kw-solar/) [Tea Estate · Ground-Mount I&C: **Harmutty Tea Estate: 400 kWp Ground-Mounted Solar Plant**400 kWp · Harmutty, Laluk, North Lakhimpur district, Assam 784160Read the case study](https://arrays-9mj.pages.dev/project-harmutty-tea-estate-400kwp-solar/) [Tea Estates · Multi-Site I&C: **Amalgamated Plantations, Assam: Solar Across Tea Estates**About 5 MW across tea estates (3.8 MWp piled at 11 sites) · Chubwa, Kakajan, Powai, Nonoi, Diffloo, Nahortoli, Naharkatia, Namrup, Borhat and other estates, AssamRead the case study](https://arrays-9mj.pages.dev/project-amalgamated-plantations-assam-tea-estates-solar/) [Tea Estates · Ground-Mount I&C: **Rossell India Tea Estates, Assam: Ground-Mount Solar I&C**302 kW, 493.24 kWp, 170.51 kWp and 367 kW · Kharikatia, Nagrijuli, Romai and Dikom Tea Estates, AssamRead the case study](https://arrays-9mj.pages.dev/project-rossell-india-assam-tea-estates-solar/)
+[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/) [Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arraysingenieria.com/project-jayshree-tea-1mw-solar-assam/) [Tea Estate · Ground-Mount: **Orangajuli Tea Estate: 450 kWp Ground-Mount Solar Plant**450 kWp · Orangajuli, Panerihaat, Udalguri district, AssamRead the case study](https://arraysingenieria.com/project-orangajuli-tea-estate-450kw-solar/) [Tea Estate · Ground-Mount: **Borpatra (Barpatra) Tea Estate: 230 kWp On-Grid Solar Plant**230 kWp · Borhat, Sivasagar district, AssamRead the case study](https://arraysingenieria.com/project-barpatra-tea-estate-230kw-solar/) [Tea Estate · Ground-Mount I&C: **Harmutty Tea Estate: 400 kWp Ground-Mounted Solar Plant**400 kWp · Harmutty, Laluk, North Lakhimpur district, Assam 784160Read the case study](https://arraysingenieria.com/project-harmutty-tea-estate-400kwp-solar/) [Tea Estates · Multi-Site I&C: **Amalgamated Plantations, Assam: Solar Across Tea Estates**About 5 MW across tea estates (3.8 MWp piled at 11 sites) · Chubwa, Kakajan, Powai, Nonoi, Diffloo, Nahortoli, Naharkatia, Namrup, Borhat and other estates, AssamRead the case study](https://arraysingenieria.com/project-amalgamated-plantations-assam-tea-estates-solar/) [Tea Estates · Ground-Mount I&C: **Rossell India Tea Estates, Assam: Ground-Mount Solar I&C**302 kW, 493.24 kWp, 170.51 kWp and 367 kW · Kharikatia, Nagrijuli, Romai and Dikom Tea Estates, AssamRead the case study](https://arraysingenieria.com/project-rossell-india-assam-tea-estates-solar/)
 
 Our work in the news
 
-- [TVPrerana Bharati Digital (PBNN)](https://arrays-9mj.pages.dev/recognition/#prerana-bharati-koomber-video)
-- [TVNews Axom](https://arrays-9mj.pages.dev/recognition/#news-axom-koomber)
-- [TVNE Reports](https://arrays-9mj.pages.dev/recognition/#ne-reports-orangajuli)
-- [TVSonari Live](https://arrays-9mj.pages.dev/recognition/#sonari-live)
-- [Azad Sipahi](https://arrays-9mj.pages.dev/recognition/#azad-sipahi-koomber)
-- [Prerna Bharati](https://arrays-9mj.pages.dev/recognition/#prerna-bharati-koomber)
-- [The Sentinel](https://arrays-9mj.pages.dev/recognition/#sentinel-koomber)
-- [Hindusthan Samachar](https://arrays-9mj.pages.dev/recognition/#hindusthan-samachar-koomber)
-- [India Today NE](https://arrays-9mj.pages.dev/recognition/#india-today-ne-koomber)
-- [Northeast Chronicle](https://arrays-9mj.pages.dev/recognition/#northeast-chronicle-borpatra)
-- [Swarajati](https://arrays-9mj.pages.dev/recognition/#swarajati-borpatra)
-- [Dainik Janambhumi](https://arrays-9mj.pages.dev/recognition/#dainik-janambhumi-borpatra)
-- [Niyomiya Barta](https://arrays-9mj.pages.dev/recognition/#niyomiya-barta-borpatra)
-- [Dainik Purvoday](https://arrays-9mj.pages.dev/recognition/#barpatra-230kw)
-- [Purvanchal Prahari](https://arrays-9mj.pages.dev/recognition/#purvanchal-prahari-borpatra)
-- [Janambhumi (online)](https://arrays-9mj.pages.dev/recognition/#janambhumi-online-borpatra)
-- [Hub Network](https://arrays-9mj.pages.dev/recognition/#hub-network-orangajuli)
-- [Sanmarg](https://arrays-9mj.pages.dev/recognition/#sanmarg-supersmelters)
-- [Dainik Bhaskar](https://arrays-9mj.pages.dev/recognition/#bhaskar-tcpl)
+- [TVPrerana Bharati Digital (PBNN)](https://arraysingenieria.com/recognition/#prerana-bharati-koomber-video)
+- [TVNews Axom](https://arraysingenieria.com/recognition/#news-axom-koomber)
+- [TVNE Reports](https://arraysingenieria.com/recognition/#ne-reports-orangajuli)
+- [TVSonari Live](https://arraysingenieria.com/recognition/#sonari-live)
+- [Azad Sipahi](https://arraysingenieria.com/recognition/#azad-sipahi-koomber)
+- [Prerna Bharati](https://arraysingenieria.com/recognition/#prerna-bharati-koomber)
+- [The Sentinel](https://arraysingenieria.com/recognition/#sentinel-koomber)
+- [Hindusthan Samachar](https://arraysingenieria.com/recognition/#hindusthan-samachar-koomber)
+- [India Today NE](https://arraysingenieria.com/recognition/#india-today-ne-koomber)
+- [Northeast Chronicle](https://arraysingenieria.com/recognition/#northeast-chronicle-borpatra)
+- [Swarajati](https://arraysingenieria.com/recognition/#swarajati-borpatra)
+- [Dainik Janambhumi](https://arraysingenieria.com/recognition/#dainik-janambhumi-borpatra)
+- [Niyomiya Barta](https://arraysingenieria.com/recognition/#niyomiya-barta-borpatra)
+- [Dainik Purvoday](https://arraysingenieria.com/recognition/#barpatra-230kw)
+- [Purvanchal Prahari](https://arraysingenieria.com/recognition/#purvanchal-prahari-borpatra)
+- [Janambhumi (online)](https://arraysingenieria.com/recognition/#janambhumi-online-borpatra)
+- [Hub Network](https://arraysingenieria.com/recognition/#hub-network-orangajuli)
+- [Sanmarg](https://arraysingenieria.com/recognition/#sanmarg-supersmelters)
+- [Dainik Bhaskar](https://arraysingenieria.com/recognition/#bhaskar-tcpl)
 
 Shared by official handles
 
-- [OFFICIALChief Minister's Office, Assam](https://arrays-9mj.pages.dev/recognition/#official-handles)
-- [OFFICIALShri Kaushik Rai, MLA, Lakhipur](https://arrays-9mj.pages.dev/recognition/#official-handles)
-- [OFFICIALShri Rajdeep Goala, MLA, Udharbond](https://arrays-9mj.pages.dev/recognition/#official-handles)
+- [OFFICIALChief Minister's Office, Assam](https://arraysingenieria.com/recognition/#official-handles)
+- [OFFICIALShri Kaushik Rai, MLA, Lakhipur](https://arraysingenieria.com/recognition/#official-handles)
+- [OFFICIALShri Rajdeep Goala, MLA, Udharbond](https://arraysingenieria.com/recognition/#official-handles)
 
 Our founder on national TV
 
-- [TVIndia Today](https://arrays-9mj.pages.dev/recognition/#national-tv)
-- [TVAaj Tak](https://arrays-9mj.pages.dev/recognition/#national-tv)
-- [TVIndia TV](https://arrays-9mj.pages.dev/recognition/#national-tv)
+- [TVIndia Today](https://arraysingenieria.com/recognition/#national-tv)
+- [TVAaj Tak](https://arraysingenieria.com/recognition/#national-tv)
+- [TVIndia TV](https://arraysingenieria.com/recognition/#national-tv)
 
 Get Started
 
@@ -153,4 +153,4 @@ Get Started
 
 Tell us your estate, your factory load and your generators, and we will propose a plant.
 
-[Talk to Our Team](https://arrays-9mj.pages.dev/contact/)[How CAPEX Works](https://arrays-9mj.pages.dev/capex-solar-epc/)
+[Talk to Our Team](https://arraysingenieria.com/contact/)[How CAPEX Works](https://arraysingenieria.com/capex-solar-epc/)

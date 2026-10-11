@@ -1,7 +1,7 @@
 ---
 title: Accelerated Depreciation on Solar 2026 | Arrays Ingenieria
 description: A business that owns its solar plant can claim 40% depreciation on written-down value. How it works under the Income-tax Act, 2025, with an example.
-url: https://arrays-9mj.pages.dev/accelerated-depreciation-solar/
+url: https://arraysingenieria.com/accelerated-depreciation-solar/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -22,7 +22,7 @@ On this page
 - Frequently asked questions
 - Sources
 
-By the [Arrays Ingenieria engineering team](https://arrays-9mj.pages.dev/about/) · Updated 11 Oct 2026 · 3 min read
+By the [Arrays Ingenieria engineering team](https://arraysingenieria.com/about/) · Updated 11 Oct 2026 · 3 min read
 
 **Key takeaways**
 
@@ -50,7 +50,7 @@ The new Act's schedule, rules and transition provisions decide the exact block, 
 - Not the consumer in an OPEX, RESCO or PPA arrangement, where the developer owns the plant and claims the depreciation itself.
 - Not households, which do not compute business income on their homes; for them PM Surya Ghar's subsidy is the support.
 
-That is the single biggest financial difference between owning a plant (CAPEX) and buying its power (OPEX). See [CAPEX vs OPEX solar](https://arrays-9mj.pages.dev/capex-vs-opex-solar/).
+That is the single biggest financial difference between owning a plant (CAPEX) and buying its power (OPEX). See [CAPEX vs OPEX solar](https://arraysingenieria.com/capex-vs-opex-solar/).
 
 ## Worked example: a Rs 1 crore plant
 
@@ -78,13 +78,13 @@ For a business owner, the full picture of a solar plant's return has three parts
 
 - **Power savings:** every unit generated replaces a unit bought from the grid at your commercial or industrial tariff.
 - **Tax savings:** 40% WDV depreciation reduces tax in the early years.
-- **Lower upfront cost:** GST on solar equipment is 5% and, for most businesses, recoverable as input tax credit (see [GST on solar](https://arrays-9mj.pages.dev/gst-on-solar-india/)).
+- **Lower upfront cost:** GST on solar equipment is 5% and, for most businesses, recoverable as input tax credit (see [GST on solar](https://arraysingenieria.com/gst-on-solar-india/)).
 
 With all three, payback for a well-sited C&I plant is often in the range of three to five years, after which the plant keeps generating for two decades more.
 
 Want a payback estimate with depreciation built in? Send us your last 12 power bills.
 
-[Get a free solar quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a free solar quote](https://arraysingenieria.com/free-solar-quote/)
 
 ## Frequently asked questions
 
@@ -111,9 +111,9 @@ An asset put to use for less than 180 days in the year of acquisition gets only 
 
 This guide explains public policy in plain language for planning purposes. Rules, rates and deadlines change: confirm the current position with the notifying authority, your DISCOM and your tax adviser before you commit. Last checked 11 Oct 2026.
 
-**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arrays-9mj.pages.dev/ex-servicemen-led-msme/) · [Our projects](https://arrays-9mj.pages.dev/projects/)
+**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arraysingenieria.com/ex-servicemen-led-msme/) · [Our projects](https://arraysingenieria.com/projects/)
 
-[CAPEX Solar EPC](https://arrays-9mj.pages.dev/capex-solar-epc/)
+[CAPEX Solar EPC](https://arraysingenieria.com/capex-solar-epc/)
 
 From Our Sites
 
@@ -121,12 +121,12 @@ From Our Sites
 
 Real plants our veteran-led crews have built, with the scope of work in detail.
 
-[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arrays-9mj.pages.dev/project-super-smelters-1980kwp-rooftop-solar/)[Industrial · Rooftop I&C: **SRMB Steel, Durgapur: Rooftop Solar I&C in Three Phases**1895.4 kWp, 1060 kWp and 1.69 MWp · Durgapur, West BengalRead the case study](https://arrays-9mj.pages.dev/project-srmb-steel-durgapur-rooftop-solar/)[Industrial · Rooftop I&C: **Apar Industries, Jharsuguda: 1.2 MWp Rooftop Solar I&C**1.2 MWp (1203 kWp) · Jharsuguda, OdishaRead the case study](https://arrays-9mj.pages.dev/project-apar-industries-jharsuguda-1-2mwp-rooftop-solar/)
+[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arraysingenieria.com/project-super-smelters-1980kwp-rooftop-solar/)[Industrial · Rooftop I&C: **SRMB Steel, Durgapur: Rooftop Solar I&C in Three Phases**1895.4 kWp, 1060 kWp and 1.69 MWp · Durgapur, West BengalRead the case study](https://arraysingenieria.com/project-srmb-steel-durgapur-rooftop-solar/)[Industrial · Rooftop I&C: **Apar Industries, Jharsuguda: 1.2 MWp Rooftop Solar I&C**1.2 MWp (1203 kWp) · Jharsuguda, OdishaRead the case study](https://arraysingenieria.com/project-apar-industries-jharsuguda-1-2mwp-rooftop-solar/)
 
 Keep Reading
 
 ## Related Guides
 
-[Tax: **GST on Solar in India (2026): 5% on Equipment, About 8.9% on EPC Contracts**The GST Council cut GST on solar devices from 12% to 5% from 22 September 2025. How it applies to modules, inverters and full EPC contracts, what the 70:30 rule means, and how much a plant saves.4 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/gst-on-solar-india/)[Business Models: **CAPEX vs OPEX (RESCO) Solar: Which Model Suits Your Business?**Own your solar plant and keep every unit, or pay a developer per unit with no upfront cost? A side-by-side comparison of CAPEX and OPEX solar, with the numbers that decide it.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/capex-vs-opex-solar/)[Buyer's Guide: **How to Choose a Solar EPC and Installation Partner in India: 12 Questions to Ask**The partner you choose decides how your plant performs for 25 years. Twelve questions to ask any solar EPC or installation contractor, what good answers look like, and the red flags to walk away from.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/choose-solar-epc-partner/)
+[Tax: **GST on Solar in India (2026): 5% on Equipment, About 8.9% on EPC Contracts**The GST Council cut GST on solar devices from 12% to 5% from 22 September 2025. How it applies to modules, inverters and full EPC contracts, what the 70:30 rule means, and how much a plant saves.4 min read · Updated 11 Oct 2026](https://arraysingenieria.com/gst-on-solar-india/)[Business Models: **CAPEX vs OPEX (RESCO) Solar: Which Model Suits Your Business?**Own your solar plant and keep every unit, or pay a developer per unit with no upfront cost? A side-by-side comparison of CAPEX and OPEX solar, with the numbers that decide it.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/capex-vs-opex-solar/)[Buyer's Guide: **How to Choose a Solar EPC and Installation Partner in India: 12 Questions to Ask**The partner you choose decides how your plant performs for 25 years. Twelve questions to ask any solar EPC or installation contractor, what good answers look like, and the red flags to walk away from.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/choose-solar-epc-partner/)
 
-[All solar guides](https://arrays-9mj.pages.dev/insights/)[Government solar schemes](https://arrays-9mj.pages.dev/solar-schemes-india/)
+[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

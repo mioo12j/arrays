@@ -1,7 +1,7 @@
 ---
 title: Solar O&M and Module Cleaning Guide | Arrays Ingenieria
 description: Why operation and maintenance decides a solar plant's return: module cleaning systems, inspections, thermography, earthing checks and a schedule.
-url: https://arrays-9mj.pages.dev/solar-om-module-cleaning/
+url: https://arraysingenieria.com/solar-om-module-cleaning/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -22,7 +22,7 @@ On this page
 - Frequently asked questions
 - Sources
 
-By the [Arrays Ingenieria engineering team](https://arrays-9mj.pages.dev/about/) · Updated 11 Oct 2026 · 3 min read
+By the [Arrays Ingenieria engineering team](https://arraysingenieria.com/about/) · Updated 11 Oct 2026 · 3 min read
 
 **Key takeaways**
 
@@ -78,7 +78,7 @@ The **performance ratio (PR)** compares what the plant actually generated with w
 
 Want a module cleaning system or an O&M plan for an existing plant? We install and service both.
 
-[Get a free solar quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a free solar quote](https://arraysingenieria.com/free-solar-quote/)
 
 ## Frequently asked questions
 
@@ -104,9 +104,9 @@ Less cleaning, but more electrical attention: check earthing, lightning protecti
 
 This guide explains public policy in plain language for planning purposes. Rules, rates and deadlines change: confirm the current position with the notifying authority, your DISCOM and your tax adviser before you commit. Last checked 11 Oct 2026.
 
-**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arrays-9mj.pages.dev/ex-servicemen-led-msme/) · [Our projects](https://arrays-9mj.pages.dev/projects/)
+**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arraysingenieria.com/ex-servicemen-led-msme/) · [Our projects](https://arraysingenieria.com/projects/)
 
-[O&M & Support](https://arrays-9mj.pages.dev/service-om/)[Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/)
+[O&M & Support](https://arraysingenieria.com/service-om/)[Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/)
 
 From Our Sites
 
@@ -114,12 +114,12 @@ From Our Sites
 
 Real plants our veteran-led crews have built, with the scope of work in detail.
 
-[Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arrays-9mj.pages.dev/project-jayshree-tea-1mw-solar-assam/)[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arrays-9mj.pages.dev/project-super-smelters-1980kwp-rooftop-solar/)[Industrial · Piling & Civil: **Tata Motors, Jamshedpur: Piling, Civil Works and I&C for 5.5 MW Solar**5.5 MW · Jamshedpur, JharkhandRead the case study](https://arrays-9mj.pages.dev/project-tata-motors-jamshedpur-5-5mw-solar-piling/)
+[Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arraysingenieria.com/project-jayshree-tea-1mw-solar-assam/)[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arraysingenieria.com/project-super-smelters-1980kwp-rooftop-solar/)[Industrial · Piling & Civil: **Tata Motors, Jamshedpur: Piling, Civil Works and I&C for 5.5 MW Solar**5.5 MW · Jamshedpur, JharkhandRead the case study](https://arraysingenieria.com/project-tata-motors-jamshedpur-5-5mw-solar-piling/)
 
 Keep Reading
 
 ## Related Guides
 
-[System Design: **Rooftop vs Ground-Mount Solar: Which Is Right for Your Site?**Use the roof you already have, or build on land? A practical comparison of rooftop and ground-mount solar: cost, space, structure, safety, foundations, approvals and maintenance.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/rooftop-vs-ground-mount-solar/)[Standards & Safety: **Solar Quality and Safety Norms in India (2026): BIS, the Quality Control Order, CEA and CEIG**What makes a solar plant compliant in 2026: the BIS Quality Control Order for modules, inverters and batteries, the standards each component should meet, the Electrical Inspector's approval, and site safety.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/solar-quality-standards-bis-cea/)[Installation & Commissioning: **Solar Plant Installation and Commissioning: The Complete Step-by-Step Checklist**What actually happens between the purchase order and the day a solar plant goes live. Every stage of installation and commissioning, the tests that prove the plant is safe, and the documents you should receive at handover.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/solar-plant-commissioning-checklist/)
+[System Design: **Rooftop vs Ground-Mount Solar: Which Is Right for Your Site?**Use the roof you already have, or build on land? A practical comparison of rooftop and ground-mount solar: cost, space, structure, safety, foundations, approvals and maintenance.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/rooftop-vs-ground-mount-solar/)[Standards & Safety: **Solar Quality and Safety Norms in India (2026): BIS, the Quality Control Order, CEA and CEIG**What makes a solar plant compliant in 2026: the BIS Quality Control Order for modules, inverters and batteries, the standards each component should meet, the Electrical Inspector's approval, and site safety.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-quality-standards-bis-cea/)[Installation & Commissioning: **Solar Plant Installation and Commissioning: The Complete Step-by-Step Checklist**What actually happens between the purchase order and the day a solar plant goes live. Every stage of installation and commissioning, the tests that prove the plant is safe, and the documents you should receive at handover.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-plant-commissioning-checklist/)
 
-[All solar guides](https://arrays-9mj.pages.dev/insights/)[Government solar schemes](https://arrays-9mj.pages.dev/solar-schemes-india/)
+[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

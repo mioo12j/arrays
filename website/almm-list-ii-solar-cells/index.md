@@ -1,7 +1,7 @@
 ---
 title: ALMM List-II for Solar Cells 2026 | Arrays Ingenieria
 description: Since 1 June 2026, projects under MNRE's ALMM order need List-I modules made with List-II cells. Who it covers, exemptions and how to comply.
-url: https://arrays-9mj.pages.dev/almm-list-ii-solar-cells/
+url: https://arraysingenieria.com/almm-list-ii-solar-cells/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -22,7 +22,7 @@ On this page
 - Frequently asked questions
 - Sources
 
-By the [Arrays Ingenieria engineering team](https://arrays-9mj.pages.dev/about/) · Updated 11 Oct 2026 · 3 min read
+By the [Arrays Ingenieria engineering team](https://arraysingenieria.com/about/) · Updated 11 Oct 2026 · 3 min read
 
 **Key takeaways**
 
@@ -112,9 +112,9 @@ MNRE has signalled a List-III for wafers, reported for June 2028. It is not yet 
 
 This guide explains public policy in plain language for planning purposes. Rules, rates and deadlines change: confirm the current position with the notifying authority, your DISCOM and your tax adviser before you commit. Last checked 11 Oct 2026.
 
-**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arrays-9mj.pages.dev/ex-servicemen-led-msme/) · [Our projects](https://arrays-9mj.pages.dev/projects/)
+**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arraysingenieria.com/ex-servicemen-led-msme/) · [Our projects](https://arraysingenieria.com/projects/)
 
-[CAPEX Solar EPC](https://arrays-9mj.pages.dev/capex-solar-epc/)[EPC Turnkey](https://arrays-9mj.pages.dev/service-epc/)
+[CAPEX Solar EPC](https://arraysingenieria.com/capex-solar-epc/)[EPC Turnkey](https://arraysingenieria.com/service-epc/)
 
 From Our Sites
 
@@ -122,12 +122,12 @@ From Our Sites
 
 Real plants our veteran-led crews have built, with the scope of work in detail.
 
-[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arrays-9mj.pages.dev/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Tea Estate · Ground-Mount: **Borpatra (Barpatra) Tea Estate: 230 kWp On-Grid Solar Plant**230 kWp · Borhat, Sivasagar district, AssamRead the case study](https://arrays-9mj.pages.dev/project-barpatra-tea-estate-230kw-solar/)
+[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Tea Estate · Ground-Mount: **Borpatra (Barpatra) Tea Estate: 230 kWp On-Grid Solar Plant**230 kWp · Borhat, Sivasagar district, AssamRead the case study](https://arraysingenieria.com/project-barpatra-tea-estate-230kw-solar/)
 
 Keep Reading
 
 ## Related Guides
 
-[Policy: **Solar Import Duty in India (2026): Customs on Modules and Cells, and What Budget 2026-27 Changed**Customs duty on imported solar equipment was restructured in Budget 2025-26 and adjusted again in Budget 2026-27. The rates, the reasoning, and how they shape module prices and your choice of supplier.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/solar-import-duty-india/)[Schemes: **PM Surya Ghar: Muft Bijli Yojana 2026: Subsidy, Eligibility and How to Apply**India's rooftop solar scheme for homes: up to Rs 78,000 central subsidy, support for housing societies, low-cost loans and the national portal. What you get, who qualifies, and the steps from application to subsidy.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/pm-surya-ghar-subsidy/)[Standards & Safety: **Solar Quality and Safety Norms in India (2026): BIS, the Quality Control Order, CEA and CEIG**What makes a solar plant compliant in 2026: the BIS Quality Control Order for modules, inverters and batteries, the standards each component should meet, the Electrical Inspector's approval, and site safety.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/solar-quality-standards-bis-cea/)
+[Policy: **Solar Import Duty in India (2026): Customs on Modules and Cells, and What Budget 2026-27 Changed**Customs duty on imported solar equipment was restructured in Budget 2025-26 and adjusted again in Budget 2026-27. The rates, the reasoning, and how they shape module prices and your choice of supplier.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-import-duty-india/)[Schemes: **PM Surya Ghar: Muft Bijli Yojana 2026: Subsidy, Eligibility and How to Apply**India's rooftop solar scheme for homes: up to Rs 78,000 central subsidy, support for housing societies, low-cost loans and the national portal. What you get, who qualifies, and the steps from application to subsidy.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/pm-surya-ghar-subsidy/)[Standards & Safety: **Solar Quality and Safety Norms in India (2026): BIS, the Quality Control Order, CEA and CEIG**What makes a solar plant compliant in 2026: the BIS Quality Control Order for modules, inverters and batteries, the standards each component should meet, the Electrical Inspector's approval, and site safety.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-quality-standards-bis-cea/)
 
-[All solar guides](https://arrays-9mj.pages.dev/insights/)[Government solar schemes](https://arrays-9mj.pages.dev/solar-schemes-india/)
+[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

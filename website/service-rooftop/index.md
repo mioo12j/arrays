@@ -1,7 +1,7 @@
 ---
 title: Rooftop Solar EPC for Industry in India | Arrays Ingenieria
 description: On-grid RCC and metal-sheet rooftop solar for factories, institutions and businesses across India, installed and commissioned by Arrays Ingenieria.
-url: https://arrays-9mj.pages.dev/service-rooftop/
+url: https://arraysingenieria.com/service-rooftop/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -47,7 +47,7 @@ Sectors: **Industrial, fuel retail, institutional**
 
 Talk to our veteran-led team for a free, no-obligation consultation.
 
-[Get a Free Quote](https://arrays-9mj.pages.dev/#contact)
+[Get a Free Quote](https://arraysingenieria.com/#contact)
 
 FAQ
 
@@ -105,10 +105,10 @@ Case Studies
 
 ## Projects Using This Service
 
-[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arrays-9mj.pages.dev/project-super-smelters-1980kwp-rooftop-solar/) [Industrial · Rooftop I&C: **Balaji Action Buildwell, Sitarganj: Solar I&C, BOS and Civil Works**4000.32 kWp project (as described in the BOS order) · Sitarganj, UttarakhandRead the case study](https://arrays-9mj.pages.dev/project-balaji-action-sitarganj-4mwp-solar/) [Industrial · Rooftop I&C: **SRMB Steel, Durgapur: Rooftop Solar I&C in Three Phases**1895.4 kWp, 1060 kWp and 1.69 MWp · Durgapur, West BengalRead the case study](https://arrays-9mj.pages.dev/project-srmb-steel-durgapur-rooftop-solar/) [Industrial · Rooftop I&C: **Apar Industries, Jharsuguda: 1.2 MWp Rooftop Solar I&C**1.2 MWp (1203 kWp) · Jharsuguda, OdishaRead the case study](https://arrays-9mj.pages.dev/project-apar-industries-jharsuguda-1-2mwp-rooftop-solar/) [Industrial · Rooftop: **TCPL Greenery Agro, Vaishali: 319 kWp Rooftop Solar**319 kWp · Bhagwanpur, Vaishali district, BiharRead the case study](https://arrays-9mj.pages.dev/project-tcpl-vaishali-319kwp-rooftop-solar/)
+[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arraysingenieria.com/project-super-smelters-1980kwp-rooftop-solar/) [Industrial · Rooftop I&C: **Balaji Action Buildwell, Sitarganj: Solar I&C, BOS and Civil Works**4000.32 kWp project (as described in the BOS order) · Sitarganj, UttarakhandRead the case study](https://arraysingenieria.com/project-balaji-action-sitarganj-4mwp-solar/) [Industrial · Rooftop I&C: **SRMB Steel, Durgapur: Rooftop Solar I&C in Three Phases**1895.4 kWp, 1060 kWp and 1.69 MWp · Durgapur, West BengalRead the case study](https://arraysingenieria.com/project-srmb-steel-durgapur-rooftop-solar/) [Industrial · Rooftop I&C: **Apar Industries, Jharsuguda: 1.2 MWp Rooftop Solar I&C**1.2 MWp (1203 kWp) · Jharsuguda, OdishaRead the case study](https://arraysingenieria.com/project-apar-industries-jharsuguda-1-2mwp-rooftop-solar/) [Industrial · Rooftop: **TCPL Greenery Agro, Vaishali: 319 kWp Rooftop Solar**319 kWp · Bhagwanpur, Vaishali district, BiharRead the case study](https://arraysingenieria.com/project-tcpl-vaishali-319kwp-rooftop-solar/)
 
 Explore More
 
 ## Our Other Services
 
-[CAPEX Solar EPC](https://arrays-9mj.pages.dev/capex-solar-epc/) [Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/) [Ground-Mount](https://arrays-9mj.pages.dev/service-ground-mount/) [EPC Turnkey](https://arrays-9mj.pages.dev/service-epc/) [Piling](https://arrays-9mj.pages.dev/service-piling/) [Civil & Fencing](https://arrays-9mj.pages.dev/service-civil/) [O&M](https://arrays-9mj.pages.dev/service-om/) [All Projects →](https://arrays-9mj.pages.dev/projects/)
+[CAPEX Solar EPC](https://arraysingenieria.com/capex-solar-epc/) [Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/) [Ground-Mount](https://arraysingenieria.com/service-ground-mount/) [EPC Turnkey](https://arraysingenieria.com/service-epc/) [Piling](https://arraysingenieria.com/service-piling/) [Civil & Fencing](https://arraysingenieria.com/service-civil/) [O&M](https://arraysingenieria.com/service-om/) [All Projects →](https://arraysingenieria.com/projects/)

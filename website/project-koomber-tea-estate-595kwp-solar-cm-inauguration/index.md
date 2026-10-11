@@ -1,7 +1,7 @@
 ---
 title: Assam CM Opens 595 kWp Koomber Solar | Arrays Ingenieria
 description: Assam CM Dr Himanta Biswa Sarma inaugurated the 595 kWp solar plant at Koomber Tea Estate, Cachar, on 1 Oct 2026. Installation partner: Arrays Ingenieria.
-url: https://arrays-9mj.pages.dev/project-koomber-tea-estate-595kwp-solar-cm-inauguration/
+url: https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -33,7 +33,7 @@ The inauguration was announced by the Chief Minister's Office on X and Facebook,
 
 ### In the news
 
-[News channel: **Prerana Bharati Digital (PBNN)**October 2026595 kW solar plant inaugurated at Koomber tea garden](https://arrays-9mj.pages.dev/recognition/#prerana-bharati-koomber-video)[News channel: **News Axom**October 2026Video report: the Koomber Tea Estate solar plant inauguration](https://arrays-9mj.pages.dev/recognition/#news-axom-koomber)[Online news: **The Sentinel**1 Oct 2026Assam: Himanta Biswa Sarma Inaugurates 595 kWp Solar Plant at Koomber Tea Estate](https://arrays-9mj.pages.dev/recognition/#sentinel-koomber)[Newspaper: **Prerna Bharati**2 Oct 2026Arrays Ingenieria welcomes Chief Minister Dr Himanta Biswa Sarma at the Koomber tea garden solar plant inauguration](https://arrays-9mj.pages.dev/recognition/#prerna-bharati-koomber)[Newspaper: **Azad Sipahi**3 Oct 2026Solar power plant inaugurated at Assam's Koomber tea garden](https://arrays-9mj.pages.dev/recognition/#azad-sipahi-koomber)[Online news: **Hindusthan Samachar**1 Oct 2026Chief Minister inaugurates 595 kWp ground-mounted on-grid solar plant in Assam](https://arrays-9mj.pages.dev/recognition/#hindusthan-samachar-koomber)[Online news: **India Today NE**1 Oct 2026Assam CM inaugurates 595 kWp Solar Power Plant at Koomber Tea Estate](https://arrays-9mj.pages.dev/recognition/#india-today-ne-koomber)
+[News channel: **Prerana Bharati Digital (PBNN)**October 2026595 kW solar plant inaugurated at Koomber tea garden](https://arraysingenieria.com/recognition/#prerana-bharati-koomber-video)[News channel: **News Axom**October 2026Video report: the Koomber Tea Estate solar plant inauguration](https://arraysingenieria.com/recognition/#news-axom-koomber)[Online news: **The Sentinel**1 Oct 2026Assam: Himanta Biswa Sarma Inaugurates 595 kWp Solar Plant at Koomber Tea Estate](https://arraysingenieria.com/recognition/#sentinel-koomber)[Newspaper: **Prerna Bharati**2 Oct 2026Arrays Ingenieria welcomes Chief Minister Dr Himanta Biswa Sarma at the Koomber tea garden solar plant inauguration](https://arraysingenieria.com/recognition/#prerna-bharati-koomber)[Newspaper: **Azad Sipahi**3 Oct 2026Solar power plant inaugurated at Assam's Koomber tea garden](https://arraysingenieria.com/recognition/#azad-sipahi-koomber)[Online news: **Hindusthan Samachar**1 Oct 2026Chief Minister inaugurates 595 kWp ground-mounted on-grid solar plant in Assam](https://arraysingenieria.com/recognition/#hindusthan-samachar-koomber)[Online news: **India Today NE**1 Oct 2026Assam CM inaugurates 595 kWp Solar Power Plant at Koomber Tea Estate](https://arraysingenieria.com/recognition/#india-today-ne-koomber)
 
 ### Photos
 
@@ -57,7 +57,7 @@ Year: **2026 (inaugurated 1 October 2026)**
 
 Talk to our veteran-led team about EPC, installation & commissioning or civil works.
 
-[Get a Free Quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a Free Quote](https://arraysingenieria.com/free-solar-quote/)
 
 Why It Matters
 
@@ -181,10 +181,10 @@ Related
 
 ## Services Used on This Project
 
-[Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/)[Ground-Mount Solar](https://arrays-9mj.pages.dev/service-ground-mount/)[Solar for Tea Estates](https://arrays-9mj.pages.dev/solar-for-tea-estates/)[All Projects →](https://arrays-9mj.pages.dev/projects/)
+[Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/)[Ground-Mount Solar](https://arraysingenieria.com/service-ground-mount/)[Solar for Tea Estates](https://arraysingenieria.com/solar-for-tea-estates/)[All Projects →](https://arraysingenieria.com/projects/)
 
 More Case Studies
 
 ## Other Projects by Arrays Ingenieria
 
-[Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arrays-9mj.pages.dev/project-jayshree-tea-1mw-solar-assam/)[Tea Estate · Ground-Mount: **Orangajuli Tea Estate: 450 kWp Ground-Mount Solar Plant**450 kWp · Orangajuli, Panerihaat, Udalguri district, AssamRead the case study](https://arrays-9mj.pages.dev/project-orangajuli-tea-estate-450kw-solar/)[Tea Estate · Ground-Mount: **Borpatra (Barpatra) Tea Estate: 230 kWp On-Grid Solar Plant**230 kWp · Borhat, Sivasagar district, AssamRead the case study](https://arrays-9mj.pages.dev/project-barpatra-tea-estate-230kw-solar/)
+[Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arraysingenieria.com/project-jayshree-tea-1mw-solar-assam/)[Tea Estate · Ground-Mount: **Orangajuli Tea Estate: 450 kWp Ground-Mount Solar Plant**450 kWp · Orangajuli, Panerihaat, Udalguri district, AssamRead the case study](https://arraysingenieria.com/project-orangajuli-tea-estate-450kw-solar/)[Tea Estate · Ground-Mount: **Borpatra (Barpatra) Tea Estate: 230 kWp On-Grid Solar Plant**230 kWp · Borhat, Sivasagar district, AssamRead the case study](https://arraysingenieria.com/project-barpatra-tea-estate-230kw-solar/)

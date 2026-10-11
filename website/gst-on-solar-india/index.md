@@ -1,7 +1,7 @@
 ---
 title: GST on Solar in India 2026: 5% Rate | Arrays Ingenieria
 description: GST on solar modules is 5% since 22 September 2025. How the 70:30 rule puts EPC contracts near 8.9%, input tax credit and a worked example.
-url: https://arrays-9mj.pages.dev/gst-on-solar-india/
+url: https://arraysingenieria.com/gst-on-solar-india/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -22,7 +22,7 @@ On this page
 - Frequently asked questions
 - Sources
 
-By the [Arrays Ingenieria engineering team](https://arrays-9mj.pages.dev/about/) · Updated 11 Oct 2026 · 4 min read
+By the [Arrays Ingenieria engineering team](https://arraysingenieria.com/about/) · Updated 11 Oct 2026 · 4 min read
 
 **Key takeaways**
 
@@ -91,14 +91,14 @@ For a business that cannot claim input tax credit, the saving is a straight redu
 
 Want a quotation with the 5% rate and the 70:30 split shown line by line? Tell us about your site.
 
-[Get a free solar quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a free solar quote](https://arraysingenieria.com/free-solar-quote/)
 
 ## Other taxes that affect a solar project
 
-- **Customs duty** on imported cells and modules (see [solar import duty in 2026](https://arrays-9mj.pages.dev/solar-import-duty-india/)).
-- **Accelerated depreciation** on the plant for a business owner (see [our depreciation guide](https://arrays-9mj.pages.dev/accelerated-depreciation-solar/)).
+- **Customs duty** on imported cells and modules (see [solar import duty in 2026](https://arraysingenieria.com/solar-import-duty-india/)).
+- **Accelerated depreciation** on the plant for a business owner (see [our depreciation guide](https://arraysingenieria.com/accelerated-depreciation-solar/)).
 - **Electricity duty** on self-consumed power, which some states levy or waive for captive solar under their solar policies.
-- **Open-access charges** if the plant is off-site (see [Green Energy Open Access](https://arrays-9mj.pages.dev/green-energy-open-access/)).
+- **Open-access charges** if the plant is off-site (see [Green Energy Open Access](https://arraysingenieria.com/green-energy-open-access/)).
 
 ## Frequently asked questions
 
@@ -130,9 +130,9 @@ Yes. Standalone services such as operation and maintenance or module cleaning ar
 
 This guide explains public policy in plain language for planning purposes. Rules, rates and deadlines change: confirm the current position with the notifying authority, your DISCOM and your tax adviser before you commit. Last checked 11 Oct 2026.
 
-**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arrays-9mj.pages.dev/ex-servicemen-led-msme/) · [Our projects](https://arrays-9mj.pages.dev/projects/)
+**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arraysingenieria.com/ex-servicemen-led-msme/) · [Our projects](https://arraysingenieria.com/projects/)
 
-[CAPEX Solar EPC](https://arrays-9mj.pages.dev/capex-solar-epc/)[EPC Turnkey](https://arrays-9mj.pages.dev/service-epc/)
+[CAPEX Solar EPC](https://arraysingenieria.com/capex-solar-epc/)[EPC Turnkey](https://arraysingenieria.com/service-epc/)
 
 From Our Sites
 
@@ -140,12 +140,12 @@ From Our Sites
 
 Real plants our veteran-led crews have built, with the scope of work in detail.
 
-[Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arrays-9mj.pages.dev/project-jayshree-tea-1mw-solar-assam/)[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arrays-9mj.pages.dev/project-super-smelters-1980kwp-rooftop-solar/)
+[Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arraysingenieria.com/project-jayshree-tea-1mw-solar-assam/)[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arraysingenieria.com/project-super-smelters-1980kwp-rooftop-solar/)
 
 Keep Reading
 
 ## Related Guides
 
-[Policy: **Solar Import Duty in India (2026): Customs on Modules and Cells, and What Budget 2026-27 Changed**Customs duty on imported solar equipment was restructured in Budget 2025-26 and adjusted again in Budget 2026-27. The rates, the reasoning, and how they shape module prices and your choice of supplier.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/solar-import-duty-india/)[Tax: **Accelerated Depreciation on Solar in India: How a Business Recovers the Cost Faster**Owning your solar plant lets you write it off at 40% a year on the written-down value. How accelerated depreciation works from April 2026 under the new Income-tax Act, the half-year rule, and a worked example.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/accelerated-depreciation-solar/)[Business Models: **CAPEX vs OPEX (RESCO) Solar: Which Model Suits Your Business?**Own your solar plant and keep every unit, or pay a developer per unit with no upfront cost? A side-by-side comparison of CAPEX and OPEX solar, with the numbers that decide it.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/capex-vs-opex-solar/)
+[Policy: **Solar Import Duty in India (2026): Customs on Modules and Cells, and What Budget 2026-27 Changed**Customs duty on imported solar equipment was restructured in Budget 2025-26 and adjusted again in Budget 2026-27. The rates, the reasoning, and how they shape module prices and your choice of supplier.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-import-duty-india/)[Tax: **Accelerated Depreciation on Solar in India: How a Business Recovers the Cost Faster**Owning your solar plant lets you write it off at 40% a year on the written-down value. How accelerated depreciation works from April 2026 under the new Income-tax Act, the half-year rule, and a worked example.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/accelerated-depreciation-solar/)[Business Models: **CAPEX vs OPEX (RESCO) Solar: Which Model Suits Your Business?**Own your solar plant and keep every unit, or pay a developer per unit with no upfront cost? A side-by-side comparison of CAPEX and OPEX solar, with the numbers that decide it.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/capex-vs-opex-solar/)
 
-[All solar guides](https://arrays-9mj.pages.dev/insights/)[Government solar schemes](https://arrays-9mj.pages.dev/solar-schemes-india/)
+[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

@@ -1,7 +1,7 @@
 ---
 title: Solar Standards in India: BIS, CEIG | Arrays Ingenieria
 description: Quality and safety norms for solar plants in India in 2026: the BIS Quality Control Order, key IS/IEC standards for each part and CEIG approval.
-url: https://arrays-9mj.pages.dev/solar-quality-standards-bis-cea/
+url: https://arraysingenieria.com/solar-quality-standards-bis-cea/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -22,7 +22,7 @@ On this page
 - Frequently asked questions
 - Sources
 
-By the [Arrays Ingenieria engineering team](https://arrays-9mj.pages.dev/about/) · Updated 11 Oct 2026 · 3 min read
+By the [Arrays Ingenieria engineering team](https://arraysingenieria.com/about/) · Updated 11 Oct 2026 · 3 min read
 
 **Key takeaways**
 
@@ -89,7 +89,7 @@ Earthing and electrical safety works on a solar plant: a 25-year plant is only a
 
 Need a plant that passes inspection first time? Our veteran-led crews build to the standards and document every test.
 
-[Get a free solar quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a free solar quote](https://arraysingenieria.com/free-solar-quote/)
 
 ## Frequently asked questions
 
@@ -117,9 +117,9 @@ Insulation resistance, polarity, string open-circuit voltage and short-circuit c
 
 This guide explains public policy in plain language for planning purposes. Rules, rates and deadlines change: confirm the current position with the notifying authority, your DISCOM and your tax adviser before you commit. Last checked 11 Oct 2026.
 
-**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arrays-9mj.pages.dev/ex-servicemen-led-msme/) · [Our projects](https://arrays-9mj.pages.dev/projects/)
+**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arraysingenieria.com/ex-servicemen-led-msme/) · [Our projects](https://arraysingenieria.com/projects/)
 
-[Quality & Safety](https://arrays-9mj.pages.dev/quality-safety/)[Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/)
+[Quality & Safety](https://arraysingenieria.com/quality-safety/)[Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/)
 
 From Our Sites
 
@@ -127,12 +127,12 @@ From Our Sites
 
 Real plants our veteran-led crews have built, with the scope of work in detail.
 
-[Industrial · Rooftop I&C: **Balaji Action Buildwell, Sitarganj: Solar I&C, BOS and Civil Works**4000.32 kWp project (as described in the BOS order) · Sitarganj, UttarakhandRead the case study](https://arrays-9mj.pages.dev/project-balaji-action-sitarganj-4mwp-solar/)[Industrial · Rooftop I&C: **Apar Industries, Jharsuguda: 1.2 MWp Rooftop Solar I&C**1.2 MWp (1203 kWp) · Jharsuguda, OdishaRead the case study](https://arrays-9mj.pages.dev/project-apar-industries-jharsuguda-1-2mwp-rooftop-solar/)[Industrial · Civil Works: **DCM Textile, Hisar: Civil Works, Piling and I&C for Solar**9979 kWp (10 MW) · Hisar, HaryanaRead the case study](https://arrays-9mj.pages.dev/project-dcm-hisar-10mw-solar-civil-works/)
+[Industrial · Rooftop I&C: **Balaji Action Buildwell, Sitarganj: Solar I&C, BOS and Civil Works**4000.32 kWp project (as described in the BOS order) · Sitarganj, UttarakhandRead the case study](https://arraysingenieria.com/project-balaji-action-sitarganj-4mwp-solar/)[Industrial · Rooftop I&C: **Apar Industries, Jharsuguda: 1.2 MWp Rooftop Solar I&C**1.2 MWp (1203 kWp) · Jharsuguda, OdishaRead the case study](https://arraysingenieria.com/project-apar-industries-jharsuguda-1-2mwp-rooftop-solar/)[Industrial · Civil Works: **DCM Textile, Hisar: Civil Works, Piling and I&C for Solar**9979 kWp (10 MW) · Hisar, HaryanaRead the case study](https://arraysingenieria.com/project-dcm-hisar-10mw-solar-civil-works/)
 
 Keep Reading
 
 ## Related Guides
 
-[Policy: **ALMM List-I and List-II Explained: The Made-in-India Rule for Solar Modules and Cells**MNRE's Approved List of Models and Manufacturers now covers solar cells as well as modules. What List-I and List-II mean, which projects they bind, the exemptions, and how to stay compliant.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/almm-list-ii-solar-cells/)[Buyer's Guide: **How to Choose a Solar EPC and Installation Partner in India: 12 Questions to Ask**The partner you choose decides how your plant performs for 25 years. Twelve questions to ask any solar EPC or installation contractor, what good answers look like, and the red flags to walk away from.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/choose-solar-epc-partner/)[Installation & Commissioning: **Solar Plant Installation and Commissioning: The Complete Step-by-Step Checklist**What actually happens between the purchase order and the day a solar plant goes live. Every stage of installation and commissioning, the tests that prove the plant is safe, and the documents you should receive at handover.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/solar-plant-commissioning-checklist/)
+[Policy: **ALMM List-I and List-II Explained: The Made-in-India Rule for Solar Modules and Cells**MNRE's Approved List of Models and Manufacturers now covers solar cells as well as modules. What List-I and List-II mean, which projects they bind, the exemptions, and how to stay compliant.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/almm-list-ii-solar-cells/)[Buyer's Guide: **How to Choose a Solar EPC and Installation Partner in India: 12 Questions to Ask**The partner you choose decides how your plant performs for 25 years. Twelve questions to ask any solar EPC or installation contractor, what good answers look like, and the red flags to walk away from.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/choose-solar-epc-partner/)[Installation & Commissioning: **Solar Plant Installation and Commissioning: The Complete Step-by-Step Checklist**What actually happens between the purchase order and the day a solar plant goes live. Every stage of installation and commissioning, the tests that prove the plant is safe, and the documents you should receive at handover.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-plant-commissioning-checklist/)
 
-[All solar guides](https://arrays-9mj.pages.dev/insights/)[Government solar schemes](https://arrays-9mj.pages.dev/solar-schemes-india/)
+[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

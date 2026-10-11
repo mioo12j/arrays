@@ -1,7 +1,7 @@
 ---
 title: Arrays Ingenieria | Veteran-Led Solar EPC Company in India
 description: Veteran-led, ISO-certified solar installation & commissioning, EPC and civil works on the CAPEX model, for Tata Power, Jay Shree Tea and more across India.
-url: https://arrays-9mj.pages.dev/
+url: https://arraysingenieria.com/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -13,7 +13,7 @@ for the Nation
 
 Ingenieria (Arrays Ingenieria Pvt. Ltd.) engineers ground-mount & rooftop solar power plants Pan-India, combining military precision with renewable-energy expertise to power a brighter, cleaner future.
 
-Start Your Solar Project   [Explore Our Projects](https://arrays-9mj.pages.dev/projects/)
+Start Your Solar Project   [Explore Our Projects](https://arraysingenieria.com/projects/)
 
 **50+** MW Solar
 Capacity Worked On
@@ -80,7 +80,7 @@ To be India's most trusted, veteran-led renewable-energy partner, recognised nat
 
 DisciplineIntegrityQuality & SafetySustainability
 
-[More About Us](https://arrays-9mj.pages.dev/about/)
+[More About Us](https://arraysingenieria.com/about/)
 
 Lt. Gen. A.R. Prasad (Retd)
 
@@ -126,7 +126,7 @@ From 10 kWp rooftops to the 300 MW SECI solar park, any size, any terrain.
 
 Dedicated crews mobilised across the length & breadth of the nation.
 
-[Why an Ex-Servicemen-Led MSME](https://arrays-9mj.pages.dev/ex-servicemen-led-msme/)
+[Why an Ex-Servicemen-Led MSME](https://arraysingenieria.com/ex-servicemen-led-msme/)
 
 What We Do
 
@@ -138,49 +138,49 @@ Ingenieria is a full-spectrum renewable-energy contractor. We carry every projec
 
 Own your plant outright: we design, supply, build and commission it, and every unit it generates is yours.
 
-[Learn more about CAPEX Solar EPC](https://arrays-9mj.pages.dev/capex-solar-epc/)
+[Learn more about CAPEX Solar EPC](https://arraysingenieria.com/capex-solar-epc/)
 
 ### Installation & Commissioning
 
 Veteran-led I&C crews for EPC companies, developers and plant owners, built to your design and approved makes.
 
-[Learn more about Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/)
+[Learn more about Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/)
 
 ### Ground-Mount Solar
 
 Utility & industrial scale ground-mount power plants, engineered for maximum yield across deserts, plains and tea estates alike.
 
-[Learn more about Ground-Mount Solar](https://arrays-9mj.pages.dev/service-ground-mount/)
+[Learn more about Ground-Mount Solar](https://arraysingenieria.com/service-ground-mount/)
 
 ### Rooftop Solar
 
 On-grid RCC and metal rooftop PV systems for factories, institutions and homes, turning idle roofs into clean power assets.
 
-[Learn more about Rooftop Solar](https://arrays-9mj.pages.dev/service-rooftop/)
+[Learn more about Rooftop Solar](https://arraysingenieria.com/service-rooftop/)
 
 ### EPC Turnkey
 
 Complete Engineering, Procurement & Construction, single-window delivery executed under Tata Power Solar EPC contracts.
 
-[Learn more about EPC Turnkey](https://arrays-9mj.pages.dev/service-epc/)
+[Learn more about EPC Turnkey](https://arraysingenieria.com/service-epc/)
 
 ### Pile Foundation & Piling
 
 Specialist piling and pile-foundation works, proven on the 300 MW SECI project at Koppal and 5.5 MW Tata Motors, Jamshedpur.
 
-[Learn more about Pile Foundation & Piling](https://arrays-9mj.pages.dev/service-piling/)
+[Learn more about Pile Foundation & Piling](https://arraysingenieria.com/service-piling/)
 
 ### Civil Works & Fencing
 
 Pre-cast boundary walls, RCC works and chain-link fencing, including the 14.36 MW YIAPL solar project in Uttar Pradesh.
 
-[Learn more about Civil Works & Fencing](https://arrays-9mj.pages.dev/service-civil/)
+[Learn more about Civil Works & Fencing](https://arraysingenieria.com/service-civil/)
 
 ### O&M & Support
 
 Operations, maintenance and statutory compliance, keeping every plant performing at peak efficiency, safely and reliably.
 
-[Learn more about O&M & Support](https://arrays-9mj.pages.dev/service-om/)
+[Learn more about O&M & Support](https://arraysingenieria.com/service-om/)
 
 How Solar Works
 
@@ -264,7 +264,7 @@ Ground-mount, Ramnagar
 
 Earthing & electrical safety works
 
-[Full Photo & Video Gallery](https://arrays-9mj.pages.dev/gallery/)[View All Projects](https://arrays-9mj.pages.dev/projects/)
+[Full Photo & Video Gallery](https://arraysingenieria.com/gallery/)[View All Projects](https://arraysingenieria.com/projects/)
 
 How We Work
 
@@ -336,23 +336,23 @@ The plant the Chief Minister of Assam inaugurated, and two of our largest instal
 
 Inaugurated by the CM
 
-### [Koomber Tea Estate, 595 kWp](https://arrays-9mj.pages.dev/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)
+### [Koomber Tea Estate, 595 kWp](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)
 
 Cachar, Assam · Installation partner, Goodricke programme
 
 Installation & Commissioning
 
-### [Super Smelters, 1980.3 kWp](https://arrays-9mj.pages.dev/project-super-smelters-1980kwp-rooftop-solar/)
+### [Super Smelters, 1980.3 kWp](https://arraysingenieria.com/project-super-smelters-1980kwp-rooftop-solar/)
 
 Jamuria, West Bengal · Rooftop I&C for Tata Power Solar
 
 Installation & Commissioning
 
-### [Jay Shree Tea, 1035 kWp](https://arrays-9mj.pages.dev/project-jayshree-tea-1mw-solar-assam/)
+### [Jay Shree Tea, 1035 kWp](https://arraysingenieria.com/project-jayshree-tea-1mw-solar-assam/)
 
 Sonari, Assam · Supply, I&C under Tata Power EPC
 
-[Full Photo & Video Gallery](https://arrays-9mj.pages.dev/gallery/)[View All Projects](https://arrays-9mj.pages.dev/projects/)
+[Full Photo & Video Gallery](https://arraysingenieria.com/gallery/)[View All Projects](https://arraysingenieria.com/projects/)
 
 Projects in Pictures
 
@@ -414,7 +414,7 @@ Shri Rajdeep Goala, MLA, Udharbond, on X and Facebook
 
 Shared and reported by[CM's Office on X](https://x.com/CMOfficeAssam/status/2105545750054928662)[CM's Office on Facebook](https://www.facebook.com/cmofficeassam/photos/d41d8cd9/1422387263413542/?set=a.302403535411926)[MLA Kaushik Rai on X](https://x.com/iKaushikRai/status/2105642116089008488)[MLA Kaushik Rai on Facebook](https://www.facebook.com/100065189221572/posts/pfbid0MmznkBYfeKxNF66pmnNDk3iEFfGnY1wan7LNwMDm4316vznz3bg86ZkZwAgdjheHl/)[MLA Rajdeep Goala on X](https://x.com/RajdeepGoala14/status/2105730931860574342)[MLA Rajdeep Goala on Facebook](https://www.facebook.com/100063684971835/posts/1732055695593913/)[The Sentinel](https://www.sentinelassam.com/breakingnews/assam-himanta-biswa-sarma-inaugurates-595-kwp-solar-plant-at-koomber-tea-estate)[The Sentinel on Instagram](https://www.instagram.com/p/Dd89-ViDQcG/)[The Sentinel on Facebook](https://www.facebook.com/100066523279937/posts/pfbid05Ug3kevPqUdUBp7ZyFbD8Eix3hYRzu78MVR8yNixHt17o5B3cShMNFXW1o4Mw1Y8l/)
 
-[See the inauguration](https://arrays-9mj.pages.dev/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Photo album (20)](https://arrays-9mj.pages.dev/project-koomber-tea-estate-595kwp-solar-cm-inauguration/#album)
+[See the inauguration](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Photo album (20)](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/#album)
 
 In the News
 
@@ -440,53 +440,53 @@ NE Reports filmed the ribbon-cutting at the 450 kW ground-mount solar plant Arra
 
 From the newspapers
 
-[**Azad Sipahi**3 Oct 2026](https://arrays-9mj.pages.dev/recognition/#azad-sipahi-koomber)[**Prerna Bharati**2 Oct 2026](https://arrays-9mj.pages.dev/recognition/#prerna-bharati-koomber)[**Northeast Chronicle**27 Sep 2026](https://arrays-9mj.pages.dev/recognition/#northeast-chronicle-borpatra)[**Swarajati**27 Sep 2026](https://arrays-9mj.pages.dev/recognition/#swarajati-borpatra)[**Dainik Janambhumi**27 Sep 2026](https://arrays-9mj.pages.dev/recognition/#dainik-janambhumi-borpatra)[**Niyomiya Barta**27 Sep 2026](https://arrays-9mj.pages.dev/recognition/#niyomiya-barta-borpatra)[**Dainik Purvoday**26 Sep 2026](https://arrays-9mj.pages.dev/recognition/#barpatra-230kw)[**Prerna Bharati**26 Sep 2026](https://arrays-9mj.pages.dev/recognition/#prerna-bharati-borpatra)
+[**Azad Sipahi**3 Oct 2026](https://arraysingenieria.com/recognition/#azad-sipahi-koomber)[**Prerna Bharati**2 Oct 2026](https://arraysingenieria.com/recognition/#prerna-bharati-koomber)[**Northeast Chronicle**27 Sep 2026](https://arraysingenieria.com/recognition/#northeast-chronicle-borpatra)[**Swarajati**27 Sep 2026](https://arraysingenieria.com/recognition/#swarajati-borpatra)[**Dainik Janambhumi**27 Sep 2026](https://arraysingenieria.com/recognition/#dainik-janambhumi-borpatra)[**Niyomiya Barta**27 Sep 2026](https://arraysingenieria.com/recognition/#niyomiya-barta-borpatra)[**Dainik Purvoday**26 Sep 2026](https://arraysingenieria.com/recognition/#barpatra-230kw)[**Prerna Bharati**26 Sep 2026](https://arraysingenieria.com/recognition/#prerna-bharati-borpatra)
 
 [Online news: **The Sentinel**22 May 2025Assam: AIPL commissions 1 MW solar power plant at Jayshree Tea Estate
 
 “Arrays Ingenieria is a unique MSME founded by ex-servicemen, symbolizing a disciplined, mission-driven transition from OG (Olive Green-the military uniform) to GG (Go Green-renewable energy).”
 
-Read the coverage](https://arrays-9mj.pages.dev/recognition/#sentinel-jayshree) [Client post: **Jay Shree Tea & Industries Ltd.**22 May 2025Jay Shree Tea commissions 1 MW solar plant in Assam
+Read the coverage](https://arraysingenieria.com/recognition/#sentinel-jayshree) [Client post: **Jay Shree Tea & Industries Ltd.**22 May 2025Jay Shree Tea commissions 1 MW solar plant in Assam
 
 “Our sincere thanks to Lieutenant General Ashish Ranjan Prasad (Retd) and the team at Arrays Ingenieria for their partnership in bringing this vision to life.”
 
-Read the coverage](https://arrays-9mj.pages.dev/recognition/#jayshree-towkok)
+Read the coverage](https://arraysingenieria.com/recognition/#jayshree-towkok)
 
 Our work in the news
 
-- [TVPrerana Bharati Digital (PBNN)](https://arrays-9mj.pages.dev/recognition/#prerana-bharati-koomber-video)
-- [TVNews Axom](https://arrays-9mj.pages.dev/recognition/#news-axom-koomber)
-- [TVNE Reports](https://arrays-9mj.pages.dev/recognition/#ne-reports-orangajuli)
-- [TVSonari Live](https://arrays-9mj.pages.dev/recognition/#sonari-live)
-- [Azad Sipahi](https://arrays-9mj.pages.dev/recognition/#azad-sipahi-koomber)
-- [Prerna Bharati](https://arrays-9mj.pages.dev/recognition/#prerna-bharati-koomber)
-- [The Sentinel](https://arrays-9mj.pages.dev/recognition/#sentinel-koomber)
-- [Hindusthan Samachar](https://arrays-9mj.pages.dev/recognition/#hindusthan-samachar-koomber)
-- [India Today NE](https://arrays-9mj.pages.dev/recognition/#india-today-ne-koomber)
-- [Northeast Chronicle](https://arrays-9mj.pages.dev/recognition/#northeast-chronicle-borpatra)
-- [Swarajati](https://arrays-9mj.pages.dev/recognition/#swarajati-borpatra)
-- [Dainik Janambhumi](https://arrays-9mj.pages.dev/recognition/#dainik-janambhumi-borpatra)
-- [Niyomiya Barta](https://arrays-9mj.pages.dev/recognition/#niyomiya-barta-borpatra)
-- [Dainik Purvoday](https://arrays-9mj.pages.dev/recognition/#barpatra-230kw)
-- [Purvanchal Prahari](https://arrays-9mj.pages.dev/recognition/#purvanchal-prahari-borpatra)
-- [Janambhumi (online)](https://arrays-9mj.pages.dev/recognition/#janambhumi-online-borpatra)
-- [Hub Network](https://arrays-9mj.pages.dev/recognition/#hub-network-orangajuli)
-- [Sanmarg](https://arrays-9mj.pages.dev/recognition/#sanmarg-supersmelters)
-- [Dainik Bhaskar](https://arrays-9mj.pages.dev/recognition/#bhaskar-tcpl)
+- [TVPrerana Bharati Digital (PBNN)](https://arraysingenieria.com/recognition/#prerana-bharati-koomber-video)
+- [TVNews Axom](https://arraysingenieria.com/recognition/#news-axom-koomber)
+- [TVNE Reports](https://arraysingenieria.com/recognition/#ne-reports-orangajuli)
+- [TVSonari Live](https://arraysingenieria.com/recognition/#sonari-live)
+- [Azad Sipahi](https://arraysingenieria.com/recognition/#azad-sipahi-koomber)
+- [Prerna Bharati](https://arraysingenieria.com/recognition/#prerna-bharati-koomber)
+- [The Sentinel](https://arraysingenieria.com/recognition/#sentinel-koomber)
+- [Hindusthan Samachar](https://arraysingenieria.com/recognition/#hindusthan-samachar-koomber)
+- [India Today NE](https://arraysingenieria.com/recognition/#india-today-ne-koomber)
+- [Northeast Chronicle](https://arraysingenieria.com/recognition/#northeast-chronicle-borpatra)
+- [Swarajati](https://arraysingenieria.com/recognition/#swarajati-borpatra)
+- [Dainik Janambhumi](https://arraysingenieria.com/recognition/#dainik-janambhumi-borpatra)
+- [Niyomiya Barta](https://arraysingenieria.com/recognition/#niyomiya-barta-borpatra)
+- [Dainik Purvoday](https://arraysingenieria.com/recognition/#barpatra-230kw)
+- [Purvanchal Prahari](https://arraysingenieria.com/recognition/#purvanchal-prahari-borpatra)
+- [Janambhumi (online)](https://arraysingenieria.com/recognition/#janambhumi-online-borpatra)
+- [Hub Network](https://arraysingenieria.com/recognition/#hub-network-orangajuli)
+- [Sanmarg](https://arraysingenieria.com/recognition/#sanmarg-supersmelters)
+- [Dainik Bhaskar](https://arraysingenieria.com/recognition/#bhaskar-tcpl)
 
 Shared by official handles
 
-- [OFFICIALChief Minister's Office, Assam](https://arrays-9mj.pages.dev/recognition/#official-handles)
-- [OFFICIALShri Kaushik Rai, MLA, Lakhipur](https://arrays-9mj.pages.dev/recognition/#official-handles)
-- [OFFICIALShri Rajdeep Goala, MLA, Udharbond](https://arrays-9mj.pages.dev/recognition/#official-handles)
+- [OFFICIALChief Minister's Office, Assam](https://arraysingenieria.com/recognition/#official-handles)
+- [OFFICIALShri Kaushik Rai, MLA, Lakhipur](https://arraysingenieria.com/recognition/#official-handles)
+- [OFFICIALShri Rajdeep Goala, MLA, Udharbond](https://arraysingenieria.com/recognition/#official-handles)
 
 Our founder on national TV
 
-- [TVIndia Today](https://arrays-9mj.pages.dev/recognition/#national-tv)
-- [TVAaj Tak](https://arrays-9mj.pages.dev/recognition/#national-tv)
-- [TVIndia TV](https://arrays-9mj.pages.dev/recognition/#national-tv)
+- [TVIndia Today](https://arraysingenieria.com/recognition/#national-tv)
+- [TVAaj Tak](https://arraysingenieria.com/recognition/#national-tv)
+- [TVIndia TV](https://arraysingenieria.com/recognition/#national-tv)
 
-[See All News Coverage](https://arrays-9mj.pages.dev/recognition/)
+[See All News Coverage](https://arraysingenieria.com/recognition/)
 
 Recognition & Accolades
 
@@ -526,7 +526,7 @@ DEFCOM India: **Keynote at DEFCOM India**Addressing the nation's defence-tech co
 
 Governance: **Meeting National Leadership**Advancing India's renewable-energy mission.
 
-[News, Media & Recognition](https://arrays-9mj.pages.dev/recognition/)
+[News, Media & Recognition](https://arraysingenieria.com/recognition/)
 
 Achievements
 
@@ -576,13 +576,13 @@ Triple ISO
 
 Certified by QRO
 
-[View All Achievements](https://arrays-9mj.pages.dev/achievements/)
+[View All Achievements](https://arraysingenieria.com/achievements/)
 
 Client Appreciation
 
 ## In Our Clients’ Own Words
 
-Quoted word for word from certificates of appreciation issued to Arrays Ingenieria. [See every certificate](https://arrays-9mj.pages.dev/achievements/).
+Quoted word for word from certificates of appreciation issued to Arrays Ingenieria. [See every certificate](https://arraysingenieria.com/achievements/).
 
 “Their exemplary dedication, engineering excellence, and meticulous approach throughout the successful execution of the project reflect a high standard of competence and professionalism.”
 
@@ -726,4 +726,4 @@ Talk to an engineer
 
 **Branch Office**Madhubani, Bihar
 
-[arraysingenieria@gmail.com](mailto:arraysingenieria@gmail.com) [Get a free solar quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[arraysingenieria@gmail.com](mailto:arraysingenieria@gmail.com) [Get a free solar quote](https://arraysingenieria.com/free-solar-quote/)

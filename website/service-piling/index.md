@@ -1,7 +1,7 @@
 ---
 title: Solar Pile Foundation & Piling | Arrays Ingenieria
 description: Specialist solar pile-foundation and piling works by Arrays Ingenieria, proven on the 300 MW SECI park at Koppal and 5.5 MW Tata Motors, Jamshedpur.
-url: https://arrays-9mj.pages.dev/service-piling/
+url: https://arraysingenieria.com/service-piling/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -47,7 +47,7 @@ QA: **Load & pull-out tested**
 
 Talk to our veteran-led team for a free, no-obligation consultation.
 
-[Get a Free Quote](https://arrays-9mj.pages.dev/#contact)
+[Get a Free Quote](https://arraysingenieria.com/#contact)
 
 FAQ
 
@@ -105,10 +105,10 @@ Case Studies
 
 ## Projects Using This Service
 
-[Tea Estates · Multi-Site I&C: **Amalgamated Plantations, Assam: Solar Across Tea Estates**About 5 MW across tea estates (3.8 MWp piled at 11 sites) · Chubwa, Kakajan, Powai, Nonoi, Diffloo, Nahortoli, Naharkatia, Namrup, Borhat and other estates, AssamRead the case study](https://arrays-9mj.pages.dev/project-amalgamated-plantations-assam-tea-estates-solar/) [Tea Estates · Ground-Mount I&C: **Rossell India Tea Estates, Assam: Ground-Mount Solar I&C**302 kW, 493.24 kWp, 170.51 kWp and 367 kW · Kharikatia, Nagrijuli, Romai and Dikom Tea Estates, AssamRead the case study](https://arrays-9mj.pages.dev/project-rossell-india-assam-tea-estates-solar/) [Industrial · Piling & Civil: **Tata Motors, Jamshedpur: Piling, Civil Works and I&C for 5.5 MW Solar**5.5 MW · Jamshedpur, JharkhandRead the case study](https://arrays-9mj.pages.dev/project-tata-motors-jamshedpur-5-5mw-solar-piling/) [Utility-Scale · Piling: **SECI 300 MW Solar Project, Koppal: Piling and DC Installation**300 MW solar project · Koppal, KarnatakaRead the case study](https://arrays-9mj.pages.dev/project-seci-300mw-koppal-pile-foundation/)
+[Tea Estates · Multi-Site I&C: **Amalgamated Plantations, Assam: Solar Across Tea Estates**About 5 MW across tea estates (3.8 MWp piled at 11 sites) · Chubwa, Kakajan, Powai, Nonoi, Diffloo, Nahortoli, Naharkatia, Namrup, Borhat and other estates, AssamRead the case study](https://arraysingenieria.com/project-amalgamated-plantations-assam-tea-estates-solar/) [Tea Estates · Ground-Mount I&C: **Rossell India Tea Estates, Assam: Ground-Mount Solar I&C**302 kW, 493.24 kWp, 170.51 kWp and 367 kW · Kharikatia, Nagrijuli, Romai and Dikom Tea Estates, AssamRead the case study](https://arraysingenieria.com/project-rossell-india-assam-tea-estates-solar/) [Industrial · Piling & Civil: **Tata Motors, Jamshedpur: Piling, Civil Works and I&C for 5.5 MW Solar**5.5 MW · Jamshedpur, JharkhandRead the case study](https://arraysingenieria.com/project-tata-motors-jamshedpur-5-5mw-solar-piling/) [Utility-Scale · Piling: **SECI 300 MW Solar Project, Koppal: Piling and DC Installation**300 MW solar project · Koppal, KarnatakaRead the case study](https://arraysingenieria.com/project-seci-300mw-koppal-pile-foundation/)
 
 Explore More
 
 ## Our Other Services
 
-[CAPEX Solar EPC](https://arrays-9mj.pages.dev/capex-solar-epc/) [Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/) [Ground-Mount](https://arrays-9mj.pages.dev/service-ground-mount/) [Rooftop](https://arrays-9mj.pages.dev/service-rooftop/) [EPC Turnkey](https://arrays-9mj.pages.dev/service-epc/) [Civil & Fencing](https://arrays-9mj.pages.dev/service-civil/) [O&M](https://arrays-9mj.pages.dev/service-om/) [All Projects →](https://arrays-9mj.pages.dev/projects/)
+[CAPEX Solar EPC](https://arraysingenieria.com/capex-solar-epc/) [Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/) [Ground-Mount](https://arraysingenieria.com/service-ground-mount/) [Rooftop](https://arraysingenieria.com/service-rooftop/) [EPC Turnkey](https://arraysingenieria.com/service-epc/) [Civil & Fencing](https://arraysingenieria.com/service-civil/) [O&M](https://arraysingenieria.com/service-om/) [All Projects →](https://arraysingenieria.com/projects/)

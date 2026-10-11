@@ -1,7 +1,7 @@
 ---
 title: Ground-Mount Solar Power Plants | Arrays Ingenieria
 description: Utility and industrial ground-mount solar plants designed, built and commissioned across India by Arrays Ingenieria, from piling to grid connection.
-url: https://arrays-9mj.pages.dev/service-ground-mount/
+url: https://arraysingenieria.com/service-ground-mount/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -47,7 +47,7 @@ Sectors: **Industrial, tea estates, utilities**
 
 Talk to our veteran-led team for a free, no-obligation consultation.
 
-[Get a Free Quote](https://arrays-9mj.pages.dev/#contact)
+[Get a Free Quote](https://arraysingenieria.com/#contact)
 
 FAQ
 
@@ -105,10 +105,10 @@ Case Studies
 
 ## Projects Using This Service
 
-[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arrays-9mj.pages.dev/project-koomber-tea-estate-595kwp-solar-cm-inauguration/) [Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arrays-9mj.pages.dev/project-jayshree-tea-1mw-solar-assam/) [Tea Estate · Ground-Mount: **Orangajuli Tea Estate: 450 kWp Ground-Mount Solar Plant**450 kWp · Orangajuli, Panerihaat, Udalguri district, AssamRead the case study](https://arrays-9mj.pages.dev/project-orangajuli-tea-estate-450kw-solar/) [Tea Estate · Ground-Mount I&C: **Harmutty Tea Estate: 400 kWp Ground-Mounted Solar Plant**400 kWp · Harmutty, Laluk, North Lakhimpur district, Assam 784160Read the case study](https://arrays-9mj.pages.dev/project-harmutty-tea-estate-400kwp-solar/) [Tea Estates · Multi-Site I&C: **Amalgamated Plantations, Assam: Solar Across Tea Estates**About 5 MW across tea estates (3.8 MWp piled at 11 sites) · Chubwa, Kakajan, Powai, Nonoi, Diffloo, Nahortoli, Naharkatia, Namrup, Borhat and other estates, AssamRead the case study](https://arrays-9mj.pages.dev/project-amalgamated-plantations-assam-tea-estates-solar/) [Tea Estates · Ground-Mount I&C: **Rossell India Tea Estates, Assam: Ground-Mount Solar I&C**302 kW, 493.24 kWp, 170.51 kWp and 367 kW · Kharikatia, Nagrijuli, Romai and Dikom Tea Estates, AssamRead the case study](https://arrays-9mj.pages.dev/project-rossell-india-assam-tea-estates-solar/) [Industrial · Civil Works: **DCM Textile, Hisar: Civil Works, Piling and I&C for Solar**9979 kWp (10 MW) · Hisar, HaryanaRead the case study](https://arrays-9mj.pages.dev/project-dcm-hisar-10mw-solar-civil-works/) [Utility-Scale · Civil & Fencing: **Noida International Airport (YIAPL): 14.36 MW Solar, Piling & Fencing**14.36 MW · Noida International Airport, Gautam Buddh Nagar, Uttar PradeshRead the case study](https://arrays-9mj.pages.dev/project-yiapl-14-36mw-solar-civil-fencing/)
+[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/) [Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arraysingenieria.com/project-jayshree-tea-1mw-solar-assam/) [Tea Estate · Ground-Mount: **Orangajuli Tea Estate: 450 kWp Ground-Mount Solar Plant**450 kWp · Orangajuli, Panerihaat, Udalguri district, AssamRead the case study](https://arraysingenieria.com/project-orangajuli-tea-estate-450kw-solar/) [Tea Estate · Ground-Mount I&C: **Harmutty Tea Estate: 400 kWp Ground-Mounted Solar Plant**400 kWp · Harmutty, Laluk, North Lakhimpur district, Assam 784160Read the case study](https://arraysingenieria.com/project-harmutty-tea-estate-400kwp-solar/) [Tea Estates · Multi-Site I&C: **Amalgamated Plantations, Assam: Solar Across Tea Estates**About 5 MW across tea estates (3.8 MWp piled at 11 sites) · Chubwa, Kakajan, Powai, Nonoi, Diffloo, Nahortoli, Naharkatia, Namrup, Borhat and other estates, AssamRead the case study](https://arraysingenieria.com/project-amalgamated-plantations-assam-tea-estates-solar/) [Tea Estates · Ground-Mount I&C: **Rossell India Tea Estates, Assam: Ground-Mount Solar I&C**302 kW, 493.24 kWp, 170.51 kWp and 367 kW · Kharikatia, Nagrijuli, Romai and Dikom Tea Estates, AssamRead the case study](https://arraysingenieria.com/project-rossell-india-assam-tea-estates-solar/) [Industrial · Civil Works: **DCM Textile, Hisar: Civil Works, Piling and I&C for Solar**9979 kWp (10 MW) · Hisar, HaryanaRead the case study](https://arraysingenieria.com/project-dcm-hisar-10mw-solar-civil-works/) [Utility-Scale · Civil & Fencing: **Noida International Airport (YIAPL): 14.36 MW Solar, Piling & Fencing**14.36 MW · Noida International Airport, Gautam Buddh Nagar, Uttar PradeshRead the case study](https://arraysingenieria.com/project-yiapl-14-36mw-solar-civil-fencing/)
 
 Explore More
 
 ## Our Other Services
 
-[CAPEX Solar EPC](https://arrays-9mj.pages.dev/capex-solar-epc/) [Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/) [Rooftop](https://arrays-9mj.pages.dev/service-rooftop/) [EPC Turnkey](https://arrays-9mj.pages.dev/service-epc/) [Piling](https://arrays-9mj.pages.dev/service-piling/) [Civil & Fencing](https://arrays-9mj.pages.dev/service-civil/) [O&M](https://arrays-9mj.pages.dev/service-om/) [All Projects →](https://arrays-9mj.pages.dev/projects/)
+[CAPEX Solar EPC](https://arraysingenieria.com/capex-solar-epc/) [Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/) [Rooftop](https://arraysingenieria.com/service-rooftop/) [EPC Turnkey](https://arraysingenieria.com/service-epc/) [Piling](https://arraysingenieria.com/service-piling/) [Civil & Fencing](https://arraysingenieria.com/service-civil/) [O&M](https://arraysingenieria.com/service-om/) [All Projects →](https://arraysingenieria.com/projects/)

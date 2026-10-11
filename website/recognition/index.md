@@ -1,7 +1,7 @@
 ---
 title: Arrays Ingenieria in the News | CM Inauguration, TV & Press
 description: Koomber solar plant inaugurated by Assam CM Dr Himanta Biswa Sarma; coverage on CMO Assam, The Sentinel, NE Reports, Prerna Bharati and Dainik Bhaskar.
-url: https://arrays-9mj.pages.dev/recognition/
+url: https://arraysingenieria.com/recognition/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -38,7 +38,7 @@ Shri Rajdeep Goala, MLA, Udharbond, on X and Facebook
 
 Shared and reported by[CM's Office on X](https://x.com/CMOfficeAssam/status/2105545750054928662)[CM's Office on Facebook](https://www.facebook.com/cmofficeassam/photos/d41d8cd9/1422387263413542/?set=a.302403535411926)[MLA Kaushik Rai on X](https://x.com/iKaushikRai/status/2105642116089008488)[MLA Kaushik Rai on Facebook](https://www.facebook.com/100065189221572/posts/pfbid0MmznkBYfeKxNF66pmnNDk3iEFfGnY1wan7LNwMDm4316vznz3bg86ZkZwAgdjheHl/)[MLA Rajdeep Goala on X](https://x.com/RajdeepGoala14/status/2105730931860574342)[MLA Rajdeep Goala on Facebook](https://www.facebook.com/100063684971835/posts/1732055695593913/)[The Sentinel](https://www.sentinelassam.com/breakingnews/assam-himanta-biswa-sarma-inaugurates-595-kwp-solar-plant-at-koomber-tea-estate)[The Sentinel on Instagram](https://www.instagram.com/p/Dd89-ViDQcG/)[The Sentinel on Facebook](https://www.facebook.com/100066523279937/posts/pfbid05Ug3kevPqUdUBp7ZyFbD8Eix3hYRzu78MVR8yNixHt17o5B3cShMNFXW1o4Mw1Y8l/)
 
-[See the inauguration](https://arrays-9mj.pages.dev/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Photo album (20)](https://arrays-9mj.pages.dev/project-koomber-tea-estate-595kwp-solar-cm-inauguration/#album)
+[See the inauguration](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Photo album (20)](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/#album)
 
 Watch: **The inauguration on video**
 

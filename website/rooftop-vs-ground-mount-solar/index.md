@@ -1,7 +1,7 @@
 ---
 title: Rooftop vs Ground-Mount Solar Guide | Arrays Ingenieria
 description: Rooftop or ground-mount solar? Cost, space, structure, roof safety, piling, fencing, approvals and maintenance compared, with lessons from our sites.
-url: https://arrays-9mj.pages.dev/rooftop-vs-ground-mount-solar/
+url: https://arraysingenieria.com/rooftop-vs-ground-mount-solar/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -21,7 +21,7 @@ On this page
 - Frequently asked questions
 - Sources
 
-By the [Arrays Ingenieria engineering team](https://arrays-9mj.pages.dev/about/) · Updated 11 Oct 2026 · 3 min read
+By the [Arrays Ingenieria engineering team](https://arraysingenieria.com/about/) · Updated 11 Oct 2026 · 3 min read
 
 **Key takeaways**
 
@@ -61,7 +61,7 @@ A sheet-roof plant at Sitarganj, Uttarakhand. On industrial roofs we install sky
 - **Drainage and flooding:** low-lying land needs raised structures and drains.
 - **Evacuation:** the distance to your meter or the grid connection point.
 - **Security:** chain-link fencing, gates and lighting.
-- **Land rules:** in Assam, tea gardens may use up to 5% of their land for solar (see [our tea-estate guide](https://arrays-9mj.pages.dev/solar-for-assam-tea-estates-guide/)).
+- **Land rules:** in Assam, tea gardens may use up to 5% of their land for solar (see [our tea-estate guide](https://arraysingenieria.com/solar-for-assam-tea-estates-guide/)).
 
 Pile foundations on a utility-scale project. Depth, alignment and levels set the quality of everything built on top.
 
@@ -71,7 +71,7 @@ Plenty of sites use both: rooftop on sound sheds near the main load, ground-moun
 
 Not sure which suits your site? Send us a roof photo or a land sketch and your bills.
 
-[Get a free solar quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a free solar quote](https://arraysingenieria.com/free-solar-quote/)
 
 ## Frequently asked questions
 
@@ -98,9 +98,9 @@ Translucent skylight sheets cannot take a person's weight. Safety mesh under or 
 
 This guide explains public policy in plain language for planning purposes. Rules, rates and deadlines change: confirm the current position with the notifying authority, your DISCOM and your tax adviser before you commit. Last checked 11 Oct 2026.
 
-**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arrays-9mj.pages.dev/ex-servicemen-led-msme/) · [Our projects](https://arrays-9mj.pages.dev/projects/)
+**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arraysingenieria.com/ex-servicemen-led-msme/) · [Our projects](https://arraysingenieria.com/projects/)
 
-[Rooftop Solar](https://arrays-9mj.pages.dev/service-rooftop/)[Ground-Mount Solar](https://arrays-9mj.pages.dev/service-ground-mount/)[Pile Foundations](https://arrays-9mj.pages.dev/service-piling/)
+[Rooftop Solar](https://arraysingenieria.com/service-rooftop/)[Ground-Mount Solar](https://arraysingenieria.com/service-ground-mount/)[Pile Foundations](https://arraysingenieria.com/service-piling/)
 
 From Our Sites
 
@@ -108,12 +108,12 @@ From Our Sites
 
 Real plants our veteran-led crews have built, with the scope of work in detail.
 
-[Tea Estates · Ground-Mount I&C: **Rossell India Tea Estates, Assam: Ground-Mount Solar I&C**302 kW, 493.24 kWp, 170.51 kWp and 367 kW · Kharikatia, Nagrijuli, Romai and Dikom Tea Estates, AssamRead the case study](https://arrays-9mj.pages.dev/project-rossell-india-assam-tea-estates-solar/)[Industrial · Rooftop I&C: **Balaji Action Buildwell, Sitarganj: Solar I&C, BOS and Civil Works**4000.32 kWp project (as described in the BOS order) · Sitarganj, UttarakhandRead the case study](https://arrays-9mj.pages.dev/project-balaji-action-sitarganj-4mwp-solar/)[Industrial · Rooftop I&C: **Apar Industries, Jharsuguda: 1.2 MWp Rooftop Solar I&C**1.2 MWp (1203 kWp) · Jharsuguda, OdishaRead the case study](https://arrays-9mj.pages.dev/project-apar-industries-jharsuguda-1-2mwp-rooftop-solar/)
+[Tea Estates · Ground-Mount I&C: **Rossell India Tea Estates, Assam: Ground-Mount Solar I&C**302 kW, 493.24 kWp, 170.51 kWp and 367 kW · Kharikatia, Nagrijuli, Romai and Dikom Tea Estates, AssamRead the case study](https://arraysingenieria.com/project-rossell-india-assam-tea-estates-solar/)[Industrial · Rooftop I&C: **Balaji Action Buildwell, Sitarganj: Solar I&C, BOS and Civil Works**4000.32 kWp project (as described in the BOS order) · Sitarganj, UttarakhandRead the case study](https://arraysingenieria.com/project-balaji-action-sitarganj-4mwp-solar/)[Industrial · Rooftop I&C: **Apar Industries, Jharsuguda: 1.2 MWp Rooftop Solar I&C**1.2 MWp (1203 kWp) · Jharsuguda, OdishaRead the case study](https://arraysingenieria.com/project-apar-industries-jharsuguda-1-2mwp-rooftop-solar/)
 
 Keep Reading
 
 ## Related Guides
 
-[Grid & Regulation: **Green Energy Open Access in India: Buy Solar Power from Off-Site Plants from 100 kW**Can't fit enough solar on your roof? Green Energy Open Access lets consumers from 100 kW buy power from a solar plant elsewhere. Eligibility, approvals, charges, banking, and the ISTS waiver phase-out.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/green-energy-open-access/)[Tea Estates: **Solar for Assam's Tea Estates: Policy, Design and Lessons from Our Plants**Tea estates are among the best solar sites in India: daytime factory load, diesel back-up to cut and land to spare. Assam's policy, how to design for the plucking season, and what we have learnt building plants from Koomber to Harmutty.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/solar-for-assam-tea-estates-guide/)[O&M: **Solar O&M and Module Cleaning: Protecting 25 Years of Returns**A solar plant has no moving parts, but it still needs care. Module cleaning, inspections, thermography, inverter and earthing checks, and a practical maintenance schedule that keeps generation where it should be.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/solar-om-module-cleaning/)
+[Grid & Regulation: **Green Energy Open Access in India: Buy Solar Power from Off-Site Plants from 100 kW**Can't fit enough solar on your roof? Green Energy Open Access lets consumers from 100 kW buy power from a solar plant elsewhere. Eligibility, approvals, charges, banking, and the ISTS waiver phase-out.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/green-energy-open-access/)[Tea Estates: **Solar for Assam's Tea Estates: Policy, Design and Lessons from Our Plants**Tea estates are among the best solar sites in India: daytime factory load, diesel back-up to cut and land to spare. Assam's policy, how to design for the plucking season, and what we have learnt building plants from Koomber to Harmutty.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-for-assam-tea-estates-guide/)[O&M: **Solar O&M and Module Cleaning: Protecting 25 Years of Returns**A solar plant has no moving parts, but it still needs care. Module cleaning, inspections, thermography, inverter and earthing checks, and a practical maintenance schedule that keeps generation where it should be.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-om-module-cleaning/)
 
-[All solar guides](https://arrays-9mj.pages.dev/insights/)[Government solar schemes](https://arrays-9mj.pages.dev/solar-schemes-india/)
+[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

@@ -1,7 +1,7 @@
 ---
 title: Solar Glossary: EPC, CAPEX, I&C Terms | Arrays Ingenieria
 description: Plain-English definitions of solar terms: EPC, I&C, CAPEX vs OPEX, net metering, kWp, ALMM, pile foundations, DG synchronisation and more.
-url: https://arrays-9mj.pages.dev/solar-glossary/
+url: https://arraysingenieria.com/solar-glossary/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -186,4 +186,4 @@ TOPCon
 
 Tunnel oxide passivated contact: a high-efficiency solar cell technology now common in new modules.
 
-[Read the FAQ](https://arrays-9mj.pages.dev/faq/)[Solar Guides](https://arrays-9mj.pages.dev/insights/)
+[Read the FAQ](https://arraysingenieria.com/faq/)[Solar Guides](https://arraysingenieria.com/insights/)

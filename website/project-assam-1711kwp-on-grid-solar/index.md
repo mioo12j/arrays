@@ -1,7 +1,7 @@
 ---
 title: 1711.66 kWp On-Grid Solar Project, Assam | Arrays Ingenieria
 description: Case study: supply of components and installation & commissioning of a 1711.66 kWp on-grid solar PV project in Assam for Sustvest (SolarGridX Ventures).
-url: https://arrays-9mj.pages.dev/project-assam-1711kwp-on-grid-solar/
+url: https://arraysingenieria.com/project-assam-1711kwp-on-grid-solar/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -46,16 +46,16 @@ Year: **2026 (purchase order dated 25 March 2026)**
 
 Talk to our veteran-led team about EPC, installation & commissioning or civil works.
 
-[Get a Free Quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a Free Quote](https://arraysingenieria.com/free-solar-quote/)
 
 Related
 
 ## Services Used on This Project
 
-[Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/)[EPC Turnkey](https://arrays-9mj.pages.dev/service-epc/)[All Projects →](https://arrays-9mj.pages.dev/projects/)
+[Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/)[EPC Turnkey](https://arraysingenieria.com/service-epc/)[All Projects →](https://arraysingenieria.com/projects/)
 
 More Case Studies
 
 ## Other Projects by Arrays Ingenieria
 
-[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arrays-9mj.pages.dev/project-super-smelters-1980kwp-rooftop-solar/)[Industrial · Rooftop I&C: **Balaji Action Buildwell, Sitarganj: Solar I&C, BOS and Civil Works**4000.32 kWp project (as described in the BOS order) · Sitarganj, UttarakhandRead the case study](https://arrays-9mj.pages.dev/project-balaji-action-sitarganj-4mwp-solar/)[Industrial · Rooftop I&C: **SRMB Steel, Durgapur: Rooftop Solar I&C in Three Phases**1895.4 kWp, 1060 kWp and 1.69 MWp · Durgapur, West BengalRead the case study](https://arrays-9mj.pages.dev/project-srmb-steel-durgapur-rooftop-solar/)
+[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arraysingenieria.com/project-super-smelters-1980kwp-rooftop-solar/)[Industrial · Rooftop I&C: **Balaji Action Buildwell, Sitarganj: Solar I&C, BOS and Civil Works**4000.32 kWp project (as described in the BOS order) · Sitarganj, UttarakhandRead the case study](https://arraysingenieria.com/project-balaji-action-sitarganj-4mwp-solar/)[Industrial · Rooftop I&C: **SRMB Steel, Durgapur: Rooftop Solar I&C in Three Phases**1895.4 kWp, 1060 kWp and 1.69 MWp · Durgapur, West BengalRead the case study](https://arraysingenieria.com/project-srmb-steel-durgapur-rooftop-solar/)

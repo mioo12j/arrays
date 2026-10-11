@@ -1,7 +1,7 @@
 ---
 title: Solar Import Duty in India 2026 | Arrays Ingenieria
 description: Customs duty on imported solar modules and cells in 2026: BCD at 20% plus AIDC, Budget 2026-27 changes, anti-dumping and what buyers should do.
-url: https://arrays-9mj.pages.dev/solar-import-duty-india/
+url: https://arraysingenieria.com/solar-import-duty-india/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -22,7 +22,7 @@ On this page
 - Frequently asked questions
 - Sources
 
-By the [Arrays Ingenieria engineering team](https://arrays-9mj.pages.dev/about/) · Updated 11 Oct 2026 · 3 min read
+By the [Arrays Ingenieria engineering team](https://arraysingenieria.com/about/) · Updated 11 Oct 2026 · 3 min read
 
 **Key takeaways**
 
@@ -34,7 +34,7 @@ By the [Arrays Ingenieria engineering team](https://arrays-9mj.pages.dev/about/)
 
 ## Why import duty matters for a solar plant
 
-Modules are the single biggest equipment cost in a solar plant, and much of the world's module and cell supply is made in China. India uses customs duty, together with the [ALMM lists](https://arrays-9mj.pages.dev/almm-list-ii-solar-cells/) and production-linked incentives, to make Indian manufacturing competitive. For a buyer, duty decides whether an imported module is cheaper than an Indian one once it lands, and therefore what your plant costs.
+Modules are the single biggest equipment cost in a solar plant, and much of the world's module and cell supply is made in China. India uses customs duty, together with the [ALMM lists](https://arraysingenieria.com/almm-list-ii-solar-cells/) and production-linked incentives, to make Indian manufacturing competitive. For a buyer, duty decides whether an imported module is cheaper than an Indian one once it lands, and therefore what your plant costs.
 
 ## The rates after Budget 2025-26
 
@@ -78,7 +78,7 @@ For most commercial and industrial buyers the decision has shifted firmly toward
 
 Not sure which module route suits your project? We will compare options and paperwork before you commit.
 
-[Get a free solar quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a free solar quote](https://arraysingenieria.com/free-solar-quote/)
 
 ## Frequently asked questions
 
@@ -107,9 +107,9 @@ For scheme-backed and government-linked projects, yes. For other projects it dep
 
 This guide explains public policy in plain language for planning purposes. Rules, rates and deadlines change: confirm the current position with the notifying authority, your DISCOM and your tax adviser before you commit. Last checked 11 Oct 2026.
 
-**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arrays-9mj.pages.dev/ex-servicemen-led-msme/) · [Our projects](https://arrays-9mj.pages.dev/projects/)
+**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arraysingenieria.com/ex-servicemen-led-msme/) · [Our projects](https://arraysingenieria.com/projects/)
 
-[CAPEX Solar EPC](https://arrays-9mj.pages.dev/capex-solar-epc/)[EPC Turnkey](https://arrays-9mj.pages.dev/service-epc/)
+[CAPEX Solar EPC](https://arraysingenieria.com/capex-solar-epc/)[EPC Turnkey](https://arraysingenieria.com/service-epc/)
 
 From Our Sites
 
@@ -117,12 +117,12 @@ From Our Sites
 
 Real plants our veteran-led crews have built, with the scope of work in detail.
 
-[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arrays-9mj.pages.dev/project-super-smelters-1980kwp-rooftop-solar/)
+[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arraysingenieria.com/project-super-smelters-1980kwp-rooftop-solar/)
 
 Keep Reading
 
 ## Related Guides
 
-[Market Update: **India's Solar Capacity in 2026: 171 GW and What It Means for Your Business**MNRE data put India's solar fleet at 171.05 GW on 30 September 2026. Where the growth is, why rooftop and C&I solar are surging, and how to plan a plant in a crowded market.4 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/india-solar-capacity-2026/)[Tax: **GST on Solar in India (2026): 5% on Equipment, About 8.9% on EPC Contracts**The GST Council cut GST on solar devices from 12% to 5% from 22 September 2025. How it applies to modules, inverters and full EPC contracts, what the 70:30 rule means, and how much a plant saves.4 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/gst-on-solar-india/)[Policy: **ALMM List-I and List-II Explained: The Made-in-India Rule for Solar Modules and Cells**MNRE's Approved List of Models and Manufacturers now covers solar cells as well as modules. What List-I and List-II mean, which projects they bind, the exemptions, and how to stay compliant.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/almm-list-ii-solar-cells/)
+[Market Update: **India's Solar Capacity in 2026: 171 GW and What It Means for Your Business**MNRE data put India's solar fleet at 171.05 GW on 30 September 2026. Where the growth is, why rooftop and C&I solar are surging, and how to plan a plant in a crowded market.4 min read · Updated 11 Oct 2026](https://arraysingenieria.com/india-solar-capacity-2026/)[Tax: **GST on Solar in India (2026): 5% on Equipment, About 8.9% on EPC Contracts**The GST Council cut GST on solar devices from 12% to 5% from 22 September 2025. How it applies to modules, inverters and full EPC contracts, what the 70:30 rule means, and how much a plant saves.4 min read · Updated 11 Oct 2026](https://arraysingenieria.com/gst-on-solar-india/)[Policy: **ALMM List-I and List-II Explained: The Made-in-India Rule for Solar Modules and Cells**MNRE's Approved List of Models and Manufacturers now covers solar cells as well as modules. What List-I and List-II mean, which projects they bind, the exemptions, and how to stay compliant.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/almm-list-ii-solar-cells/)
 
-[All solar guides](https://arrays-9mj.pages.dev/insights/)[Government solar schemes](https://arrays-9mj.pages.dev/solar-schemes-india/)
+[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

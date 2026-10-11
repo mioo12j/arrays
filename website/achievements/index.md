@@ -1,7 +1,7 @@
 ---
 title: Awards, Client Certificates & ISO | Arrays Ingenieria
 description: Client appreciation from Jay Shree Tea, Super Smelters & Bharat Petroleum, ISO 9001, 14001 & 45001 certification and other recognition we have earned.
-url: https://arrays-9mj.pages.dev/achievements/
+url: https://arraysingenieria.com/achievements/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---

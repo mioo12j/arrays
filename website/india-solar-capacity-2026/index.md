@@ -1,7 +1,7 @@
 ---
 title: India Solar Capacity 2026: 171 GW | Arrays Ingenieria
 description: India reached 171.05 GW of solar by 30 September 2026. What the growth, the rooftop boom and the 500 GW goal mean for a business planning solar.
-url: https://arrays-9mj.pages.dev/india-solar-capacity-2026/
+url: https://arraysingenieria.com/india-solar-capacity-2026/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -22,7 +22,7 @@ On this page
 - Frequently asked questions
 - Sources
 
-By the [Arrays Ingenieria engineering team](https://arrays-9mj.pages.dev/about/) · Updated 11 Oct 2026 · 4 min read
+By the [Arrays Ingenieria engineering team](https://arraysingenieria.com/about/) · Updated 11 Oct 2026 · 4 min read
 
 **Key takeaways**
 
@@ -62,8 +62,8 @@ The direction is set at the highest level. At COP26 in Glasgow in 2021 the Prime
 
 Policy then makes solar cheaper and easier to adopt:
 
-- **GST on solar equipment fell from 12% to 5%** from 22 September 2025, lowering the upfront cost of every plant (see [our GST guide](https://arrays-9mj.pages.dev/gst-on-solar-india/)).
-- **Accelerated depreciation** lets a business that owns its plant write off the cost quickly (see [depreciation explained](https://arrays-9mj.pages.dev/accelerated-depreciation-solar/)).
+- **GST on solar equipment fell from 12% to 5%** from 22 September 2025, lowering the upfront cost of every plant (see [our GST guide](https://arraysingenieria.com/gst-on-solar-india/)).
+- **Accelerated depreciation** lets a business that owns its plant write off the cost quickly (see [depreciation explained](https://arraysingenieria.com/accelerated-depreciation-solar/)).
 - **PM Surya Ghar** subsidises rooftop solar for homes and **PM-KUSUM** solarises farms and feeders.
 - **Green Energy Open Access** rules let consumers with as little as 100 kW of load buy green power from plants elsewhere.
 - **ALMM** and import duties steer buyers towards Indian-made modules and, since 1 June 2026, Indian-made cells.
@@ -74,7 +74,7 @@ For a business the economics are now simple: a well-built plant on your own roof
 
 ### Utility-scale parks and tenders
 
-Large solar parks, such as the 300 MW SECI project at Koppal in Karnataka where Arrays Ingenieria has done pile foundations and DC installation, still account for most new megawatts. New tenders increasingly ask for co-located battery storage (see [storage with solar](https://arrays-9mj.pages.dev/battery-storage-with-solar/)).
+Large solar parks, such as the 300 MW SECI project at Koppal in Karnataka where Arrays Ingenieria has done pile foundations and DC installation, still account for most new megawatts. New tenders increasingly ask for co-located battery storage (see [storage with solar](https://arraysingenieria.com/battery-storage-with-solar/)).
 
 ### Commercial and industrial (C&I) rooftops
 
@@ -84,7 +84,7 @@ The 1980.3 kWp sheet-roof plant at Super Smelters, Jamuria, West Bengal, install
 
 ### Tea estates and agro-industry
 
-Assam's tea gardens have become a solar story of their own: estates with steady daytime factory load, diesel-generator back-up and spare land are building ground-mount plants. The Chief Minister of Assam inaugurated our 595 kWp plant at Koomber Tea Estate on 1 October 2026 (see [solar for Assam's tea estates](https://arrays-9mj.pages.dev/solar-for-assam-tea-estates-guide/)).
+Assam's tea gardens have become a solar story of their own: estates with steady daytime factory load, diesel-generator back-up and spare land are building ground-mount plants. The Chief Minister of Assam inaugurated our 595 kWp plant at Koomber Tea Estate on 1 October 2026 (see [solar for Assam's tea estates](https://arraysingenieria.com/solar-for-assam-tea-estates-guide/)).
 
 ## What this means if you are planning a plant
 
@@ -94,11 +94,11 @@ Record volumes are good news for prices and choice, but they create bottlenecks 
 - **Approvals.** DISCOM feasibility, net-metering or open-access approval and the Electrical Inspector's (CEIG) inspection all take time, and queues grow when everyone builds at once.
 - **Compliant equipment.** ALMM-listed modules (with List-II cells for covered projects) and BIS-certified inverters must be specified and documented from the start.
 
-The practical answer is to start early and choose a partner who has done the work before, at scale and with documents to show for it. Ask for case studies, client certificates and references; our checklist of [12 questions to ask a solar EPC](https://arrays-9mj.pages.dev/choose-solar-epc-partner/) is a good place to start.
+The practical answer is to start early and choose a partner who has done the work before, at scale and with documents to show for it. Ask for case studies, client certificates and references; our checklist of [12 questions to ask a solar EPC](https://arraysingenieria.com/choose-solar-epc-partner/) is a good place to start.
 
 Planning a rooftop or ground-mount plant for 2026-27? Our engineers will size it, cost it and map the approvals for you.
 
-[Get a free solar quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a free solar quote](https://arraysingenieria.com/free-solar-quote/)
 
 ## How Arrays Ingenieria fits in
 
@@ -134,9 +134,9 @@ MNRE publishes cumulative installed capacity every month on its physical-progres
 
 This guide explains public policy in plain language for planning purposes. Rules, rates and deadlines change: confirm the current position with the notifying authority, your DISCOM and your tax adviser before you commit. Last checked 11 Oct 2026.
 
-**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arrays-9mj.pages.dev/ex-servicemen-led-msme/) · [Our projects](https://arrays-9mj.pages.dev/projects/)
+**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arraysingenieria.com/ex-servicemen-led-msme/) · [Our projects](https://arraysingenieria.com/projects/)
 
-[CAPEX Solar EPC](https://arrays-9mj.pages.dev/capex-solar-epc/)[Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/)[Ground-Mount Solar](https://arrays-9mj.pages.dev/service-ground-mount/)[Rooftop Solar](https://arrays-9mj.pages.dev/service-rooftop/)
+[CAPEX Solar EPC](https://arraysingenieria.com/capex-solar-epc/)[Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/)[Ground-Mount Solar](https://arraysingenieria.com/service-ground-mount/)[Rooftop Solar](https://arraysingenieria.com/service-rooftop/)
 
 From Our Sites
 
@@ -144,12 +144,12 @@ From Our Sites
 
 Real plants our veteran-led crews have built, with the scope of work in detail.
 
-[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arrays-9mj.pages.dev/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arrays-9mj.pages.dev/project-super-smelters-1980kwp-rooftop-solar/)[Utility-Scale · Piling: **SECI 300 MW Solar Project, Koppal: Piling and DC Installation**300 MW solar project · Koppal, KarnatakaRead the case study](https://arrays-9mj.pages.dev/project-seci-300mw-koppal-pile-foundation/)
+[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arraysingenieria.com/project-super-smelters-1980kwp-rooftop-solar/)[Utility-Scale · Piling: **SECI 300 MW Solar Project, Koppal: Piling and DC Installation**300 MW solar project · Koppal, KarnatakaRead the case study](https://arraysingenieria.com/project-seci-300mw-koppal-pile-foundation/)
 
 Keep Reading
 
 ## Related Guides
 
-[Tax: **GST on Solar in India (2026): 5% on Equipment, About 8.9% on EPC Contracts**The GST Council cut GST on solar devices from 12% to 5% from 22 September 2025. How it applies to modules, inverters and full EPC contracts, what the 70:30 rule means, and how much a plant saves.4 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/gst-on-solar-india/)[Business Models: **CAPEX vs OPEX (RESCO) Solar: Which Model Suits Your Business?**Own your solar plant and keep every unit, or pay a developer per unit with no upfront cost? A side-by-side comparison of CAPEX and OPEX solar, with the numbers that decide it.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/capex-vs-opex-solar/)[Buyer's Guide: **How to Choose a Solar EPC and Installation Partner in India: 12 Questions to Ask**The partner you choose decides how your plant performs for 25 years. Twelve questions to ask any solar EPC or installation contractor, what good answers look like, and the red flags to walk away from.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/choose-solar-epc-partner/)
+[Tax: **GST on Solar in India (2026): 5% on Equipment, About 8.9% on EPC Contracts**The GST Council cut GST on solar devices from 12% to 5% from 22 September 2025. How it applies to modules, inverters and full EPC contracts, what the 70:30 rule means, and how much a plant saves.4 min read · Updated 11 Oct 2026](https://arraysingenieria.com/gst-on-solar-india/)[Business Models: **CAPEX vs OPEX (RESCO) Solar: Which Model Suits Your Business?**Own your solar plant and keep every unit, or pay a developer per unit with no upfront cost? A side-by-side comparison of CAPEX and OPEX solar, with the numbers that decide it.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/capex-vs-opex-solar/)[Buyer's Guide: **How to Choose a Solar EPC and Installation Partner in India: 12 Questions to Ask**The partner you choose decides how your plant performs for 25 years. Twelve questions to ask any solar EPC or installation contractor, what good answers look like, and the red flags to walk away from.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/choose-solar-epc-partner/)
 
-[All solar guides](https://arrays-9mj.pages.dev/insights/)[Government solar schemes](https://arrays-9mj.pages.dev/solar-schemes-india/)
+[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

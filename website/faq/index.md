@@ -1,7 +1,7 @@
 ---
 title: Solar EPC FAQs: CAPEX, I&C & Civil Works | Arrays Ingenieria
 description: Answers on CAPEX solar, installation & commissioning, civil works, DG synchronisation, net-metering and working with Arrays Ingenieria.
-url: https://arrays-9mj.pages.dev/faq/
+url: https://arraysingenieria.com/faq/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -96,4 +96,4 @@ How do I get a quote?
 
 Send us your site location, the type of plant (rooftop or ground-mount), the approximate capacity or your monthly electricity bill, and whether you need full EPC, I&C only or civil works only. Use the contact form or email arraysingenieria@gmail.com.
 
-[Ask Us Anything](https://arrays-9mj.pages.dev/contact/)[Solar Glossary](https://arrays-9mj.pages.dev/solar-glossary/)
+[Ask Us Anything](https://arraysingenieria.com/contact/)[Solar Glossary](https://arraysingenieria.com/solar-glossary/)

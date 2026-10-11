@@ -1,7 +1,7 @@
 ---
 title: Terms of Use and Legal Notices | Arrays Ingenieria Pvt. Ltd.
 description: Terms for using the Arrays Ingenieria website: copyright in our brand and content, permitted use, scraping, liability, governing law and legal notices.
-url: https://arrays-9mj.pages.dev/terms/
+url: https://arraysingenieria.com/terms/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -16,7 +16,7 @@ Last updated: 11 October 2026
 
 ## 1. Acceptance of these terms
 
-This website is owned and run by **Arrays Ingenieria Pvt. Ltd.** ("Ingenieria", "we", "us"), CIN U45309DL2018PTC340544. By using it, you agree to these terms. If you do not agree, please do not use the site. Our [Privacy Policy](https://arrays-9mj.pages.dev/privacy-policy/) explains how we handle personal data.
+This website is owned and run by **Arrays Ingenieria Pvt. Ltd.** ("Ingenieria", "we", "us"), CIN U45309DL2018PTC340544. By using it, you agree to these terms. If you do not agree, please do not use the site. Our [Privacy Policy](https://arraysingenieria.com/privacy-policy/) explains how we handle personal data.
 
 ## 2. Copyright and trademarks
 
@@ -30,7 +30,7 @@ You may view and print pages for your own information, share links to any page, 
 
 ## 4. Scraping and automated access
 
-You may not scrape, harvest, mirror or bulk-download this website or its images and videos, or use them to build databases, datasets, competing websites or marketing lists, without our written permission. Search engines and AI assistants may crawl and index the site as allowed by our [robots.txt](https://arrays-9mj.pages.dev/robots.txt), and may cite it with a link to the source page. You may not attempt to disrupt, overload or gain unauthorised access to the site or its contact form.
+You may not scrape, harvest, mirror or bulk-download this website or its images and videos, or use them to build databases, datasets, competing websites or marketing lists, without our written permission. Search engines and AI assistants may crawl and index the site as allowed by our [robots.txt](https://arraysingenieria.com/robots.txt), and may cite it with a link to the source page. You may not attempt to disrupt, overload or gain unauthorised access to the site or its contact form.
 
 ## 5. Information only, no offer
 
@@ -38,7 +38,7 @@ Content on this website is general information about our company, projects and t
 
 ## 6. Third-party links and posts
 
-We link to news reports, government sources and social-media posts. We do not control those sites and are not responsible for their content or privacy practices. Original posts from X, Facebook and Instagram on our News & Media page and the Koomber case study load directly from those platforms when you scroll near them, as described in our [Privacy Policy](https://arrays-9mj.pages.dev/privacy-policy/#cookies); YouTube videos load only when you press play.
+We link to news reports, government sources and social-media posts. We do not control those sites and are not responsible for their content or privacy practices. Original posts from X, Facebook and Instagram on our News & Media page and the Koomber case study load directly from those platforms when you scroll near them, as described in our [Privacy Policy](https://arraysingenieria.com/privacy-policy/#cookies); YouTube videos load only when you press play.
 
 ## 7. Limitation of liability
 

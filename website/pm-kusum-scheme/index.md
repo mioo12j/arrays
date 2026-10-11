@@ -1,7 +1,7 @@
 ---
 title: PM-KUSUM Scheme 2026: Deadlines | Arrays Ingenieria
 description: PM-KUSUM in 2026: solar plants on farmland, solar pumps and feeder solarisation, the support on offer, the extended deadlines and the proposed 2.0.
-url: https://arrays-9mj.pages.dev/pm-kusum-scheme/
+url: https://arraysingenieria.com/pm-kusum-scheme/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -22,7 +22,7 @@ On this page
 - Frequently asked questions
 - Sources
 
-By the [Arrays Ingenieria engineering team](https://arrays-9mj.pages.dev/about/) · Updated 11 Oct 2026 · 3 min read
+By the [Arrays Ingenieria engineering team](https://arraysingenieria.com/about/) · Updated 11 Oct 2026 · 3 min read
 
 **Key takeaways**
 
@@ -71,14 +71,14 @@ The Union Minister for New and Renewable Energy has said a **PM-KUSUM 2.0** will
 - **Land and soil:** a soil test decides the pile design; farmland often needs deeper piles than hard ground.
 - **Evacuation:** the distance to the substation and the line route drive cost and approvals.
 - **Security:** chain-link fencing and lighting protect modules on open farmland.
-- **Domestic content:** scheme plants must use DCR modules (see [ALMM explained](https://arrays-9mj.pages.dev/almm-list-ii-solar-cells/)).
+- **Domestic content:** scheme plants must use DCR modules (see [ALMM explained](https://arraysingenieria.com/almm-list-ii-solar-cells/)).
 - **Schedule:** with the March 2027 cut-off, piling and structures must start early enough to leave time for commissioning and inspection.
 
 Civil works and chain-link fencing for a 14.36 MW solar project in Uttar Pradesh: the same site works a Component A or feeder-level plant needs.
 
 Developing a PM-KUSUM Component A or feeder-level plant? We do piling, fencing, civil works and installation & commissioning.
 
-[Get a free solar quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a free solar quote](https://arraysingenieria.com/free-solar-quote/)
 
 ## Frequently asked questions
 
@@ -106,9 +106,9 @@ It has been announced, with about 10 GW for agri-photovoltaics, but it had not b
 
 This guide explains public policy in plain language for planning purposes. Rules, rates and deadlines change: confirm the current position with the notifying authority, your DISCOM and your tax adviser before you commit. Last checked 11 Oct 2026.
 
-**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arrays-9mj.pages.dev/ex-servicemen-led-msme/) · [Our projects](https://arrays-9mj.pages.dev/projects/)
+**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arraysingenieria.com/ex-servicemen-led-msme/) · [Our projects](https://arraysingenieria.com/projects/)
 
-[Ground-Mount Solar](https://arrays-9mj.pages.dev/service-ground-mount/)[Pile Foundations](https://arrays-9mj.pages.dev/service-piling/)[Civil Works & Fencing](https://arrays-9mj.pages.dev/service-civil/)
+[Ground-Mount Solar](https://arraysingenieria.com/service-ground-mount/)[Pile Foundations](https://arraysingenieria.com/service-piling/)[Civil Works & Fencing](https://arraysingenieria.com/service-civil/)
 
 From Our Sites
 
@@ -116,12 +116,12 @@ From Our Sites
 
 Real plants our veteran-led crews have built, with the scope of work in detail.
 
-[Industrial · Civil Works: **DCM Textile, Hisar: Civil Works, Piling and I&C for Solar**9979 kWp (10 MW) · Hisar, HaryanaRead the case study](https://arrays-9mj.pages.dev/project-dcm-hisar-10mw-solar-civil-works/)[Utility-Scale · Civil & Fencing: **Noida International Airport (YIAPL): 14.36 MW Solar, Piling & Fencing**14.36 MW · Noida International Airport, Gautam Buddh Nagar, Uttar PradeshRead the case study](https://arrays-9mj.pages.dev/project-yiapl-14-36mw-solar-civil-fencing/)[Utility-Scale · Piling: **SECI 300 MW Solar Project, Koppal: Piling and DC Installation**300 MW solar project · Koppal, KarnatakaRead the case study](https://arrays-9mj.pages.dev/project-seci-300mw-koppal-pile-foundation/)
+[Industrial · Civil Works: **DCM Textile, Hisar: Civil Works, Piling and I&C for Solar**9979 kWp (10 MW) · Hisar, HaryanaRead the case study](https://arraysingenieria.com/project-dcm-hisar-10mw-solar-civil-works/)[Utility-Scale · Civil & Fencing: **Noida International Airport (YIAPL): 14.36 MW Solar, Piling & Fencing**14.36 MW · Noida International Airport, Gautam Buddh Nagar, Uttar PradeshRead the case study](https://arraysingenieria.com/project-yiapl-14-36mw-solar-civil-fencing/)[Utility-Scale · Piling: **SECI 300 MW Solar Project, Koppal: Piling and DC Installation**300 MW solar project · Koppal, KarnatakaRead the case study](https://arraysingenieria.com/project-seci-300mw-koppal-pile-foundation/)
 
 Keep Reading
 
 ## Related Guides
 
-[Policy: **ALMM List-I and List-II Explained: The Made-in-India Rule for Solar Modules and Cells**MNRE's Approved List of Models and Manufacturers now covers solar cells as well as modules. What List-I and List-II mean, which projects they bind, the exemptions, and how to stay compliant.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/almm-list-ii-solar-cells/)[Schemes: **PM Surya Ghar: Muft Bijli Yojana 2026: Subsidy, Eligibility and How to Apply**India's rooftop solar scheme for homes: up to Rs 78,000 central subsidy, support for housing societies, low-cost loans and the national portal. What you get, who qualifies, and the steps from application to subsidy.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/pm-surya-ghar-subsidy/)[System Design: **Rooftop vs Ground-Mount Solar: Which Is Right for Your Site?**Use the roof you already have, or build on land? A practical comparison of rooftop and ground-mount solar: cost, space, structure, safety, foundations, approvals and maintenance.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/rooftop-vs-ground-mount-solar/)
+[Policy: **ALMM List-I and List-II Explained: The Made-in-India Rule for Solar Modules and Cells**MNRE's Approved List of Models and Manufacturers now covers solar cells as well as modules. What List-I and List-II mean, which projects they bind, the exemptions, and how to stay compliant.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/almm-list-ii-solar-cells/)[Schemes: **PM Surya Ghar: Muft Bijli Yojana 2026: Subsidy, Eligibility and How to Apply**India's rooftop solar scheme for homes: up to Rs 78,000 central subsidy, support for housing societies, low-cost loans and the national portal. What you get, who qualifies, and the steps from application to subsidy.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/pm-surya-ghar-subsidy/)[System Design: **Rooftop vs Ground-Mount Solar: Which Is Right for Your Site?**Use the roof you already have, or build on land? A practical comparison of rooftop and ground-mount solar: cost, space, structure, safety, foundations, approvals and maintenance.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/rooftop-vs-ground-mount-solar/)
 
-[All solar guides](https://arrays-9mj.pages.dev/insights/)[Government solar schemes](https://arrays-9mj.pages.dev/solar-schemes-india/)
+[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

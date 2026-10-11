@@ -1,7 +1,7 @@
 ---
 title: 450 kWp Solar, Orangajuli Tea Estate | Arrays Ingenieria
 description: Case study: 450 kWp grid-connected ground-mount solar plant at Goodricke's Orangajuli Tea Estate, Udalguri, Assam, commissioned on Janmashtami 2026.
-url: https://arrays-9mj.pages.dev/project-orangajuli-tea-estate-450kw-solar/
+url: https://arraysingenieria.com/project-orangajuli-tea-estate-450kw-solar/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -28,7 +28,7 @@ With Orangajuli, Arrays Ingenieria reported that it had completed the installati
 
 ### In the news
 
-[News channel: **NE Reports**September 2026Janmashtami launch: 450 kW solar plant at Orangajuli Tea Estate, Udalguri](https://arrays-9mj.pages.dev/recognition/#ne-reports-orangajuli)[Online news: **Hub Network**4 Sep 2026Assam tea garden gets 450 kWp solar plant as clean energy push gathers pace](https://arrays-9mj.pages.dev/recognition/#hub-network-orangajuli)[Newspaper: **Prerna Bharati**5 Sep 2026New green-energy initiative in Assam on Janmashtami: 450 kW solar plant starts](https://arrays-9mj.pages.dev/recognition/#prerna-bharati-orangajuli)
+[News channel: **NE Reports**September 2026Janmashtami launch: 450 kW solar plant at Orangajuli Tea Estate, Udalguri](https://arraysingenieria.com/recognition/#ne-reports-orangajuli)[Online news: **Hub Network**4 Sep 2026Assam tea garden gets 450 kWp solar plant as clean energy push gathers pace](https://arraysingenieria.com/recognition/#hub-network-orangajuli)[Newspaper: **Prerna Bharati**5 Sep 2026New green-energy initiative in Assam on Janmashtami: 450 kW solar plant starts](https://arraysingenieria.com/recognition/#prerna-bharati-orangajuli)
 
 ### Photos
 
@@ -52,7 +52,7 @@ Year: **2026 (commissioned 4 September 2026)**
 
 Talk to our veteran-led team about EPC, installation & commissioning or civil works.
 
-[Get a Free Quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a Free Quote](https://arraysingenieria.com/free-solar-quote/)
 
 Documents
 
@@ -66,10 +66,10 @@ Related
 
 ## Services Used on This Project
 
-[Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/)[Ground-Mount Solar](https://arrays-9mj.pages.dev/service-ground-mount/)[Solar for Tea Estates](https://arrays-9mj.pages.dev/solar-for-tea-estates/)[All Projects →](https://arrays-9mj.pages.dev/projects/)
+[Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/)[Ground-Mount Solar](https://arraysingenieria.com/service-ground-mount/)[Solar for Tea Estates](https://arraysingenieria.com/solar-for-tea-estates/)[All Projects →](https://arraysingenieria.com/projects/)
 
 More Case Studies
 
 ## Other Projects by Arrays Ingenieria
 
-[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arrays-9mj.pages.dev/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arrays-9mj.pages.dev/project-jayshree-tea-1mw-solar-assam/)[Tea Estate · Ground-Mount: **Borpatra (Barpatra) Tea Estate: 230 kWp On-Grid Solar Plant**230 kWp · Borhat, Sivasagar district, AssamRead the case study](https://arrays-9mj.pages.dev/project-barpatra-tea-estate-230kw-solar/)
+[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arraysingenieria.com/project-jayshree-tea-1mw-solar-assam/)[Tea Estate · Ground-Mount: **Borpatra (Barpatra) Tea Estate: 230 kWp On-Grid Solar Plant**230 kWp · Borhat, Sivasagar district, AssamRead the case study](https://arraysingenieria.com/project-barpatra-tea-estate-230kw-solar/)

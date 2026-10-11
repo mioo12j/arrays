@@ -1,7 +1,7 @@
 ---
 title: About Arrays Ingenieria | Veteran-Led Solar EPC, India
 description: Founded in 2018 by ex-servicemen and led by Lt. Gen. A.R. Prasad (Retd), Arrays Ingenieria is an ISO 9001/14001/45001-certified solar EPC company.
-url: https://arrays-9mj.pages.dev/about/
+url: https://arraysingenieria.com/about/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -26,37 +26,37 @@ Our ISO 9001, ISO 14001 and ISO 45001 certifications reflect an unwavering dedic
 
 Our work in the news
 
-- [TVPrerana Bharati Digital (PBNN)](https://arrays-9mj.pages.dev/recognition/#prerana-bharati-koomber-video)
-- [TVNews Axom](https://arrays-9mj.pages.dev/recognition/#news-axom-koomber)
-- [TVNE Reports](https://arrays-9mj.pages.dev/recognition/#ne-reports-orangajuli)
-- [TVSonari Live](https://arrays-9mj.pages.dev/recognition/#sonari-live)
-- [Azad Sipahi](https://arrays-9mj.pages.dev/recognition/#azad-sipahi-koomber)
-- [Prerna Bharati](https://arrays-9mj.pages.dev/recognition/#prerna-bharati-koomber)
-- [The Sentinel](https://arrays-9mj.pages.dev/recognition/#sentinel-koomber)
-- [Hindusthan Samachar](https://arrays-9mj.pages.dev/recognition/#hindusthan-samachar-koomber)
-- [India Today NE](https://arrays-9mj.pages.dev/recognition/#india-today-ne-koomber)
-- [Northeast Chronicle](https://arrays-9mj.pages.dev/recognition/#northeast-chronicle-borpatra)
-- [Swarajati](https://arrays-9mj.pages.dev/recognition/#swarajati-borpatra)
-- [Dainik Janambhumi](https://arrays-9mj.pages.dev/recognition/#dainik-janambhumi-borpatra)
-- [Niyomiya Barta](https://arrays-9mj.pages.dev/recognition/#niyomiya-barta-borpatra)
-- [Dainik Purvoday](https://arrays-9mj.pages.dev/recognition/#barpatra-230kw)
-- [Purvanchal Prahari](https://arrays-9mj.pages.dev/recognition/#purvanchal-prahari-borpatra)
-- [Janambhumi (online)](https://arrays-9mj.pages.dev/recognition/#janambhumi-online-borpatra)
-- [Hub Network](https://arrays-9mj.pages.dev/recognition/#hub-network-orangajuli)
-- [Sanmarg](https://arrays-9mj.pages.dev/recognition/#sanmarg-supersmelters)
-- [Dainik Bhaskar](https://arrays-9mj.pages.dev/recognition/#bhaskar-tcpl)
+- [TVPrerana Bharati Digital (PBNN)](https://arraysingenieria.com/recognition/#prerana-bharati-koomber-video)
+- [TVNews Axom](https://arraysingenieria.com/recognition/#news-axom-koomber)
+- [TVNE Reports](https://arraysingenieria.com/recognition/#ne-reports-orangajuli)
+- [TVSonari Live](https://arraysingenieria.com/recognition/#sonari-live)
+- [Azad Sipahi](https://arraysingenieria.com/recognition/#azad-sipahi-koomber)
+- [Prerna Bharati](https://arraysingenieria.com/recognition/#prerna-bharati-koomber)
+- [The Sentinel](https://arraysingenieria.com/recognition/#sentinel-koomber)
+- [Hindusthan Samachar](https://arraysingenieria.com/recognition/#hindusthan-samachar-koomber)
+- [India Today NE](https://arraysingenieria.com/recognition/#india-today-ne-koomber)
+- [Northeast Chronicle](https://arraysingenieria.com/recognition/#northeast-chronicle-borpatra)
+- [Swarajati](https://arraysingenieria.com/recognition/#swarajati-borpatra)
+- [Dainik Janambhumi](https://arraysingenieria.com/recognition/#dainik-janambhumi-borpatra)
+- [Niyomiya Barta](https://arraysingenieria.com/recognition/#niyomiya-barta-borpatra)
+- [Dainik Purvoday](https://arraysingenieria.com/recognition/#barpatra-230kw)
+- [Purvanchal Prahari](https://arraysingenieria.com/recognition/#purvanchal-prahari-borpatra)
+- [Janambhumi (online)](https://arraysingenieria.com/recognition/#janambhumi-online-borpatra)
+- [Hub Network](https://arraysingenieria.com/recognition/#hub-network-orangajuli)
+- [Sanmarg](https://arraysingenieria.com/recognition/#sanmarg-supersmelters)
+- [Dainik Bhaskar](https://arraysingenieria.com/recognition/#bhaskar-tcpl)
 
 Shared by official handles
 
-- [OFFICIALChief Minister's Office, Assam](https://arrays-9mj.pages.dev/recognition/#official-handles)
-- [OFFICIALShri Kaushik Rai, MLA, Lakhipur](https://arrays-9mj.pages.dev/recognition/#official-handles)
-- [OFFICIALShri Rajdeep Goala, MLA, Udharbond](https://arrays-9mj.pages.dev/recognition/#official-handles)
+- [OFFICIALChief Minister's Office, Assam](https://arraysingenieria.com/recognition/#official-handles)
+- [OFFICIALShri Kaushik Rai, MLA, Lakhipur](https://arraysingenieria.com/recognition/#official-handles)
+- [OFFICIALShri Rajdeep Goala, MLA, Udharbond](https://arraysingenieria.com/recognition/#official-handles)
 
 Our founder on national TV
 
-- [TVIndia Today](https://arrays-9mj.pages.dev/recognition/#national-tv)
-- [TVAaj Tak](https://arrays-9mj.pages.dev/recognition/#national-tv)
-- [TVIndia TV](https://arrays-9mj.pages.dev/recognition/#national-tv)
+- [TVIndia Today](https://arraysingenieria.com/recognition/#national-tv)
+- [TVAaj Tak](https://arraysingenieria.com/recognition/#national-tv)
+- [TVIndia TV](https://arraysingenieria.com/recognition/#national-tv)
 
 ### Our Mission
 
@@ -100,7 +100,7 @@ Under his leadership, Ingenieria blends the precision of engineering with the re
 
 Ex-Servicemen Led Triple ISO Certified Since 2018 Pan-India
 
-[See Our Recognition & Media](https://arrays-9mj.pages.dev/recognition/)
+[See Our Recognition & Media](https://arraysingenieria.com/recognition/)
 
 50 MW+
 
@@ -118,4 +118,4 @@ Ex-Servicemen Led
 
 Quality · Environment · Safety
 
-[Work With Us](https://arrays-9mj.pages.dev/#contact)
+[Work With Us](https://arraysingenieria.com/#contact)

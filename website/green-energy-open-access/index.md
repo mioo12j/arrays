@@ -1,7 +1,7 @@
 ---
 title: Green Energy Open Access India 2026 | Arrays Ingenieria
 description: Green Energy Open Access lets consumers from 100 kW buy solar from off-site plants. Eligibility, charges, banking, GOAR and the ISTS waiver phase-out.
-url: https://arrays-9mj.pages.dev/green-energy-open-access/
+url: https://arraysingenieria.com/green-energy-open-access/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -22,7 +22,7 @@ On this page
 - Frequently asked questions
 - Sources
 
-By the [Arrays Ingenieria engineering team](https://arrays-9mj.pages.dev/about/) · Updated 11 Oct 2026 · 3 min read
+By the [Arrays Ingenieria engineering team](https://arraysingenieria.com/about/) · Updated 11 Oct 2026 · 3 min read
 
 **Key takeaways**
 
@@ -86,7 +86,7 @@ For an inter-state open-access deal, this makes commissioning dates matter: a pr
 
 Building a captive ground-mount plant? We do the piling, civil works, fencing and installation & commissioning.
 
-[Get a free solar quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a free solar quote](https://arraysingenieria.com/free-solar-quote/)
 
 ## Frequently asked questions
 
@@ -115,9 +115,9 @@ Not always. Rooftop solar avoids network charges entirely. Open access makes sen
 
 This guide explains public policy in plain language for planning purposes. Rules, rates and deadlines change: confirm the current position with the notifying authority, your DISCOM and your tax adviser before you commit. Last checked 11 Oct 2026.
 
-**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arrays-9mj.pages.dev/ex-servicemen-led-msme/) · [Our projects](https://arrays-9mj.pages.dev/projects/)
+**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arraysingenieria.com/ex-servicemen-led-msme/) · [Our projects](https://arraysingenieria.com/projects/)
 
-[Ground-Mount Solar](https://arrays-9mj.pages.dev/service-ground-mount/)[Pile Foundations](https://arrays-9mj.pages.dev/service-piling/)[Civil Works & Fencing](https://arrays-9mj.pages.dev/service-civil/)
+[Ground-Mount Solar](https://arraysingenieria.com/service-ground-mount/)[Pile Foundations](https://arraysingenieria.com/service-piling/)[Civil Works & Fencing](https://arraysingenieria.com/service-civil/)
 
 From Our Sites
 
@@ -125,12 +125,12 @@ From Our Sites
 
 Real plants our veteran-led crews have built, with the scope of work in detail.
 
-[Industrial · Civil Works: **DCM Textile, Hisar: Civil Works, Piling and I&C for Solar**9979 kWp (10 MW) · Hisar, HaryanaRead the case study](https://arrays-9mj.pages.dev/project-dcm-hisar-10mw-solar-civil-works/)[Utility-Scale · Civil & Fencing: **Noida International Airport (YIAPL): 14.36 MW Solar, Piling & Fencing**14.36 MW · Noida International Airport, Gautam Buddh Nagar, Uttar PradeshRead the case study](https://arrays-9mj.pages.dev/project-yiapl-14-36mw-solar-civil-fencing/)[Utility-Scale · Piling: **SECI 300 MW Solar Project, Koppal: Piling and DC Installation**300 MW solar project · Koppal, KarnatakaRead the case study](https://arrays-9mj.pages.dev/project-seci-300mw-koppal-pile-foundation/)
+[Industrial · Civil Works: **DCM Textile, Hisar: Civil Works, Piling and I&C for Solar**9979 kWp (10 MW) · Hisar, HaryanaRead the case study](https://arraysingenieria.com/project-dcm-hisar-10mw-solar-civil-works/)[Utility-Scale · Civil & Fencing: **Noida International Airport (YIAPL): 14.36 MW Solar, Piling & Fencing**14.36 MW · Noida International Airport, Gautam Buddh Nagar, Uttar PradeshRead the case study](https://arraysingenieria.com/project-yiapl-14-36mw-solar-civil-fencing/)[Utility-Scale · Piling: **SECI 300 MW Solar Project, Koppal: Piling and DC Installation**300 MW solar project · Koppal, KarnatakaRead the case study](https://arraysingenieria.com/project-seci-300mw-koppal-pile-foundation/)
 
 Keep Reading
 
 ## Related Guides
 
-[Business Models: **CAPEX vs OPEX (RESCO) Solar: Which Model Suits Your Business?**Own your solar plant and keep every unit, or pay a developer per unit with no upfront cost? A side-by-side comparison of CAPEX and OPEX solar, with the numbers that decide it.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/capex-vs-opex-solar/)[Grid & Regulation: **Net Metering in India (2026): Net Billing, Gross Metering, ToD Tariffs and the Draft 2026 Rules**How your solar plant connects to the DISCOM and how exported units are paid for: net metering, net billing and gross metering, the 500 kW rule, time-of-day tariffs, the draft 2026 amendments, and the step-by-step approval process.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/net-metering-india/)[System Design: **Rooftop vs Ground-Mount Solar: Which Is Right for Your Site?**Use the roof you already have, or build on land? A practical comparison of rooftop and ground-mount solar: cost, space, structure, safety, foundations, approvals and maintenance.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/rooftop-vs-ground-mount-solar/)
+[Business Models: **CAPEX vs OPEX (RESCO) Solar: Which Model Suits Your Business?**Own your solar plant and keep every unit, or pay a developer per unit with no upfront cost? A side-by-side comparison of CAPEX and OPEX solar, with the numbers that decide it.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/capex-vs-opex-solar/)[Grid & Regulation: **Net Metering in India (2026): Net Billing, Gross Metering, ToD Tariffs and the Draft 2026 Rules**How your solar plant connects to the DISCOM and how exported units are paid for: net metering, net billing and gross metering, the 500 kW rule, time-of-day tariffs, the draft 2026 amendments, and the step-by-step approval process.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/net-metering-india/)[System Design: **Rooftop vs Ground-Mount Solar: Which Is Right for Your Site?**Use the roof you already have, or build on land? A practical comparison of rooftop and ground-mount solar: cost, space, structure, safety, foundations, approvals and maintenance.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/rooftop-vs-ground-mount-solar/)
 
-[All solar guides](https://arrays-9mj.pages.dev/insights/)[Government solar schemes](https://arrays-9mj.pages.dev/solar-schemes-india/)
+[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

@@ -1,7 +1,7 @@
 ---
 title: Turnkey Solar EPC Contractor in India | Arrays Ingenieria
 description: Turnkey solar EPC from Arrays Ingenieria: engineering, procurement and construction under single-window responsibility, including Tata Power EPC projects.
-url: https://arrays-9mj.pages.dev/service-epc/
+url: https://arraysingenieria.com/service-epc/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -47,7 +47,7 @@ Assurance: **Triple ISO certified**
 
 Talk to our veteran-led team for a free, no-obligation consultation.
 
-[Get a Free Quote](https://arrays-9mj.pages.dev/#contact)
+[Get a Free Quote](https://arraysingenieria.com/#contact)
 
 FAQ
 
@@ -105,10 +105,10 @@ Case Studies
 
 ## Projects Using This Service
 
-[Tea Estate · Ground-Mount: **Borpatra (Barpatra) Tea Estate: 230 kWp On-Grid Solar Plant**230 kWp · Borhat, Sivasagar district, AssamRead the case study](https://arrays-9mj.pages.dev/project-barpatra-tea-estate-230kw-solar/) [Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arrays-9mj.pages.dev/project-super-smelters-1980kwp-rooftop-solar/) [Industrial · Rooftop: **TCPL Greenery Agro, Vaishali: 319 kWp Rooftop Solar**319 kWp · Bhagwanpur, Vaishali district, BiharRead the case study](https://arrays-9mj.pages.dev/project-tcpl-vaishali-319kwp-rooftop-solar/) [On-Grid · I&C: **1711.66 kWp On-Grid Solar PV Project, Assam**1711.66 kWp · AssamRead the case study](https://arrays-9mj.pages.dev/project-assam-1711kwp-on-grid-solar/)
+[Tea Estate · Ground-Mount: **Borpatra (Barpatra) Tea Estate: 230 kWp On-Grid Solar Plant**230 kWp · Borhat, Sivasagar district, AssamRead the case study](https://arraysingenieria.com/project-barpatra-tea-estate-230kw-solar/) [Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arraysingenieria.com/project-super-smelters-1980kwp-rooftop-solar/) [Industrial · Rooftop: **TCPL Greenery Agro, Vaishali: 319 kWp Rooftop Solar**319 kWp · Bhagwanpur, Vaishali district, BiharRead the case study](https://arraysingenieria.com/project-tcpl-vaishali-319kwp-rooftop-solar/) [On-Grid · I&C: **1711.66 kWp On-Grid Solar PV Project, Assam**1711.66 kWp · AssamRead the case study](https://arraysingenieria.com/project-assam-1711kwp-on-grid-solar/)
 
 Explore More
 
 ## Our Other Services
 
-[CAPEX Solar EPC](https://arrays-9mj.pages.dev/capex-solar-epc/) [Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/) [Ground-Mount](https://arrays-9mj.pages.dev/service-ground-mount/) [Rooftop](https://arrays-9mj.pages.dev/service-rooftop/) [Piling](https://arrays-9mj.pages.dev/service-piling/) [Civil & Fencing](https://arrays-9mj.pages.dev/service-civil/) [O&M](https://arrays-9mj.pages.dev/service-om/) [All Projects →](https://arrays-9mj.pages.dev/projects/)
+[CAPEX Solar EPC](https://arraysingenieria.com/capex-solar-epc/) [Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/) [Ground-Mount](https://arraysingenieria.com/service-ground-mount/) [Rooftop](https://arraysingenieria.com/service-rooftop/) [Piling](https://arraysingenieria.com/service-piling/) [Civil & Fencing](https://arraysingenieria.com/service-civil/) [O&M](https://arraysingenieria.com/service-om/) [All Projects →](https://arraysingenieria.com/projects/)

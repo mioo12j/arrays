@@ -1,7 +1,7 @@
 ---
 title: How It Works: Your Solar Project | Arrays Ingenieria
 description: How a solar project with Arrays Ingenieria works: how solar makes power, CAPEX vs I&C, each step from site survey to commissioning, and who owns what.
-url: https://arrays-9mj.pages.dev/how-it-works/
+url: https://arraysingenieria.com/how-it-works/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -29,17 +29,17 @@ Choose Your Path
 - We design, supply, build and commission the complete plant
 - You pay once and own everything
 - Civil works, approvals and handover included
-Learn more](https://arrays-9mj.pages.dev/capex-solar-epc/)[2Installation & commissioning: **Build for a developer or EPC**For EPC companies and OPEX/RESCO developers
+Learn more](https://arraysingenieria.com/capex-solar-epc/)[2Installation & commissioning: **Build for a developer or EPC**For EPC companies and OPEX/RESCO developers
 
 - You own the design and the equipment
 - Our veteran-led crews install and commission
 - Work to your specifications and approved makes
-Learn more](https://arrays-9mj.pages.dev/solar-installation-commissioning/)[3Piling & civil works: **Foundations & civil only**For any solar project that needs groundwork
+Learn more](https://arraysingenieria.com/solar-installation-commissioning/)[3Piling & civil works: **Foundations & civil only**For any solar project that needs groundwork
 
 - Pile foundations for module structures
 - RCC, pre-cast boundary walls, chain-link fencing
 - Proven on SECI 300 MW and Tata Motors 5.5 MW
-Learn more](https://arrays-9mj.pages.dev/service-civil/)
+Learn more](https://arraysingenieria.com/service-civil/)
 
 Step by Step
 
@@ -137,7 +137,7 @@ Who Owns What
 - Owns nothing in your plant
 - Offers O&M support only if you ask for it
 
-[Full CAPEX ownership table](https://arrays-9mj.pages.dev/capex-solar-epc/#who-owns-what)
+[Full CAPEX ownership table](https://arraysingenieria.com/capex-solar-epc/#who-owns-what)
 
 Before & After
 
@@ -165,4 +165,4 @@ Get Started
 
 Tell us your site and your power use; we will take it from there.
 
-[Start Your Project](https://arrays-9mj.pages.dev/contact/)[Read the FAQ](https://arrays-9mj.pages.dev/faq/)[See Case Studies](https://arrays-9mj.pages.dev/projects/#case-studies)
+[Start Your Project](https://arraysingenieria.com/contact/)[Read the FAQ](https://arraysingenieria.com/faq/)[See Case Studies](https://arraysingenieria.com/projects/#case-studies)

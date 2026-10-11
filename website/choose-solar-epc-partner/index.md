@@ -1,7 +1,7 @@
 ---
 title: How to Choose a Solar EPC in India | Arrays Ingenieria
 description: 12 questions to ask before hiring a solar EPC or installation partner in India: track record, documents, equipment, safety, approvals and warranties.
-url: https://arrays-9mj.pages.dev/choose-solar-epc-partner/
+url: https://arraysingenieria.com/choose-solar-epc-partner/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -22,7 +22,7 @@ On this page
 - Frequently asked questions
 - Sources
 
-By the [Arrays Ingenieria engineering team](https://arrays-9mj.pages.dev/about/) · Updated 11 Oct 2026 · 3 min read
+By the [Arrays Ingenieria engineering team](https://arraysingenieria.com/about/) · Updated 11 Oct 2026 · 3 min read
 
 **Key takeaways**
 
@@ -73,13 +73,13 @@ Questions to ask a solar EPC or installation partner
 
 ## Our answers
 
-Arrays Ingenieria is an ex-servicemen-led company certified to ISO 9001, ISO 14001 and ISO 45001. Our [projects page](https://arrays-9mj.pages.dev/projects/) lists our work, and our case studies carry the client certificates and press coverage behind them. We do not manufacture modules or inverters, so we specify and document the makes your project requires.
+Arrays Ingenieria is an ex-servicemen-led company certified to ISO 9001, ISO 14001 and ISO 45001. Our [projects page](https://arraysingenieria.com/projects/) lists our work, and our case studies carry the client certificates and press coverage behind them. We do not manufacture modules or inverters, so we specify and document the makes your project requires.
 
 Our team with the Chief Minister of Assam at the Koomber Tea Estate plant, 1 October 2026.
 
 Put our answers to the test: ask us all 12 questions about your project.
 
-[Get a free solar quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a free solar quote](https://arraysingenieria.com/free-solar-quote/)
 
 ## Frequently asked questions
 
@@ -106,9 +106,9 @@ Not always, but compare quotations on the same specification and bill of quantit
 
 This guide explains public policy in plain language for planning purposes. Rules, rates and deadlines change: confirm the current position with the notifying authority, your DISCOM and your tax adviser before you commit. Last checked 11 Oct 2026.
 
-**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arrays-9mj.pages.dev/ex-servicemen-led-msme/) · [Our projects](https://arrays-9mj.pages.dev/projects/)
+**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arraysingenieria.com/ex-servicemen-led-msme/) · [Our projects](https://arraysingenieria.com/projects/)
 
-[CAPEX Solar EPC](https://arrays-9mj.pages.dev/capex-solar-epc/)[Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/)[Quality & Safety](https://arrays-9mj.pages.dev/quality-safety/)
+[CAPEX Solar EPC](https://arraysingenieria.com/capex-solar-epc/)[Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/)[Quality & Safety](https://arraysingenieria.com/quality-safety/)
 
 From Our Sites
 
@@ -116,12 +116,12 @@ From Our Sites
 
 Real plants our veteran-led crews have built, with the scope of work in detail.
 
-[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arrays-9mj.pages.dev/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arrays-9mj.pages.dev/project-super-smelters-1980kwp-rooftop-solar/)[Tea Estates · Multi-Site I&C: **Amalgamated Plantations, Assam: Solar Across Tea Estates**About 5 MW across tea estates (3.8 MWp piled at 11 sites) · Chubwa, Kakajan, Powai, Nonoi, Diffloo, Nahortoli, Naharkatia, Namrup, Borhat and other estates, AssamRead the case study](https://arrays-9mj.pages.dev/project-amalgamated-plantations-assam-tea-estates-solar/)
+[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arraysingenieria.com/project-super-smelters-1980kwp-rooftop-solar/)[Tea Estates · Multi-Site I&C: **Amalgamated Plantations, Assam: Solar Across Tea Estates**About 5 MW across tea estates (3.8 MWp piled at 11 sites) · Chubwa, Kakajan, Powai, Nonoi, Diffloo, Nahortoli, Naharkatia, Namrup, Borhat and other estates, AssamRead the case study](https://arraysingenieria.com/project-amalgamated-plantations-assam-tea-estates-solar/)
 
 Keep Reading
 
 ## Related Guides
 
-[Business Models: **CAPEX vs OPEX (RESCO) Solar: Which Model Suits Your Business?**Own your solar plant and keep every unit, or pay a developer per unit with no upfront cost? A side-by-side comparison of CAPEX and OPEX solar, with the numbers that decide it.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/capex-vs-opex-solar/)[Standards & Safety: **Solar Quality and Safety Norms in India (2026): BIS, the Quality Control Order, CEA and CEIG**What makes a solar plant compliant in 2026: the BIS Quality Control Order for modules, inverters and batteries, the standards each component should meet, the Electrical Inspector's approval, and site safety.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/solar-quality-standards-bis-cea/)[Installation & Commissioning: **Solar Plant Installation and Commissioning: The Complete Step-by-Step Checklist**What actually happens between the purchase order and the day a solar plant goes live. Every stage of installation and commissioning, the tests that prove the plant is safe, and the documents you should receive at handover.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/solar-plant-commissioning-checklist/)
+[Business Models: **CAPEX vs OPEX (RESCO) Solar: Which Model Suits Your Business?**Own your solar plant and keep every unit, or pay a developer per unit with no upfront cost? A side-by-side comparison of CAPEX and OPEX solar, with the numbers that decide it.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/capex-vs-opex-solar/)[Standards & Safety: **Solar Quality and Safety Norms in India (2026): BIS, the Quality Control Order, CEA and CEIG**What makes a solar plant compliant in 2026: the BIS Quality Control Order for modules, inverters and batteries, the standards each component should meet, the Electrical Inspector's approval, and site safety.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-quality-standards-bis-cea/)[Installation & Commissioning: **Solar Plant Installation and Commissioning: The Complete Step-by-Step Checklist**What actually happens between the purchase order and the day a solar plant goes live. Every stage of installation and commissioning, the tests that prove the plant is safe, and the documents you should receive at handover.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-plant-commissioning-checklist/)
 
-[All solar guides](https://arrays-9mj.pages.dev/insights/)[Government solar schemes](https://arrays-9mj.pages.dev/solar-schemes-india/)
+[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

@@ -1,7 +1,7 @@
 ---
 title: PM Surya Ghar Subsidy 2026 Guide | Arrays Ingenieria
 description: PM Surya Ghar gives homes up to Rs 78,000 for rooftop solar. Subsidy by size, housing-society support, loans, eligibility and how to apply in 2026.
-url: https://arrays-9mj.pages.dev/pm-surya-ghar-subsidy/
+url: https://arraysingenieria.com/pm-surya-ghar-subsidy/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -22,7 +22,7 @@ On this page
 - Frequently asked questions
 - Sources
 
-By the [Arrays Ingenieria engineering team](https://arrays-9mj.pages.dev/about/) · Updated 11 Oct 2026 · 3 min read
+By the [Arrays Ingenieria engineering team](https://arraysingenieria.com/about/) · Updated 11 Oct 2026 · 3 min read
 
 **Key takeaways**
 
@@ -77,15 +77,15 @@ Collateral-free loans of around 7% are available from public-sector banks for re
 - Size to your consumption: a 3 kW system typically generates around 12 units a day in most of India, depending on sunshine and orientation.
 - Use a shade-free, south-facing area where you can; avoid water tanks and parapets casting shadows.
 - Ask for the DCR module certificate, inverter BIS certificate and warranty documents.
-- Keep the panels clean: dust can cut output noticeably in dry months (see [O&M and module cleaning](https://arrays-9mj.pages.dev/solar-om-module-cleaning/)).
+- Keep the panels clean: dust can cut output noticeably in dry months (see [O&M and module cleaning](https://arraysingenieria.com/solar-om-module-cleaning/)).
 
 ## Where Arrays Ingenieria fits
 
-PM Surya Ghar is a scheme for homes and housing societies. Arrays Ingenieria focuses on commercial, industrial and tea-estate plants, which fall outside it, and on installation & commissioning for developers. For businesses, the equivalent levers are [accelerated depreciation](https://arrays-9mj.pages.dev/accelerated-depreciation-solar/), the [5% GST rate](https://arrays-9mj.pages.dev/gst-on-solar-india/) and [net metering](https://arrays-9mj.pages.dev/net-metering-india/) or [open access](https://arrays-9mj.pages.dev/green-energy-open-access/).
+PM Surya Ghar is a scheme for homes and housing societies. Arrays Ingenieria focuses on commercial, industrial and tea-estate plants, which fall outside it, and on installation & commissioning for developers. For businesses, the equivalent levers are [accelerated depreciation](https://arraysingenieria.com/accelerated-depreciation-solar/), the [5% GST rate](https://arraysingenieria.com/gst-on-solar-india/) and [net metering](https://arraysingenieria.com/net-metering-india/) or [open access](https://arraysingenieria.com/green-energy-open-access/).
 
 Running a business, school, hospital or housing society with a large roof? We can design a plant that pays back fast.
 
-[Get a free solar quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a free solar quote](https://arraysingenieria.com/free-solar-quote/)
 
 ## Frequently asked questions
 
@@ -113,9 +113,9 @@ After installation, inspection and net-meter commissioning, the commissioning ce
 
 This guide explains public policy in plain language for planning purposes. Rules, rates and deadlines change: confirm the current position with the notifying authority, your DISCOM and your tax adviser before you commit. Last checked 11 Oct 2026.
 
-**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arrays-9mj.pages.dev/ex-servicemen-led-msme/) · [Our projects](https://arrays-9mj.pages.dev/projects/)
+**About the authors.** Arrays Ingenieria is an ex-servicemen-led solar EPC and installation & commissioning company working Pan-India, from Assam's tea estates to industrial rooftops. [Our story](https://arraysingenieria.com/ex-servicemen-led-msme/) · [Our projects](https://arraysingenieria.com/projects/)
 
-[Rooftop Solar](https://arrays-9mj.pages.dev/service-rooftop/)[CAPEX Solar EPC](https://arrays-9mj.pages.dev/capex-solar-epc/)
+[Rooftop Solar](https://arraysingenieria.com/service-rooftop/)[CAPEX Solar EPC](https://arraysingenieria.com/capex-solar-epc/)
 
 From Our Sites
 
@@ -123,12 +123,12 @@ From Our Sites
 
 Real plants our veteran-led crews have built, with the scope of work in detail.
 
-[On-Grid · I&C: **1711.66 kWp On-Grid Solar PV Project, Assam**1711.66 kWp · AssamRead the case study](https://arrays-9mj.pages.dev/project-assam-1711kwp-on-grid-solar/)
+[On-Grid · I&C: **1711.66 kWp On-Grid Solar PV Project, Assam**1711.66 kWp · AssamRead the case study](https://arraysingenieria.com/project-assam-1711kwp-on-grid-solar/)
 
 Keep Reading
 
 ## Related Guides
 
-[Policy: **ALMM List-I and List-II Explained: The Made-in-India Rule for Solar Modules and Cells**MNRE's Approved List of Models and Manufacturers now covers solar cells as well as modules. What List-I and List-II mean, which projects they bind, the exemptions, and how to stay compliant.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/almm-list-ii-solar-cells/)[Grid & Regulation: **Net Metering in India (2026): Net Billing, Gross Metering, ToD Tariffs and the Draft 2026 Rules**How your solar plant connects to the DISCOM and how exported units are paid for: net metering, net billing and gross metering, the 500 kW rule, time-of-day tariffs, the draft 2026 amendments, and the step-by-step approval process.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/net-metering-india/)[Schemes: **PM-KUSUM in 2026: Components A, B and C, New Deadlines and What Comes Next**India's farm solar scheme: up to 2 MW plants on farmers' land, standalone solar pumps and solarised feeders. What each component offers, the 2026 deadline extensions, and the proposed PM-KUSUM 2.0.3 min read · Updated 11 Oct 2026](https://arrays-9mj.pages.dev/pm-kusum-scheme/)
+[Policy: **ALMM List-I and List-II Explained: The Made-in-India Rule for Solar Modules and Cells**MNRE's Approved List of Models and Manufacturers now covers solar cells as well as modules. What List-I and List-II mean, which projects they bind, the exemptions, and how to stay compliant.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/almm-list-ii-solar-cells/)[Grid & Regulation: **Net Metering in India (2026): Net Billing, Gross Metering, ToD Tariffs and the Draft 2026 Rules**How your solar plant connects to the DISCOM and how exported units are paid for: net metering, net billing and gross metering, the 500 kW rule, time-of-day tariffs, the draft 2026 amendments, and the step-by-step approval process.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/net-metering-india/)[Schemes: **PM-KUSUM in 2026: Components A, B and C, New Deadlines and What Comes Next**India's farm solar scheme: up to 2 MW plants on farmers' land, standalone solar pumps and solarised feeders. What each component offers, the 2026 deadline extensions, and the proposed PM-KUSUM 2.0.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/pm-kusum-scheme/)
 
-[All solar guides](https://arrays-9mj.pages.dev/insights/)[Government solar schemes](https://arrays-9mj.pages.dev/solar-schemes-india/)
+[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

@@ -1,7 +1,7 @@
 ---
 title: Rossell India Tea Estate Solar Plants | Arrays Ingenieria
 description: Case study: piling, BOS works and installation & commissioning of ground-mount solar plants at four Rossell India tea estates in Assam, for Tata Power.
-url: https://arrays-9mj.pages.dev/project-rossell-india-assam-tea-estates-solar/
+url: https://arraysingenieria.com/project-rossell-india-assam-tea-estates-solar/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -48,7 +48,7 @@ Year: **2023-2026**
 
 Talk to our veteran-led team about EPC, installation & commissioning or civil works.
 
-[Get a Free Quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a Free Quote](https://arraysingenieria.com/free-solar-quote/)
 
 Project Timeline
 
@@ -172,16 +172,16 @@ The standard ground-mount installation & commissioning scope we deliver to EPC m
 - Third-party validation of tools where required
 - Testing, commissioning and handover
 
-[The full commissioning checklist](https://arrays-9mj.pages.dev/solar-plant-commissioning-checklist/)[Our I&C service](https://arrays-9mj.pages.dev/solar-installation-commissioning/)
+[The full commissioning checklist](https://arraysingenieria.com/solar-plant-commissioning-checklist/)[Our I&C service](https://arraysingenieria.com/solar-installation-commissioning/)
 
 Related
 
 ## Services Used on This Project
 
-[Installation & Commissioning](https://arrays-9mj.pages.dev/solar-installation-commissioning/)[Pile Foundations](https://arrays-9mj.pages.dev/service-piling/)[Ground-Mount Solar](https://arrays-9mj.pages.dev/service-ground-mount/)[Solar for Tea Estates](https://arrays-9mj.pages.dev/solar-for-tea-estates/)[All Projects →](https://arrays-9mj.pages.dev/projects/)
+[Installation & Commissioning](https://arraysingenieria.com/solar-installation-commissioning/)[Pile Foundations](https://arraysingenieria.com/service-piling/)[Ground-Mount Solar](https://arraysingenieria.com/service-ground-mount/)[Solar for Tea Estates](https://arraysingenieria.com/solar-for-tea-estates/)[All Projects →](https://arraysingenieria.com/projects/)
 
 More Case Studies
 
 ## Other Projects by Arrays Ingenieria
 
-[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arrays-9mj.pages.dev/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arrays-9mj.pages.dev/project-jayshree-tea-1mw-solar-assam/)[Tea Estate · Ground-Mount: **Orangajuli Tea Estate: 450 kWp Ground-Mount Solar Plant**450 kWp · Orangajuli, Panerihaat, Udalguri district, AssamRead the case study](https://arrays-9mj.pages.dev/project-orangajuli-tea-estate-450kw-solar/)
+[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arraysingenieria.com/project-jayshree-tea-1mw-solar-assam/)[Tea Estate · Ground-Mount: **Orangajuli Tea Estate: 450 kWp Ground-Mount Solar Plant**450 kWp · Orangajuli, Panerihaat, Udalguri district, AssamRead the case study](https://arraysingenieria.com/project-orangajuli-tea-estate-450kw-solar/)

@@ -1,7 +1,7 @@
 ---
 title: 319 kWp Rooftop Solar, TCPL Vaishali | Arrays Ingenieria
 description: Case study: 319 kWp rooftop solar plant for TCPL Greenery Agro (Tata Consumer Products) at Bhagwanpur, Vaishali, Bihar, reported by Dainik Bhaskar.
-url: https://arrays-9mj.pages.dev/project-tcpl-vaishali-319kwp-rooftop-solar/
+url: https://arraysingenieria.com/project-tcpl-vaishali-319kwp-rooftop-solar/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -31,7 +31,7 @@ Bihar is home ground for the company: its branch office is in Madhubani.
 
 ### In the news
 
-[Newspaper: **Dainik Bhaskar**3 Apr 2024Bhagwanpur solar plant to generate 319 kW of power](https://arrays-9mj.pages.dev/recognition/#bhaskar-tcpl)
+[Newspaper: **Dainik Bhaskar**3 Apr 2024Bhagwanpur solar plant to generate 319 kW of power](https://arraysingenieria.com/recognition/#bhaskar-tcpl)
 
 ### Photos
 
@@ -55,7 +55,7 @@ Year: **2024**
 
 Talk to our veteran-led team about EPC, installation & commissioning or civil works.
 
-[Get a Free Quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a Free Quote](https://arraysingenieria.com/free-solar-quote/)
 
 Project Timeline
 
@@ -140,16 +140,16 @@ The standard rooftop installation & commissioning scope we deliver to EPC majors
 - Safety posters, storage under covers and care until handover
 - Testing, commissioning and handover
 
-[The full commissioning checklist](https://arrays-9mj.pages.dev/solar-plant-commissioning-checklist/)[Our I&C service](https://arrays-9mj.pages.dev/solar-installation-commissioning/)
+[The full commissioning checklist](https://arraysingenieria.com/solar-plant-commissioning-checklist/)[Our I&C service](https://arraysingenieria.com/solar-installation-commissioning/)
 
 Related
 
 ## Services Used on This Project
 
-[Rooftop Solar](https://arrays-9mj.pages.dev/service-rooftop/)[EPC Turnkey](https://arrays-9mj.pages.dev/service-epc/)[All Projects →](https://arrays-9mj.pages.dev/projects/)
+[Rooftop Solar](https://arraysingenieria.com/service-rooftop/)[EPC Turnkey](https://arraysingenieria.com/service-epc/)[All Projects →](https://arraysingenieria.com/projects/)
 
 More Case Studies
 
 ## Other Projects by Arrays Ingenieria
 
-[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arrays-9mj.pages.dev/project-super-smelters-1980kwp-rooftop-solar/)[Industrial · Rooftop I&C: **Balaji Action Buildwell, Sitarganj: Solar I&C, BOS and Civil Works**4000.32 kWp project (as described in the BOS order) · Sitarganj, UttarakhandRead the case study](https://arrays-9mj.pages.dev/project-balaji-action-sitarganj-4mwp-solar/)[Industrial · Rooftop I&C: **SRMB Steel, Durgapur: Rooftop Solar I&C in Three Phases**1895.4 kWp, 1060 kWp and 1.69 MWp · Durgapur, West BengalRead the case study](https://arrays-9mj.pages.dev/project-srmb-steel-durgapur-rooftop-solar/)
+[Industrial · Rooftop: **Super Smelters: 1980.3 kWp Rooftop Solar Plant**1980.3 kWp (about 2 MW) · Jamuria (Asansol), West BengalRead the case study](https://arraysingenieria.com/project-super-smelters-1980kwp-rooftop-solar/)[Industrial · Rooftop I&C: **Balaji Action Buildwell, Sitarganj: Solar I&C, BOS and Civil Works**4000.32 kWp project (as described in the BOS order) · Sitarganj, UttarakhandRead the case study](https://arraysingenieria.com/project-balaji-action-sitarganj-4mwp-solar/)[Industrial · Rooftop I&C: **SRMB Steel, Durgapur: Rooftop Solar I&C in Three Phases**1895.4 kWp, 1060 kWp and 1.69 MWp · Durgapur, West BengalRead the case study](https://arraysingenieria.com/project-srmb-steel-durgapur-rooftop-solar/)

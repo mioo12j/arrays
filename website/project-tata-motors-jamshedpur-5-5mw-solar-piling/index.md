@@ -1,7 +1,7 @@
 ---
 title: 5.5 MW Solar Piling & I&C, Tata Motors | Arrays Ingenieria
 description: Case study: piling, civil works, installation & commissioning and a pre-cast boundary wall for the 5.5 MW Tata Motors solar plant at Jojobera, Jamshedpur.
-url: https://arrays-9mj.pages.dev/project-tata-motors-jamshedpur-5-5mw-solar-piling/
+url: https://arraysingenieria.com/project-tata-motors-jamshedpur-5-5mw-solar-piling/
 last_updated: 2026-10-11
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
@@ -50,7 +50,7 @@ Year: **2023-2024**
 
 Talk to our veteran-led team about EPC, installation & commissioning or civil works.
 
-[Get a Free Quote](https://arrays-9mj.pages.dev/free-solar-quote/)
+[Get a Free Quote](https://arraysingenieria.com/free-solar-quote/)
 
 Project Timeline
 
@@ -174,16 +174,16 @@ The standard ground-mount installation & commissioning scope we deliver to EPC m
 - Third-party validation of tools where required
 - Testing, commissioning and handover
 
-[The full commissioning checklist](https://arrays-9mj.pages.dev/solar-plant-commissioning-checklist/)[Our I&C service](https://arrays-9mj.pages.dev/solar-installation-commissioning/)
+[The full commissioning checklist](https://arraysingenieria.com/solar-plant-commissioning-checklist/)[Our I&C service](https://arraysingenieria.com/solar-installation-commissioning/)
 
 Related
 
 ## Services Used on This Project
 
-[Pile Foundations](https://arrays-9mj.pages.dev/service-piling/)[Civil Works & Fencing](https://arrays-9mj.pages.dev/service-civil/)[All Projects →](https://arrays-9mj.pages.dev/projects/)
+[Pile Foundations](https://arraysingenieria.com/service-piling/)[Civil Works & Fencing](https://arraysingenieria.com/service-civil/)[All Projects →](https://arraysingenieria.com/projects/)
 
 More Case Studies
 
 ## Other Projects by Arrays Ingenieria
 
-[Industrial · Civil Works: **DCM Textile, Hisar: Civil Works, Piling and I&C for Solar**9979 kWp (10 MW) · Hisar, HaryanaRead the case study](https://arrays-9mj.pages.dev/project-dcm-hisar-10mw-solar-civil-works/)[Utility-Scale · Civil & Fencing: **Noida International Airport (YIAPL): 14.36 MW Solar, Piling & Fencing**14.36 MW · Noida International Airport, Gautam Buddh Nagar, Uttar PradeshRead the case study](https://arrays-9mj.pages.dev/project-yiapl-14-36mw-solar-civil-fencing/)[Utility-Scale · Piling: **SECI 300 MW Solar Project, Koppal: Piling and DC Installation**300 MW solar project · Koppal, KarnatakaRead the case study](https://arrays-9mj.pages.dev/project-seci-300mw-koppal-pile-foundation/)
+[Industrial · Civil Works: **DCM Textile, Hisar: Civil Works, Piling and I&C for Solar**9979 kWp (10 MW) · Hisar, HaryanaRead the case study](https://arraysingenieria.com/project-dcm-hisar-10mw-solar-civil-works/)[Utility-Scale · Civil & Fencing: **Noida International Airport (YIAPL): 14.36 MW Solar, Piling & Fencing**14.36 MW · Noida International Airport, Gautam Buddh Nagar, Uttar PradeshRead the case study](https://arraysingenieria.com/project-yiapl-14-36mw-solar-civil-fencing/)[Utility-Scale · Piling: **SECI 300 MW Solar Project, Koppal: Piling and DC Installation**300 MW solar project · Koppal, KarnatakaRead the case study](https://arraysingenieria.com/project-seci-300mw-koppal-pile-foundation/)
