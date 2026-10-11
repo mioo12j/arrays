@@ -2207,3 +2207,8 @@ input[aria-invalid="true"] { border-color: #d92d20 !important; }
 .proof-list b { display: block; font-family: var(--head); font-size: 15.5px; color: #0f2a1f; }
 .proof-list span { display: block; font-size: 13.5px; color: var(--muted); margin-top: 2px; line-height: 1.45; }
 .page-hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 22px 0 18px; }
+/* guide body: fill the grid column instead of sizing to its widest content (phones) */
+.art-grid > .art-body { margin-inline: 0; width: auto; justify-self: stretch; }
+.jr-body { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 560px) { .jr-step { gap: 12px; } .jr-body { padding: 14px 16px; } .jr-step.reveal { transform: translateY(18px); } }
+.ins-keys ul { list-style: disc; padding-left: 22px; } .ins-keys li::marker { color: var(--green-600); }
