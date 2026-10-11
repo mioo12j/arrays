@@ -1221,8 +1221,11 @@ KOOMBER_VIDEOS = [
 
 def render_koomber_videos():
     dims = {poster: image_size(os.path.join(ROOT, poster)) or (16, 9) for _, poster, _, _, _ in KOOMBER_VIDEOS}
-    items = "".join(f'<figure class="kv kv--{o} reveal" data-d="{i}"><video poster="{poster}" width="{dims[poster][0]}" height="{dims[poster][1]}" muted loop playsinline preload="metadata" data-autoplay '
-                    f'aria-label="{esc(cap)}"><source src="{src}" type="video/mp4" /><source src="{src[:-4]}.webm" type="video/webm" /></video><figcaption>{esc(cap)}</figcaption></figure>'
+    # WebP poster when one exists next to the JPEG (smaller download before the video plays)
+    psrc = {poster: (poster[:-4] + ".webp" if os.path.isfile(os.path.join(ROOT, poster.lstrip("/")[:-4] + ".webp")) else poster)
+            for _, poster, _, _, _ in KOOMBER_VIDEOS}
+    items = "".join(f'<figure class="kv kv--{o} reveal" data-d="{i}"><video poster="{psrc[poster]}" width="{dims[poster][0]}" height="{dims[poster][1]}" muted loop playsinline preload="none" data-autoplay '
+                    f'aria-label="{esc(cap)}"><source src="{src[:-4]}.webm" type="video/webm" /><source src="{src}" type="video/mp4" /></video><figcaption>{esc(cap)}</figcaption></figure>'
                     for i, (src, poster, cap, _, o) in enumerate(KOOMBER_VIDEOS))
     return f'<div class="kv-grid">{items}</div>'
 
@@ -2382,8 +2385,9 @@ def process_images(body_html):
             tag = set_attr(tag, "loading", "eager")
             tag = set_attr(tag, "fetchpriority", "high")
         elif "data-eager" in tag:  # key photos further down (CM mosaic, video thumbnails): never left blank while lazy-loading
-            tag = del_attr(del_attr(tag, "data-eager"), "fetchpriority")
+            tag = del_attr(tag, "data-eager")
             tag = set_attr(tag, "loading", "eager")
+            tag = set_attr(tag, "fetchpriority", "low")  # fetched early, but after the hero and fonts
         else:
             tag = del_attr(tag, "fetchpriority")
             tag = set_attr(tag, "loading", "lazy")
@@ -2610,8 +2614,8 @@ def process_page(fname):
     # links, asset versions, scripts
     text = normalise_links(text)
     text = re.sub(r"\?v=[0-9a-f]+", f"?v={ASSET_VERSION}", text)
-    if 'id="indiaMap"' not in text:
-        text = re.sub(r'<script src="/?assets/js/india-map-data(?:\.min)?\.js[^"]*"[^>]*></script>\n', "", text)
+    # the map data and the PDF library are loaded on demand by components.js (window.loadScript)
+    text = re.sub(r'<script src="/?assets/js/(?:india-map-data(?:\.min)?|jspdf\.umd\.min)\.js[^"]*"[^>]*></script>\n', "", text)
 
     # images
     head, body = text.split("</head>", 1)

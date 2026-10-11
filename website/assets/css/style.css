@@ -2212,3 +2212,13 @@ input[aria-invalid="true"] { border-color: #d92d20 !important; }
 .jr-body { min-width: 0; overflow-wrap: anywhere; }
 @media (max-width: 560px) { .jr-step { gap: 12px; } .jr-body { padding: 14px 16px; } .jr-step.reveal { transform: translateY(18px); } }
 .ins-keys ul { list-style: disc; padding-left: 22px; } .ins-keys li::marker { color: var(--green-600); }
+
+/* ---- performance: GPU-only animations, and skip rendering off-screen sections until needed ---- */
+.gold-name, .gold-frame { animation: none; background-position: 50% center; }
+.scroll-cue .mouse::after { top: 7px; animation-name: wheelT; }
+@keyframes wheelT { 0% { opacity: 1; transform: translate(-50%, 0); } 80%, 100% { opacity: 0; transform: translate(-50%, 11px); } }
+.slide-dot { transition: background-color .25s; }
+.office-line { animation: none; }
+.office-ring { animation-name: ringPulseT; }
+@keyframes ringPulseT { 0% { transform: scale(.67); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+/* (content-visibility was tried here and dropped: placeholder heights made the page jump and broke in-page links) */

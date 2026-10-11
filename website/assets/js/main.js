@@ -346,7 +346,18 @@ async function formAccepted(res) {
 
   /* ---------- India presence map ---------- */
   const mapHost = $("#indiaMap");
-  if (mapHost && window.INDIA_MAP) {
+  // the map outline (~180 KB) is fetched only when the map is about to scroll into view
+  if (mapHost && !window.INDIA_MAP && window.loadScript) {
+    const mio = new IntersectionObserver((entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      mio.disconnect();
+      window.loadScript("india-map-data.min.js").then(drawMap, () => {});
+    }, { rootMargin: "900px 0px" });
+    mio.observe(mapHost);
+  } else if (mapHost) drawMap();
+  function drawMap() {
+  if (!window.INDIA_MAP) return;
+  {
     const data = window.INDIA_MAP;
     const presence = new Set(["hr","dl","rj","ut","up","br","jh","wb","or","as","ka"]);
     const offices = [
@@ -401,6 +412,7 @@ async function formAccepted(res) {
       tag.style.top = (((o.y - 50) / vb[3]) * 100) + "%";
       mapHost.appendChild(tag);
     });
+  }
   }
 
   /* ---------- Contact form (Formspree → email, mailto fallback) ---------- */

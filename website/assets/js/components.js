@@ -268,7 +268,33 @@ window.phoneProblem = function (raw) {
     v.addEventListener("pause", paint);
     fig.appendChild(btn);
     paint();
-    if (!(reduce && reduce.matches)) { const p = v.play(); if (p && p.catch) p.catch(() => paint()); }
+    // autoplay only while on screen (the files are several MB: nothing downloads until the video is near view);
+    // once someone presses Pause, scrolling never restarts it
+    let userPaused = false;
+    btn.addEventListener("click", () => { userPaused = v.paused; }); // runs after the toggle above
+    const start = () => { if (!(reduce && reduce.matches) && !userPaused) { const p = v.play(); if (p && p.catch) p.catch(() => paint()); } };
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver((entries) => entries.forEach((e) => {
+        if (e.isIntersecting) start(); else if (!v.paused) v.pause();
+      }), { rootMargin: "200px 0px" }).observe(v);
+    } else start();
     if (reduce && reduce.addEventListener) reduce.addEventListener("change", (e) => { if (e.matches) v.pause(); });
   });
+})();
+
+/* Load a script from /assets/js/ on demand, with the same ?v= version as this file. */
+window.loadScript = (function () {
+  const cache = {};
+  const me = document.currentScript && document.currentScript.src;
+  return function (name) {
+    if (cache[name]) return cache[name];
+    const base = me ? me.replace(/components(\.min)?\.js/, name) : "/assets/js/" + name;
+    cache[name] = new Promise((resolve, reject) => {
+      const s = document.createElement("script");
+      s.src = base; s.async = true; s.onload = resolve;
+      s.onerror = () => { delete cache[name]; reject(new Error("load failed: " + name)); };
+      document.head.appendChild(s);
+    });
+    return cache[name];
+  };
 })();

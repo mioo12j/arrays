@@ -278,13 +278,18 @@
     return doc;
   }
 
+  // the PDF library (~360 KB) loads only when someone asks for the report
+  const loadPdfLib = () => (window.jspdf && window.jspdf.jsPDF) ? Promise.resolve()
+    : (window.loadScript ? window.loadScript("jspdf.umd.min.js") : Promise.reject(new Error("no loader")));
   $("calcPdf").addEventListener("click", function () {
-    const doc = buildPdf();
-    if (!doc) {
-      if (last) alert("Preparing report… please click again in a moment."); // inputs are fine, the PDF library is still loading
-      return; // otherwise the input error is already shown under the button
-    }
-    doc.save("Ingenieria-Solar-Estimate.pdf");
+    const btn = this;
+    if (!last && compute() === false) return; // the input error is already shown under the button
+    btn.setAttribute("aria-busy", "true");
+    loadPdfLib().then(() => {
+      const doc = buildPdf();
+      if (doc) doc.save("Ingenieria-Solar-Estimate.pdf");
+    }, () => alert("Sorry, the report could not be prepared. Please check your connection and try again."))
+      .finally(() => btn.removeAttribute("aria-busy"));
   });
   window.__buildPdf = buildPdf;
 })();
