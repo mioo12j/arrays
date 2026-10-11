@@ -391,7 +391,7 @@ GLOSSARY = [
 # name, relationship, what we did, project files
 CLIENTS = [
     ("Tata Power Renewable Energy Ltd. / Tata Power Solar Systems Ltd.", "EPC partner",
-     "Our longest-running client: 181 purchase orders since 2021 for installation & commissioning, BOS works, piling, "
+     "Our longest-running client, since 2021: installation & commissioning, BOS works, piling, "
      "civil works, module cleaning systems and CEIG approvals, on rooftop and ground-mount plants from Assam to Odisha, Haryana and Uttar Pradesh.",
      ["project-super-smelters-1980kwp-rooftop-solar.html", "project-amalgamated-plantations-assam-tea-estates-solar.html",
       "project-tata-motors-jamshedpur-5-5mw-solar-piling.html", "project-dcm-hisar-10mw-solar-civil-works.html"]),
@@ -959,9 +959,7 @@ GLOSSARY += [
 
 
 # ------------------------------------------------- purchase-order record ----
-# From the SAP Ariba purchase orders issued to Arrays Ingenieria by Tata Power Solar
-# Systems Ltd. (TPSSL) and Tata Power Renewable Energy Ltd. (TPREL), 2021-2026, under the
-# Order values and billing details are left out.
+# Additional project detail. No order counts, values or billing details are published.
 TPSSL = "Tata Power Solar Systems Ltd."
 TPREL = "Tata Power Renewable Energy Ltd."
 GENERIC_GROUND = "assets/photos/arrays-ingenieria-utility-scale-ground-mount-solar-power-plant.jpg"
@@ -977,7 +975,7 @@ _p.update(partner=f"{TPSSL} (EPC)", role="Installation & commissioning, BOS work
           scope=["Installation & commissioning of the 1980 kW sheet-roof plant", "Balance-of-system (BOS) materials and additional cabling",
                  "Cable trays and earth excavation", "Earthing strip and self-drilling fasteners",
                  "Module cleaning system: supply and services", "Testing and commissioning"])
-_p["body"].append("Tata Power Solar's purchase orders of 2024 set out the scope: installation & commissioning of the 1980 kW sheet-roof "
+_p["body"].append("In 2024 Tata Power Solar engaged Arrays Ingenieria for the installation & commissioning of the 1980 kW sheet-roof "
                   "plant, the BOS materials and additional cabling, cable trays and earth excavation, the earthing strip, and the supply "
                   "and service of the module cleaning system.")
 
@@ -1017,7 +1015,7 @@ _p.update(name="Noida International Airport (YIAPL): 14.36 MW Solar, Piling & Fe
                  "All manpower, machinery and material for the fencing"])
 _p["intro"] = ("Pile foundations and chain-link perimeter fencing for the 14.36 MW solar power project of YIAPL, the company building "
                "Noida International Airport in Uttar Pradesh.")
-_p["body"] = ["Tata Power Renewable Energy issued Arrays Ingenieria service orders in 2025 for the construction of pile foundations "
+_p["body"] = ["In 2025 Tata Power Renewable Energy engaged Arrays Ingenieria for the construction of pile foundations "
               "(300 mm diameter, 1.8 m to 2.3 m deep) and for the supply, civil work and erection of chain-link fencing, with a "
               "tentative fence length of about 6.25 km, at the 14.36 MW YIAPL solar power project.",
               "A plant of this size needs its foundations in and its perimeter secured before installation crews can move in."]
@@ -1026,7 +1024,7 @@ _p = _project("project-tcpl-vaishali-319kwp-rooftop-solar.html")
 _p.update(partner=f"{TPSSL} (EPC)", role="Installation & commissioning, BOS works and module cleaning system",
           scope=["Installation & commissioning of the 319.06 kW sheet-roof plant", "BOS materials, cable glands and lugs",
                  "Module cleaning system services", "Grid connection"])
-_p["body"].insert(1, "Tata Power Solar's purchase orders of 2024 cover the installation & commissioning of the 319.06 kW sheet-roof plant, "
+_p["body"].insert(1, "In 2024 Tata Power Solar engaged the company for the installation & commissioning of the 319.06 kW sheet-roof plant, "
                      "its BOS materials, cable glands and lugs, and the module cleaning system services.")
 
 PROJECTS += [
@@ -1162,39 +1160,37 @@ PROJECTS += [
     ),
 ]
 
-# Work-experience record: one row per site, covering all 181 purchase orders (2021-2026) after re-issued duplicates are
-# merged. Columns: years, site, capacity, state, our scope, ordered by. Order values are left out.
+# Work-experience record, one row per site. Columns: years, site, capacity, state, our scope.
 TRACK_RECORD = [
-    ("2021-25", "DCM Textile, Hisar", "10 MW, 2.1 MW and 500 kWp", "Haryana", "Civil works and piling, rooftop I&C, canopy, earthing, CEIG approval, module cleaning", "TPSSL / TPREL"),
-    ("2021", "Ramnagar solar project", "2.71 MWp ground-mount", "Uttarakhand", "Civil works and piling, I&C, module cleaning", "TPSSL"),
-    ("2021", "Tata Motors, Pantnagar (Phase 4)", "2 MWp", "Uttarakhand", "Civil works and pile foundations", "TPSSL"),
-    ("2021-23", "SRMB Steel, Durgapur", "1895.4 kWp, 1060 kWp, 1.69 MWp", "West Bengal", "Rooftop I&C, BOS, module cleaning, module shifting", "TPSSL"),
-    ("2022-23", "Balaji Action Buildwell, Sitarganj", "4000.32 kWp", "Uttarakhand", "Rooftop I&C, BOS, civil works and piling, CEIG approvals, labour colony", "TPSSL"),
-    ("2022-23", "Pernod Ricard India, Behror", "250 kW ground-mount", "Rajasthan", "Piling, I&C, BOS, CEIG approval, module cleaning, land levelling", "TPSSL"),
-    ("2022-24", "Amalgamated Plantations (APPL) tea estates", "About 5 MW, 12+ estates", "Assam", "Piling, I&C, BOS, module cleaning, logistics", "TPSSL / TPREL"),
-    ("2022-23", "Tata Steel, Jamshedpur (incl. floating solar)", "", "Jharkhand", "Module cleaning systems, ballast lifting hooks", "TPSSL"),
-    ("2022", "Special Bureau rooftops, Kolkata, Patna and Agartala", "28.16, 14.08 and 15.515 kWp", "WB, Bihar, Tripura", "Rooftop BOS services", "TPSSL"),
-    ("2022, 2026", "Goodyear (North Region)", "1000.845 kWp", "", "BOS supply, transport and installation", "TPSSL / TPREL"),
-    ("2022-24", "RSSB, Raipur and Bhati (Chhatarpur)", "63 kWp and 96 kW", "Chhattisgarh, Delhi", "CEIG and net-metering approval, BOS cabling, module cleaning", "TPSSL / TPREL"),
-    ("2023", "Apar Industries, Jharsuguda", "1.2 MWp", "Odisha", "Rooftop I&C, BOS, skylight mesh, CEIG approval", "TPSSL"),
-    ("2023", "Singhania Tea Estate, Jalpaiguri", "400 kW ground-mount", "West Bengal", "Pile foundations and civil works", "TPSSL"),
-    ("2023", "TCPL, Siliguri", "24 kWp", "West Bengal", "Rooftop BOS, module cleaning", "TPSSL"),
-    ("2023-24", "Poolawadi Wind Farm", "", "", "Supply of 1.1 kV XLPE armoured power cable", "TPREL"),
-    ("2023-24", "Tata Motors, Jojobera Yard, Jamshedpur", "5.579 MWp", "Jharkhand", "Piling, civil works, boundary wall, I&C, module cleaning, liaison", "TPSSL / TPREL"),
-    ("2023-24", "Tata Croma, Gurugram", "500 kWp", "Haryana", "Rooftop I&C, BOS, skylight mesh, module cleaning", "TPSSL / TPREL"),
-    ("2023-26", "Rossell India tea estates", "302 kW, 493.24 kWp, 170.51 kWp, 367 kW", "Assam", "Piling, I&C, BOS, module cleaning", "TPSSL / TPREL"),
-    ("2024", "Tata Consumer Products (TCPL), Vaishali", "319.06 kW", "Bihar", "Rooftop I&C, BOS, module cleaning", "TPSSL"),
-    ("2024", "RSPL, Roorkee", "417 kWp", "Uttarakhand", "Rooftop I&C, BOS, skylight mesh, module cleaning", "TPSSL / TPREL"),
-    ("2024", "Super Smelters, Jamuria", "1980 kW", "West Bengal", "Rooftop I&C, BOS, cable trays, module cleaning", "TPSSL / TPREL"),
-    ("2024-25", "A K Automatics, Rohtak", "531 kWp", "Haryana", "Rooftop I&C, BOS, module cleaning", "TPSSL / TPREL"),
-    ("2025", "SECI 300 MW solar project, Koppal", "300 MW", "Karnataka", "Pile foundations; DC installation: tracker modules, string combiner boxes, cable trenching and terminations", "TPREL"),
-    ("2025", "YIAPL, Noida International Airport", "14.36 MW", "Uttar Pradesh", "Pile foundations, chain-link fencing", "TPREL"),
-    ("2026", "Luhit Tea Estate, Golaghat", "488 kWp", "Assam", "I&C with BOS services", "TPREL"),
-    ("2026", "Monokholi and Kadamba Tea Estates", "220 kWp and 234 kWp", "Assam", "I&C with BOS services", "TPREL"),
-    ("2026", "Amalgamated project for SolarGridX (Sustvest)", "2862 kWp", "Assam", "BOS works, piling, transport", "TPREL"),
-    ("2026", "Orangajuli Tea Estate (Goodricke)", "450 kW", "Assam", "BOS: earthing pits", "TPREL"),
+    ("2021-25", "DCM Textile, Hisar", "10 MW, 2.1 MW and 500 kWp", "Haryana", "Civil works and piling, rooftop I&C, canopy, earthing, CEIG approval, module cleaning"),
+    ("2021", "Ramnagar solar project", "2.71 MWp ground-mount", "Uttarakhand", "Civil works and piling, I&C, module cleaning"),
+    ("2021", "Tata Motors, Pantnagar (Phase 4)", "2 MWp", "Uttarakhand", "Civil works and pile foundations"),
+    ("2021-23", "SRMB Steel, Durgapur", "1895.4 kWp, 1060 kWp, 1.69 MWp", "West Bengal", "Rooftop I&C, BOS, module cleaning, module shifting"),
+    ("2022-23", "Balaji Action Buildwell, Sitarganj", "4000.32 kWp", "Uttarakhand", "Rooftop I&C, BOS, civil works and piling, CEIG approvals, labour colony"),
+    ("2022-23", "Pernod Ricard India, Behror", "250 kW ground-mount", "Rajasthan", "Piling, I&C, BOS, CEIG approval, module cleaning, land levelling"),
+    ("2022-24", "Amalgamated Plantations (APPL) tea estates", "About 5 MW, 12+ estates", "Assam", "Piling, I&C, BOS, module cleaning, logistics"),
+    ("2022-23", "Tata Steel, Jamshedpur (incl. floating solar)", "", "Jharkhand", "Module cleaning systems, ballast lifting hooks"),
+    ("2022", "Special Bureau rooftops, Kolkata, Patna and Agartala", "28.16, 14.08 and 15.515 kWp", "WB, Bihar, Tripura", "Rooftop BOS services"),
+    ("2022, 2026", "Goodyear (North Region)", "1000.845 kWp", "", "BOS supply, transport and installation"),
+    ("2022-24", "RSSB, Raipur and Bhati (Chhatarpur)", "63 kWp and 96 kW", "Chhattisgarh, Delhi", "CEIG and net-metering approval, BOS cabling, module cleaning"),
+    ("2023", "Apar Industries, Jharsuguda", "1.2 MWp", "Odisha", "Rooftop I&C, BOS, skylight mesh, CEIG approval"),
+    ("2023", "Singhania Tea Estate, Jalpaiguri", "400 kW ground-mount", "West Bengal", "Pile foundations and civil works"),
+    ("2023", "TCPL, Siliguri", "24 kWp", "West Bengal", "Rooftop BOS, module cleaning"),
+    ("2023-24", "Poolawadi Wind Farm", "", "", "Supply of 1.1 kV XLPE armoured power cable"),
+    ("2023-24", "Tata Motors, Jojobera Yard, Jamshedpur", "5.579 MWp", "Jharkhand", "Piling, civil works, boundary wall, I&C, module cleaning, liaison"),
+    ("2023-24", "Tata Croma, Gurugram", "500 kWp", "Haryana", "Rooftop I&C, BOS, skylight mesh, module cleaning"),
+    ("2023-26", "Rossell India tea estates", "302 kW, 493.24 kWp, 170.51 kWp, 367 kW", "Assam", "Piling, I&C, BOS, module cleaning"),
+    ("2024", "Tata Consumer Products (TCPL), Vaishali", "319.06 kW", "Bihar", "Rooftop I&C, BOS, module cleaning"),
+    ("2024", "RSPL, Roorkee", "417 kWp", "Uttarakhand", "Rooftop I&C, BOS, skylight mesh, module cleaning"),
+    ("2024", "Super Smelters, Jamuria", "1980 kW", "West Bengal", "Rooftop I&C, BOS, cable trays, module cleaning"),
+    ("2024-25", "A K Automatics, Rohtak", "531 kWp", "Haryana", "Rooftop I&C, BOS, module cleaning"),
+    ("2025", "SECI 300 MW solar project, Koppal", "300 MW", "Karnataka", "Pile foundations; DC installation: tracker modules, string combiner boxes, cable trenching and terminations"),
+    ("2025", "YIAPL, Noida International Airport", "14.36 MW", "Uttar Pradesh", "Pile foundations, chain-link fencing"),
+    ("2026", "Luhit Tea Estate, Golaghat", "488 kWp", "Assam", "I&C with BOS services"),
+    ("2026", "Monokholi and Kadamba Tea Estates", "220 kWp and 234 kWp", "Assam", "I&C with BOS services"),
+    ("2026", "Amalgamated project for SolarGridX (Sustvest)", "2862 kWp", "Assam", "BOS works, piling, transport"),
+    ("2026", "Orangajuli Tea Estate (Goodricke)", "450 kW", "Assam", "BOS: earthing pits"),
 ]
-TRACK_SUMMARY = [("181", "purchase orders"), ("28", "project sites"), ("13", "states & UTs"), ("2021-2026", "continuous orders")]
 
 # Case-study order: the Chief Minister's inauguration, then installation & commissioning work, then piling and civil works.
 _ORDER = ["koomber", "jayshree", "orangajuli", "barpatra", "super-smelters", "amalgamated", "rossell", "balaji", "srmb", "apar",
@@ -1209,7 +1205,7 @@ _p.update(name="SECI 300 MW Solar Project, Koppal: Piling and DC Installation",
                  "Termination of 1C x 240 and 300 sq mm cables", "Cable trenching, sand bedding, protection bricks, route markers and warning tape",
                  "DWC HDPE pipe and RCC hume pipe crossings"])
 _p["body"] = ["Tata Power Renewable Energy Ltd. (TPREL) issued Arrays Ingenieria an outline agreement on 17 February 2025 for the "
-              "construction of pile foundations at the 300 MW SECI project, followed by purchase orders against it for the piling.",
+              "construction of pile foundations at the 300 MW SECI project.",
               "In July 2025 TPREL extended the company's role on the same project to DC installation: loading and installing modules "
               "on 112-module interior and exterior trackers, installing string combiner boxes, terminating the main DC cables, and "
               "trenching and laying the cable routes.",
