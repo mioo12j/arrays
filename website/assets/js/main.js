@@ -17,6 +17,33 @@ async function formAccepted(res) {
 
   const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* Automatic rotation with a persistent Pause / Play button: hover or keyboard focus pauses it for a moment,
+     the button stops it for good, and with reduced motion it never starts by itself. */
+  function autoRotate(box, step, interval) {
+    let timer = null, userPaused = reduceMotion, hold = false;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "rotate-toggle";
+    const paint = () => {
+      btn.setAttribute("aria-pressed", userPaused ? "true" : "false");
+      btn.setAttribute("aria-label", userPaused ? "Play the automatic slideshow" : "Pause the automatic slideshow");
+      btn.innerHTML = userPaused
+        ? '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+    };
+    const stop = () => { clearInterval(timer); timer = null; };
+    const start = () => { stop(); if (!userPaused && !hold) timer = setInterval(step, interval); };
+    btn.addEventListener("click", () => { userPaused = !userPaused; paint(); start(); });
+    box.addEventListener("mouseenter", () => { hold = true; stop(); });
+    box.addEventListener("mouseleave", () => { hold = false; start(); });
+    box.addEventListener("focusin", () => { hold = true; stop(); });
+    box.addEventListener("focusout", (e) => { if (!box.contains(e.relatedTarget)) { hold = false; start(); } });
+    box.appendChild(btn);
+    paint();
+    start();
+    return { restart: start };
+  }
+
   /* ---------- Auto-stagger: sibling reveals without data-d cascade in ---------- */
   const staggerGroups = new Map();
   $$(".reveal:not([data-d])").forEach(el => {
@@ -85,7 +112,7 @@ async function formAccepted(res) {
     const slides = $$(".lq-slide", sl);
     const dotsWrap = $(".lq-dots", sl);
     if (!slides.length) return;
-    let idx = 0, timer;
+    let idx = 0;
     const dots = slides.map((s, i) => {
       const d = document.createElement("button");
       d.setAttribute("aria-label", "Show quote " + (i + 1));
@@ -99,14 +126,12 @@ async function formAccepted(res) {
       slides[idx].classList.add("active"); dots[idx].classList.add("active");
       if (manual) restart();
     };
-    const start = () => { if (!reduceMotion) timer = setInterval(() => go(idx + 1), parseInt(sl.dataset.interval || "7000", 10)); };
-    const restart = () => { clearInterval(timer); start(); };
+    let rot = null;
+    const restart = () => rot && rot.restart();
     $(".lq-prev", sl).addEventListener("click", () => go(idx - 1, true));
     $(".lq-next", sl).addEventListener("click", () => go(idx + 1, true));
-    sl.addEventListener("mouseenter", () => clearInterval(timer));
-    sl.addEventListener("mouseleave", restart);
     slides[0].classList.add("active"); dots[0].classList.add("active");
-    start();
+    rot = autoRotate(sl, () => go(idx + 1), parseInt(sl.dataset.interval || "7000", 10));
   });
 
   /* ---------- Scroll reveal ---------- */
@@ -134,6 +159,7 @@ async function formAccepted(res) {
     const target = parseFloat(el.dataset.count);
     const decimals = (el.dataset.count.split(".")[1] || "").length;
     const suffix = el.dataset.suffix || "";
+    if (reduceMotion) { el.textContent = target.toFixed(decimals) + suffix; return; }
     const dur = 1600, start = performance.now();
     const step = now => {
       const p = Math.min((now - start) / dur, 1);
@@ -167,12 +193,28 @@ async function formAccepted(res) {
   $$("[data-filters]").forEach(group => {
     const targetSel = group.dataset.filters;
     const items = $$(targetSel);
-    group.querySelectorAll(".filter").forEach(btn =>
+    // the selected filter and the number of results are announced, not only shown
+    group.setAttribute("role", "group");
+    if (!group.getAttribute("aria-label")) group.setAttribute("aria-label", "Filter by category");
+    const live = document.createElement("p");
+    live.className = "sr-only";
+    live.setAttribute("aria-live", "polite");
+    group.insertAdjacentElement("afterend", live);
+    const btns = [...group.querySelectorAll(".filter")];
+    btns.forEach(b => b.setAttribute("aria-pressed", b.classList.contains("active") ? "true" : "false"));
+    btns.forEach(btn =>
       btn.addEventListener("click", () => {
-        group.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
+        btns.forEach(b => { b.classList.remove("active"); b.setAttribute("aria-pressed", "false"); });
         btn.classList.add("active");
+        btn.setAttribute("aria-pressed", "true");
         const f = btn.dataset.filter;
-        items.forEach(it => it.classList.toggle("hide", !(f === "all" || (it.dataset.cat || "").split(" ").includes(f))));
+        let shown = 0;
+        items.forEach(it => {
+          const on = f === "all" || (it.dataset.cat || "").split(" ").includes(f);
+          it.classList.toggle("hide", !on);
+          if (on) shown++;
+        });
+        live.textContent = btn.textContent.trim() + ": " + shown + (shown === 1 ? " result" : " results");
       })
     );
   });
@@ -195,25 +237,19 @@ async function formAccepted(res) {
         return d;
       });
     }
-    let timer;
+    let rot = null;
     const go = (n, manual) => {
       slides[idx].classList.remove("active");
       if (dots[idx]) dots[idx].classList.remove("active");
       idx = (n + slides.length) % slides.length;
       slides[idx].classList.add("active");
       if (dots[idx]) dots[idx].classList.add("active");
-      if (manual) restart();
+      if (manual && rot) rot.restart();
     };
-    const next = () => go(idx + 1);
-    const start = () => { timer = setInterval(next, interval); };
-    const stop = () => clearInterval(timer);
-    const restart = () => { stop(); start(); };
     $(".slide-prev", sw)?.addEventListener("click", () => go(idx - 1, true));
     $(".slide-next", sw)?.addEventListener("click", () => go(idx + 1, true));
-    sw.addEventListener("mouseenter", stop);
-    sw.addEventListener("mouseleave", start);
     slides[0].classList.add("active");
-    start();
+    rot = autoRotate(sw, () => go(idx + 1), interval);
   });
 
   /* ---------- Lightbox (accessible photo viewer) ---------- */
@@ -382,6 +418,13 @@ async function formAccepted(res) {
       const phone = $("#phone").value.trim();
       const email = $("#email").value.trim();
       const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      const phoneBad = window.phoneProblem ? window.phoneProblem(phone) : (phone ? "" : "Please enter your phone number.");
+      if (phoneBad) {
+        status.className = "form-status err";
+        status.textContent = phoneBad;
+        $("#phone").focus();
+        return;
+      }
       if (!name || !phone || !emailOk) {
         status.className = "form-status err";
         status.textContent = "Please enter your name, a valid email and phone number.";
@@ -468,7 +511,20 @@ async function formAccepted(res) {
     btns.forEach((b) => b.addEventListener("click", () => {
       const f = b.dataset.artFilter;
       btns.forEach((x) => { x.classList.toggle("active", x === b); x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
-      grid.querySelectorAll(".art-card").forEach((c) => c.classList.toggle("is-hidden", f !== "all" && c.dataset.tag !== f));
+      // "All" shows the featured guide above and the rest below; a topic shows every matching guide in the grid
+      const feature = document.querySelector("[data-art-feature]");
+      if (feature) feature.hidden = f !== "all";
+      let shown = 0;
+      grid.querySelectorAll(".art-card").forEach((c) => {
+        const on = c.dataset.lead ? f !== "all" && c.dataset.tag === f : f === "all" || c.dataset.tag === f;
+        c.classList.toggle("is-hidden", !on);
+        if (on) shown++;
+      });
+      if (f === "all") shown += 1;
+      const empty = document.querySelector("[data-art-empty]");
+      if (empty) empty.hidden = shown > 0;
+      const count = document.querySelector("[data-art-count]");
+      if (count) count.textContent = b.textContent.trim() + ": " + shown + (shown === 1 ? " guide" : " guides");
     }));
     btns.forEach((x) => x.setAttribute("aria-pressed", x.classList.contains("active") ? "true" : "false"));
   }

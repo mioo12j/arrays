@@ -18,7 +18,6 @@ async function formAccepted(res) {
   const $$ = (s, el) => [...(el || form).querySelectorAll(s)];
   const steps = $$(".q-step");
   const fill = $(".q-bar__fill");
-  const pct = $(".q-pct");
   const stepTxt = $(".q-steptxt");
   const status = document.getElementById("quoteStatus");
   const done = document.getElementById("quoteDone");
@@ -48,25 +47,51 @@ async function formAccepted(res) {
 
   form.classList.add("is-stepped");
 
+  /* Requests for O&M, piling, civil or I&C only do not need a new-plant estimate: they skip the power-use step,
+     the payment question and the savings summary, and are asked about the plant and the work instead. */
+  const PLANT = /Complete solar plant|Advice/;
+  function serviceOnly() {
+    const ticked = $$('input[name="services"]:checked').map((b) => b.value);
+    return ticked.length > 0 && !ticked.some((v) => PLANT.test(v));
+  }
+  function applyBranch() {
+    const only = serviceOnly();
+    $$("[data-plant-only]").forEach((el) => { el.hidden = only; });
+    $$('[data-plant-only] input[name="ownership"]').forEach((r) => { r.required = !only; if (only) r.checked = false; });
+    $$("[data-service-only]").forEach((el) => { el.hidden = !only; });
+    $("#q-scope").required = only;
+    $("#q-bill").required = !only;
+  }
+  const active = () => steps.filter((st) => !(st.hasAttribute("data-plant-step") && serviceOnly()));
+
   function show(i, scroll = true) {
+    applyBranch();
     current = i;
-    steps.forEach((s, n) => { s.hidden = n !== i; });
-    const p = Math.round(10 + (i / (steps.length - 1)) * 80); // starts at 10%: a head start keeps people going
-    fill.style.width = p + "%";
-    pct.textContent = p + "%";
-    stepTxt.textContent = i === steps.length - 1 ? "Last step" : "Step " + (i + 1) + " of " + steps.length;
+    steps.forEach((st, n) => { st.hidden = n !== i; });
+    const list = active();
+    const pos = list.indexOf(steps[i]) + 1;
+    fill.style.width = Math.round(((pos - 1) / list.length) * 100) + "%"; // 100% only once the request is accepted
+    stepTxt.textContent = "Step " + pos + " of " + list.length;
     if (i === 1) {
       const proof = $("[data-proof]");
       const k = segKey();
       proof.textContent = PROOF[k] || "";
       proof.hidden = !PROOF[k];
     }
-    if (i === 3) estimate();
+    if (steps[i].hasAttribute("data-plant-step")) estimate();
     if (i === steps.length - 1) summary();
+    // keyboard and screen-reader users continue from the new step, not from a hidden button
+    const legend = steps[i].querySelector("legend");
+    if (legend && scroll) { legend.tabIndex = -1; legend.focus({ preventScroll: true }); }
     if (!scroll) return;
     const top = form.getBoundingClientRect().top + window.scrollY - 90;
     if (Math.abs(window.scrollY - top) > 40) window.scrollTo({ top, behavior: "smooth" });
   }
+  const nextIndex = (i, dir) => {
+    let n = i + dir;
+    while (n > 0 && n < steps.length - 1 && steps[n].hasAttribute("data-plant-step") && serviceOnly()) n += dir;
+    return n;
+  };
 
   /* "tick at least one service": the error lives on the first box but is re-evaluated from the whole group,
      so ticking ANY box clears it (it used to clear only when the first box itself changed) */
@@ -76,26 +101,23 @@ async function formAccepted(res) {
     svc[0].setCustomValidity(ok ? "" : "Please tick at least one option.");
     return ok;
   }
-  svc.forEach((b) => b.addEventListener("change", serviceCheck));
+  svc.forEach((b) => b.addEventListener("change", () => { serviceCheck(); applyBranch(); }));
 
   function valid(step) {
     if (step.dataset.step === "2" && !serviceCheck()) { svc[0].reportValidity(); return false; }
     for (const el of $$("input, select, textarea", step)) {
-      if (!el.checkValidity()) { el.reportValidity(); return false; }
+      if (!el.closest("[hidden]") && !el.checkValidity()) { el.reportValidity(); el.focus(); return false; }
     }
     return true;
   }
 
-  /* instant estimate: the home-page calculator's assumptions (4.3 sun-hours, cost per kWp by segment) */
+  /* instant estimate: the same shared model as the home-page calculator (components.js, window.SolarModel) */
   function calc() {
     const bill = +$("#q-bill").value || 0;
-    if (bill < 1000) return null;
+    if (bill < 1000 || !window.SolarModel) return null;
     const tariff = Math.max(1, +$("#q-tariff").value || 8);
-    // size the plant to cover about 90% of the units used: realistic for on-grid plants and net metering
-    const size = Math.max(1, Math.round((0.9 * bill / tariff / (SUN * 30)) * 10) / 10);
-    const cost = size * (COST_PER_KW[segKey()] || 52000);
-    const annualSave = size * SUN * 365 * tariff;
-    return { size, monthly: annualSave / 12, payback: cost / annualSave, co2: (size * SUN * 365 * 0.82) / 1000 };
+    const r = window.SolarModel.estimate({ bill, tariff, sun: SUN, costPerKw: COST_PER_KW[segKey()] || 52000 });
+    return { size: r.size, monthly: r.monthly, payback: r.payback, co2: r.co2 };
   }
   function estimate() {
     const box = document.getElementById("qEstimate");
@@ -103,9 +125,11 @@ async function formAccepted(res) {
     if (!r) { box.hidden = true; return; }
     $('[data-est="size"]').textContent = r.size.toLocaleString("en-IN") + " kWp";
     $('[data-est="save"]').textContent = inrShort(r.monthly);
-    $('[data-est="payback"]').textContent = r.payback.toFixed(1) + " years";
+    $('[data-est="payback"]').textContent = r.payback === null ? "over 25 years" : r.payback.toFixed(1) + " years";
     $('[data-est="co2"]').textContent = r.co2.toFixed(1) + " t";
     $('[data-est="loss"]').textContent = "Every month without solar could be costing you about " + inrShort(r.monthly) + ".";
+    const a = $('[data-est="assume"]');
+    if (a && window.SolarModel) a.textContent = window.SolarModel.assumptions;
     box.hidden = false;
     $('input[name="estimate_kwp"]').value = r.size + " kWp";
     $('input[name="estimate_monthly_savings"]').value = inr(r.monthly);
@@ -123,12 +147,13 @@ async function formAccepted(res) {
     const val = (n) => { const el = $('[name="' + n + '"]:checked') || $('[name="' + n + '"]'); return el && el.value ? el.value : ""; };
     const services = $$('input[name="services"]:checked').map((x) => x.value).join(", ");
     const bill = +$("#q-bill").value;
-    const r = calc();
+    const r = serviceOnly() ? null : calc();
     const rows = [
       ["For", val("segment")],
       ["Need", services],
       ["Site", [$("#q-city").value, val("state")].filter(Boolean).join(", ")],
-      ["Bill", bill ? inr(bill) + " a month" : ""],
+      ["Work", serviceOnly() ? ($("#q-scope").value || "").trim().slice(0, 160) : ""],
+      ["Bill", bill && !serviceOnly() ? inr(bill) + " a month" : ""],
       ["Estimate", r ? r.size + " kWp, saving about " + inrShort(r.monthly) + " a month" : ""],
       ["Start", val("timeline")],
     ].filter((x) => x[1]);
@@ -160,6 +185,14 @@ async function formAccepted(res) {
     // prefill from the home-page calculator: /free-solar-quote/?bill=25000&tariff=8&segment=home
     if (q.get("bill")) $("#q-bill").value = Math.round(+q.get("bill")) || "";
     if (q.get("tariff")) $("#q-tariff").value = +q.get("tariff") || "";
+    // ?service=capex (from the CAPEX page) ticks "Complete solar plant"
+    const svc = q.get("service");
+    if (svc === "capex" || svc === "plant") {
+      const c = $$('input[name="services"]').find((x) => /Complete solar plant/.test(x.value));
+      if (c) c.checked = true;
+      const o = $$('input[name="ownership"]').find((x) => /CAPEX/.test(x.value));
+      if (o) o.checked = true;
+    }
     const seg = q.get("segment");
     if (seg) {
       const h = $$("[data-seg-key]").find((x) => x.value === seg);
@@ -169,15 +202,13 @@ async function formAccepted(res) {
   })();
 
   form.addEventListener("click", (e) => {
-    if (e.target.closest("[data-next]")) { if (valid(steps[current])) show(current + 1); }
-    if (e.target.closest("[data-back]")) show(current - 1);
+    if (e.target.closest("[data-next]")) { if (valid(steps[current])) show(nextIndex(current, 1)); }
+    if (e.target.closest("[data-back]")) show(nextIndex(current, -1));
   });
-  /* tapping a single-choice card moves on by itself on step 1 */
-  $$('input[name="segment"]').forEach((r) => r.addEventListener("change", () => setTimeout(() => show(1), 250)));
   form.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && e.target.tagName !== "TEXTAREA" && e.target.tagName !== "BUTTON" && current < steps.length - 1) {
       e.preventDefault();
-      if (valid(steps[current])) show(current + 1);
+      if (valid(steps[current])) show(nextIndex(current, 1));
     }
   });
 
@@ -185,12 +216,12 @@ async function formAccepted(res) {
     e.preventDefault();
     if (sending) return;
     if ($('[name="_honey"]').value) return;
-    for (const s of steps) { if (!valid(s)) { show(steps.indexOf(s)); return; } }
+    for (const s of active()) { if (!valid(s)) { show(steps.indexOf(s)); return; } }
     estimate();
     const lead = score();
     $('input[name="lead_score"]').value = lead;
     const who = $("#q-company").value || $("#q-name").value;
-    const r = calc();
+    const r = serviceOnly() ? null : calc();
     $('input[name="_subject"]').value = "[" + lead + "] Solar quote: " + who + ", " + ($("#q-city").value || "") +
       (r ? ", ~" + r.size + " kWp" : "");
     const btn = $('button[type="submit"]');
@@ -204,6 +235,7 @@ async function formAccepted(res) {
       const result = await formAccepted(res);
       if (!result.ok) throw new Error(result.message || "send failed");
       steps.forEach((s) => { s.hidden = true; });
+      fill.style.width = "100%";
       $(".q-top").hidden = true;
       const first = ($("#q-name").value || "").trim().split(" ")[0];
       done.querySelector("[data-done-name]").textContent = first ? ", " + first : "";

@@ -112,7 +112,7 @@ A(dict(
     takeaways=["India had <strong>171.05 GW</strong> of solar on 30 September 2026, per MNRE's physical-progress data",
                "That is about 30 GW more than the 140.6 GW MNRE reported for January 2026",
                "Grid-connected rooftop solar has reached 33.41 GW; ground-mounted plants make up 125.65 GW",
-               "Renewables (excluding large hydro, as MNRE counts them) total about 299 GW, on the road to 500 GW of non-fossil capacity by 2030",
+               "Renewables including large hydro total about 299 GW (about 247 GW excluding large hydro), on the road to 500 GW of non-fossil capacity by 2030",
                "The scarce resource is now skilled installation and commissioning: book your EPC partner and approvals early"],
     sections=[
         dict(h="The numbers in one place", blocks=[
@@ -121,7 +121,7 @@ A(dict(
             "That is up from 150.26 GW on 31 March 2026 and 164.59 GW on 31 July 2026, and roughly 30 GW more than the 140.6 GW MNRE "
             "reported for January 2026.",
             ("stats", [("171.05 GW", "Solar installed, 30 Sep 2026"), ("125.65 GW", "Ground-mounted plants"), ("33.41 GW", "Grid-connected rooftop"),
-                       ("~299 GW", "Total renewable capacity (MNRE)")]),
+                       ("~299 GW", "Renewable capacity incl. large hydro (MNRE)")]),
             ("table", "India's solar capacity by segment, cumulative as on 30 September 2026 (MNRE)",
              ["Segment", "Installed capacity", "What it covers"],
              [["Ground-mounted solar", "125.65 GW", "Utility-scale parks and open-access or captive plants on land"],
@@ -153,7 +153,7 @@ A(dict(
             "<a href=\"battery-storage-with-solar.html\">storage with solar</a>).",
             ("h3", "Commercial and industrial (C&I) rooftops"),
             "Factories with large sheet roofs are among the best sites in the country: the roof already exists, consumption is during the day "
-            "and tariffs are high. Our rooftop work runs from small commercial roofs to almost 2 MW on a single industrial roof, at "
+            "and tariffs are high. Our rooftop work runs from small commercial roofs to multi-megawatt industrial sheds, at "
             "smelters, steel and textile plants, consumer-goods units and retail warehouses.",
             ("fig",) + IMG["supersmelters"] + ("The 1980.3 kWp sheet-roof plant at Super Smelters, Jamuria, West Bengal, installed and commissioned by Arrays Ingenieria with Tata Power Solar.",),
             ("h3", "Tea estates and agro-industry"),
@@ -167,7 +167,7 @@ A(dict(
                     "<strong>Approvals.</strong> DISCOM feasibility, net-metering or open-access approval and the Electrical Inspector's (CEIG) inspection all take time, and queues grow when everyone builds at once.",
                     "<strong>Compliant equipment.</strong> ALMM-listed modules (with List-II cells for covered projects) and BIS-certified inverters must be specified and documented from the start."]),
             "The practical answer is to start early and choose a partner who has done the work before, at scale and with documents to show "
-            "for it. Ask for case studies, client certificates and references; our checklist of <a href=\"choose-solar-epc-partner.html\">10 questions "
+            "for it. Ask for case studies, client certificates and references; our checklist of <a href=\"choose-solar-epc-partner.html\">12 questions "
             "to ask a solar EPC</a> is a good place to start.",
             ("cta", "Planning a rooftop or ground-mount plant for 2026-27? Our engineers will size it, cost it and map the approvals for you."),
         ]),

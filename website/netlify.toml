@@ -1,5 +1,5 @@
 # Netlify config for the Arrays Ingenieria website (static HTML/CSS/JS; tools/build.py is run before committing).
-# In Netlify: set "Base directory" to `website`. Netlify serves HTTPS only and compresses with Brotli/Gzip itself.
+# In Netlify: set "Base directory" to `website`.
 [build]
   publish = "."
 

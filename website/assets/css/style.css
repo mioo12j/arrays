@@ -2186,3 +2186,24 @@ body[data-page="quote"] .cta-strip, body[data-page="quote"] .contact-dock { disp
 @media (max-width: 1700px) { .nav-cta .btn--outline { display: none; } }
 /* contents list: keep the two-digit numbers on one line */
 .art-toc a::before { flex: none; min-width: 20px; }
+.cr-assume { font-size: 12.5px; color: var(--muted); line-height: 1.5; margin: 10px 0 0; }
+.field-error { display: block; min-height: 0; font-size: 12.5px; color: #b42318; margin-top: 4px; }
+.field-error:empty { display: none; }
+input[aria-invalid="true"] { border-color: #d92d20 !important; }
+.art-feature[hidden] { display: none; }
+.art-empty { text-align: center; color: var(--muted); margin-top: 18px; }
+.filters-note { text-align: center; font-size: 13.5px; color: var(--muted); margin: -6px 0 18px; }
+/* pause / play controls for automatic slideshows and looping videos */
+.slideshow, .lq-slider { position: relative; }
+.rotate-toggle, .video-toggle { position: absolute; z-index: 5; width: 38px; height: 38px; border-radius: 50%; border: 0; background: rgba(6,40,30,.78); color: #fff; display: grid; place-items: center; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,.25); }
+.rotate-toggle { right: 12px; bottom: 12px; }
+.video-toggle { right: 10px; top: 10px; }
+.rotate-toggle svg, .video-toggle svg { width: 16px; height: 16px; }
+.rotate-toggle:focus-visible, .video-toggle:focus-visible { outline: 3px solid #fde047; outline-offset: 2px; }
+.proof-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.proof-list a { display: block; padding: 14px 16px 14px 46px; border-radius: 14px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow-sm); position: relative; color: inherit; text-decoration: none; transition: transform .25s, border-color .25s; }
+.proof-list a::before { content: ""; position: absolute; left: 16px; top: 17px; width: 18px; height: 18px; border-radius: 50%; background: var(--grad-green); box-shadow: inset 0 0 0 5px #d1fae5; }
+.proof-list a:hover { transform: translateY(-2px); border-color: var(--green-400, #34d399); }
+.proof-list b { display: block; font-family: var(--head); font-size: 15.5px; color: #0f2a1f; }
+.proof-list span { display: block; font-size: 13.5px; color: var(--muted); margin-top: 2px; line-height: 1.45; }
+.page-hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 22px 0 18px; }

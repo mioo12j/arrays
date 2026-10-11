@@ -89,7 +89,7 @@ PAGES = {
         desc="Koomber solar plant inaugurated by Assam CM Dr Himanta Biswa Sarma; coverage on CMO Assam, The Sentinel, NE Reports, Prerna Bharati and Dainik Bhaskar."),
     "achievements.html": dict(path="/achievements.html", crumb="Achievements",
         title="Awards, Client Certificates & ISO | Arrays Ingenieria",
-        desc="Client appreciation from Jay Shree Tea, Super Smelters & Bharat Petroleum, ISO 9001, 14001 & 45001 certification and work orders won by Arrays Ingenieria."),
+        desc="Client appreciation from Jay Shree Tea, Super Smelters & Bharat Petroleum, ISO 9001, 14001 & 45001 certification and other recognition we have earned."),
     "industries.html": dict(path="/industries.html", crumb="Industries",
         title="Solar for Industry, Tea Estates & Homes | Arrays Ingenieria",
         desc="Solar power for every sector in India: factories, tea estates, commercial buildings, institutions, homes and government/PSU projects by Arrays Ingenieria."),
@@ -216,7 +216,6 @@ GALLERY_CATS = [
     ("media", "News & Media"),
     ("leadership", "Leadership & Honours"),
     ("certificates", "Awards & Certifications"),
-    ("orders", "Work Orders"),
 ]
 GALLERY = [
     ("assets/photos/arrays-ingenieria-ex-servicemen-led-orangajuli-tea-estate-450kwp-solar-inauguration-ribbon.jpg", "projects events",
@@ -361,16 +360,6 @@ GALLERY = [
      "Super Smelters Ltd. letter of appreciation to Arrays Ingenieria for the 1980.3 kWp solar plant"),
     ("assets/certs/arrays-ingenieria-bharat-petroleum-certificate-of-appreciation.jpg", "certificates", "Bharat Petroleum: appreciation for RCC rooftop on-grid solar",
      "Bharat Petroleum certificate of appreciation to Arrays Ingenieria for rooftop solar"),
-    ("assets/orders/arrays-ingenieria-tata-power-seci-koppal-work-order.jpg", "orders", "Tata Power (TPREL): pile-foundation works, 300 MW SECI, Koppal",
-     "Tata Power work order to Arrays Ingenieria for SECI 300 MW solar pile foundation"),
-    ("assets/orders/arrays-ingenieria-tata-power-dcm-hisar-work-order.jpg", "orders", "Tata Power: civil works, 10 MW DCM Textile, Hisar",
-     "Tata Power work order to Arrays Ingenieria for DCM Hisar 10 MW solar civil works"),
-    ("assets/orders/arrays-ingenieria-tata-power-tata-motors-jamshedpur-work-order.jpg", "orders", "Tata Power: piling & civil works, 5.5 MW Tata Motors, Jamshedpur",
-     "Tata Power work order to Arrays Ingenieria for Tata Motors 5.5 MW solar"),
-    ("assets/orders/arrays-ingenieria-jay-shree-tea-1035kwp-purchase-order.jpg", "orders", "Jay Shree Tea: purchase order for 1035 kWp grid-connected solar",
-     "Jay Shree Tea purchase order to Arrays Ingenieria for 1035 kWp grid-connected solar"),
-    ("assets/orders/arrays-ingenieria-sustvest-assam-solar-purchase-order.jpg", "orders", "SolarGridX / Sustvest: purchase order for 1711.66 kWp on-grid solar, Assam",
-     "Purchase order to Arrays Ingenieria for 1711.66 kWp on-grid solar in Assam"),
 ]
 
 # ----------------------------------------------------------- coverage ----
@@ -1229,7 +1218,7 @@ KOOMBER_VIDEOS = [
 
 def render_koomber_videos():
     dims = {poster: image_size(os.path.join(ROOT, poster)) or (16, 9) for _, poster, _, _, _ in KOOMBER_VIDEOS}
-    items = "".join(f'<figure class="kv kv--{o} reveal" data-d="{i}"><video poster="{poster}" width="{dims[poster][0]}" height="{dims[poster][1]}" muted loop playsinline autoplay preload="metadata" '
+    items = "".join(f'<figure class="kv kv--{o} reveal" data-d="{i}"><video poster="{poster}" width="{dims[poster][0]}" height="{dims[poster][1]}" muted loop playsinline preload="metadata" data-autoplay '
                     f'aria-label="{esc(cap)}"><source src="{src}" type="video/mp4" /><source src="{src[:-4]}.webm" type="video/webm" /></video><figcaption>{esc(cap)}</figcaption></figure>'
                     for i, (src, poster, cap, _, o) in enumerate(KOOMBER_VIDEOS))
     return f'<div class="kv-grid">{items}</div>'
@@ -1804,10 +1793,12 @@ def render_insights_page():
 
 <section class="section" id="guides">
   <div class="container">{anchors}
-    <a class="art-feature reveal" href="{lead['file']}"><span class="af-img"><img src="{lead['hero'][0]}" alt="{esc(lead['hero'][1])}" /></span>
+    <a class="art-feature reveal" href="{lead['file']}" data-art-feature><span class="af-img"><img src="{lead['hero'][0]}" alt="{esc(lead['hero'][1])}" /></span>
       <span class="af-body"><span class="ins-tag">Latest · {esc(lead['tag'])}</span><b>{esc(lead['title'])}</b><span>{esc(lead['summary'])}</span><span class="btn btn--primary">Read the guide {ARROW_SVG}</span></span></a>
     <div class="filters reveal" role="group" aria-label="Filter guides by topic">{filters}</div>
-    <div class="art-grid-cards" data-art-grid>{"".join(art_card(a, i) for i, a in enumerate(rest))}</div>
+    <p class="sr-only" aria-live="polite" data-art-count></p>
+    <div class="art-grid-cards" data-art-grid>{art_card(lead, 0).replace('class="art-card reveal"', 'class="art-card reveal is-hidden" data-lead="1"', 1)}{"".join(art_card(a, i) for i, a in enumerate(rest))}</div>
+    <p class="art-empty" data-art-empty hidden>No guides in this topic yet. <a href="insights.html">See all guides</a>.</p>
   </div>
 </section>
 
@@ -1932,8 +1923,8 @@ def render_quote_page():
     seg_keys = "".join(f'<input type="hidden" disabled data-seg-key="{esc(t)}" value="{k}" />' for k, t, _, _ in QUOTE_SEGMENTS)
     svc_cards = cards("services", [(x, f"<b>{esc(x)}</b>") for x in QUOTE_SERVICES], "q-opt q-chk", "checkbox")
     own = cards("ownership", [
-        ("Buy and own it (CAPEX)", "<b>Buy and own it</b><small>Lowest lifetime cost; all savings and tax benefits are yours.</small>"),
-        ("Pay per unit, no investment (OPEX)", "<b>No upfront investment</b><small>A developer owns the plant; you buy power at a fixed tariff. We connect you with our partners.</small>"),
+        ("Buy and own it (CAPEX)", "<b>Buy and own it</b><small>Usually the lowest lifetime cost, depending on finance and tariff; the savings and tax benefits are yours.</small>"),
+        ("Pay per unit, no investment (OPEX)", "<b>No upfront investment</b><small>A separate developer finances and owns the plant under its own agreement and checks; you buy its power at an agreed tariff. With your permission we can introduce developers we build for.</small>"),
         ("Not sure, advise me", "<b>Not sure yet</b><small>Our engineer will compare both for you.</small>")])
     timeline = cards("timeline", [(x, f"<b>{esc(x)}</b>") for x in
                                   ["Within 1 month", "In 1 to 3 months", "In 3 to 6 months", "In 6 to 12 months", "Just exploring"]], "q-opt q-pill")
@@ -1964,7 +1955,7 @@ def render_quote_page():
 
       <div class="q-top">
         <div class="q-bar" aria-hidden="true"><span class="q-bar__fill"></span></div>
-        <p class="q-count" aria-live="polite"><b class="q-pct">10%</b> done · <span class="q-steptxt">Step 1 of 6</span></p>
+        <p class="q-count"><span class="q-steptxt">Step 1 of 6</span></p>
       </div>
 
       <fieldset class="q-step" data-step="1">
@@ -1979,8 +1970,10 @@ def render_quote_page():
         <p class="q-proof" data-proof hidden></p>
         <p class="q-sub">Tick all that apply.</p>
         <div class="q-opts">{svc_cards}</div>
-        <p class="q-label">How would you like to pay for it?</p>
-        <div class="q-opts q-opts--3">{own}</div>
+        <div data-plant-only>
+          <p class="q-label">How would you like to pay for it?</p>
+          <div class="q-opts q-opts--3">{own}</div>
+        </div>
         <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--primary" data-next>Continue {ARROW_SVG}</button></div>
       </fieldset>
 
@@ -1994,11 +1987,12 @@ def render_quote_page():
           {sel("site_type", "Where will the panels go?", ["RCC (concrete) rooftop", "Metal-sheet rooftop", "Open land (ground-mount)", "Carport / parking", "Not sure yet"])}
           <div class="field"><label for="q-area">Free area available</label><div class="q-inline"><input type="number" id="q-area" name="area" min="0" step="any" inputmode="decimal" placeholder="e.g. 20000" /><select name="area_unit" aria-label="Area unit"><option>sq ft</option><option>sq m</option><option>acres</option><option>bigha</option></select></div></div>
         </div>
+        <div class="field" data-service-only hidden><label for="q-scope">About the plant and the work *</label><textarea id="q-scope" name="scope_details" maxlength="1500" placeholder="For O&amp;M: capacity, age, inverter make and any performance issue. For piling, civil or I&amp;C: capacity, scope and whether drawings are ready."></textarea></div>
         <div class="field"><label for="q-capacity">Capacity in mind (optional)</label><div class="q-inline"><input type="number" id="q-capacity" name="capacity_kw" min="0" step="any" inputmode="decimal" placeholder="If you already know it" /><span class="q-unit">kWp</span></div></div>
         <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--primary" data-next>Continue {ARROW_SVG}</button></div>
       </fieldset>
 
-      <fieldset class="q-step" data-step="4">
+      <fieldset class="q-step" data-step="4" data-plant-step>
         <legend>How much power do you use?</legend>
         <p class="q-sub">Your bill lets us size the plant and estimate your savings right now.</p>
         <div class="field"><label for="q-bill">Average monthly electricity bill *</label><div class="q-inline q-money"><span class="q-unit">Rs</span><input type="number" id="q-bill" name="monthly_bill" min="1000" step="any" inputmode="numeric" placeholder="e.g. 200000" required /></div>
@@ -2020,7 +2014,7 @@ def render_quote_page():
             <div><b data-est="co2">-</b><span>CO2 avoided a year</span></div>
           </div>
           <p class="q-est__loss" data-est="loss"></p>
-          <p class="q-est__note">Indicative only, from standard assumptions. Your free proposal will be based on your actual site.</p>
+          <p class="q-est__note">Indicative only. Same model as our savings calculator: <span data-est="assume"></span> Your free proposal will be based on your actual site.</p>
         </div>
         <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--primary" data-next>Continue {ARROW_SVG}</button></div>
       </fieldset>
@@ -2054,7 +2048,7 @@ def render_quote_page():
         {sel("heard_from", "How did you hear about us?", ["Google search", "News or TV", "Facebook / X / Instagram", "LinkedIn", "A client or colleague", "Event or exhibition", "Other"])}
         <p class="form-consent">By submitting this form, you agree to our <a href="/privacy-policy/">Privacy Policy</a>. We use your details only to prepare your quote and never add you to a mailing list.</p>
         <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="submit" class="btn btn--sun q-submit">Send Me My Free Quote {ARROW_SVG}</button></div>
-        <ul class="q-assure"><li>{tick}Free</li><li>{tick}No obligation</li><li>{tick}Your number is never shared</li></ul>
+        <ul class="q-assure"><li>{tick}Free</li><li>{tick}No obligation</li><li>{tick}Your details are used only to reply</li></ul>
         <div class="form-status" id="quoteStatus" role="status"></div>
       </fieldset>
 

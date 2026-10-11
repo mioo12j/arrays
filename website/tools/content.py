@@ -41,24 +41,23 @@ PROJECTS = [
                 ("assets/photos/arrays-ingenieria-towkok-tea-estate-535kwp-ground-mount-solar-assam.jpg", "Towkok Tea Estate 535 kWp ground-mount solar plant, Assam, by Arrays Ingenieria"),
                 ("assets/photos/arrays-ingenieria-manjushree-tea-estate-500kwp-ground-mount-solar-assam.jpg", "Manjushree Tea Estate 500 kWp ground-mount solar plant, Assam, by Arrays Ingenieria"),
                 ("assets/photos/arrays-ingenieria-jay-shree-tea-1035kwp-grid-connected-solar.jpg", "1035 kWp grid-connected solar system for Jay Shree Tea, built by Arrays Ingenieria")],
-        docs=[("assets/orders/arrays-ingenieria-jay-shree-tea-1035kwp-purchase-order.jpg", "Jay Shree Tea purchase order, 2 Dec 2024: supply, installation & commissioning of 1035 kWp"),
-              ("assets/certs/arrays-ingenieria-jay-shree-tea-towkok-535kwp-certificate-of-appreciation.jpg", "Jay Shree Tea certificate of appreciation: 535 kWp, Towkok Tea Estate"),
+        docs=[("assets/certs/arrays-ingenieria-jay-shree-tea-towkok-535kwp-certificate-of-appreciation.jpg", "Jay Shree Tea certificate of appreciation: 535 kWp, Towkok Tea Estate"),
               ("assets/certs/arrays-ingenieria-jay-shree-tea-500kwp-certificate-of-appreciation.jpg", "Jay Shree Tea certificate of appreciation: 500 kWp ground-mount solar")],
         coverage=["sentinel-jayshree", "jayshree-towkok"],
         services=["capex-solar-epc.html", "solar-installation-commissioning.html", "service-ground-mount.html", "solar-for-tea-estates.html"],
     ),
     dict(
         file="project-orangajuli-tea-estate-450kw-solar.html",
-        name="Orangajuli Tea Estate: 450 kW Ground-Mount Solar Plant",
-        short="Orangajuli Tea Estate, Assam · 450 kW",
-        title="450 kW Solar, Orangajuli Tea Estate | Arrays Ingenieria",
-        desc="Case study: 450 kW grid-connected ground-mount solar plant at Goodricke's Orangajuli Tea Estate, Udalguri, Assam, commissioned on Janmashtami 2026.",
-        capacity="450 kW", kind="Ground-mount, grid-connected", location="Orangajuli, Panerihaat, Udalguri district, Assam",
+        name="Orangajuli Tea Estate: 450 kWp Ground-Mount Solar Plant",
+        short="Orangajuli Tea Estate, Assam · 450 kWp",
+        title="450 kWp Solar, Orangajuli Tea Estate | Arrays Ingenieria",
+        desc="Case study: 450 kWp grid-connected ground-mount solar plant at Goodricke's Orangajuli Tea Estate, Udalguri, Assam, commissioned on Janmashtami 2026.",
+        capacity="450 kWp", kind="Ground-mount, grid-connected", location="Orangajuli, Panerihaat, Udalguri district, Assam",
         client="Orangajuli Tea Estate (Goodricke Group)", partner="Tata Power Renewable Energy Ltd. & Sustvest (3.11 MW programme)",
         role="Installation partner", year="2026 (commissioned 4 September 2026)",
         cat="ground", tag="Tea Estate · Ground-Mount",
         hero="assets/photos/arrays-ingenieria-ex-servicemen-led-orangajuli-tea-estate-450kwp-solar-inauguration-ribbon.jpg",
-        intro="A 450 kW grid-connected ground-mount solar plant at Orangajuli Tea Estate, Panerihaat, in Udalguri, Assam, commissioned "
+        intro="A 450 kWp grid-connected ground-mount solar plant at Orangajuli Tea Estate, Panerihaat, in Udalguri, Assam, commissioned "
               "on Janmashtami, 4 September 2026, and inaugurated by the estate manager, Daljit Singh Maan.",
         body=[
             "The plant is part of a 3.11 MW solar programme for Goodricke Group's tea estates, developed jointly by Tata Power Renewable "
@@ -68,7 +67,7 @@ PROJECTS = [
         ],
         scope=["Installation of the ground-mount solar plant", "Grid connection", "Testing and commissioning"],
         photos=[("assets/photos/arrays-ingenieria-ex-servicemen-led-orangajuli-tea-estate-450kwp-solar-inauguration-ribbon.jpg",
-                 "Ribbon-cutting at the 450 kW Orangajuli Tea Estate solar plant in Udalguri, Assam, built by Arrays Ingenieria"),
+                 "Ribbon-cutting at the 450 kWp Orangajuli Tea Estate solar plant in Udalguri, Assam, built by Arrays Ingenieria"),
                 ("assets/photos/arrays-ingenieria-ex-servicemen-led-orangajuli-tea-estate-450kwp-solar-inauguration-team.jpg",
                  "Inauguration of the 450 kWp ground-mounted on-grid solar plant at Orangajuli Tea Garden, Panerihaat, Udalguri, on Sri Krishna Janmashtami, 4 September 2026, with Arrays Ingenieria (ex-servicemen-led MSME), installation partner")],
         docs=[("assets/news/prerna-bharati-orangajuli-450kw-solar-ingenieria.jpg", "Prerna Bharati, 5 Sep 2026: report on the Orangajuli plant")],
@@ -77,23 +76,23 @@ PROJECTS = [
     ),
     dict(
         file="project-barpatra-tea-estate-230kw-solar.html",
-        name="Barpatra (Borpatra) Tea Estate: 230 kW On-Grid Solar Plant",
-        short="Barpatra Tea Estate, Assam · 230 kW",
-        title="230 kW Solar, Barpatra Tea Estate | Arrays Ingenieria",
-        desc="Case study: 230 kW on-grid ground-mount solar at Goodricke's Barpatra (Borpatra) Tea Estate, Sonari, Assam, with net-metering approvals from APDCL.",
-        capacity="230 kW", kind="Ground-mount, on-grid (net-metered)", location="Borhat, Sivasagar district, Assam",
+        name="Borpatra (Barpatra) Tea Estate: 230 kWp On-Grid Solar Plant",
+        short="Borpatra Tea Estate, Assam · 230 kWp",
+        title="230 kWp Solar, Borpatra Tea Estate | Arrays Ingenieria",
+        desc="Case study: 230 kWp on-grid ground-mount solar at Goodricke's Borpatra (Barpatra) Tea Estate, Sonari, Assam, with net-metering approvals from APDCL.",
+        capacity="230 kWp", kind="Ground-mount, on-grid (net-metered)", location="Borhat, Sivasagar district, Assam",
         client="Borpatra Tea Garden, Stewart Holl (India) Ltd. (Goodricke Group)", partner="Tata Power Renewable Energy Ltd. & Sustvest (3.11 MW programme)",
         role="Turnkey implementation partner", year="2026 (commissioned September 2026)",
         cat="ground", tag="Tea Estate · Ground-Mount",
         hero="assets/borpatra/arrays-ingenieria-ex-servicemen-led-borpatra-tea-estate-230kwp-solar-inauguration-team.jpg",
-        intro="A 230 kW on-grid ground-mount solar plant at Goodricke Group's Barpatra (Borpatra) Tea Garden in Borhat, Sivasagar, Assam, formally "
+        intro="A 230 kWp on-grid ground-mount solar plant at Goodricke Group's Borpatra (Barpatra) Tea Garden in Borhat, Sivasagar, Assam, formally "
               "inaugurated by the estate manager, Satish Pandey, on 25 September 2026.",
         body=[
             "The plant is part of the 3.11 MW commercial & industrial solar programme for Goodricke's estates, developed jointly by Tata "
             "Power Renewable Energy Ltd. and Sustvest, with Arrays Ingenieria as the turnkey implementation partner.",
             "Arrays Ingenieria obtained the net-metering and statutory approvals from Assam Power Distribution Company Ltd. (APDCL), "
             "including technical inspection by the Namrup SDE and the APDCL Dibrugarh TRD department, so the plant could start on schedule.",
-            "Barpatra brought the company's count to 19 on-grid solar plants in Assam's tea gardens, as reported in the Hindi press on "
+            "Borpatra brought the company's count to 19 on-grid solar plants in Assam's tea gardens, as reported in the Hindi press on "
             "25 September 2026.",
             "Under its motto \"Olive Green to Go Green\", Arrays Ingenieria brings military-grade discipline and engineering precision "
             "to building critical clean-energy infrastructure. For its team of veterans, working in renewable energy is a \"second "
@@ -102,7 +101,7 @@ PROJECTS = [
         impact=dict(
             heading="Driving the PM's Panchamrit and Assam's green-energy goals",
             paras=[
-                "By cutting reliance on fossil fuels in the energy-intensive tea-processing sector, the Barpatra solar installation "
+                "By cutting reliance on fossil fuels in the energy-intensive tea-processing sector, the Borpatra solar installation "
                 "contributes to Prime Minister Narendra Modi's \"Panchamrit\" climate commitments, announced at COP26: 500 GW of "
                 "non-fossil capacity and half of India's energy needs from renewables by 2030, and net zero by 2070.",
                 "It also advances Assam Chief Minister Dr Himanta Biswa Sarma's target of 6,000 MW of installed green-energy capacity "
@@ -177,7 +176,7 @@ PROJECTS = [
         ],
         scope=["Construction of pile foundations for the module mounting structures", "Work to Tata Power specifications and schedule"],
         photos=[("assets/photos/arrays-ingenieria-seci-300mw-koppal-karnataka-solar-pile-foundation.jpg", "SECI 300 MW solar park pile-foundation works at Koppal, Karnataka, by Arrays Ingenieria")],
-        docs=[("assets/orders/arrays-ingenieria-tata-power-seci-koppal-work-order.jpg", "Tata Power (TPREL) outline agreement, 17 Feb 2025: pile foundation work, 300 MW SECI, Koppal")],
+        docs=[],
         coverage=[],
         services=["service-piling.html", "service-civil.html", "solar-installation-commissioning.html"],
     ),
@@ -199,7 +198,7 @@ PROJECTS = [
         ],
         scope=["Civil works for the 10 MW ground-mount plant", "Work to Tata Power specifications"],
         photos=[("assets/photos/arrays-ingenieria-dcm-hisar-10mw-ground-mount-solar-civil-works.jpg", "DCM Hisar 10 MW ground-mount solar project civil works, Haryana, by Arrays Ingenieria")],
-        docs=[("assets/orders/arrays-ingenieria-tata-power-dcm-hisar-work-order.jpg", "Tata Power work order, 18 Jun 2021: civil works at 9979 kWp DCM Textile, Hisar")],
+        docs=[],
         coverage=[],
         services=["service-civil.html", "service-ground-mount.html"],
     ),
@@ -222,7 +221,7 @@ PROJECTS = [
         scope=["Pile foundations for the module mounting structures", "Civil works", "Pre-cast boundary wall"],
         photos=[("assets/photos/arrays-ingenieria-tata-motors-jamshedpur-5-5mw-solar-piling.jpg", "Tata Motors 5.5 MW solar piling and civil works in Jamshedpur by Arrays Ingenieria"),
                 ("assets/photos/arrays-ingenieria-tata-motors-jamshedpur-precast-boundary-wall.jpg", "Pre-cast boundary wall for the Tata Motors solar plant, Jamshedpur, by Arrays Ingenieria")],
-        docs=[("assets/orders/arrays-ingenieria-tata-power-tata-motors-jamshedpur-work-order.jpg", "Tata Power work order, 27 Jul 2023: piling & civil work for TML 5.5 MW, Jamshedpur")],
+        docs=[],
         coverage=[],
         services=["service-piling.html", "service-civil.html"],
     ),
@@ -294,7 +293,7 @@ PROJECTS = [
         ],
         scope=["Supply of components (as per the contract annexure)", "Installation", "Commissioning"],
         photos=[("assets/photos/arrays-ingenieria-assam-1711kwp-on-grid-rooftop-solar.jpg", "1711.66 kWp on-grid solar PV project in Assam by Arrays Ingenieria")],
-        docs=[("assets/orders/arrays-ingenieria-sustvest-assam-solar-purchase-order.jpg", "Sustvest (SolarGridX) purchase order, 25 Mar 2026: supply, installation & commissioning of 1711.66 kWp")],
+        docs=[],
         coverage=[],
         services=["solar-installation-commissioning.html", "service-epc.html"],
     ),
@@ -334,7 +333,7 @@ FAQ = [
      "Yes. At Jay Shree Tea's Towkok and Manjushree estates the scope included synchronising each solar plant with two DG sets, so "
      "the estates can run solar and generators together."),
     ("Do you handle net-metering and DISCOM approvals?",
-     "Yes. At Barpatra Tea Estate in Assam we obtained the net-metering and statutory approvals from APDCL, including its technical "
+     "Yes. At Borpatra Tea Estate in Assam we obtained the net-metering and statutory approvals from APDCL, including its technical "
      "inspections, so the plant could start on schedule."),
     ("How many tea-estate solar plants have you built?",
      "As reported in September 2026, Arrays Ingenieria has installed 19 on-grid solar plants in Assam's tea gardens, for estates "
@@ -399,7 +398,7 @@ CLIENTS = [
      "1035 kWp across Towkok and Manjushree Tea Estates, and solar plants at the Dewan, Labac and Burtoll gardens of the Dewan Group of Tea Estates.",
      ["project-jayshree-tea-1mw-solar-assam.html"]),
     ("Goodricke Group", "Plant owner",
-     "Solar plants at Koomber (595 kWp, inaugurated by the Chief Minister of Assam), Orangajuli (450 kW) and Barpatra (230 kW) Tea Estates under the 3.11 MW programme with Tata Power Renewable Energy and Sustvest, and the 400 kWp plant at Harmutty Tea Estate, North Lakhimpur; Goodricke has issued certificates of appreciation for Koomber, Borpatra and Harmutty.",
+     "Solar plants at Koomber (595 kWp, inaugurated by the Chief Minister of Assam), Orangajuli (450 kWp) and Barpatra (230 kWp) Tea Estates under the 3.11 MW programme with Tata Power Renewable Energy and Sustvest, and the 400 kWp plant at Harmutty Tea Estate, North Lakhimpur; Goodricke has issued certificates of appreciation for Koomber, Borpatra and Harmutty.",
      ["project-koomber-tea-estate-595kwp-solar-cm-inauguration.html", "project-orangajuli-tea-estate-450kw-solar.html", "project-barpatra-tea-estate-230kw-solar.html", "project-harmutty-tea-estate-400kwp-solar.html"]),
     ("Sustvest (SolarGridX Ventures Pvt. Ltd.)", "Developer partner",
      "Supply of components and installation & commissioning of a 1711.66 kWp on-grid project in Assam, and the Goodricke tea-estate programme.",
@@ -420,7 +419,7 @@ CLIENTS = [
      ["project-amalgamated-plantations-assam-tea-estates-solar.html"]),
     ("Rossell India Ltd.", "Plant owner", "Ground-mount plants at the Kharikatia, Nagrijuli, Romai and Dikom tea estates in Assam, piled, installed and commissioned by us.",
      ["project-rossell-india-assam-tea-estates-solar.html"]),
-    ("Balaji Action Buildwell", "Plant owner", "Installation & commissioning, BOS, civil works and CEIG approvals for a 4000.32 kWp project at Sitarganj, Uttarakhand.",
+    ("Balaji Action Buildwell", "Plant owner", "Installation & commissioning of a sheet-roof plant, BOS, ground-mount civil works and CEIG approvals at Sitarganj, Uttarakhand.",
      ["project-balaji-action-sitarganj-4mwp-solar.html"]),
     ("SRMB Steel", "Plant owner", "Rooftop I&C and BOS works for three phases at Durgapur, West Bengal: 1895.4 kWp, 1060 kWp and 1.69 MWp.",
      ["project-srmb-steel-durgapur-rooftop-solar.html"]),
@@ -584,8 +583,8 @@ TIMELINE = [
      "Solar plants at Dewan, Labac and Burtoll for Jay Shree Tea.", "recognition.html#jayshree-dewan"),
     ("Mar 2026", "2026-03", "Sustvest, 1711.66 kWp",
      "Appointed for supply, installation and commissioning of an on-grid project in Assam.", "project-assam-1711kwp-on-grid-solar.html"),
-    ("Sep 2026", "2026-09", "Orangajuli and Barpatra",
-     "450 kW at Orangajuli on Janmashtami and 230 kW at Barpatra: 19 on-grid plants in Assam's tea gardens.", "solar-for-tea-estates.html"),
+    ("Sep 2026", "2026-09", "Orangajuli and Borpatra",
+     "450 kWp at Orangajuli on Janmashtami and 230 kWp at Borpatra: 19 on-grid plants in Assam's tea gardens.", "solar-for-tea-estates.html"),
 ]
 
 # ----------------------------------------------------------- panchamrit ----
@@ -605,8 +604,8 @@ STATES = [
     ("Assam", "Our biggest region: on-grid plants across the tea gardens", [
         ("Koomber Tea Estate: 595 kWp, inaugurated by the Chief Minister, Cachar", "project-koomber-tea-estate-595kwp-solar-cm-inauguration.html"),
         ("Jay Shree Tea: 535 kWp Towkok and 500 kWp Manjushree, Sonari", "project-jayshree-tea-1mw-solar-assam.html"),
-        ("Orangajuli Tea Estate: 450 kW, Udalguri", "project-orangajuli-tea-estate-450kw-solar.html"),
-        ("Barpatra (Borpatra) Tea Garden: 230 kW, Borhat, Sivasagar", "project-barpatra-tea-estate-230kw-solar.html"),
+        ("Orangajuli Tea Estate: 450 kWp, Udalguri", "project-orangajuli-tea-estate-450kw-solar.html"),
+        ("Borpatra (Barpatra) Tea Garden: 230 kWp, Borhat, Sivasagar", "project-barpatra-tea-estate-230kw-solar.html"),
         ("1711.66 kWp on-grid project for Sustvest", "project-assam-1711kwp-on-grid-solar.html"),
         ("Dewan, Labac and Burtoll gardens for Jay Shree Tea", "recognition.html#jayshree-dewan"),
         ("Kakajan Tea Estate for Amalgamated Plantations", "")]),
@@ -733,7 +732,7 @@ PROJECTS.insert(0, dict(
 # Borpatra inauguration photos (25 September 2026, read from the banners).
 _bp = next(p for p in PROJECTS if p["file"] == "project-barpatra-tea-estate-230kw-solar.html")
 _bp["photos"] = BORPATRA_ALBUM[:4] + [("assets/news/arrays-ingenieria-borpatra-tea-estate-230kwp-solar-newspaper-print.jpg",
-                 "Printed newspaper report on the 230 kW Barpatra (Borpatra) Tea Estate solar plant by Arrays Ingenieria")]
+                 "Printed newspaper report on the 230 kWp Borpatra (Barpatra) Tea Estate solar plant by Arrays Ingenieria")]
 _bp["album"] = BORPATRA_ALBUM
 _bp["album_lead"] = "%d photos from the inauguration at Borpatra Tea Estate, 25 September 2026." % len(BORPATRA_ALBUM)
 
@@ -1120,22 +1119,23 @@ PROJECTS += [
     ),
     dict(
         file="project-balaji-action-sitarganj-4mwp-solar.html",
-        name="Balaji Action Buildwell, Sitarganj: 4 MWp Solar I&C",
-        short="Balaji Action, Uttarakhand · 4 MWp",
-        title="4 MWp Solar I&C, Balaji Action Sitarganj | Arrays Ingenieria",
+        name="Balaji Action Buildwell, Sitarganj: Solar I&C, BOS and Civil Works",
+        short="Balaji Action, Uttarakhand · I&C and civil",
+        title="Solar I&C and Civil Works, Balaji Action | Arrays Ingenieria",
         desc="Case study: installation & commissioning, BOS, civil works and CEIG approvals for the 4000.32 kWp Balaji Action Buildwell solar project, Sitarganj.",
-        capacity="4000.32 kWp (3 MWp sheet roof plus ground-mount)", kind="Industrial rooftop and ground-mount",
+        capacity="4000.32 kWp project (as described in the BOS order)", kind="Sheet-roof I&C (ordered as 3 MWp) and ground-mount civil works",
         location="Sitarganj, Uttarakhand", client="Balaji Action Buildwell Pvt. Ltd.", partner=f"{TPSSL} (EPC)",
         role="Installation & commissioning, BOS, civil works and approvals", year="2022-2023",
         cat="rooftop", tag="Industrial · Rooftop I&C",
         hero="assets/photos/arrays-ingenieria-balaji-action-tesa-sitarganj-rooftop-solar.jpg",
         hero_alt="Balaji Action Buildwell rooftop solar plant at Sitarganj, Uttarakhand, by Arrays Ingenieria",
-        intro="A 4000.32 kWp solar project for Balaji Action Buildwell at Sitarganj, Uttarakhand: a 3 MWp sheet-roof plant plus "
-              "ground-mount capacity, installed and commissioned by Arrays Ingenieria for Tata Power Solar.",
-        body=["Tata Power Solar's 2022 orders gave Arrays Ingenieria the installation & commissioning of the 3 MWp sheet-roof plant, the "
-              "rooftop BOS services for the full 4000.32 kWp, civil work and pile foundations for the ground-mount portion, a labour "
-              "colony for the site crew, and the CEIG approvals.",
-              "Additional orders in 2023 covered further I&C work, an ITB canopy, additional cable trays, fire extinguishers and sand "
+        intro="Installation & commissioning, balance-of-system works, civil works and approvals on Balaji Action Buildwell's solar project "
+              "at Sitarganj, Uttarakhand, for Tata Power Solar.",
+        body=["The orders describe the project in more than one way, and we show each scope as it was ordered rather than adding the "
+              "figures together: rooftop BOS services for a project of 4000.32 kWp, installation & commissioning of a sheet-roof plant "
+              "described as 3 MWp, and civil works with pile foundations for a ground-mount plant also described as 3 MWp.",
+              "Tata Power Solar's 2022 orders also covered a labour colony for the site crew and the CEIG approvals for the project.",
+              "Further orders in 2023 covered additional I&C work, an ITB canopy, additional cable trays, fire extinguishers and sand "
               "buckets, and cable lugs: the details that take a large plant from installed to inspected and handed over."],
         scope=["Installation & commissioning of the 3 MWp sheet-roof plant", "Rooftop BOS services for the 4000.32 kWp project",
                "Civil work and pile foundations for the ground-mount portion", "CEIG approvals", "ITB canopy, cable trays and fire safety equipment",
@@ -1222,7 +1222,7 @@ TRACK_RECORD = [
     ("2026", "Luhit Tea Estate, Golaghat", "488 kWp", "Assam", "I&C with BOS services"),
     ("2026", "Monokholi and Kadamba Tea Estates", "220 kWp and 234 kWp", "Assam", "I&C with BOS services"),
     ("2026", "Amalgamated project for SolarGridX (Sustvest)", "2862 kWp", "Assam", "BOS works, piling, transport"),
-    ("2026", "Orangajuli Tea Estate (Goodricke)", "450 kW", "Assam", "BOS: earthing pits"),
+    ("2026", "Orangajuli Tea Estate (Goodricke)", "450 kWp", "Assam", "BOS: earthing pits"),
     ("2026", "Harmutty Tea Estate (Goodricke), North Lakhimpur", "400 kWp", "Assam", "Installation & commissioning; inaugurated 7 Oct 2026"),
 ]
 
@@ -1317,13 +1317,13 @@ _project("project-balaji-action-sitarganj-4mwp-solar.html").update(
     ic_scope="rooftop",
     phases=[("May 2022", "Rooftop services for 4000.32 kWp", "BOS services for the full project."),
             ("Jun 2022", "Labour colony", "Construction of a labour colony for the site crew."),
-            ("Jul 2022", "I&C and approvals", "Installation & commissioning of the 3 MWp sheet-roof plant; CEIG approvals for the 4 MWp project."),
-            ("Aug-Sep 2022", "Safety and ground-mount civil works", "Portable fire extinguishers and sand buckets; civil and pile foundations for the 3 MWp ground-mount portion."),
+            ("Jul 2022", "I&C and approvals", "Installation & commissioning of the 3 MWp sheet-roof plant; CEIG approvals for the project."),
+            ("Aug-Sep 2022", "Safety and ground-mount civil works", "Portable fire extinguishers and sand buckets; civil works and pile foundations for the ground-mount plant (ordered as 3 MWp)."),
             ("Dec 2022-Feb 2023", "BOS completion", "Further rooftop services, cable lugs and additional cable trays."),
             ("Mar 2023", "Final works", "ITB canopy and additional I&C works.")],
-    detail=[("Four megawatts on one site", "A large sheet-roof plant plus a ground-mount portion meant two very different jobs, height work and piling, running in parallel on one industrial campus."),
+    detail=[("Roof and ground on one site", "A large sheet-roof plant and ground-mount civil works meant two very different jobs, height work and piling, on one industrial campus."),
             ("A camp for the crew", "With a large crew on site for months, a proper labour colony was part of the scope: decent living conditions are part of working safely."),
-            ("Approvals as part of the job", "CEIG approvals for the whole 4 MWp project were in our scope, so inspection was planned into the schedule rather than added at the end.")])
+            ("Approvals as part of the job", "CEIG approvals for the project were in our scope, so inspection was planned into the schedule rather than added at the end.")])
 
 _project("project-srmb-steel-durgapur-rooftop-solar.html").update(
     ic_scope="rooftop",

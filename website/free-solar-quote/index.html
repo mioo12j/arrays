@@ -32,7 +32,7 @@
 <link rel="preload" as="image" type="image/webp" imagesrcset="/assets/opt/koomber/arrays-ingenieria-ex-servicemen-led-koomber-tea-estate-595kwp-solar-cm-inaugurates-595kwp-solar-plant-ribbon-cutting-480.webp 480w, /assets/opt/koomber/arrays-ingenieria-ex-servicemen-led-koomber-tea-estate-595kwp-solar-cm-inaugurates-595kwp-solar-plant-ribbon-cutting-960.webp 960w, /assets/opt/koomber/arrays-ingenieria-ex-servicemen-led-koomber-tea-estate-595kwp-solar-cm-inaugurates-595kwp-solar-plant-ribbon-cutting-1600.webp 1600w" imagesizes="100vw" fetchpriority="high" />
 <link rel="preload" href="/assets/fonts/plus-jakarta-sans-var-latin.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/assets/fonts/poppins-700-latin.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="stylesheet" href="/assets/css/style.min.css?v=01963ca7" />
+<link rel="stylesheet" href="/assets/css/style.min.css?v=39b53e8b" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -120,7 +120,7 @@
 
       <div class="q-top">
         <div class="q-bar" aria-hidden="true"><span class="q-bar__fill"></span></div>
-        <p class="q-count" aria-live="polite"><b class="q-pct">10%</b> done · <span class="q-steptxt">Step 1 of 6</span></p>
+        <p class="q-count"><span class="q-steptxt">Step 1 of 6</span></p>
       </div>
 
       <fieldset class="q-step" data-step="1">
@@ -135,8 +135,10 @@
         <p class="q-proof" data-proof hidden></p>
         <p class="q-sub">Tick all that apply.</p>
         <div class="q-opts"><label class="q-opt q-chk"><input type="checkbox" name="services" value="Complete solar plant (design, supply, build, commission)" /><span class="q-opt__box"><b>Complete solar plant (design, supply, build, commission)</b></span></label><label class="q-opt q-chk"><input type="checkbox" name="services" value="Installation &amp; commissioning only" /><span class="q-opt__box"><b>Installation &amp; commissioning only</b></span></label><label class="q-opt q-chk"><input type="checkbox" name="services" value="Pile foundations &amp; civil works" /><span class="q-opt__box"><b>Pile foundations &amp; civil works</b></span></label><label class="q-opt q-chk"><input type="checkbox" name="services" value="Fencing, roads &amp; drainage" /><span class="q-opt__box"><b>Fencing, roads &amp; drainage</b></span></label><label class="q-opt q-chk"><input type="checkbox" name="services" value="O&amp;M for an existing plant" /><span class="q-opt__box"><b>O&amp;M for an existing plant</b></span></label><label class="q-opt q-chk"><input type="checkbox" name="services" value="Advice: not sure yet" /><span class="q-opt__box"><b>Advice: not sure yet</b></span></label></div>
-        <p class="q-label">How would you like to pay for it?</p>
-        <div class="q-opts q-opts--3"><label class="q-opt"><input type="radio" name="ownership" value="Buy and own it (CAPEX)" required /><span class="q-opt__box"><b>Buy and own it</b><small>Lowest lifetime cost; all savings and tax benefits are yours.</small></span></label><label class="q-opt"><input type="radio" name="ownership" value="Pay per unit, no investment (OPEX)" required /><span class="q-opt__box"><b>No upfront investment</b><small>A developer owns the plant; you buy power at a fixed tariff. We connect you with our partners.</small></span></label><label class="q-opt"><input type="radio" name="ownership" value="Not sure, advise me" required /><span class="q-opt__box"><b>Not sure yet</b><small>Our engineer will compare both for you.</small></span></label></div>
+        <div data-plant-only>
+          <p class="q-label">How would you like to pay for it?</p>
+          <div class="q-opts q-opts--3"><label class="q-opt"><input type="radio" name="ownership" value="Buy and own it (CAPEX)" required /><span class="q-opt__box"><b>Buy and own it</b><small>Usually the lowest lifetime cost, depending on finance and tariff; the savings and tax benefits are yours.</small></span></label><label class="q-opt"><input type="radio" name="ownership" value="Pay per unit, no investment (OPEX)" required /><span class="q-opt__box"><b>No upfront investment</b><small>A separate developer finances and owns the plant under its own agreement and checks; you buy its power at an agreed tariff. With your permission we can introduce developers we build for.</small></span></label><label class="q-opt"><input type="radio" name="ownership" value="Not sure, advise me" required /><span class="q-opt__box"><b>Not sure yet</b><small>Our engineer will compare both for you.</small></span></label></div>
+        </div>
         <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--primary" data-next>Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
       </fieldset>
 
@@ -150,11 +152,12 @@
           <div class="field"><label for="q-site_type">Where will the panels go?</label><select id="q-site_type" name="site_type"><option value="">Select…</option><option>RCC (concrete) rooftop</option><option>Metal-sheet rooftop</option><option>Open land (ground-mount)</option><option>Carport / parking</option><option>Not sure yet</option></select></div>
           <div class="field"><label for="q-area">Free area available</label><div class="q-inline"><input type="number" id="q-area" name="area" min="0" step="any" inputmode="decimal" placeholder="e.g. 20000" /><select name="area_unit" aria-label="Area unit"><option>sq ft</option><option>sq m</option><option>acres</option><option>bigha</option></select></div></div>
         </div>
+        <div class="field" data-service-only hidden><label for="q-scope">About the plant and the work *</label><textarea id="q-scope" name="scope_details" maxlength="1500" placeholder="For O&amp;M: capacity, age, inverter make and any performance issue. For piling, civil or I&amp;C: capacity, scope and whether drawings are ready."></textarea></div>
         <div class="field"><label for="q-capacity">Capacity in mind (optional)</label><div class="q-inline"><input type="number" id="q-capacity" name="capacity_kw" min="0" step="any" inputmode="decimal" placeholder="If you already know it" /><span class="q-unit">kWp</span></div></div>
         <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--primary" data-next>Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
       </fieldset>
 
-      <fieldset class="q-step" data-step="4">
+      <fieldset class="q-step" data-step="4" data-plant-step>
         <legend>How much power do you use?</legend>
         <p class="q-sub">Your bill lets us size the plant and estimate your savings right now.</p>
         <div class="field"><label for="q-bill">Average monthly electricity bill *</label><div class="q-inline q-money"><span class="q-unit">Rs</span><input type="number" id="q-bill" name="monthly_bill" min="1000" step="any" inputmode="numeric" placeholder="e.g. 200000" required /></div>
@@ -176,7 +179,7 @@
             <div><b data-est="co2">-</b><span>CO2 avoided a year</span></div>
           </div>
           <p class="q-est__loss" data-est="loss"></p>
-          <p class="q-est__note">Indicative only, from standard assumptions. Your free proposal will be based on your actual site.</p>
+          <p class="q-est__note">Indicative only. Same model as our savings calculator: <span data-est="assume"></span> Your free proposal will be based on your actual site.</p>
         </div>
         <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--primary" data-next>Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
       </fieldset>
@@ -210,7 +213,7 @@
         <div class="field"><label for="q-heard_from">How did you hear about us?</label><select id="q-heard_from" name="heard_from"><option value="">Select…</option><option>Google search</option><option>News or TV</option><option>Facebook / X / Instagram</option><option>LinkedIn</option><option>A client or colleague</option><option>Event or exhibition</option><option>Other</option></select></div>
         <p class="form-consent">By submitting this form, you agree to our <a href="/privacy-policy/">Privacy Policy</a>. We use your details only to prepare your quote and never add you to a mailing list.</p>
         <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="submit" class="btn btn--sun q-submit">Send Me My Free Quote <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
-        <ul class="q-assure"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Free</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>No obligation</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Your number is never shared</li></ul>
+        <ul class="q-assure"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Free</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>No obligation</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Your details are used only to reply</li></ul>
         <div class="form-status" id="quoteStatus" role="status"></div>
       </fieldset>
 
@@ -248,7 +251,7 @@
     <div class="section-cta reveal"><a class="btn btn--outline" href="/how-it-works/">How a project runs</a><a class="btn btn--outline" href="/faq/">Questions? Read the FAQ</a></div>
   </div>
 </section>
-<script src="/assets/js/quote.min.js?v=01963ca7" defer></script>
+<script src="/assets/js/quote.min.js?v=39b53e8b" defer></script>
 </main>
 <!-- build:footer -->
 <section class="cta-strip" aria-label="Contact Arrays Ingenieria">
@@ -337,7 +340,7 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
   </button>
 <!-- /build:footer -->
-<script src="/assets/js/components.min.js?v=01963ca7" defer></script>
-<script src="/assets/js/main.min.js?v=01963ca7" defer></script>
+<script src="/assets/js/components.min.js?v=39b53e8b" defer></script>
+<script src="/assets/js/main.min.js?v=39b53e8b" defer></script>
 </body>
 </html>

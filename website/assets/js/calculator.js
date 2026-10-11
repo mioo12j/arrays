@@ -59,11 +59,10 @@
     const isRes = typeEl.options[typeEl.selectedIndex].dataset.res === "1";
     const subsidyOn = $("calcSubsidy").checked;
 
-    const monthlyUnits = bill / tariff;
-    let size = monthlyUnits / (sun * 30);
-    size = Math.max(1, Math.round(size * 10) / 10);
-
-    const cost = size * costPer;
+    // subsidy is worked out on the shared model's system size
+    const base = window.SolarModel.estimate({ bill, tariff, sun, costPerKw: costPer });
+    const size = base.size;
+    const cost = base.cost;
     let subsidy = 0, subsidyNote = "";
     if (subsidyOn && isRes) {
       subsidy = Math.min(size, 2) * 30000 + Math.min(Math.max(size - 2, 0), 1) * 18000;
@@ -71,24 +70,25 @@
     } else if (subsidyOn && !isRes) {
       subsidyNote = "Govt. subsidy (PM Surya Ghar) applies to residential rooftop only.";
     }
-    const netCost = cost - subsidy;
-
-    const annualGen = size * sun * 365;
-    const annualSave = annualGen * tariff;
-    const monthlySave = annualSave / 12;
-    const payback = netCost / annualSave;
-    const save25 = annualSave * 25 * 0.92 - netCost;
-    const co2 = (annualGen * 0.82) / 1000;
+    const r = window.SolarModel.estimate({ bill, tariff, sun, costPerKw: costPer, subsidy });
+    const netCost = r.netCost;
+    const annualGen = r.gen1;
+    const annualSave = r.save1;
+    const monthlySave = r.monthly;
+    const payback = r.payback;
+    const save25 = r.net25;
+    const flows = r.flows;
+    const co2 = r.co2;
     const trees = Math.round((annualGen * 0.82) / 21);
 
     last = { bill, tariff, sun, costPer, isRes, subsidyOn, size, cost, subsidy, netCost,
-             annualGen, annualSave, monthlySave, payback, save25, co2, trees,
+             annualGen, annualSave, monthlySave, payback, save25, flows, co2, trees, capped: r.capped,
              type: typeEl.options[typeEl.selectedIndex].text };
 
     $("rSize").textContent = size.toFixed(1) + " kWp";
     $("rCost").textContent = inrShort(cost);
     $("rSave").textContent = inr(monthlySave);
-    $("rPayback").textContent = payback.toFixed(1) + " yrs";
+    $("rPayback").textContent = payback === null ? "over 25 yrs" : payback.toFixed(1) + " yrs";
     $("rGen").textContent = Math.round(annualGen).toLocaleString("en-IN") + " kWh";
     $("r25").textContent = inrShort(save25);
     $("rCo2").textContent = co2.toFixed(1) + " t";
@@ -104,6 +104,8 @@
     $("rEco").innerHTML = "🌱 Equivalent to planting <b>" + trees.toLocaleString("en-IN") +
       " trees</b> every year, your clean-energy contribution to the nation.";
 
+    const note = $("rAssume");
+    if (note) note.textContent = (r.capped ? "The smallest practical system is 1 kWp; output beyond your own use is not counted as savings. " : "") + window.SolarModel.assumptions;
     $("calcResults").hidden = false;
     const q = $("calcQuote");
     if (q) q.href = "/free-solar-quote/?bill=" + Math.round(bill) + "&tariff=" + tariff + (isRes ? "&segment=home" : "");
@@ -186,7 +188,7 @@
     y += pH + 22;
 
     // 3 metric cards
-    const mc = [["PAYBACK PERIOD", d.payback.toFixed(1) + " years", C.green],
+    const mc = [["PAYBACK PERIOD", (d.payback === null ? "over 25 years" : d.payback.toFixed(1) + " years"), C.green],
                 ["25-YEAR NET SAVINGS", rsShort(d.save25), C.gold],
                 ["ANNUAL GENERATION", Math.round(d.annualGen).toLocaleString("en-IN") + " kWh", C.ink]];
     const mcw = (CW - 2 * 12) / 3, mch = 66;
@@ -204,7 +206,7 @@
     if (d.subsidy > 0) { rows.push(["Govt. subsidy (PM Surya Ghar)", "- " + rs(d.subsidy), 0], ["Net investment", rs(d.netCost), 1]); }
     rows.push(["Annual generation", Math.round(d.annualGen).toLocaleString("en-IN") + " kWh", 0],
               ["Monthly savings", rs(d.monthlySave), 0], ["Annual savings", rs(d.annualSave), 0],
-              ["Payback period", d.payback.toFixed(1) + " years", 0],
+              ["Payback period", (d.payback === null ? "over 25 years" : d.payback.toFixed(1) + " years"), 0],
               ["Net savings over 25 years", rs(d.save25), 1],
               ["CO2 offset per year", d.co2.toFixed(1) + " t  (~ " + d.trees.toLocaleString("en-IN") + " trees)", 0]);
     rows.forEach((r, i) => {
@@ -219,11 +221,11 @@
     doc.addPage(); header();
     y = 118;
     font(12, "bold"); t(C.ink); doc.text("Cumulative Net Savings Over 25 Years", M, y);
-    font(9); t(C.mut); doc.text("After your investment is recovered, savings keep compounding year on year.", M, y + 15);
+    font(9); t(C.mut); doc.text("Cumulative savings after O&M, minus the investment, with 0.7% yearly module degradation and a flat tariff.", M, y + 15);
     y += 34;
 
     const yrs = [5, 10, 15, 20, 25];
-    const vals = yrs.map(yr => d.annualSave * yr * 0.92 - d.netCost);
+    const vals = yrs.map(yr => d.flows[yr - 1].cumulative);
     const maxV = Math.max.apply(null, vals.map(v => Math.max(v, 0)).concat([1]));
     const labelW = 58, valW = 92, x0 = M + labelW, availW = CW - labelW - valW, rowH = 27;
     yrs.forEach((yr, i) => {
@@ -268,7 +270,7 @@
     y += 70;
 
     font(7.5, "italic"); t(C.mut);
-    const disc = "Disclaimer: This is an indicative estimate based on the inputs provided and standard assumptions (generation, tariff, " +
+    const disc = "Assumptions: " + window.SolarModel.assumptions + " Disclaimer: This is an indicative estimate based on the inputs provided and standard assumptions (generation, tariff, " +
       "component costs and PM Surya Ghar subsidy slabs). Actual system size, cost, subsidy and savings are subject to a detailed site " +
       "survey, shadow analysis, sanctioned load, net-metering policy and final component selection. This document is not a quotation.";
     doc.text(doc.splitTextToSize(disc, CW), M, y);
