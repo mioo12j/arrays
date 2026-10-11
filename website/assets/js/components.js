@@ -278,11 +278,17 @@ window.phoneProblem = function (raw) {
     let userPaused = false;
     btn.addEventListener("click", () => { userPaused = v.paused; }); // runs after the toggle above
     const start = () => { if (!(reduce && reduce.matches) && !userPaused) { const p = v.play(); if (p && p.catch) p.catch(() => paint()); } };
+    // the preview image is fetched only as the video approaches the screen, so it never competes with the page's main photo
+    const setPoster = () => { if (v.dataset.poster && !v.poster) v.poster = v.dataset.poster; };
     if ("IntersectionObserver" in window) {
+      const near = new IntersectionObserver((entries) => {
+        if (entries.some((e) => e.isIntersecting)) { setPoster(); near.disconnect(); }
+      }, { rootMargin: "1200px 0px" });
+      near.observe(v);
       new IntersectionObserver((entries) => entries.forEach((e) => {
-        if (e.isIntersecting) start(); else if (!v.paused) v.pause();
+        if (e.isIntersecting) { setPoster(); start(); } else if (!v.paused) v.pause();
       }), { rootMargin: "200px 0px" }).observe(v);
-    } else start();
+    } else { setPoster(); start(); }
     if (reduce && reduce.addEventListener) reduce.addEventListener("change", (e) => { if (e.matches) v.pause(); });
   });
 })();

@@ -1223,7 +1223,7 @@ def render_koomber_videos():
     # WebP poster when one exists next to the JPEG (smaller download before the video plays)
     psrc = {poster: (poster[:-4] + ".webp" if os.path.isfile(os.path.join(ROOT, poster.lstrip("/")[:-4] + ".webp")) else poster)
             for _, poster, _, _, _ in KOOMBER_VIDEOS}
-    items = "".join(f'<figure class="kv kv--{o} reveal" data-d="{i}"><video poster="{psrc[poster]}" width="{dims[poster][0]}" height="{dims[poster][1]}" muted loop playsinline preload="none" data-autoplay '
+    items = "".join(f'<figure class="kv kv--{o} reveal" data-d="{i}"><video data-poster="{psrc[poster]}" width="{dims[poster][0]}" height="{dims[poster][1]}" muted loop playsinline preload="none" data-autoplay '
                     f'aria-label="{esc(cap)}"><source src="{src[:-4]}.webm" type="video/webm" /><source src="{src}" type="video/mp4" /></video><figcaption>{esc(cap)}</figcaption></figure>'
                     for i, (src, poster, cap, _, o) in enumerate(KOOMBER_VIDEOS))
     return f'<div class="kv-grid">{items}</div>'
@@ -2323,7 +2323,7 @@ def add_main(body_html):
 
 WEBP_DIRS = ("assets/photos/", "assets/koomber/", "assets/borpatra/", "assets/press/", "assets/news/", "assets/certs/",
              "assets/harmutty/", "assets/leaders/", "assets/video/")
-WEBP_WIDTHS = (480, 960, 1600)
+WEBP_WIDTHS = (480, 800, 960, 1600)  # 800: phones (412 px at ~1.75x) get a right-sized hero
 SIZES_FULL = "100vw"
 SIZES_CARD = "(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw"
 
@@ -2351,7 +2351,7 @@ def webp_set(rel):
             im = ImageOps.exif_transpose(Image.open(src)).convert("RGB")
             if im.width > w:
                 im = im.resize((w, round(im.height * w / im.width)), Image.LANCZOS)
-            im.save(dst, "WEBP", quality=78, method=6)
+            im.save(dst, "WEBP", quality=72, method=6)
         out.append(("/" + dst_rel, w))
     return out
 
@@ -2456,7 +2456,7 @@ def normalise_links(text):
     # absolute site URLs in structured data and meta
     text = re.sub(re.escape(SITE_URL) + r'/([a-z0-9-]+)\.html', lambda m: f"{SITE_URL}/" if m.group(1) == "index" else (f"{SITE_URL}/{m.group(1)}/" if m.group(1) in pages else m.group(0)), text)
     # relative asset paths -> root-absolute, so they work from /about/
-    text = re.sub(r'(\s(?:src|href|data-full|poster|srcset)=")(assets/|site\.webmanifest|llms\.txt|sitemap\.xml)', r'\1/\2', text)
+    text = re.sub(r'(\s(?:src|href|data-full|poster|data-poster|srcset)=")(assets/|site\.webmanifest|llms\.txt|sitemap\.xml)', r'\1/\2', text)
     text = re.sub(r"url\((['\"]?)assets/", r"url(\1/assets/", text)
     text = re.sub(r"href='([^']*)'", r'href="\1"', text)
     return text
