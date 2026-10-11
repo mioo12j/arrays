@@ -62,7 +62,7 @@
   [headers.values]
     Cache-Control = "public, max-age=2592000"
 [[headers]]
-  for = "/assets/orders/*"
+  for = "/assets/harmutty/*"
   [headers.values]
     Cache-Control = "public, max-age=2592000"
 [[headers]]
@@ -77,3 +77,26 @@
   for = "/assets/img/*"
   [headers.values]
     Cache-Control = "public, max-age=2592000"
+
+# ---- Machine-readable files for search engines and AI assistants ----
+[[headers]]
+  for = "/*.md"
+  [headers.values]
+    Content-Type = "text/markdown; charset=utf-8"
+    X-Robots-Tag = "noindex"
+    Cache-Control = "public, max-age=3600"
+[[headers]]
+  for = "/llms.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    Cache-Control = "public, max-age=3600"
+[[headers]]
+  for = "/llms-full.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    Cache-Control = "public, max-age=3600"
+[[headers]]
+  for = "/feed.xml"
+  [headers.values]
+    Content-Type = "application/rss+xml; charset=utf-8"
+    Cache-Control = "public, max-age=3600"

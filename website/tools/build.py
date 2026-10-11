@@ -19,11 +19,14 @@ What it does to every page:
 Edit PAGES for titles/descriptions, GALLERY for gallery photos, COVERAGE for
 news, video and client-post coverage. Change SITE_URL once the custom domain is live.
 """
+import hashlib
 import html
+import html.parser
 import json
 import os
 import re
 import struct
+import subprocess
 import sys
 from datetime import date
 
@@ -67,6 +70,7 @@ def write_min_assets():
 
 ASSET_VERSION = _asset_version()
 BRAND = "Arrays Ingenieria"
+LEGAL = "Arrays Ingenieria Pvt. Ltd."
 TODAY = date.today().isoformat()
 
 # ---------------------------------------------------------------- pages ----
@@ -2255,7 +2259,7 @@ def del_attr(tag, name):
 
 
 BRAND_DIRS = ("assets/koomber/", "assets/borpatra/", "assets/photos/", "assets/press/", "assets/news/", "assets/certs/",
-              "assets/orders/", "assets/video/")
+              "assets/harmutty/", "assets/video/")
 PLANT_NAMES = [("koomber", "Koomber Tea Estate 595 kWp solar plant"), ("borpatra", "Borpatra Tea Estate 230 kWp solar plant"),
                ("orangajuli", "Orangajuli Tea Estate 450 kWp solar plant")]
 
@@ -2317,7 +2321,7 @@ def add_main(body_html):
 
 
 WEBP_DIRS = ("assets/photos/", "assets/koomber/", "assets/borpatra/", "assets/press/", "assets/news/", "assets/certs/",
-             "assets/orders/", "assets/leaders/", "assets/video/")
+             "assets/harmutty/", "assets/leaders/", "assets/video/")
 WEBP_WIDTHS = (480, 960, 1600)
 SIZES_FULL = "100vw"
 SIZES_CARD = "(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw"
@@ -2469,7 +2473,15 @@ def breadcrumb_ld(fname):
 
 # Google Search Console: paste the content="..." value of the google-site-verification meta tag here
 # (or verify by DNS instead and leave it empty), then submit /sitemap.xml in Search Console.
-GSC_VERIFICATION = ""
+GSC_VERIFICATION = ""   # Google Search Console HTML-tag token, once the property is verified
+BING_VERIFICATION = ""  # Bing Webmaster Tools token (msvalidate.01); Bing also feeds Copilot and ChatGPT search
+INDEXNOW_KEY = "7c3e9a41d2b84f06a5e1c8b9d3f27a60"  # served at /<key>.txt; tools/indexnow.py pings Bing, Yandex & co.
+
+
+def md_url(fname):
+    """The Markdown twin of a page: /about/ -> /about/index.md (home -> /index.md)."""
+    path = PAGES[fname]["path"] or "/"
+    return SITE_URL + path + "index.md"
 
 
 def head_block(fname, og_image, og_alt):
@@ -2484,9 +2496,12 @@ def head_block(fname, og_image, og_alt):
     lines += [
         '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />',
         *([f'<meta name="google-site-verification" content="{GSC_VERIFICATION}" />'] if GSC_VERIFICATION and fname == "index.html" else []),
+        *([f'<meta name="msvalidate.01" content="{BING_VERIFICATION}" />'] if BING_VERIFICATION and fname == "index.html" else []),
         f'<link rel="canonical" href="{url}" />',
         f'<link rel="alternate" hreflang="en-IN" href="{url}" />',
         f'<link rel="alternate" hreflang="x-default" href="{url}" />',
+        f'<link rel="alternate" type="text/markdown" href="{md_url(fname)}" title="This page as Markdown (for AI assistants)" />',
+        f'<link rel="alternate" type="application/rss+xml" href="{SITE_URL}/feed.xml" title="{BRAND}: solar guides" />',
         '<meta property="og:type" content="article" />' if meta.get("kind") == "article" else '<meta property="og:type" content="website" />',
         *([f'<meta property="article:published_time" content="{meta["published"]}" />',
            f'<meta property="article:modified_time" content="{meta["modified"]}" />',
@@ -2515,10 +2530,21 @@ def head_block(fname, og_image, og_alt):
 
 HEAD_TAG_RE = re.compile(
     r'^[ \t]*(?:<title>.*?</title>|<meta (?:property|name)="(?:og:[^"]+|twitter:[^"]+|article:[^"]+|description|robots)"[^>]*>'
-    r'|<meta name="google-site-verification"[^>]*>|<link rel="canonical"[^>]*>|<link rel="alternate" hreflang="[^"]*"[^>]*>)[ \t]*\n', re.M | re.S)
+    r'|<meta name="google-site-verification"[^>]*>|<link rel="canonical"[^>]*>|<link rel="alternate" (?:hreflang|type)="[^"]*"[^>]*>|<meta name="msvalidate\.01"[^>]*>)[ \t]*\n', re.M | re.S)
 
 
 OG_BRAND = "assets/img/arrays-ingenieria-olive-green-to-go-green-og.jpg"
+
+
+def projects_ld():
+    """Projects hub: a CollectionPage listing every case study, so search engines see the set as one collection."""
+    order = [p for p in PROJECTS if p["file"] in PAGES]
+    return {"@context": "https://schema.org", "@type": "CollectionPage", "@id": SITE_URL + "/projects/#page",
+            "name": "Solar projects and case studies by Arrays Ingenieria", "url": SITE_URL + "/projects/",
+            "isPartOf": {"@id": SITE_URL + "/#website"}, "about": {"@id": SITE_URL + "/#organization"},
+            "mainEntity": {"@type": "ItemList", "numberOfItems": len(order), "itemListElement": [
+                {"@type": "ListItem", "position": i + 1, "url": SITE_URL + PAGES[p["file"]]["path"], "name": p["name"]}
+                for i, p in enumerate(order)]}}
 
 
 def process_page(fname):
@@ -2572,6 +2598,10 @@ def process_page(fname):
     if "<!-- build:press-tv -->" in body:
         head += ('<script type="application/ld+json" data-build="coverage">\n'
                  + json.dumps(coverage_ld(), ensure_ascii=False, indent=2) + "\n</script>\n")
+    head = re.sub(r'<script type="application/ld\+json" data-build="itemlist">.*?</script>\n', "", head, flags=re.S)
+    if fname == "projects.html":
+        head += ('<script type="application/ld+json" data-build="itemlist">\n'
+                 + json.dumps(projects_ld(), ensure_ascii=False, indent=2) + "\n</script>\n")
     text = head + "</head>" + body
 
     # official social embeds: load each platform's script once, only where needed
@@ -2613,7 +2643,7 @@ def write_sitemap():
         for src in re.findall(r'(?:src|data-full)="/?(assets/[^"]+\.(?:jpe?g|png|webp))"', body):
             if src not in imgs:
                 imgs.append(src)
-        out.append(f"  <url>\n    <loc>{SITE_URL}{meta['path']}</loc>\n    <lastmod>{TODAY}</lastmod>")
+        out.append(f"  <url>\n    <loc>{SITE_URL}{meta['path']}</loc>\n    <lastmod>{LASTMOD.get(fname, TODAY)}</lastmod>")
         for src in imgs:
             out.append(f"    <image:image><image:loc>{SITE_URL}/{src}</image:loc></image:image>")
         for c in COVERAGE:
@@ -2634,12 +2664,27 @@ def write_sitemap():
     open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf8").write("\n".join(out))
 
 
+AI_BOTS = ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-SearchBot", "Claude-User", "PerplexityBot",
+           "Perplexity-User", "Google-Extended", "Applebot", "Applebot-Extended", "Bingbot", "DuckAssistBot", "meta-externalagent",
+           "MistralAI-User", "CCBot", "Amazonbot", "YouBot"]
+
+
 def write_robots():
-    """Every crawler is welcome, search engines and AI assistants alike: being found and cited is the point."""
+    """Every crawler is welcome, search engines and AI assistants alike: being found and cited is the point.
+    The AI crawlers are named explicitly so a blanket rule elsewhere (a CDN default, say) cannot be mistaken for our intent."""
+    bots = "".join(f"User-agent: {b}\n" for b in AI_BOTS)
     open(os.path.join(ROOT, "robots.txt"), "w", encoding="utf8").write(
-        "# Arrays Ingenieria (Ingenieria): search engines and AI assistants may crawl and cite this site.\n"
+        "# Arrays Ingenieria (Ingenieria): search engines and AI assistants may crawl, index and cite this site.\n"
         "User-agent: *\nAllow: /\nDisallow: /tools/\n\n"
-        f"Sitemap: {SITE_URL}/sitemap.xml\n# Plain-language summary of the site: {SITE_URL}/llms.txt\n")
+        "# AI search and assistant crawlers: welcome\n" + bots + "Allow: /\nDisallow: /tools/\n\n"
+        f"Sitemap: {SITE_URL}/sitemap.xml\n"
+        f"# Plain-language summary for AI assistants: {SITE_URL}/llms.txt\n"
+        f"# Full text of every page in one file: {SITE_URL}/llms-full.txt\n"
+        f"# Guides feed: {SITE_URL}/feed.xml\n")
+
+
+def _plain(x):
+    return html.unescape(re.sub(r"<[^>]+>", "", x)).strip()
 
 
 def write_llms():
@@ -2649,35 +2694,251 @@ def write_llms():
         return f"- [{m['title'].split(' | ')[0]}]({SITE_URL}{m['path']}): {m['desc']}"
     groups = [
         ("Company", ["about.html", "leadership.html", "ex-servicemen-led-msme.html", "quality-safety.html", "where-we-work.html",
-                     "clients.html", "achievements.html", "recognition.html", "contact.html"]),
+                     "clients.html", "achievements.html", "recognition.html", "contact.html", "free-solar-quote.html"]),
         ("Services", ["capex-solar-epc.html", "solar-installation-commissioning.html", "service-ground-mount.html", "service-rooftop.html",
                       "service-epc.html", "service-piling.html", "service-civil.html", "service-om.html", "solar-for-tea-estates.html",
                       "industries.html", "how-it-works.html"]),
         ("Projects and case studies", ["projects.html"] + [p["file"] for p in PROJECTS] + ["gallery.html"]),
-        ("Resources", ["insights.html", "solar-schemes-india.html", "solar-glossary.html", "faq.html"]),
-        ("Solar guides (2026)", [a["file"] for a in ARTICLES]),
+        ("Solar guides for India (updated " + max(a["updated"] for a in ARTICLES) + ")", ["insights.html"] + [a["file"] for a in ARTICLES]),
+        ("Reference", ["solar-schemes-india.html", "solar-glossary.html", "faq.html"]),
     ]
     out = ["# Arrays Ingenieria Pvt. Ltd. (INGENIERIA)", "",
            "> Ex-servicemen-led, ISO-certified Indian MSME that delivers solar installation & commissioning (I&C), CAPEX solar EPC "
-           "and all solar civil works (pile foundations, fencing, roads, drainage) for ground-mount and rooftop plants. "
-           "Motto: \"Olive Green to Go Green\". Founder and CEO: Lt. Gen. Ashish Ranjan Prasad (Retd). Corporate office in Greater Noida (Uttar Pradesh), branch office in Madhubani (Bihar); "
-           "projects across Assam, Bihar, Jharkhand, West Bengal, Uttar Pradesh, Uttarakhand, Haryana and Karnataka.", "",
-           "Key facts:",
-           "- Does NOT manufacture solar modules or inverters, and does not run OPEX/RESCO models; it builds plants the client owns (CAPEX) "
-           "and works as installation partner to developers such as Tata Power Renewable Energy and Sustvest.",
-           "- Installation partner for the 3.11 MW Goodricke Tea Estates Solar Programme (TPREL and Sustvest) in Assam: Koomber 595 kWp "
-           "(inaugurated by Assam Chief Minister Dr Himanta Biswa Sarma on 1 October 2026), Orangajuli 450 kWp (4 September 2026) and "
-           "Borpatra 230 kWp (25 September 2026).",
+           "and all solar civil works (pile foundations, fencing, roads, drainage) for ground-mount and rooftop plants, pan India. "
+           "Motto: \"Olive Green to Go Green\". Founder and CEO: Lt. Gen. Ashish Ranjan Prasad (Retd). "
+           "Corporate office in Greater Noida (Uttar Pradesh), branch office in Madhubani (Bihar).", "",
+           "Every page below also has a clean Markdown version: add `index.md` to its URL (for example "
+           f"{SITE_URL}/about/index.md). The full text of the whole site is in one file at {SITE_URL}/llms-full.txt.", "",
+           "## Key facts",
+           "- What we do: installation & commissioning of solar plants, turnkey CAPEX solar EPC, and solar civil works "
+           "(pile foundations, RCC, roads, drainage, boundary walls and fencing), for ground-mount and rooftop plants.",
+           "- What we do not do: we do not manufacture solar modules or inverters, and we do not run OPEX/RESCO or PPA models. "
+           "We build plants the client owns (CAPEX) and work as installation partner to developers and EPC companies such as "
+           "Tata Power Renewable Energy and Sustvest.",
+           "- Goodricke tea-estate solar plants in Assam (installation partner): Koomber 595 kWp, inaugurated by the Chief Minister of Assam, "
+           "Dr Himanta Biswa Sarma, on 1 October 2026; Orangajuli 450 kWp (4 September 2026); Borpatra 230 kWp (25 September 2026); "
+           "Harmutty 400 kWp (7 October 2026). Goodricke issued certificates of appreciation for Koomber, Borpatra and Harmutty.",
            "- At the Koomber inauguration, MLAs Kaushik Rai (Lakhipur) and Rajdeep Goala (Udharbond) publicly praised Arrays Ingenieria "
            "as an MSME led by ex-servicemen under Lt. Gen. A.R. Prasad (Retd) delivering critical renewable-energy infrastructure.",
-           "- Registrations: CIN U45309DL2018PTC340544; Udyam UDYAM-DL-03-0023905; ISO 9001, ISO 14001, ISO 45001.",
-           "- Contact: arraysingenieria@gmail.com, or the form at " + SITE_URL + "/contact/", ""]
+           "- Registrations: CIN U45309DL2018PTC340544 (incorporated 2018); Udyam UDYAM-DL-03-0023905; ISO 9001, ISO 14001, ISO 45001.",
+           "- Where we work: pan India, from tea estates in Assam to industrial rooftops and utility-scale ground-mount plants.",
+           f"- Contact: arraysingenieria@gmail.com, the form at {SITE_URL}/contact/ or a free quote at {SITE_URL}/free-solar-quote/", ""]
     for title, files in groups:
         out.append(f"## {title}")
         out += [line(f) for f in files if f in PAGES]
         out.append("")
-    out += ["## Optional", f"- [Sitemap]({SITE_URL}/sitemap.xml): every page, image and video", ""]
+    out.append("## Quick answers")
+    out += [f"- **{_plain(q)}** {_plain(a)}" for q, a in FAQ[:12]]
+    out.append("")
+    out += ["## Optional",
+            f"- [Full text of the site]({SITE_URL}/llms-full.txt): every page as Markdown in one file",
+            f"- [Guides feed]({SITE_URL}/feed.xml): RSS feed of the solar guides",
+            f"- [Sitemap]({SITE_URL}/sitemap.xml): every page, image and video", ""]
     open(os.path.join(ROOT, "llms.txt"), "w", encoding="utf8").write("\n".join(out))
+
+
+# ------------------------------------------------- markdown twins ----
+class _MD(html.parser.HTMLParser):
+    """Turns a page's <main> into readable Markdown: headings, paragraphs, lists, tables and links; no chrome."""
+    SKIP = {"script", "style", "svg", "nav", "form", "button", "template", "noscript", "select", "textarea", "iframe", "video", "picture"}
+    BLOCK = {"caption", "p", "div", "section", "article", "aside", "header", "footer", "figure", "figcaption", "blockquote", "details",
+             "summary", "dl", "dt", "dd", "ul", "ol", "table"}
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.out, self.skip, self.href, self.link_text, self.row, self.cell = [], 0, None, [], None, None
+        self.rows_seen = 0
+        self.list_depth = 0
+
+    def nl(self, n=2):
+        self.out.append("\n" * n)
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        if self.skip or tag in self.SKIP or "hidden" in a or a.get("aria-hidden") == "true" \
+                or "is-hidden" in (a.get("class") or "") or "sr-only" in (a.get("class") or "") and tag != "span":
+            if tag not in ("br", "img", "input", "source", "meta", "link", "hr"):
+                self.skip += 1
+            return
+        if tag in ("h1", "h2", "h3", "h4", "h5", "h6"):
+            self.nl(); self.out.append("#" * int(tag[1]) + " ")
+        elif tag == "li":
+            self.nl(1); self.out.append("  " * max(self.list_depth - 1, 0) + "- ")
+        elif tag in ("ul", "ol"):
+            self.list_depth += 1; self.nl(1)
+        elif tag == "br":
+            self.out.append("\n")
+        elif a.get("data-count"):  # animated counters start at 0: print the real figure
+            self.out.append(("**" if tag in ("b", "strong") else "") + a["data-count"] + a.get("data-suffix", "")
+                            + ("**" if tag in ("b", "strong") else "") + " ")
+            self.skip += 1
+        elif tag in ("b", "strong"):
+            prev = "".join(self.out[-2:])
+            self.out.append(": **" if prev[-1:].isalnum() else "**")
+        elif tag == "a" and a.get("href") and not a["href"].startswith(("#", "javascript:")):
+            h = a["href"]
+            self.href = h if h.startswith(("http", "mailto:", "tel:")) else SITE_URL + h
+            self.link_text = []
+            self.out.append("\x00")
+        elif tag == "img" and a.get("alt") and self.cell is None:
+            pass
+        elif tag == "tr":
+            self.row = []
+        elif tag in ("td", "th"):
+            self.cell = []
+        elif tag == "table":
+            self.nl(); self.rows_seen = 0
+        elif tag in self.BLOCK:
+            self.nl()
+
+    def handle_endtag(self, tag):
+        if self.skip:
+            if tag not in ("br", "img", "input", "source", "meta", "link", "hr"):
+                self.skip -= 1
+            return
+        if tag in ("h1", "h2", "h3", "h4", "h5", "h6"):
+            self.nl()
+        elif tag in ("ul", "ol"):
+            self.list_depth = max(self.list_depth - 1, 0); self.nl(1)
+        elif tag in ("b", "strong"):
+            self.out.append("**")
+        elif tag == "a" and self.href:
+            i = len(self.out) - 1 - self.out[::-1].index("\x00")
+            text = "".join(self.out[i + 1:]).strip()
+            self.out[i:] = [f"[{text}]({self.href})" if text else ""]
+            self.href = None
+        elif tag in ("td", "th") and self.cell is not None and self.row is not None:
+            self.row.append(" ".join("".join(self.cell).split()).replace("|", "/"))
+            self.cell = None
+        elif tag == "tr" and self.row is not None:
+            if any(self.row):
+                self.out.append("| " + " | ".join(self.row) + " |\n")
+                if self.rows_seen == 0:
+                    self.out.append("|" + " --- |" * len(self.row) + "\n")
+                self.rows_seen += 1
+            self.row = None
+        elif tag in self.BLOCK:
+            self.nl()
+
+    def handle_data(self, data):
+        if self.skip:
+            return
+        text = re.sub(r"\s+", " ", data)
+        if self.cell is not None:
+            self.cell.append(text)
+        else:
+            self.out.append(text)
+
+    def markdown(self):
+        md = "".join(self.out).replace("\x00", "")
+        md = re.sub(r"\*\*\s*\*\*", "", md)
+        md = re.sub(r"[ \t]+\n", "\n", md)
+        md = re.sub(r"\n[ \t]+(?=[^-\s|])", "\n", md)
+        md = re.sub(r"\n{3,}", "\n\n", md)
+        return md.strip() + "\n"
+
+
+def page_markdown(fname):
+    text = open(page_path(fname), encoding="utf8").read()
+    main = re.search(r"<main\b[^>]*>(.*)</main>", text, re.S)
+    p = _MD()
+    p.feed(main.group(1) if main else "")
+    meta = PAGES[fname]
+    head = (f"---\ntitle: {meta['title']}\ndescription: {meta['desc']}\nurl: {SITE_URL}{meta['path']}\n"
+            f"last_updated: {LASTMOD.get(fname, TODAY)}\nsource: {BRAND} ({LEGAL})\n---\n\n")
+    return head + p.markdown()
+
+
+def write_markdown():
+    """A Markdown twin of every page (/about/index.md) and the whole site in one file (llms-full.txt), so AI assistants
+    and agents can read the content without the page chrome."""
+    full = [f"# {LEGAL}: full site text\n\n> Every page of {SITE_URL} as Markdown, generated {TODAY}. "
+            f"Page index: {SITE_URL}/llms.txt\n"]
+    for fname, meta in PAGES.items():
+        if not meta["path"]:
+            continue
+        md = page_markdown(fname)
+        out = os.path.join(os.path.dirname(page_path(fname)), "index.md")
+        open(out, "w", encoding="utf8").write(md)
+        full.append(f"\n\n---\n\nSource: {SITE_URL}{meta['path']}\n\n" + md.split("---\n\n", 1)[-1])
+    open(os.path.join(ROOT, "llms-full.txt"), "w", encoding="utf8").write("".join(full))
+
+
+# ------------------------------------------------- lastmod, feed, IndexNow ----
+LASTMOD = {}
+LASTMOD_FILE = os.path.join(ROOT, "tools", "lastmod.json")
+
+
+def compute_lastmod():
+    """Each page's lastmod changes only when its visible content changes (a hash of <title>, description and <main>),
+    so search engines can trust the dates in sitemap.xml."""
+    try:
+        store = json.load(open(LASTMOD_FILE, encoding="utf8"))
+    except (OSError, ValueError):
+        store = {}
+    for fname, meta in PAGES.items():
+        if not meta["path"]:
+            continue
+        t = open(page_path(fname), encoding="utf8").read()
+        main = re.search(r"<main\b.*</main>", t, re.S)
+        sig = meta["title"] + meta["desc"] + re.sub(r"\?v=[0-9a-f]+|\s+", "", main.group(0) if main else t)
+        h = hashlib.sha1(sig.encode("utf8")).hexdigest()[:16]
+        old = store.get(fname)
+        if old and old[0] == h:
+            day = old[1]
+        elif old:
+            day = TODAY
+        else:  # first time: the date the page was last committed
+            try:
+                day = subprocess.run(["git", "log", "-1", "--format=%cs", "--", os.path.relpath(page_path(fname), ROOT)],
+                                     cwd=ROOT, capture_output=True, text=True, timeout=20).stdout.strip() or TODAY
+            except (OSError, subprocess.SubprocessError):
+                day = TODAY
+        if meta.get("kind") == "article" and meta.get("modified", "") > day:
+            day = meta["modified"]
+        store[fname] = [h, day]
+        LASTMOD[fname] = day
+    json.dump(dict(sorted(store.items())), open(LASTMOD_FILE, "w", encoding="utf8"), indent=1)
+
+
+def write_feed():
+    """RSS 2.0 feed of the solar guides, newest first."""
+    from email.utils import format_datetime
+    from datetime import datetime, timezone
+
+    def rfc(d):
+        return format_datetime(datetime.fromisoformat(d).replace(hour=9, tzinfo=timezone.utc))
+    items = []
+    for a in sorted(ARTICLES, key=lambda a: (a["updated"], a["date"]), reverse=True):
+        m = PAGES[a["file"]]
+        url = SITE_URL + m["path"]
+        items.append(f"""  <item>
+    <title>{esc(a['title'])}</title>
+    <link>{url}</link>
+    <guid isPermaLink="true">{url}</guid>
+    <pubDate>{rfc(a['date'])}</pubDate>
+    <category>{esc(a['tag'])}</category>
+    <description>{esc(m['desc'])}</description>
+    <enclosure url="{SITE_URL}/{a['hero'][0].lstrip('/')}" type="image/jpeg" length="{os.path.getsize(os.path.join(ROOT, a['hero'][0]))}" />
+  </item>""")
+    last = rfc(max(a["updated"] for a in ARTICLES))
+    open(os.path.join(ROOT, "feed.xml"), "w", encoding="utf8").write(f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>{BRAND}: Solar Guides for India</title>
+  <link>{SITE_URL}/insights/</link>
+  <atom:link href="{SITE_URL}/feed.xml" rel="self" type="application/rss+xml" />
+  <description>Plain-English guides to solar in India: GST, ALMM, subsidies, net metering, open access, CAPEX vs OPEX, commissioning and O&amp;M, from an ex-servicemen-led solar EPC company.</description>
+  <language>en-in</language>
+  <lastBuildDate>{last}</lastBuildDate>
+{chr(10).join(items)}
+</channel>
+</rss>
+""")
+
+
+def write_indexnow_key():
+    open(os.path.join(ROOT, f"{INDEXNOW_KEY}.txt"), "w", encoding="utf8").write(INDEXNOW_KEY)
 
 
 def write_headers():
@@ -2777,8 +3038,12 @@ def main():
     write_generated_pages()
     for fname in PAGES:
         process_page(fname)
+    compute_lastmod()
     write_sitemap()
     write_llms()
+    write_markdown()
+    write_feed()
+    write_indexnow_key()
     write_robots()
     write_redirects()
     write_headers()

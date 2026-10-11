@@ -1,13 +1,17 @@
 # Arrays Ingenieria Pvt. Ltd. (INGENIERIA)
 
-> Ex-servicemen-led, ISO-certified Indian MSME that delivers solar installation & commissioning (I&C), CAPEX solar EPC and all solar civil works (pile foundations, fencing, roads, drainage) for ground-mount and rooftop plants. Motto: "Olive Green to Go Green". Founder and CEO: Lt. Gen. Ashish Ranjan Prasad (Retd). Corporate office in Greater Noida (Uttar Pradesh), branch office in Madhubani (Bihar); projects across Assam, Bihar, Jharkhand, West Bengal, Uttar Pradesh, Uttarakhand, Haryana and Karnataka.
+> Ex-servicemen-led, ISO-certified Indian MSME that delivers solar installation & commissioning (I&C), CAPEX solar EPC and all solar civil works (pile foundations, fencing, roads, drainage) for ground-mount and rooftop plants, pan India. Motto: "Olive Green to Go Green". Founder and CEO: Lt. Gen. Ashish Ranjan Prasad (Retd). Corporate office in Greater Noida (Uttar Pradesh), branch office in Madhubani (Bihar).
 
-Key facts:
-- Does NOT manufacture solar modules or inverters, and does not run OPEX/RESCO models; it builds plants the client owns (CAPEX) and works as installation partner to developers such as Tata Power Renewable Energy and Sustvest.
-- Installation partner for the 3.11 MW Goodricke Tea Estates Solar Programme (TPREL and Sustvest) in Assam: Koomber 595 kWp (inaugurated by Assam Chief Minister Dr Himanta Biswa Sarma on 1 October 2026), Orangajuli 450 kWp (4 September 2026) and Borpatra 230 kWp (25 September 2026).
+Every page below also has a clean Markdown version: add `index.md` to its URL (for example https://arrays-9mj.pages.dev/about/index.md). The full text of the whole site is in one file at https://arrays-9mj.pages.dev/llms-full.txt.
+
+## Key facts
+- What we do: installation & commissioning of solar plants, turnkey CAPEX solar EPC, and solar civil works (pile foundations, RCC, roads, drainage, boundary walls and fencing), for ground-mount and rooftop plants.
+- What we do not do: we do not manufacture solar modules or inverters, and we do not run OPEX/RESCO or PPA models. We build plants the client owns (CAPEX) and work as installation partner to developers and EPC companies such as Tata Power Renewable Energy and Sustvest.
+- Goodricke tea-estate solar plants in Assam (installation partner): Koomber 595 kWp, inaugurated by the Chief Minister of Assam, Dr Himanta Biswa Sarma, on 1 October 2026; Orangajuli 450 kWp (4 September 2026); Borpatra 230 kWp (25 September 2026); Harmutty 400 kWp (7 October 2026). Goodricke issued certificates of appreciation for Koomber, Borpatra and Harmutty.
 - At the Koomber inauguration, MLAs Kaushik Rai (Lakhipur) and Rajdeep Goala (Udharbond) publicly praised Arrays Ingenieria as an MSME led by ex-servicemen under Lt. Gen. A.R. Prasad (Retd) delivering critical renewable-energy infrastructure.
-- Registrations: CIN U45309DL2018PTC340544; Udyam UDYAM-DL-03-0023905; ISO 9001, ISO 14001, ISO 45001.
-- Contact: arraysingenieria@gmail.com, or the form at https://arrays-9mj.pages.dev/contact/
+- Registrations: CIN U45309DL2018PTC340544 (incorporated 2018); Udyam UDYAM-DL-03-0023905; ISO 9001, ISO 14001, ISO 45001.
+- Where we work: pan India, from tea estates in Assam to industrial rooftops and utility-scale ground-mount plants.
+- Contact: arraysingenieria@gmail.com, the form at https://arrays-9mj.pages.dev/contact/ or a free quote at https://arrays-9mj.pages.dev/free-solar-quote/
 
 ## Company
 - [About Arrays Ingenieria](https://arrays-9mj.pages.dev/about/): Founded in 2018 by ex-servicemen and led by Lt. Gen. A.R. Prasad (Retd), Arrays Ingenieria is an ISO 9001/14001/45001-certified solar EPC company.
@@ -19,6 +23,7 @@ Key facts:
 - [Awards, Client Certificates & ISO](https://arrays-9mj.pages.dev/achievements/): Client appreciation from Jay Shree Tea, Super Smelters & Bharat Petroleum, ISO 9001, 14001 & 45001 certification and other recognition we have earned.
 - [Arrays Ingenieria in the News](https://arrays-9mj.pages.dev/recognition/): Koomber solar plant inaugurated by Assam CM Dr Himanta Biswa Sarma; coverage on CMO Assam, The Sentinel, NE Reports, Prerna Bharati and Dainik Bhaskar.
 - [Contact Arrays Ingenieria](https://arrays-9mj.pages.dev/contact/): Contact Arrays Ingenieria for solar EPC, installation & commissioning or civil works. Corporate office Greater Noida, branch office Madhubani, Bihar.
+- [Get a Free Solar Quote](https://arrays-9mj.pages.dev/free-solar-quote/): Free, no-obligation solar quote from Arrays Ingenieria: CAPEX solar EPC, installation & commissioning and civil works. Three quick questions, one engineer.
 
 ## Services
 - [CAPEX Solar EPC Company in India](https://arrays-9mj.pages.dev/capex-solar-epc/): Own your solar plant outright. Arrays Ingenieria designs, supplies, builds and commissions rooftop and ground-mount solar on the CAPEX model.
@@ -54,13 +59,8 @@ Key facts:
 - [SECI 300 MW Koppal Solar Pile Foundation](https://arrays-9mj.pages.dev/project-seci-300mw-koppal-pile-foundation/): Case study: construction of pile foundations for the 300 MW SECI solar project at Koppal, Karnataka, under an outline agreement with Tata Power (TPREL).
 - [Photo & Video Gallery](https://arrays-9mj.pages.dev/gallery/): Photos and videos of Arrays Ingenieria solar power plants, inaugurations, awards, certifications and news coverage from Assam to Karnataka.
 
-## Resources
+## Solar guides for India (updated 2026-10-11)
 - [Solar Insights India 2026](https://arrays-9mj.pages.dev/insights/): India's solar in 2026: 164 GW installed, ALMM List-II, GST cut to 5%, CAPEX vs OPEX, PM Surya Ghar, PM-KUSUM and solar for Assam tea estates.
-- [Government Solar Schemes in India 2026](https://arrays-9mj.pages.dev/solar-schemes-india/): Solar schemes in India 2026: PM Surya Ghar, PM-KUSUM deadlines, ALMM List-II, GST at 5%, Assam tea-garden solar, depreciation and net metering.
-- [Solar Glossary: EPC, CAPEX, I&C Terms](https://arrays-9mj.pages.dev/solar-glossary/): Plain-English definitions of solar terms: EPC, I&C, CAPEX vs OPEX, net metering, kWp, ALMM, pile foundations, DG synchronisation and more.
-- [Solar EPC FAQs: CAPEX, I&C & Civil Works](https://arrays-9mj.pages.dev/faq/): Answers on CAPEX solar, installation & commissioning, civil works, DG synchronisation, net-metering and working with Arrays Ingenieria.
-
-## Solar guides (2026)
 - [India Solar Capacity 2026: 171 GW](https://arrays-9mj.pages.dev/india-solar-capacity-2026/): India reached 171.05 GW of solar by 30 September 2026. What the growth, the rooftop boom and the 500 GW goal mean for a business planning solar.
 - [GST on Solar in India 2026: 5% Rate](https://arrays-9mj.pages.dev/gst-on-solar-india/): GST on solar modules is 5% since 22 September 2025. How the 70:30 rule puts EPC contracts near 8.9%, input tax credit and a worked example.
 - [ALMM List-II for Solar Cells 2026](https://arrays-9mj.pages.dev/almm-list-ii-solar-cells/): Since 1 June 2026, projects under MNRE's ALMM order need List-I modules made with List-II cells. Who it covers, exemptions and how to comply.
@@ -79,5 +79,26 @@ Key facts:
 - [Battery Storage with Solar in India](https://arrays-9mj.pages.dev/battery-storage-with-solar/): Battery storage with solar in India: the 2-hour storage rule in tenders, VGF for BESS, ISTS waiver terms, the draft 500 kW rule and when it pays.
 - [Solar Installation & Commissioning Steps](https://arrays-9mj.pages.dev/solar-plant-commissioning-checklist/): Step by step through installing and commissioning a solar plant in India: civil works, structures, modules, cabling, earthing, tests and handover.
 
+## Reference
+- [Government Solar Schemes in India 2026](https://arrays-9mj.pages.dev/solar-schemes-india/): Solar schemes in India 2026: PM Surya Ghar, PM-KUSUM deadlines, ALMM List-II, GST at 5%, Assam tea-garden solar, depreciation and net metering.
+- [Solar Glossary: EPC, CAPEX, I&C Terms](https://arrays-9mj.pages.dev/solar-glossary/): Plain-English definitions of solar terms: EPC, I&C, CAPEX vs OPEX, net metering, kWp, ALMM, pile foundations, DG synchronisation and more.
+- [Solar EPC FAQs: CAPEX, I&C & Civil Works](https://arrays-9mj.pages.dev/faq/): Answers on CAPEX solar, installation & commissioning, civil works, DG synchronisation, net-metering and working with Arrays Ingenieria.
+
+## Quick answers
+- **What does Arrays Ingenieria do?** Arrays Ingenieria is a veteran-led solar contractor. We do three things: installation & commissioning (I&C) of solar plants, complete EPC (engineering, procurement and construction), and all the civil works a plant needs, from pile foundations to boundary walls and fencing. We work on the CAPEX model, so the plant belongs to our client.
+- **Is Arrays Ingenieria (Ingenieria) an ex-servicemen-led company?** Yes. Arrays Ingenieria Pvt. Ltd., known as Ingenieria, is an ex-servicemen-led MSME founded in 2018 by Lt. Gen. Ashish Ranjan Prasad (Retd), its Chief Executive Officer. Veterans lead its project teams under the motto "Olive Green to Go Green".
+- **Did Arrays Ingenieria build the Koomber Tea Estate solar plant inaugurated by the Chief Minister of Assam?** Yes. Arrays Ingenieria was the installation partner for the 595 kWp ground-mounted, on-grid solar plant at Koomber Tea Estate, Cachar, inaugurated by Chief Minister Dr Himanta Biswa Sarma on 1 October 2026. It is part of the 3.11 MW Goodricke Tea Estates Solar Programme developed by Tata Power Renewable Energy and Sustvest.
+- **Which tea-estate solar plants did Arrays Ingenieria complete in 2026?** Under the 3.11 MW Goodricke Tea Estates Solar Programme: Orangajuli Tea Garden, Udalguri (450 kWp, inaugurated 4 September 2026), Borpatra Tea Estate, Sivasagar (230 kWp, inaugurated 25 September 2026) and Koomber Tea Estate, Cachar (595 kWp, inaugurated by the Chief Minister on 1 October 2026).
+- **Do you manufacture solar panels or inverters?** No. We are an installation, EPC and civil company, not a manufacturer. We source Tier-1 modules, inverters and balance-of-system equipment from established manufacturers, or use the makes approved by our client or the lead EPC, such as Tata Power-approved makes.
+- **What is the CAPEX model for solar?** Under CAPEX you pay for the plant and own it from day one. We design, supply and build it; every unit it generates is yours, and there is no long-term power purchase agreement. Businesses that own the plant may also claim accelerated depreciation under the Income Tax Act; check the current rate with your tax adviser.
+- **Do you offer OPEX, RESCO or zero-investment solar?** No, we do not finance or own plants. If your organisation prefers an OPEX or RESCO arrangement, the developer that finances the plant can engage us as its installation and EPC partner, as Tata Power Renewable Energy and Sustvest have done for tea estates in Assam.
+- **What is the difference between CAPEX and OPEX solar?** With CAPEX you invest upfront, own the plant and keep all the savings. With OPEX or RESCO a developer invests and owns the plant, and you buy its power at an agreed tariff for many years. CAPEX usually gives the highest lifetime savings; OPEX avoids the upfront cost.
+- **What does solar installation & commissioning (I&C) include?** I&C covers everything on site after the design and equipment are fixed: mounting structures, module installation, DC and AC cabling, inverters and distribution boards, earthing and lightning protection, testing, grid synchronisation and commissioning.
+- **Do you work as a subcontractor for EPC companies and developers?** Yes, it is a large part of our work. Tata Power has engaged us for pile foundations on the 300 MW SECI project at Koppal, civil works on the 10 MW DCM Textile plant in Hisar and piling and civil works for the 5.5 MW Tata Motors plant in Jamshedpur, and Sustvest for the installation and commissioning of 1711.66 kWp in Assam.
+- **What civil works do you carry out for solar plants?** Pile foundations for module mounting structures, RCC works, pre-cast boundary walls, chain-link fencing, earthing with its civil work, and cable trays and conduits with their supports.
+- **Can a solar plant work alongside our diesel generators?** Yes. At Jay Shree Tea's Towkok and Manjushree estates the scope included synchronising each solar plant with two DG sets, so the estates can run solar and generators together.
+
 ## Optional
+- [Full text of the site](https://arrays-9mj.pages.dev/llms-full.txt): every page as Markdown in one file
+- [Guides feed](https://arrays-9mj.pages.dev/feed.xml): RSS feed of the solar guides
 - [Sitemap](https://arrays-9mj.pages.dev/sitemap.xml): every page, image and video

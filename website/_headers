@@ -28,7 +28,7 @@
   Cache-Control: public, max-age=2592000
 /assets/certs/*
   Cache-Control: public, max-age=2592000
-/assets/orders/*
+/assets/harmutty/*
   Cache-Control: public, max-age=2592000
 /assets/leaders/*
   Cache-Control: public, max-age=2592000
@@ -36,3 +36,16 @@
   Cache-Control: public, max-age=2592000
 /assets/img/*
   Cache-Control: public, max-age=2592000
+/*.md
+  Content-Type: text/markdown; charset=utf-8
+  X-Robots-Tag: noindex
+  Cache-Control: public, max-age=3600
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=3600
+/llms-full.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=3600
+/feed.xml
+  Content-Type: application/rss+xml; charset=utf-8
+  Cache-Control: public, max-age=3600

@@ -1,7 +1,31 @@
-# Arrays Ingenieria (Ingenieria): search engines and AI assistants may crawl and cite this site.
+# Arrays Ingenieria (Ingenieria): search engines and AI assistants may crawl, index and cite this site.
 User-agent: *
 Allow: /
 Disallow: /tools/
 
+# AI search and assistant crawlers: welcome
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Google-Extended
+User-agent: Applebot
+User-agent: Applebot-Extended
+User-agent: Bingbot
+User-agent: DuckAssistBot
+User-agent: meta-externalagent
+User-agent: MistralAI-User
+User-agent: CCBot
+User-agent: Amazonbot
+User-agent: YouBot
+Allow: /
+Disallow: /tools/
+
 Sitemap: https://arrays-9mj.pages.dev/sitemap.xml
-# Plain-language summary of the site: https://arrays-9mj.pages.dev/llms.txt
+# Plain-language summary for AI assistants: https://arrays-9mj.pages.dev/llms.txt
+# Full text of every page in one file: https://arrays-9mj.pages.dev/llms-full.txt
+# Guides feed: https://arrays-9mj.pages.dev/feed.xml
