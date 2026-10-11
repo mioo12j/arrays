@@ -91,6 +91,10 @@
   function load(p) {
     if (loading[p]) return loading[p];
     loading[p] = new Promise((resolve, reject) => {
+      if (p === "x") {
+        // X's documented loader: callbacks queued on twttr.ready run once widgets.js has fully initialised
+        window.twttr = window.twttr || (function () { const t = { _e: [] }; t.ready = (f) => t._e.push(f); return t; })();
+      }
       if (p === "facebook") {
         if (!document.getElementById("fb-root")) { const r = document.createElement("div"); r.id = "fb-root"; document.body.prepend(r); }
         window.fbAsyncInit = () => { window.FB.init({ xfbml: false, version: "v24.0" }); resolve(); };
@@ -105,10 +109,7 @@
   }
   function render(p, wrap) {
     // X: widgets.js finishes setting itself up after its onload; twttr.ready waits for that
-    if (p === "x" && window.twttr) {
-      if (window.twttr.ready) window.twttr.ready((t) => t.widgets.load(wrap));
-      else if (window.twttr.widgets) window.twttr.widgets.load(wrap);
-    }
+    if (p === "x" && window.twttr && window.twttr.ready) window.twttr.ready((t) => t.widgets.load(wrap));
     if (p === "facebook" && window.FB) window.FB.XFBML.parse(wrap);
     if (p === "instagram" && window.instgrm) window.instgrm.Embeds.process();
   }
