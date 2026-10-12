@@ -2,7 +2,7 @@
 title: Arrays Ingenieria | Veteran-Led Solar EPC Company in India
 description: Veteran-led, ISO-certified solar installation & commissioning, EPC and civil works on the CAPEX model, for Tata Power, Jay Shree Tea and more across India.
 url: https://arraysingenieria.com/
-last_updated: 2026-10-11
+last_updated: 2026-10-12
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -412,7 +412,7 @@ Shri Kaushik Rai, MLA, Lakhipur, on X and Facebook
 
 Shri Rajdeep Goala, MLA, Udharbond, on X and Facebook
 
-Shared and reported by[CM's Office on X](https://x.com/CMOfficeAssam/status/2105545750054928662)[CM's Office on Facebook](https://www.facebook.com/cmofficeassam/photos/d41d8cd9/1422387263413542/?set=a.302403535411926)[MLA Kaushik Rai on X](https://x.com/iKaushikRai/status/2105642116089008488)[MLA Kaushik Rai on Facebook](https://www.facebook.com/100065189221572/posts/pfbid0MmznkBYfeKxNF66pmnNDk3iEFfGnY1wan7LNwMDm4316vznz3bg86ZkZwAgdjheHl/)[MLA Rajdeep Goala on X](https://x.com/RajdeepGoala14/status/2105730931860574342)[MLA Rajdeep Goala on Facebook](https://www.facebook.com/100063684971835/posts/1732055695593913/)[The Sentinel](https://www.sentinelassam.com/breakingnews/assam-himanta-biswa-sarma-inaugurates-595-kwp-solar-plant-at-koomber-tea-estate)[The Sentinel on Instagram](https://www.instagram.com/p/Dd89-ViDQcG/)[The Sentinel on Facebook](https://www.facebook.com/100066523279937/posts/pfbid05Ug3kevPqUdUBp7ZyFbD8Eix3hYRzu78MVR8yNixHt17o5B3cShMNFXW1o4Mw1Y8l/)
+Shared and reported by[CM's Office on X](https://x.com/CMOfficeAssam/status/2105545750054928662)[CM's Office on Facebook](https://www.facebook.com/cmofficeassam/photos/d41d8cd9/1422387263413542/?set=a.302403535411926)[MLA Kaushik Rai on X](https://x.com/iKaushikRai/status/2105642116089008488)[MLA Kaushik Rai on Facebook](https://www.facebook.com/100065189221572/posts/pfbid0MmznkBYfeKxNF66pmnNDk3iEFfGnY1wan7LNwMDm4316vznz3bg86ZkZwAgdjheHl/)[MLA Rajdeep Goala on X](https://x.com/RajdeepGoala14/status/2105730931860574342)[MLA Rajdeep Goala on Facebook](https://www.facebook.com/100063684971835/posts/1732055695593913/)[MLA Pallab Lochan Das on X](https://x.com/pallablochandas/status/2105636063217885672)[The Sentinel](https://www.sentinelassam.com/breakingnews/assam-himanta-biswa-sarma-inaugurates-595-kwp-solar-plant-at-koomber-tea-estate)[The Sentinel on Instagram](https://www.instagram.com/p/Dd89-ViDQcG/)[The Sentinel on Facebook](https://www.facebook.com/100066523279937/posts/pfbid05Ug3kevPqUdUBp7ZyFbD8Eix3hYRzu78MVR8yNixHt17o5B3cShMNFXW1o4Mw1Y8l/)
 
 [See the inauguration](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Photo album (20)](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/#album)
 
@@ -426,7 +426,7 @@ PB: **Prerana Bharati Digital (PBNN)**Silchar, Assam · on YouTube
 
 ### 595 kW solar plant inaugurated at Koomber tea garden
 
-कूम्बर चाय बागान में 595 किलो वाट सौर संयंत्र का उद्घाटन Prerana Bharati's news video on the Chief Minister of Assam inaugurating the 595 kWp ground-mounted, on-grid solar plant at Koomber Tea Garden, installed by Arrays Ingenieria under the 3.11 MW Goodricke Tea Estates Solar Programme. October 2026[Watch on YouTube](https://www.youtube.com/watch?v=XYA1zfqmqlU) [Video on Facebook](https://www.facebook.com/story.php?story_fbid=1502310741932902&id=100064619714592)[Prerana Bharati on YouTube](https://www.youtube.com/@preranabhartidigital)
+कूम्बर चाय बागान में 595 किलो वाट सौर संयंत्र का उद्घाटन Prerana Bharati's news video on the Chief Minister of Assam inaugurating the 595 kWp ground-mounted, on-grid solar plant at Koomber Tea Garden, installed by Arrays Ingenieria under the 3.11 MW Goodricke Tea Estates Solar Programme. 1 Oct 2026[Watch on YouTube](https://www.youtube.com/watch?v=XYA1zfqmqlU) [Video on Facebook](https://www.facebook.com/story.php?story_fbid=1502310741932902&id=100064619714592)[Prerana Bharati on YouTube](https://www.youtube.com/@preranabhartidigital)
 
 [News channel  NA: **News Axom**Nagaon, Assam · on Facebook
 
@@ -479,6 +479,7 @@ Shared by official handles
 - [OFFICIALChief Minister's Office, Assam](https://arraysingenieria.com/recognition/#official-handles)
 - [OFFICIALShri Kaushik Rai, MLA, Lakhipur](https://arraysingenieria.com/recognition/#official-handles)
 - [OFFICIALShri Rajdeep Goala, MLA, Udharbond](https://arraysingenieria.com/recognition/#official-handles)
+- [OFFICIALShri Pallab Lochan Das, MLA, Biswanath](https://arraysingenieria.com/recognition/#official-handles)
 
 Our founder on national TV
 

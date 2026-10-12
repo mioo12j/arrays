@@ -712,7 +712,7 @@ PROJECTS.insert(0, dict(
           ("assets/news/arrays-ingenieria-koomber-595kwp-solar-cm-inauguration-prerna-bharati.jpg", "Prerna Bharati, 2 Oct 2026: Arrays Ingenieria welcomes the Chief Minister at the Koomber inauguration"),
           ("assets/news/arrays-ingenieria-koomber-595kwp-solar-cm-inauguration-azad-sipahi.jpg", "Azad Sipahi, Ranchi, 3 Oct 2026: solar plant inaugurated at Koomber tea garden")],
     coverage=["sentinel-koomber", "hindusthan-samachar-koomber", "india-today-ne-koomber", "prerana-bharati-koomber-video", "news-axom-koomber", "prerna-bharati-koomber", "azad-sipahi-koomber"],
-    official=["cmo-assam-koomber", "kaushik-rai-koomber", "rajdeep-goala-koomber"],
+    official=["cmo-assam-koomber", "kaushik-rai-koomber", "rajdeep-goala-koomber", "pallab-lochan-das-koomber"],
     services=["solar-installation-commissioning.html", "service-ground-mount.html", "solar-for-tea-estates.html"],
     impact=dict(
         heading="Driving the PM's Panchamrit and the CM's Green Assam mission",

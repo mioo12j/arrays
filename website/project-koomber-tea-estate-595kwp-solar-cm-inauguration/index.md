@@ -2,7 +2,7 @@
 title: Assam CM Opens 595 kWp Koomber Solar | Arrays Ingenieria
 description: Assam CM Dr Himanta Biswa Sarma inaugurated the 595 kWp solar plant at Koomber Tea Estate, Cachar, on 1 Oct 2026. Installation partner: Arrays Ingenieria.
 url: https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/
-last_updated: 2026-10-11
+last_updated: 2026-10-12
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -33,7 +33,7 @@ The inauguration was announced by the Chief Minister's Office on X and Facebook,
 
 ### In the news
 
-[News channel: **Prerana Bharati Digital (PBNN)**October 2026595 kW solar plant inaugurated at Koomber tea garden](https://arraysingenieria.com/recognition/#prerana-bharati-koomber-video)[News channel: **News Axom**October 2026Video report: the Koomber Tea Estate solar plant inauguration](https://arraysingenieria.com/recognition/#news-axom-koomber)[Online news: **The Sentinel**1 Oct 2026Assam: Himanta Biswa Sarma Inaugurates 595 kWp Solar Plant at Koomber Tea Estate](https://arraysingenieria.com/recognition/#sentinel-koomber)[Newspaper: **Prerna Bharati**2 Oct 2026Arrays Ingenieria welcomes Chief Minister Dr Himanta Biswa Sarma at the Koomber tea garden solar plant inauguration](https://arraysingenieria.com/recognition/#prerna-bharati-koomber)[Newspaper: **Azad Sipahi**3 Oct 2026Solar power plant inaugurated at Assam's Koomber tea garden](https://arraysingenieria.com/recognition/#azad-sipahi-koomber)[Online news: **Hindusthan Samachar**1 Oct 2026Chief Minister inaugurates 595 kWp ground-mounted on-grid solar plant in Assam](https://arraysingenieria.com/recognition/#hindusthan-samachar-koomber)[Online news: **India Today NE**1 Oct 2026Assam CM inaugurates 595 kWp Solar Power Plant at Koomber Tea Estate](https://arraysingenieria.com/recognition/#india-today-ne-koomber)
+[News channel: **Prerana Bharati Digital (PBNN)**1 Oct 2026595 kW solar plant inaugurated at Koomber tea garden](https://arraysingenieria.com/recognition/#prerana-bharati-koomber-video)[News channel: **News Axom**October 2026Video report: the Koomber Tea Estate solar plant inauguration](https://arraysingenieria.com/recognition/#news-axom-koomber)[Online news: **The Sentinel**1 Oct 2026Assam: Himanta Biswa Sarma Inaugurates 595 kWp Solar Plant at Koomber Tea Estate](https://arraysingenieria.com/recognition/#sentinel-koomber)[Newspaper: **Prerna Bharati**2 Oct 2026Arrays Ingenieria welcomes Chief Minister Dr Himanta Biswa Sarma at the Koomber tea garden solar plant inauguration](https://arraysingenieria.com/recognition/#prerna-bharati-koomber)[Newspaper: **Azad Sipahi**3 Oct 2026Solar power plant inaugurated at Assam's Koomber tea garden](https://arraysingenieria.com/recognition/#azad-sipahi-koomber)[Online news: **Hindusthan Samachar**1 Oct 2026Chief Minister inaugurates 595 kWp ground-mounted on-grid solar plant in Assam](https://arraysingenieria.com/recognition/#hindusthan-samachar-koomber)[Online news: **India Today NE**1 Oct 2026Assam CM inaugurates 595 kWp Solar Power Plant at Koomber Tea Estate](https://arraysingenieria.com/recognition/#india-today-ne-koomber)
 
 ### Photos
 
@@ -91,6 +91,8 @@ SRG: **Shri Rajdeep Goala, MLA, Udharbond**@RajdeepGoala14It is particularly enc
 
 SRG: **Shri Rajdeep Goala, MLA, Udharbond**@RajdeepGoala14It is particularly encouraging to witness Arrays Ingenieria, an MSME led by ex-servicemen under the stewardship of Lt. Gen. A.R. Prasad (Retd.), translating its expertise, precision and institutional discipline into critical renewable-energy infrastructure.1 Oct 2026[View on Facebook](https://www.facebook.com/100063684971835/posts/1732055695593913/)
 
+SPL: **Shri Pallab Lochan Das, MLA, Biswanath**@pallablochandasA new chapter in Assam's clean-energy journey! HCM Dr. @himantabiswa inaugurated a 595 kWp ground-mounted, on-grid solar power plant at Koomber Tea Estate, part of Goodricke Tea Estates' 3.11 MW solar programme. From Assam's iconic tea gardens to a greener energy…1 Oct 2026[View on X](https://x.com/pallablochandas/status/2105636063217885672)
+
 Present at the Inauguration
 
 ## Leaders Who Joined the Chief Minister
@@ -117,7 +119,7 @@ PB: **Prerana Bharati Digital (PBNN)**Silchar, Assam · on YouTube
 
 ### 595 kW solar plant inaugurated at Koomber tea garden
 
-कूम्बर चाय बागान में 595 किलो वाट सौर संयंत्र का उद्घाटन Prerana Bharati's news video on the Chief Minister of Assam inaugurating the 595 kWp ground-mounted, on-grid solar plant at Koomber Tea Garden, installed by Arrays Ingenieria under the 3.11 MW Goodricke Tea Estates Solar Programme. October 2026[Watch on YouTube](https://www.youtube.com/watch?v=XYA1zfqmqlU) [Video on Facebook](https://www.facebook.com/story.php?story_fbid=1502310741932902&id=100064619714592)[Prerana Bharati on YouTube](https://www.youtube.com/@preranabhartidigital)
+कूम्बर चाय बागान में 595 किलो वाट सौर संयंत्र का उद्घाटन Prerana Bharati's news video on the Chief Minister of Assam inaugurating the 595 kWp ground-mounted, on-grid solar plant at Koomber Tea Garden, installed by Arrays Ingenieria under the 3.11 MW Goodricke Tea Estates Solar Programme. 1 Oct 2026[Watch on YouTube](https://www.youtube.com/watch?v=XYA1zfqmqlU) [Video on Facebook](https://www.facebook.com/story.php?story_fbid=1502310741932902&id=100064619714592)[Prerana Bharati on YouTube](https://www.youtube.com/@preranabhartidigital)
 
 Photo Album
 

@@ -2,7 +2,7 @@
 title: Solar for Assam Tea Estates: 2026 Guide | Arrays Ingenieria
 description: Why Assam's tea estates are going solar: the 2026 policy, the 5% land rule, DG synchronisation, APDCL approvals and lessons from our tea plants.
 url: https://arraysingenieria.com/solar-for-assam-tea-estates-guide/
-last_updated: 2026-10-11
+last_updated: 2026-10-12
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -79,7 +79,7 @@ PB: **Prerana Bharati Digital (PBNN)**Silchar, Assam · on YouTube
 
 ### 595 kW solar plant inaugurated at Koomber tea garden
 
-कूम्बर चाय बागान में 595 किलो वाट सौर संयंत्र का उद्घाटन Prerana Bharati's news video on the Chief Minister of Assam inaugurating the 595 kWp ground-mounted, on-grid solar plant at Koomber Tea Garden, installed by Arrays Ingenieria under the 3.11 MW Goodricke Tea Estates Solar Programme. October 2026[Watch on YouTube](https://www.youtube.com/watch?v=XYA1zfqmqlU) [Video on Facebook](https://www.facebook.com/story.php?story_fbid=1502310741932902&id=100064619714592)[Prerana Bharati on YouTube](https://www.youtube.com/@preranabhartidigital)
+कूम्बर चाय बागान में 595 किलो वाट सौर संयंत्र का उद्घाटन Prerana Bharati's news video on the Chief Minister of Assam inaugurating the 595 kWp ground-mounted, on-grid solar plant at Koomber Tea Garden, installed by Arrays Ingenieria under the 3.11 MW Goodricke Tea Estates Solar Programme. 1 Oct 2026[Watch on YouTube](https://www.youtube.com/watch?v=XYA1zfqmqlU) [Video on Facebook](https://www.facebook.com/story.php?story_fbid=1502310741932902&id=100064619714592)[Prerana Bharati on YouTube](https://www.youtube.com/@preranabhartidigital)
 
 The Arrays Ingenieria team takes the Chief Minister around the Koomber plant after the inauguration.
 

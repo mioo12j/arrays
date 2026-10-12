@@ -373,7 +373,7 @@ GALLERY = [
 # date: ISO (YYYY-MM-DD or YYYY-MM) or None when the source shows no date.
 COVERAGE = [
     dict(id="prerana-bharati-koomber-video", kind="tv", outlet="Prerana Bharati Digital (PBNN)", place="Silchar, Assam",
-         platform="YouTube", date="2026-10", youtube="XYA1zfqmqlU",
+         platform="YouTube", date="2026-10-01", youtube="XYA1zfqmqlU",
          headline="595 kW solar plant inaugurated at Koomber tea garden",
          original="कूम्बर चाय बागान में 595 किलो वाट सौर संयंत्र का उद्घाटन",
          summary="Prerana Bharati's news video on the Chief Minister of Assam inaugurating the 595 kWp ground-mounted, on-grid "
@@ -519,6 +519,16 @@ COVERAGE = [
                 ("Facebook", "https://www.facebook.com/100063684971835/posts/1732055695593913/")],
          img="assets/koomber/arrays-ingenieria-ex-servicemen-led-koomber-tea-estate-595kwp-solar-cm-and-officials-at-solar-site.jpg",
          alt="The Chief Minister of Assam with MLAs at the Koomber solar plant built by Arrays Ingenieria"),
+    dict(id="pallab-lochan-das-koomber", kind="official", outlet="Shri Pallab Lochan Das, MLA, Biswanath", handle="@pallablochandas",
+         place="Member of the Assam Legislative Assembly", date="2026-10-01",
+         headline="\"A new chapter in Assam's clean-energy journey\"",
+         quote="A new chapter in Assam's clean-energy journey! HCM Dr. @himantabiswa inaugurated a 595 kWp ground-mounted, on-grid "
+               "solar power plant at Koomber Tea Estate, part of Goodricke Tea Estates' 3.11 MW solar programme. From Assam's "
+               "iconic tea gardens to a greener energy…",
+         summary="Posting photos from the Chief Minister's inauguration of the 595 kWp plant at Koomber Tea Estate.",
+         links=[("X", "https://x.com/pallablochandas/status/2105636063217885672")],
+         img="assets/koomber/arrays-ingenieria-ex-servicemen-led-koomber-tea-estate-595kwp-solar-cm-speaks-at-solar-plant-site.jpg",
+         alt="The Chief Minister of Assam speaks at the Koomber solar plant site"),
     dict(id="hub-network-orangajuli", kind="online", outlet="Hub Network", place="Guwahati, Assam", platform="hubnetwork.in",
          date="2026-09-04",
          headline="Assam tea garden gets 450 kWp solar plant as clean energy push gathers pace",
@@ -1094,6 +1104,24 @@ def render_home_news():
     {render_featured_inner()}"""
 
 
+def ist(d):
+    """A schema.org date with a time zone (Google asks for one): 2026-10-01 -> 2026-10-01T12:00:00+05:30 (IST)."""
+    return f"{d}T12:00:00+05:30" if d and len(d) == 10 else None  # month-only dates are left out, never guessed
+
+
+def profile_url(post_url):
+    """The account behind a post: https://x.com/handle/status/1 -> https://x.com/handle."""
+    m = re.match(r"(https://[^/]+/[^/?#]+)", post_url)
+    return m.group(1) if m else None
+
+
+def image_rights():
+    """Licence metadata for photos Arrays Ingenieria owns (Google image metadata)."""
+    return {"creator": {"@type": "Organization", "name": LEGAL, "url": SITE_URL + "/"},
+            "creditText": "Arrays Ingenieria", "copyrightNotice": f"\u00a9 {LEGAL}",
+            "license": SITE_URL + "/terms/#copyright", "acquireLicensePage": SITE_URL + "/contact/"}
+
+
 def coverage_ld():
     org = {"@id": SITE_URL + "/#organization"}
     items = []
@@ -1101,12 +1129,13 @@ def coverage_ld():
         publisher = {"@type": "Organization", "name": c["outlet"]}
         if c["kind"] in ("client", "official"):
             node = {"@type": "SocialMediaPosting", "headline": c["headline"], "url": c["links"][0][1],
-                    "sameAs": [u for _, u in c["links"][1:]] or None, "author": {"@type": "Organization", "name": c["outlet"]},
+                    "sameAs": [u for _, u in c["links"][1:]] or None, "author": {"@type": "Person" if c["kind"] == "official" and c["outlet"].startswith(("Shri", "Dr")) else "Organization",
+                               "name": c["outlet"], "url": profile_url(c["links"][0][1])},
                     "articleBody": c["quote"], "about": org}
         elif c.get("youtube"):
             node = {"@type": "VideoObject", "name": c.get("original") or c["headline"], "alternativeHeadline": c["headline"],
                     "description": c["summary"], "url": c["url"], "embedUrl": f"https://www.youtube-nocookie.com/embed/{c['youtube']}",
-                    "thumbnailUrl": f"{SITE_URL}/{c['img']}", "uploadDate": c["date"], "publisher": publisher, "about": org,
+                    "thumbnailUrl": f"{SITE_URL}/{c['img']}", "uploadDate": ist(c["date"]), "publisher": publisher, "about": org,
                     "inLanguage": "hi"}
         elif c["kind"] == "tv":
             node = {"@type": "CreativeWork", "genre": "News report (video)", "name": c["headline"], "url": c["url"],
@@ -1118,8 +1147,8 @@ def coverage_ld():
                 node["alternativeHeadline"] = c["headline"]
             node["url"] = c.get("url")
             node["image"] = f"{SITE_URL}/{c['img']}" if not c.get("url") else None
-        if c["date"]:
-            node["datePublished"] = c["date"]
+        if ist(c["date"]):
+            node["datePublished"] = ist(c["date"])
         items.append({k: v for k, v in node.items() if v is not None})
     return {"@context": "https://schema.org", "@type": "CollectionPage",
             "name": "Arrays Ingenieria in the news", "url": SITE_URL + "/recognition/",
@@ -1237,7 +1266,7 @@ def koomber_video_ld():
     return [{"@context": "https://schema.org", "@type": "VideoObject", "name": cap, "description": cap + "." + VIDEO_DESC,
              "embedUrl": f"{SITE_URL}/project-koomber-tea-estate-595kwp-solar-cm-inauguration.html#videos",
              "contentLocation": {"@type": "Place", "name": "Koomber Tea Estate, Cachar, Assam"},
-             "contentUrl": f"{SITE_URL}/{src}", "thumbnailUrl": f"{SITE_URL}/{poster}", "uploadDate": "2026-10-01",
+             "contentUrl": f"{SITE_URL}/{src}", "thumbnailUrl": f"{SITE_URL}/{poster}", "uploadDate": ist("2026-10-01"),
              "duration": dur, "publisher": {"@id": SITE_URL + "/#organization"}} for src, poster, cap, dur, _ in KOOMBER_VIDEOS]
 
 
@@ -1253,6 +1282,7 @@ def render_cm_showcase(videos=True):
         ("MLA Kaushik Rai on Facebook", "Facebook", "https://www.facebook.com/100065189221572/posts/pfbid0MmznkBYfeKxNF66pmnNDk3iEFfGnY1wan7LNwMDm4316vznz3bg86ZkZwAgdjheHl/"),
         ("MLA Rajdeep Goala on X", "X", "https://x.com/RajdeepGoala14/status/2105730931860574342"),
         ("MLA Rajdeep Goala on Facebook", "Facebook", "https://www.facebook.com/100063684971835/posts/1732055695593913/"),
+        ("MLA Pallab Lochan Das on X", "X", "https://x.com/pallablochandas/status/2105636063217885672"),
         ("The Sentinel", "", "https://www.sentinelassam.com/breakingnews/assam-himanta-biswa-sarma-inaugurates-595-kwp-solar-plant-at-koomber-tea-estate"),
         ("The Sentinel on Instagram", "Instagram", "https://www.instagram.com/p/Dd89-ViDQcG/"),
         ("The Sentinel on Facebook", "Facebook", "https://www.facebook.com/100066523279937/posts/pfbid05Ug3kevPqUdUBp7ZyFbD8Eix3hYRzu78MVR8yNixHt17o5B3cShMNFXW1o4Mw1Y8l/")])
@@ -1593,19 +1623,16 @@ def render_project_page(p):
         ld[0]["subjectOf"] = [u for c in links for _, u, *_ in (c.get("links") or []) + (c.get("also") or [])]
     if p.get("album"):
         ld.append({"@context": "https://schema.org", "@type": "ImageGallery", "name": f"{p['name']}: inauguration photos",
-                   "url": f"{SITE_URL}{page_url(p['file'])}#album", "creator": {"@id": SITE_URL + "/#organization"},
-                   "image": [{"@type": "ImageObject", "contentUrl": f"{SITE_URL}/{src}", "caption": alt,
-                              "creator": {"@id": SITE_URL + "/#organization"}} for src, alt in p["album"]]})
+                   "url": f"{SITE_URL}{page_url(p['file'])}#album", "creator": image_rights()["creator"],
+                   "image": [{"@type": "ImageObject", "contentUrl": f"{SITE_URL}/{src}", "caption": alt, **image_rights()}
+                             for src, alt in p["album"]]})
     if p.get("videos"):
         ld.extend(koomber_video_ld())
-        ld.append({"@context": "https://schema.org", "@type": "Event", "name": p["name"],
-                   "startDate": "2026-10-01", "eventStatus": "https://schema.org/EventScheduled",
-                   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-                   "location": {"@type": "Place", "name": "Koomber Tea Estate",
-                                "address": {"@type": "PostalAddress", "addressRegion": "Assam", "addressLocality": "Cachar", "addressCountry": "IN"}},
-                   "description": p["intro"], "image": [f"{SITE_URL}/{src}" for src, _ in p["album"][:6]],
-                   "performer": {"@type": "Person", "name": "Dr Himanta Biswa Sarma", "jobTitle": "Chief Minister of Assam"},
-                   "attendee": [
+        # the inauguration is described through the people it involved (it was an invitation-only event,
+        # so Event markup, which Google reads as a public, ticketed event, does not fit)
+        ld[0]["mentions"] += [
+                       {"@type": "Person", "name": "Dr Himanta Biswa Sarma", "jobTitle": "Chief Minister of Assam",
+                        "sameAs": ["https://x.com/himantabiswa"]},
                        {"@type": "Person", "name": "Shri Kaushik Rai", "jobTitle": "MLA, Lakhipur",
                         "sameAs": ["https://x.com/iKaushikRai"],
                         "subjectOf": "https://x.com/iKaushikRai/status/2105642116089008488"},
@@ -1613,9 +1640,12 @@ def render_project_page(p):
                         "sameAs": ["https://x.com/RajdeepGoala14"],
                         "subjectOf": "https://x.com/RajdeepGoala14/status/2105730931860574342"},
                        {"@type": "Person", "name": "Shri Krishnendu Paul", "jobTitle": "Minister of Public Health Engineering and MLA, Patharkandi"},
-                       {"@type": "Person", "name": "Dr Rajdeep Roy", "jobTitle": "MLA, Silchar"}],
-                   "organizer": {"@type": "Organization", "name": "Goodricke Group"},
-                   "contributor": {"@id": SITE_URL + "/#organization"}})
+                       {"@type": "Person", "name": "Dr Rajdeep Roy", "jobTitle": "MLA, Silchar"},
+                       {"@type": "Person", "name": "Shri Pallab Lochan Das", "jobTitle": "MLA, Biswanath",
+                        "sameAs": ["https://x.com/pallablochandas"],
+                        "subjectOf": "https://x.com/pallablochandas/status/2105636063217885672"}]
+        ld[0]["contentLocation"] = {"@type": "Place", "name": "Koomber Tea Estate",
+                                    "address": {"@type": "PostalAddress", "addressRegion": "Assam", "addressLocality": "Cachar", "addressCountry": "IN"}}
     return page_shell("projects", body_html, p["hero"], hero_alt, ld)
 
 
@@ -1724,7 +1754,7 @@ def render_article_page(a):
 </section>"""
     plain = lambda t: html.unescape(re.sub(r"<[^>]+>", "", t))
     ld = [{"@context": "https://schema.org", "@type": "Article", "headline": a["title"], "description": a["desc"],
-           "image": [f"{SITE_URL}/{a['hero'][0]}"], "datePublished": a["date"], "dateModified": a["updated"],
+           "image": [f"{SITE_URL}/{a['hero'][0]}"], "datePublished": ist(a["date"]), "dateModified": ist(a["updated"]),
            "author": {"@type": "Organization", "name": "Arrays Ingenieria engineering team", "url": SITE_URL + "/about/"},
            "publisher": {"@id": SITE_URL + "/#organization"}, "mainEntityOfPage": SITE_URL + page_url(a["file"]),
            "articleSection": a["tag"], "keywords": ", ".join(a.get("keywords", [])), "wordCount": words, "inLanguage": "en-IN",
@@ -1737,7 +1767,7 @@ def render_article_page(a):
             if not isinstance(b, str) and b[0] == "yt":
                 c = next(x for x in COVERAGE if x["id"] == b[1])
                 ld.append({"@context": "https://schema.org", "@type": "VideoObject", "name": c.get("original") or c["headline"],
-                           "description": c["summary"], "thumbnailUrl": f"{SITE_URL}/{c['img']}", "uploadDate": c["date"],
+                           "description": c["summary"], "thumbnailUrl": f"{SITE_URL}/{c['img']}", "uploadDate": ist(c["date"]),
                            "embedUrl": f"https://www.youtube-nocookie.com/embed/{c['youtube']}", "url": c["url"]})
     body = page_hero(a["hero"][0], a["hero"][1], f"Guide · {esc(a['tag'])}", a["title"], esc(a["summary"]),
                      [("Insights", "insights.html"), (a["short"], None)]) + f"""
@@ -1789,7 +1819,7 @@ def render_insights_page():
     ld = [{"@context": "https://schema.org", "@type": "Blog", "name": "Arrays Ingenieria Solar Insights", "url": SITE_URL + "/insights/",
            "publisher": {"@id": SITE_URL + "/#organization"},
            "blogPost": [{"@type": "BlogPosting", "headline": a["title"], "description": a["desc"], "url": SITE_URL + page_url(a["file"]),
-                         "datePublished": a["date"], "dateModified": a["updated"], "image": f"{SITE_URL}/{a['hero'][0]}",
+                         "datePublished": ist(a["date"]), "dateModified": ist(a["updated"]), "image": f"{SITE_URL}/{a['hero'][0]}",
                          "author": {"@id": SITE_URL + "/#organization"}, "publisher": {"@id": SITE_URL + "/#organization"}} for a in ARTICLES]}]
     body = page_hero(img, "Industrial rooftop solar array installed by Arrays Ingenieria", "Solar Insights 2026",
                      'Solar Power in India, <span class="text-sun">Explained</span>',
@@ -2157,10 +2187,8 @@ def render_gallery_page():
         "description": PAGES["gallery.html"]["desc"],
         "publisher": {"@id": SITE_URL + "/#organization"},
         "associatedMedia": [{
-            "@type": "ImageObject", "contentUrl": f"{SITE_URL}/{src}", "name": cap, "caption": alt,
-            "creditText": "Arrays Ingenieria", "copyrightNotice": "© Arrays Ingenieria Pvt. Ltd.",
-            "creator": {"@type": "Organization", "name": "Arrays Ingenieria Pvt. Ltd."},
-        } for src, cats, cap, alt in GALLERY],
+            "@type": "ImageObject", "contentUrl": f"{SITE_URL}/{src}", "name": cap, "caption": alt, **image_rights(),
+        } for src, cats, cap, alt in GALLERY if not set(cats.split()) & {"media", "leadership"}],
     }
     return f"""<!DOCTYPE html>
 <html lang="en">

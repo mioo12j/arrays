@@ -2,7 +2,7 @@
 title: Clients & Partners | Arrays Ingenieria Solar EPC India
 description: Arrays Ingenieria's clients and partners: Tata Power, Jay Shree Tea (BK Birla Group), Goodricke, Sustvest, Super Smelters, Tata Motors and more.
 url: https://arraysingenieria.com/clients/
-last_updated: 2026-10-11
+last_updated: 2026-10-12
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -191,6 +191,7 @@ Shared by official handles
 - [OFFICIALChief Minister's Office, Assam](https://arraysingenieria.com/recognition/#official-handles)
 - [OFFICIALShri Kaushik Rai, MLA, Lakhipur](https://arraysingenieria.com/recognition/#official-handles)
 - [OFFICIALShri Rajdeep Goala, MLA, Udharbond](https://arraysingenieria.com/recognition/#official-handles)
+- [OFFICIALShri Pallab Lochan Das, MLA, Biswanath](https://arraysingenieria.com/recognition/#official-handles)
 
 Our founder on national TV
 
