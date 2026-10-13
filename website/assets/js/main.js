@@ -45,24 +45,8 @@ async function formAccepted(res) {
   }
 
   /* ---------- Scrolling strips: press and hold to stop them, or pause them for good with the button ---------- */
+  // press and hold stops a scrolling strip under the finger; it moves on when released (no buttons, by request)
   $$(".marquee, .testi-marquee").forEach(m => {
-    const wrap = document.createElement("div");
-    wrap.className = "marquee-wrap";
-    m.before(wrap); wrap.appendChild(m);
-    const btn = document.createElement("button");
-    btn.type = "button"; btn.className = "rotate-toggle marquee-toggle";
-    const what = m.classList.contains("testi-marquee") ? "client quotes" : "client names";
-    const paint = () => {
-      const paused = m.classList.contains("is-paused");
-      btn.setAttribute("aria-pressed", paused ? "true" : "false");
-      btn.setAttribute("aria-label", (paused ? "Play the scrolling " : "Pause the scrolling ") + what);
-      btn.innerHTML = paused
-        ? '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>'
-        : '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
-    };
-    btn.addEventListener("click", () => { m.classList.toggle("is-paused"); paint(); });
-    wrap.appendChild(btn); paint();
-    // feedback on press: the strip stops under the finger the moment it is touched
     m.addEventListener("pointerdown", () => m.classList.add("is-held"));
     ["pointerup", "pointercancel", "pointerleave"].forEach(ev => m.addEventListener(ev, () => m.classList.remove("is-held")));
   });
@@ -540,7 +524,11 @@ async function formAccepted(res) {
     ];
     const ns = "http://www.w3.org/2000/svg";
     const svg = document.createElementNS(ns, "svg");
-    svg.setAttribute("viewBox", data.viewBox);
+    // headroom above the map: the office cards float there, so they never cover North India
+    const vb0 = data.viewBox.split(" ").map(Number), HEAD = 175;
+    const vb = [vb0[0], vb0[1] - HEAD, vb0[2], vb0[3] + HEAD];
+    const cardY = vb0[1] - 22; // bottom edge of the cards, just above the top of Ladakh
+    svg.setAttribute("viewBox", vb.join(" "));
     svg.setAttribute("class", "india-svg");
     svg.setAttribute("role", "img");
     svg.setAttribute("aria-label", "Map of Arrays Ingenieria's presence across India");
@@ -557,7 +545,7 @@ async function formAccepted(res) {
 
     // office connectors + 3D pins
     offices.forEach(o => {
-      const baseY = o.y, topY = o.y - 46;
+      const baseY = o.y, topY = cardY;
       const line = document.createElementNS(ns, "line");
       line.setAttribute("x1", o.x); line.setAttribute("y1", baseY);
       line.setAttribute("x2", o.x); line.setAttribute("y2", topY);
@@ -575,15 +563,14 @@ async function formAccepted(res) {
     });
     mapHost.appendChild(svg);
 
-    // HTML floating labels (for crisp text + 3D look)
-    const vb = data.viewBox.split(" ").map(Number);
+    // HTML labels (crisp text), above the map and joined to their pins by the dotted lines
     offices.forEach(o => {
       const tag = document.createElement("div");
       tag.className = "office-tag office-tag--" + o.type + " " + o.side;
       tag.innerHTML = `<span class="ot-badge">${o.type === "hq" ? "Corporate" : "Branch"}</span>
         <b>${o.title}</b><span class="ot-place">${o.place}</span>`;
-      tag.style.left = ((o.x / vb[2]) * 100) + "%";
-      tag.style.top = (((o.y - 50) / vb[3]) * 100) + "%";
+      tag.style.left = (((o.x - vb[0]) / vb[2]) * 100) + "%";
+      tag.style.top = (((cardY - vb[1]) / vb[3]) * 100) + "%";
       mapHost.appendChild(tag);
     });
   }

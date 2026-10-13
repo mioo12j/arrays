@@ -2355,3 +2355,12 @@ main > .section--dark + .section--dark { padding-top: 0; }
 @media (prefers-reduced-motion: reduce) { .marquee-toggle { display: none; } }
 /* the mobile menu settles on the same spring as everything else, and can be reversed mid-way */
 .nav-links { transition-timing-function: var(--spring); }
+/* partners strip: a slower, calmer scroll */
+.marquee__track { animation-duration: 60s; }
+/* client quotes: a medium, readable pace */
+.testi-track { animation-duration: 60s; }
+/* office cards sit above the map (never over North India): Corporate opens to the left of its line, Branch to the right */
+#indiaMap { position: relative; }
+.office-tag--hq { transform: translate(-82%, -100%); }
+.office-tag--branch { transform: translate(-18%, -100%); }
+.office-line { stroke-dasharray: 2 3; opacity: .85; }
