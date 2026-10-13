@@ -2,7 +2,7 @@
 title: Solar Installation & Commissioning Steps | Arrays Ingenieria
 description: Step by step through installing and commissioning a solar plant in India: civil works, structures, modules, cabling, earthing, tests and handover.
 url: https://arraysingenieria.com/solar-plant-commissioning-checklist/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -134,4 +134,4 @@ Keep Reading
 
 [Buyer's Guide: **How to Choose a Solar EPC and Installation Partner in India: 12 Questions to Ask**The partner you choose decides how your plant performs for 25 years. Twelve questions to ask any solar EPC or installation contractor, what good answers look like, and the red flags to walk away from.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/choose-solar-epc-partner/)[O&M: **Solar O&M and Module Cleaning: Protecting 25 Years of Returns**A solar plant has no moving parts, but it still needs care. Module cleaning, inspections, thermography, inverter and earthing checks, and a practical maintenance schedule that keeps generation where it should be.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-om-module-cleaning/)[Standards & Safety: **Solar Quality and Safety Norms in India (2026): BIS, the Quality Control Order, CEA and CEIG**What makes a solar plant compliant in 2026: the BIS Quality Control Order for modules, inverters and batteries, the standards each component should meet, the Electrical Inspector's approval, and site safety.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-quality-standards-bis-cea/)
 
-[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)
+[All Solar Guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

@@ -2,7 +2,7 @@
 title: Rooftop vs Ground-Mount Solar Guide | Arrays Ingenieria
 description: Rooftop or ground-mount solar? Cost, space, structure, roof safety, piling, fencing, approvals and maintenance compared, with lessons from our sites.
 url: https://arraysingenieria.com/rooftop-vs-ground-mount-solar/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -116,4 +116,4 @@ Keep Reading
 
 [Grid & Regulation: **Green Energy Open Access in India: Buy Solar Power from Off-Site Plants from 100 kW**Can't fit enough solar on your roof? Green Energy Open Access lets consumers from 100 kW buy power from a solar plant elsewhere. Eligibility, approvals, charges, banking, and the ISTS waiver phase-out.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/green-energy-open-access/)[Tea Estates: **Solar for Assam's Tea Estates: Policy, Design and Lessons from Our Plants**Tea estates are among the best solar sites in India: daytime factory load, diesel back-up to cut and land to spare. Assam's policy, how to design for the plucking season, and what we have learnt building plants from Koomber to Harmutty.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-for-assam-tea-estates-guide/)[O&M: **Solar O&M and Module Cleaning: Protecting 25 Years of Returns**A solar plant has no moving parts, but it still needs care. Module cleaning, inspections, thermography, inverter and earthing checks, and a practical maintenance schedule that keeps generation where it should be.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-om-module-cleaning/)
 
-[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)
+[All Solar Guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

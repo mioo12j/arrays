@@ -2,7 +2,7 @@
 title: PM Surya Ghar Subsidy 2026 Guide | Arrays Ingenieria
 description: PM Surya Ghar gives homes up to Rs 78,000 for rooftop solar. Subsidy by size, housing-society support, loans, eligibility and how to apply in 2026.
 url: https://arraysingenieria.com/pm-surya-ghar-subsidy/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -131,4 +131,4 @@ Keep Reading
 
 [Policy: **ALMM List-I and List-II Explained: The Made-in-India Rule for Solar Modules and Cells**MNRE's Approved List of Models and Manufacturers now covers solar cells as well as modules. What List-I and List-II mean, which projects they bind, the exemptions, and how to stay compliant.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/almm-list-ii-solar-cells/)[Grid & Regulation: **Net Metering in India (2026): Net Billing, Gross Metering, ToD Tariffs and the Draft 2026 Rules**How your solar plant connects to the DISCOM and how exported units are paid for: net metering, net billing and gross metering, the 500 kW rule, time-of-day tariffs, the draft 2026 amendments, and the step-by-step approval process.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/net-metering-india/)[Schemes: **PM-KUSUM in 2026: Components A, B and C, New Deadlines and What Comes Next**India's farm solar scheme: up to 2 MW plants on farmers' land, standalone solar pumps and solarised feeders. What each component offers, the 2026 deadline extensions, and the proposed PM-KUSUM 2.0.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/pm-kusum-scheme/)
 
-[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)
+[All Solar Guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

@@ -2,7 +2,7 @@
 title: Solar Standards in India: BIS, CEIG | Arrays Ingenieria
 description: Quality and safety norms for solar plants in India in 2026: the BIS Quality Control Order, key IS/IEC standards for each part and CEIG approval.
 url: https://arraysingenieria.com/solar-quality-standards-bis-cea/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -135,4 +135,4 @@ Keep Reading
 
 [Policy: **ALMM List-I and List-II Explained: The Made-in-India Rule for Solar Modules and Cells**MNRE's Approved List of Models and Manufacturers now covers solar cells as well as modules. What List-I and List-II mean, which projects they bind, the exemptions, and how to stay compliant.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/almm-list-ii-solar-cells/)[Buyer's Guide: **How to Choose a Solar EPC and Installation Partner in India: 12 Questions to Ask**The partner you choose decides how your plant performs for 25 years. Twelve questions to ask any solar EPC or installation contractor, what good answers look like, and the red flags to walk away from.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/choose-solar-epc-partner/)[Installation & Commissioning: **Solar Plant Installation and Commissioning: The Complete Step-by-Step Checklist**What actually happens between the purchase order and the day a solar plant goes live. Every stage of installation and commissioning, the tests that prove the plant is safe, and the documents you should receive at handover.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-plant-commissioning-checklist/)
 
-[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)
+[All Solar Guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

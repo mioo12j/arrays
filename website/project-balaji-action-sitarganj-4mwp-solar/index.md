@@ -2,7 +2,7 @@
 title: Solar I&C and Civil Works, Balaji Action | Arrays Ingenieria
 description: Case study: installation & commissioning, BOS, civil works and CEIG approvals for the 4000.32 kWp Balaji Action Buildwell solar project, Sitarganj.
 url: https://arraysingenieria.com/project-balaji-action-sitarganj-4mwp-solar/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -178,7 +178,7 @@ The standard rooftop installation & commissioning scope we deliver to EPC majors
 - Safety posters, storage under covers and care until handover
 - Testing, commissioning and handover
 
-[The full commissioning checklist](https://arraysingenieria.com/solar-plant-commissioning-checklist/)[Our I&C service](https://arraysingenieria.com/solar-installation-commissioning/)
+[The Full Commissioning Checklist](https://arraysingenieria.com/solar-plant-commissioning-checklist/)[Our I&C service](https://arraysingenieria.com/solar-installation-commissioning/)
 
 Related
 

@@ -2,7 +2,7 @@
 title: Get a Free Solar Quote | Arrays Ingenieria Solar EPC
 description: Free, no-obligation solar quote from Arrays Ingenieria: CAPEX solar EPC, installation & commissioning and civil works. Three quick questions, one engineer.
 url: https://arraysingenieria.com/free-solar-quote/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -45,4 +45,4 @@ A call to understand your needs, then a site survey where needed.
 
 Plant size, scope of work and price, with no obligation.
 
-[How a project runs](https://arraysingenieria.com/how-it-works/)[Questions? Read the FAQ](https://arraysingenieria.com/faq/)
+[How a Project Runs](https://arraysingenieria.com/how-it-works/)[Questions? Read the FAQ](https://arraysingenieria.com/faq/)

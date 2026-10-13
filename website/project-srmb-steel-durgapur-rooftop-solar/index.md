@@ -2,7 +2,7 @@
 title: SRMB Steel Durgapur Rooftop Solar I&C | Arrays Ingenieria
 description: Case study: installation & commissioning and BOS works for SRMB Steel's 1895.4 kWp, 1060 kWp and 1.69 MWp sheet-roof solar plants at Durgapur, West Bengal.
 url: https://arraysingenieria.com/project-srmb-steel-durgapur-rooftop-solar/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -166,7 +166,7 @@ The standard rooftop installation & commissioning scope we deliver to EPC majors
 - Safety posters, storage under covers and care until handover
 - Testing, commissioning and handover
 
-[The full commissioning checklist](https://arraysingenieria.com/solar-plant-commissioning-checklist/)[Our I&C service](https://arraysingenieria.com/solar-installation-commissioning/)
+[The Full Commissioning Checklist](https://arraysingenieria.com/solar-plant-commissioning-checklist/)[Our I&C service](https://arraysingenieria.com/solar-installation-commissioning/)
 
 Related
 

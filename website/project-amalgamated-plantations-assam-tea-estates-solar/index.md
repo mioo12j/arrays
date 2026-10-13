@@ -2,7 +2,7 @@
 title: Amalgamated Plantations Tea Estate Solar | Arrays Ingenieria
 description: Case study: piling, BOS works and installation & commissioning of ground-mount solar plants at Amalgamated Plantations tea estates in Assam for Tata Power.
 url: https://arraysingenieria.com/project-amalgamated-plantations-assam-tea-estates-solar/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -203,7 +203,7 @@ The standard ground-mount installation & commissioning scope we deliver to EPC m
 - Third-party validation of tools where required
 - Testing, commissioning and handover
 
-[The full commissioning checklist](https://arraysingenieria.com/solar-plant-commissioning-checklist/)[Our I&C service](https://arraysingenieria.com/solar-installation-commissioning/)
+[The Full Commissioning Checklist](https://arraysingenieria.com/solar-plant-commissioning-checklist/)[Our I&C service](https://arraysingenieria.com/solar-installation-commissioning/)
 
 Related
 

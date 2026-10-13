@@ -2,7 +2,7 @@
 title: How to Choose a Solar EPC in India | Arrays Ingenieria
 description: 12 questions to ask before hiring a solar EPC or installation partner in India: track record, documents, equipment, safety, approvals and warranties.
 url: https://arraysingenieria.com/choose-solar-epc-partner/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -124,4 +124,4 @@ Keep Reading
 
 [Business Models: **CAPEX vs OPEX (RESCO) Solar: Which Model Suits Your Business?**Own your solar plant and keep every unit, or pay a developer per unit with no upfront cost? A side-by-side comparison of CAPEX and OPEX solar, with the numbers that decide it.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/capex-vs-opex-solar/)[Standards & Safety: **Solar Quality and Safety Norms in India (2026): BIS, the Quality Control Order, CEA and CEIG**What makes a solar plant compliant in 2026: the BIS Quality Control Order for modules, inverters and batteries, the standards each component should meet, the Electrical Inspector's approval, and site safety.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-quality-standards-bis-cea/)[Installation & Commissioning: **Solar Plant Installation and Commissioning: The Complete Step-by-Step Checklist**What actually happens between the purchase order and the day a solar plant goes live. Every stage of installation and commissioning, the tests that prove the plant is safe, and the documents you should receive at handover.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-plant-commissioning-checklist/)
 
-[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)
+[All Solar Guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

@@ -309,3 +309,45 @@ window.loadScript = (function () {
     return cache[name];
   };
 })();
+
+/* ---------- Springs (Apple's damping + response model, from WWDC "Designing Fluid Interfaces") ----------
+   Spring.to({ from, to, velocity, damping, response, onUpdate, onRest }) animates a number on the display clock.
+   It always starts from the value it is given (the on-screen value) and keeps its velocity when re-targeted,
+   so motion can be grabbed and reversed at any moment. damping 1 = no overshoot; < 1 = a little bounce. */
+window.Spring = (function () {
+  function to(o) {
+    const k = Math.pow((2 * Math.PI) / (o.response || 0.4), 2);
+    const c = (4 * Math.PI * (o.damping == null ? 1 : o.damping)) / (o.response || 0.4);
+    let x = o.from, v = o.velocity || 0, target = o.to, raf = 0, last = 0, done = false;
+    const frame = (now) => {
+      if (done) return;
+      let dt = Math.min(0.064, last ? (now - last) / 1000 : 1 / 60);
+      last = now;
+      const steps = Math.ceil(dt / 0.004); dt /= steps;
+      for (let i = 0; i < steps; i++) { v += (-k * (x - target) - c * v) * dt; x += v * dt; }
+      if (Math.abs(x - target) < 0.3 && Math.abs(v) < 4) { x = target; v = 0; done = true; }
+      o.onUpdate && o.onUpdate(x, v);
+      if (done) { o.onRest && o.onRest(); } else raf = requestAnimationFrame(frame);
+    };
+    raf = requestAnimationFrame(frame);
+    return {
+      stop() { done = true; cancelAnimationFrame(raf); },
+      retarget(t) { target = t; },
+      get value() { return x; },
+      get velocity() { return v; },
+    };
+  }
+  /* where a flick would come to rest (Apple's exponential deceleration; 0.998 feels like normal scrolling) */
+  function project(velocity, rate) { rate = rate || 0.998; return (velocity / 1000) * rate / (1 - rate); }
+  /* soft edges: the further past the boundary, the less the element follows */
+  function rubberband(over, dim, cst) { cst = cst || 0.55; return (over * dim * cst) / (dim + cst * Math.abs(over)); }
+  /* velocity in px/s from the last ~100ms of pointer samples */
+  function velocity(samples, axis) {
+    const now = samples.length ? samples[samples.length - 1].t : 0;
+    const recent = samples.filter((s) => now - s.t < 100);
+    if (recent.length < 2) return 0;
+    const a = recent[0], b = recent[recent.length - 1], dt = (b.t - a.t) / 1000;
+    return dt > 0 ? (b[axis] - a[axis]) / dt : 0;
+  }
+  return { to, project, rubberband, velocity };
+})();

@@ -2,7 +2,7 @@
 title: 319 kWp Rooftop Solar, TCPL Vaishali | Arrays Ingenieria
 description: Case study: 319 kWp rooftop solar plant for TCPL Greenery Agro (Tata Consumer Products) at Bhagwanpur, Vaishali, Bihar, reported by Dainik Bhaskar.
 url: https://arraysingenieria.com/project-tcpl-vaishali-319kwp-rooftop-solar/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -140,7 +140,7 @@ The standard rooftop installation & commissioning scope we deliver to EPC majors
 - Safety posters, storage under covers and care until handover
 - Testing, commissioning and handover
 
-[The full commissioning checklist](https://arraysingenieria.com/solar-plant-commissioning-checklist/)[Our I&C service](https://arraysingenieria.com/solar-installation-commissioning/)
+[The Full Commissioning Checklist](https://arraysingenieria.com/solar-plant-commissioning-checklist/)[Our I&C service](https://arraysingenieria.com/solar-installation-commissioning/)
 
 Related
 

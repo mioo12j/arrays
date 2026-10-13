@@ -2,7 +2,7 @@
 title: CAPEX Solar EPC Company in India | Arrays Ingenieria
 description: Own your solar plant outright. Arrays Ingenieria designs, supplies, builds and commissions rooftop and ground-mount solar on the CAPEX model.
 url: https://arraysingenieria.com/capex-solar-epc/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -12,7 +12,7 @@ CAPEX Solar EPC
 
 You invest once and own the plant outright. We design it, supply it, build it and commission it, and every unit it generates is yours.
 
-[Request a CAPEX Proposal](https://arraysingenieria.com/free-solar-quote/?service=capex) See a plant our client owns
+[Request a CAPEX Proposal](https://arraysingenieria.com/free-solar-quote/?service=capex) See a Plant Our Client Owns
 
 What CAPEX Means
 

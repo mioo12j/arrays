@@ -52,7 +52,8 @@ async function formAccepted(res) {
     staggerGroups.set(el.parentElement, list);
   });
   staggerGroups.forEach(list => {
-    if (list.length > 1) list.forEach((el, i) => { el.style.transitionDelay = Math.min(i, 6) * 80 + "ms"; });
+    // a short cascade only: no item waits more than 0.15s (no artificial delays)
+    if (list.length > 1) list.forEach((el, i) => { el.style.transitionDelay = Math.min(i, 5) * 30 + "ms"; });
   });
 
   /* ---------- Page titles rise in word by word ---------- */
@@ -250,6 +251,49 @@ async function formAccepted(res) {
     $(".slide-next", sw)?.addEventListener("click", () => go(idx + 1, true));
     slides[0].classList.add("active");
     rot = autoRotate(sw, () => go(idx + 1), interval);
+    // swipe: the photo tracks the finger, a flick decides next/previous by its direction and speed
+    const S = window.Spring;
+    if (S && slides.length > 1) {
+      let down = null, axis = null, samples = [], dx = 0, spring = null, dragged = false;
+      const setDx = (el, v) => el.style.setProperty("--dx", v.toFixed(1) + "px");
+      sw.addEventListener("pointerdown", e => {
+        if (e.button !== 0 || e.target.closest("button, a")) return;
+        if (spring) { spring.stop(); spring = null; }
+        down = { x: e.clientX, y: e.clientY, id: e.pointerId, base: dx }; axis = null; dragged = false;
+        samples = [{ t: performance.now(), x: e.clientX }];
+      });
+      sw.addEventListener("pointermove", e => {
+        if (!down || e.pointerId !== down.id) return;
+        const mx = e.clientX - down.x, my = e.clientY - down.y;
+        if (!axis) {
+          if (Math.hypot(mx, my) < 10) return;
+          axis = Math.abs(mx) > Math.abs(my) ? "x" : "y";
+          if (axis === "y") { down = null; return; } // a vertical move is the page scrolling
+          sw.setPointerCapture(e.pointerId); sw.classList.add("is-dragging"); dragged = true;
+        }
+        samples.push({ t: performance.now(), x: e.clientX }); if (samples.length > 8) samples.shift();
+        dx = down.base + mx; setDx(slides[idx], dx);
+      });
+      const end = e => {
+        if (!down || e.pointerId !== down.id) return;
+        down = null; sw.classList.remove("is-dragging");
+        if (axis !== "x") return;
+        samples.push({ t: performance.now(), x: e.clientX });
+        const v = S.velocity(samples, "x"), W = sw.clientWidth;
+        const landing = dx + S.project(v);
+        const out = slides[idx];
+        const dir = landing < -W * 0.25 ? 1 : landing > W * 0.25 ? -1 : 0;
+        if (dir) go(idx + dir, true);
+        const from = dx; dx = 0;
+        if (reduceMotion) { setDx(out, 0); return; }
+        // the outgoing photo keeps the finger's velocity as it leaves (or springs home if not committed)
+        spring = S.to({ from, to: dir ? -dir * W * 0.5 : 0, velocity: v, damping: dir ? 1 : 0.85, response: 0.35,
+          onUpdate: x => setDx(out, x), onRest: () => { setDx(out, 0); spring = null; } });
+      };
+      sw.addEventListener("pointerup", end);
+      sw.addEventListener("pointercancel", end);
+      sw.addEventListener("click", e => { if (dragged) { e.preventDefault(); e.stopImmediatePropagation(); dragged = false; } }, true);
+    }
   });
 
   /* ---------- Lightbox (accessible photo viewer) ---------- */
@@ -281,6 +325,35 @@ async function formAccepted(res) {
       $(".lb-prev", lb).hidden = !many;
       $(".lb-next", lb).hidden = !many;
     };
+    const stage = $(".lb-stage", lb);
+    const S = window.Spring;
+    const physics = !!S && !reduceMotion;
+    let sx = 0, sy = 0, anims = [];
+    const stopAll = () => { anims.forEach(a => a.stop()); anims = []; };
+    const paint = () => {
+      stage.style.transform = (sx || sy) ? `translate3d(${sx}px, ${sy}px, 0)` : "";
+      lb.style.backgroundColor = sy ? `rgba(4,20,14,${(0.94 * Math.max(0.15, 1 - Math.abs(sy) / (innerHeight * 0.6))).toFixed(3)})` : "";
+    };
+    // the photo grows out of the thumbnail that was tapped, and shrinks back into it (same path in and out)
+    const thumbOf = t => (t && (t.tagName === "IMG" ? t : $("img", t))) || null;
+    const flip = (thumb, opening, after) => {
+      img.style.opacity = "";
+      const r = thumb && thumb.getBoundingClientRect();
+      const ir = img.getBoundingClientRect();
+      if (!physics || !r || !r.width || !ir.width || r.bottom < 0 || r.top > innerHeight) { lb.style.backgroundColor = ""; after && after(); return; }
+      const dx = (r.left + r.width / 2) - (ir.left + ir.width / 2), dy = (r.top + r.height / 2) - (ir.top + ir.height / 2);
+      const sc = Math.max(0.05, r.width / ir.width);
+      const set = p => {
+        img.style.transform = `translate3d(${dx * (1 - p)}px, ${dy * (1 - p)}px, 0) scale(${sc + (1 - sc) * p})`;
+        lb.style.backgroundColor = `rgba(4,20,14,${(0.94 * p).toFixed(3)})`;
+        cap.style.opacity = String(Math.max(0, p * 2 - 1));
+      };
+      stopAll();
+      const from = opening ? 0 : 1, to = opening ? 1 : 0;
+      set(from);
+      anims.push(S.to({ from, to, damping: 1, response: 0.35, onUpdate: set,
+        onRest: () => { img.style.transform = ""; cap.style.opacity = ""; lb.style.backgroundColor = ""; after && after(); } }));
+    };
     const open = t => {
       const g = t.dataset.gallery;
       // only step through items the current filter is showing
@@ -289,32 +362,110 @@ async function formAccepted(res) {
       pos = group.indexOf(t);
       opener = t;
       render();
+      stopAll(); sx = sy = 0; paint();
       lb.inert = false;
       lb.classList.add("open");
+      if (physics) { lb.classList.add("lb-physics"); lb.style.backgroundColor = "rgba(4,20,14,0)"; img.style.opacity = "0"; }
       document.body.style.overflow = "hidden";
       $(".lb-close", lb).focus();
+      const go = () => flip(thumbOf(t), true);
+      if (img.complete && img.naturalWidth) go(); else img.addEventListener("load", go, { once: true });
+    };
+    const finish = () => {
+      lb.classList.remove("open", "lb-physics");
+      lb.inert = true;
+      stopAll(); sx = sy = 0; paint();
+      img.style.transform = ""; cap.style.opacity = ""; lb.style.backgroundColor = "";
+      document.body.style.overflow = "";
+      const back = opener && (opener.matches("[tabindex], a, button") ? opener : opener.querySelector("[tabindex]"));
+      if (back && document.contains(back)) back.focus(); // back to the photo the visitor opened
     };
     const close = () => {
-      lb.classList.remove("open");
-      lb.inert = true;
-      document.body.style.overflow = "";
-      if (opener && document.contains(opener)) opener.focus(); // back to the photo the visitor opened
+      // shrink back into the thumbnail of the photo now showing, if it is on screen
+      if (physics && !sx && !sy) flip(thumbOf(group[pos]), false, finish); else finish();
     };
     const move = d => { pos = (pos + d + group.length) % group.length; render(); };
+
+    /* Direct manipulation: the photo follows the finger 1:1 (respecting where it was grabbed), a flick is projected
+       forward to decide the outcome, release velocity is handed to the spring, and any motion can be grabbed again. */
+    if (S) {
+      let down = null, axis = null, samples = [], dragged = false;
+      lb.addEventListener("pointerdown", e => {
+        if (e.button !== 0 || e.target.closest("button")) return;
+        stopAll(); // grab it mid-flight: continue from where it is on screen
+        img.style.transform = ""; cap.style.opacity = "";
+        down = { x: e.clientX, y: e.clientY, sx, sy, id: e.pointerId };
+        axis = null; samples = [{ t: performance.now(), x: e.clientX, y: e.clientY }]; dragged = false;
+      });
+      lb.addEventListener("pointermove", e => {
+        if (!down || e.pointerId !== down.id) return;
+        const dx = e.clientX - down.x, dy = e.clientY - down.y;
+        if (!axis) {
+          if (Math.hypot(dx, dy) < 10) return; // hysteresis before committing to a direction
+          axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+          lb.setPointerCapture(e.pointerId);
+          lb.classList.add("is-dragging"); dragged = true;
+        }
+        samples.push({ t: performance.now(), x: e.clientX, y: e.clientY });
+        if (samples.length > 8) samples.shift();
+        if (axis === "x") {
+          const raw = down.sx + dx;
+          sx = group.length > 1 ? raw : S.rubberband(raw, innerWidth); // one photo: soft edge, nothing beyond
+        } else sy = down.sy + dy;
+        paint();
+      });
+      const release = e => {
+        if (!down || (e.pointerId !== down.id)) return;
+        lb.classList.remove("is-dragging");
+        samples.push({ t: performance.now(), x: e.clientX, y: e.clientY }); // velocity is measured at the moment of release
+        const ax = axis; down = null; axis = null;
+        if (!ax) return;
+        const W = innerWidth, H = innerHeight;
+        const spring = (key, to, velocity, damping, response, onRest) => anims.push(S.to({
+          from: key === "x" ? sx : sy, to, velocity, damping, response,
+          onUpdate: v => { if (key === "x") sx = v; else sy = v; paint(); }, onRest }));
+        if (ax === "x") {
+          const vx = S.velocity(samples, "x");
+          const landing = sx + S.project(vx);
+          const dir = landing < -W * 0.3 ? 1 : landing > W * 0.3 ? -1 : 0;
+          if (dir && group.length > 1) {
+            if (!physics) { sx = 0; paint(); move(dir); return; }
+            // out along the swipe, the next photo comes in from the other side on the same path
+            spring("x", -dir * W, vx, 1, 0.3, () => {
+              move(dir); sx = dir * W * 0.6; paint();
+              spring("x", 0, 0, 1, 0.35);
+            });
+          } else if (physics) spring("x", 0, vx, 0.8, 0.35); else { sx = 0; paint(); }
+        } else {
+          const vy = S.velocity(samples, "y");
+          const landing = sy + S.project(vy, 0.99);
+          if (Math.abs(landing) > H * 0.2) {
+            if (!physics) { finish(); return; }
+            spring("y", Math.sign(landing) * H, vy, 1, 0.3, finish); // dismissed in the direction it was thrown
+          } else if (physics) spring("y", 0, vy, 0.8, 0.35); else { sy = 0; paint(); }
+        }
+      };
+      lb.addEventListener("pointerup", release);
+      lb.addEventListener("pointercancel", release);
+      // a drag must not also count as a tap on the backdrop
+      lb.addEventListener("click", e => { if (dragged) { e.stopImmediatePropagation(); dragged = false; } }, true);
+    }
     triggers.forEach(t => {
       t.style.cursor = "zoom-in";
       // photos that are not links or buttons become keyboard-operable buttons
       // ...unless the card already holds its own link (e.g. "Read the case study"): a button may not contain links
       if (!t.matches("a, button") && !t.querySelector("a[href], button, [tabindex]")) {
-        if (!t.hasAttribute("tabindex")) t.tabIndex = 0;
-        if (!t.getAttribute("role")) t.setAttribute("role", "button");
-        if (!t.getAttribute("aria-label")) {
-          const thumb = t.tagName === "IMG" ? t : $("img", t);
-          const label = t.dataset.caption || (thumb && thumb.alt) || "photo";
-          t.setAttribute("aria-label", "View larger: " + label);
+        // a <figure> may not take a button role: the photo inside it becomes the button
+        const thumb = t.tagName === "IMG" ? t : $("img", t);
+        const btn = t.tagName === "FIGURE" && thumb ? thumb : t;
+        if (!btn.hasAttribute("tabindex")) btn.tabIndex = 0;
+        if (!btn.getAttribute("role")) btn.setAttribute("role", "button");
+        if (!btn.getAttribute("aria-label")) {
+          const label = (thumb && thumb.alt) || t.dataset.caption || "photo";
+          btn.setAttribute("aria-label", "View larger: " + label);
         }
-        t.addEventListener("keydown", e => {
-          if (e.target !== t) return;
+        btn.addEventListener("keydown", e => {
+          if (e.target !== btn) return;
           if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(t); }
         });
       }

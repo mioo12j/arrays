@@ -2,7 +2,7 @@
 title: India Solar Capacity 2026: 171 GW | Arrays Ingenieria
 description: India reached 171.05 GW of solar by 30 September 2026. What the growth, the rooftop boom and the 500 GW goal mean for a business planning solar.
 url: https://arraysingenieria.com/india-solar-capacity-2026/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -152,4 +152,4 @@ Keep Reading
 
 [Tax: **GST on Solar in India (2026): 5% on Equipment, About 8.9% on EPC Contracts**The GST Council cut GST on solar devices from 12% to 5% from 22 September 2025. How it applies to modules, inverters and full EPC contracts, what the 70:30 rule means, and how much a plant saves.4 min read · Updated 11 Oct 2026](https://arraysingenieria.com/gst-on-solar-india/)[Business Models: **CAPEX vs OPEX (RESCO) Solar: Which Model Suits Your Business?**Own your solar plant and keep every unit, or pay a developer per unit with no upfront cost? A side-by-side comparison of CAPEX and OPEX solar, with the numbers that decide it.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/capex-vs-opex-solar/)[Buyer's Guide: **How to Choose a Solar EPC and Installation Partner in India: 12 Questions to Ask**The partner you choose decides how your plant performs for 25 years. Twelve questions to ask any solar EPC or installation contractor, what good answers look like, and the red flags to walk away from.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/choose-solar-epc-partner/)
 
-[All solar guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)
+[All Solar Guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)

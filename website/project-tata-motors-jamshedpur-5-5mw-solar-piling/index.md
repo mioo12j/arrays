@@ -2,7 +2,7 @@
 title: 5.5 MW Solar Piling & I&C, Tata Motors | Arrays Ingenieria
 description: Case study: piling, civil works, installation & commissioning and a pre-cast boundary wall for the 5.5 MW Tata Motors solar plant at Jojobera, Jamshedpur.
 url: https://arraysingenieria.com/project-tata-motors-jamshedpur-5-5mw-solar-piling/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -174,7 +174,7 @@ The standard ground-mount installation & commissioning scope we deliver to EPC m
 - Third-party validation of tools where required
 - Testing, commissioning and handover
 
-[The full commissioning checklist](https://arraysingenieria.com/solar-plant-commissioning-checklist/)[Our I&C service](https://arraysingenieria.com/solar-installation-commissioning/)
+[The Full Commissioning Checklist](https://arraysingenieria.com/solar-plant-commissioning-checklist/)[Our I&C service](https://arraysingenieria.com/solar-installation-commissioning/)
 
 Related
 

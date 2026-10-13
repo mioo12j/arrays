@@ -2,7 +2,7 @@
 title: 1.2 MWp Rooftop Solar, Apar Industries | Arrays Ingenieria
 description: Case study: installation & commissioning, BOS, skylight safety mesh and CEIG approval for the 1.2 MWp Apar Industries sheet-roof solar plant, Jharsuguda.
 url: https://arraysingenieria.com/project-apar-industries-jharsuguda-1-2mwp-rooftop-solar/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -165,7 +165,7 @@ The standard rooftop installation & commissioning scope we deliver to EPC majors
 - Safety posters, storage under covers and care until handover
 - Testing, commissioning and handover
 
-[The full commissioning checklist](https://arraysingenieria.com/solar-plant-commissioning-checklist/)[Our I&C service](https://arraysingenieria.com/solar-installation-commissioning/)
+[The Full Commissioning Checklist](https://arraysingenieria.com/solar-plant-commissioning-checklist/)[Our I&C service](https://arraysingenieria.com/solar-installation-commissioning/)
 
 Related
 

@@ -838,8 +838,8 @@ FOOTER = f"""<section class="cta-strip" aria-label="Contact Arrays Ingenieria">
   </footer>
 
   <nav class="contact-dock" aria-label="Quick contact">
-    <a class="cd-mail" href="mailto:arraysingenieria@gmail.com?subject=Solar%20project%20enquiry" aria-label="Email Arrays Ingenieria"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>Email us</span></a>
-    <a class="cd-quote" href="free-solar-quote.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span>Free solar quote</span></a>
+    <a class="cd-mail" href="mailto:arraysingenieria@gmail.com?subject=Solar%20project%20enquiry" aria-label="Email Us at arraysingenieria@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>Email Us</span></a>
+    <a class="cd-quote" href="free-solar-quote.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span>Free Solar Quote</span></a>
   </nav>
   <button class="to-top" id="toTop" aria-label="Back to top">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
@@ -1492,7 +1492,7 @@ def render_project_detail(p):
   <div class="container">
     <div class="section-head center reveal"><span class="eyebrow">Installation &amp; Commissioning</span><h2>What Our I&amp;C Scope <span class="text-grad">Covered</span></h2><p>The standard {"rooftop" if p["ic_scope"] == "rooftop" else "ground-mount"} installation &amp; commissioning scope we deliver to EPC majors' specifications, after the mandatory quality and safety training and contractor safety sign-off.</p></div>
     <div class="ic-grid">{groups}</div>
-    <div class="section-cta reveal"><a class="btn btn--outline" href="solar-plant-commissioning-checklist.html">The full commissioning checklist</a><a class="btn btn--primary" href="solar-installation-commissioning.html">Our I&amp;C service {ARROW_SVG}</a></div>
+    <div class="section-cta reveal"><a class="btn btn--outline" href="solar-plant-commissioning-checklist.html">The Full Commissioning Checklist</a><a class="btn btn--primary" href="solar-installation-commissioning.html">Our I&amp;C service {ARROW_SVG}</a></div>
   </div>
 </section>"""
     return out
@@ -1799,7 +1799,7 @@ def render_article_page(a):
   <div class="container">
     <div class="section-head center reveal"><span class="eyebrow">Keep Reading</span><h2>Related <span class="text-grad">Guides</span></h2></div>
     <div class="art-grid-cards">{"".join(art_card(x, i) for i, x in enumerate(related))}</div>
-    <div class="section-cta reveal"><a class="btn btn--outline" href="insights.html">All solar guides</a><a class="btn btn--primary" href="solar-schemes-india.html">Government solar schemes {ARROW_SVG}</a></div>
+    <div class="section-cta reveal"><a class="btn btn--outline" href="insights.html">All Solar Guides</a><a class="btn btn--primary" href="solar-schemes-india.html">Government solar schemes {ARROW_SVG}</a></div>
   </div>
 </section>"""
     return page_shell("insights", body, a["hero"][0], a["hero"][1], ld)
@@ -2092,7 +2092,7 @@ def render_quote_page():
         <h2>Thank you<span data-done-name></span>! Your request is in.</h2>
         <p>An engineer from our team will study your details and contact you to plan the next step. Meanwhile, see what we have built for others.</p>
         <ol class="q-done__next"><li><b>Review</b>We study your site, load and goals.</li><li><b>Call &amp; survey</b>We talk, and survey the site where needed.</li><li><b>Proposal</b>Plant size, scope and price, with no obligation.</li></ol>
-        <div class="q-nav q-nav--center"><a class="btn btn--outline" href="/projects/">See our projects</a><a class="btn btn--primary" href="/project-koomber-tea-estate-595kwp-solar-cm-inauguration/">Koomber: inaugurated by the CM</a></div>
+        <div class="q-nav q-nav--center"><a class="btn btn--outline" href="/projects/">See Our Projects</a><a class="btn btn--primary" href="/project-koomber-tea-estate-595kwp-solar-cm-inauguration/">Koomber: Inaugurated by the CM</a></div>
       </div>
     </form>
 
@@ -2118,7 +2118,7 @@ def render_quote_page():
       <li class="reveal" data-d="1"><span class="st-n">2</span><div><b>We talk and survey</b><p>A call to understand your needs, then a site survey where needed.</p></div></li>
       <li class="reveal" data-d="2"><span class="st-n">3</span><div><b>You get a clear proposal</b><p>Plant size, scope of work and price, with no obligation.</p></div></li>
     </ol>
-    <div class="section-cta reveal"><a class="btn btn--outline" href="/how-it-works/">How a project runs</a><a class="btn btn--outline" href="/faq/">Questions? Read the FAQ</a></div>
+    <div class="section-cta reveal"><a class="btn btn--outline" href="/how-it-works/">How a Project Runs</a><a class="btn btn--outline" href="/faq/">Questions? Read the FAQ</a></div>
   </div>
 </section>
 <script src="assets/js/quote.js?v={ASSET_VERSION}"></script>"""

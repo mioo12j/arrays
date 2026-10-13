@@ -2,7 +2,7 @@
 title: How It Works: Your Solar Project | Arrays Ingenieria
 description: How a solar project with Arrays Ingenieria works: how solar makes power, CAPEX vs I&C, each step from site survey to commissioning, and who owns what.
 url: https://arraysingenieria.com/how-it-works/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -137,7 +137,7 @@ Who Owns What
 - Owns nothing in your plant
 - Offers O&M support only if you ask for it
 
-[Full CAPEX ownership table](https://arraysingenieria.com/capex-solar-epc/#who-owns-what)
+[Full CAPEX Ownership Table](https://arraysingenieria.com/capex-solar-epc/#who-owns-what)
 
 Before & After
 
