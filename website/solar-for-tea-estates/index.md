@@ -91,9 +91,9 @@ Shared and reported by[CM's Office on X](https://x.com/CMOfficeAssam/status/2105
 
 Watch: **The inauguration on video**
 
-The Chief Minister of Assam cuts the ribbon at the 595 kWp Koomber Tea Estate solar plant installed by Arrays Ingenieria
+The Chief Minister of Assam cuts the ribbon at the 595 kWp Koomber Tea Estate solar plant installed by Arrays Ingenieria [Open the Video Page](https://arraysingenieria.com/video-koomber-cm-ribbon-cutting/)
 
-The inauguration ceremony at the Koomber Tea Estate 595 kWp solar plant, 1 October 2026, Arrays Ingenieria installation partner
+The inauguration ceremony at the Koomber Tea Estate 595 kWp solar plant, 1 October 2026, Arrays Ingenieria installation partner [Open the Video Page](https://arraysingenieria.com/video-koomber-solar-plant-inauguration/)
 
 Why It Matters
 

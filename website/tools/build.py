@@ -204,7 +204,8 @@ for _f, _m in PAGES.items():
     if _m["path"]:
         _m["path"] = page_url(_f)
 PARENTS = {"services": ("Services", "/#services"), "projects": ("Projects", "/projects/"),
-           "industries": ("Industries", "/industries/"), "insights": ("Insights", "/insights/")}
+           "industries": ("Industries", "/industries/"), "insights": ("Insights", "/insights/"),
+           "gallery": ("Photo & Video Gallery", "/gallery/")}
 SERVICE_PAGES = [p for p in PAGES if p.startswith("service-")]
 for _p in SERVICE_PAGES:
     PAGES[_p].setdefault("parent", "services")
@@ -893,7 +894,7 @@ def yt_card(c, lead=False, with_id=True):
           <span class="tv-outlet"><span class="tv-mono">PB</span><span><b>{esc(c['outlet'])}</b><small>{esc(c['place'])} · on {c['platform']}</small></span></span>
           <h3 class="tv-title">{esc(c['headline'])}</h3>{orig}
           <span class="tv-sum">{esc(c['summary'])}</span>
-          <span class="tv-foot">{time_tag(c['date'])}<a class="tv-go" href="{c['url']}" target="_blank" rel="noopener">Watch on YouTube {EXT_SVG}</a></span>
+          <span class="tv-foot">{time_tag(c['date'])}<a class="tv-go" href="{c['url']}" target="_blank" rel="noopener">Watch on YouTube {EXT_SVG}</a>{f'<a class="tv-go" href="{WATCH_BY_SRC[c["youtube"]]["file"]}">Video Page</a>' if c.get("youtube") in WATCH_BY_SRC else ""}</span>
           <span class="tv-more">{links}</span>
         </span>
       </article>"""
@@ -1133,10 +1134,11 @@ def coverage_ld():
                                "name": c["outlet"], "url": profile_url(c["links"][0][1])},
                     "articleBody": c["quote"], "about": org}
         elif c.get("youtube"):
-            node = {"@type": "VideoObject", "name": c.get("original") or c["headline"], "alternativeHeadline": c["headline"],
-                    "description": c["summary"], "url": c["url"], "embedUrl": f"https://www.youtube-nocookie.com/embed/{c['youtube']}",
-                    "thumbnailUrl": f"{SITE_URL}/{c['img']}", "uploadDate": ist(c["date"]), "publisher": publisher, "about": org,
-                    "inLanguage": "hi"}
+            # the video itself is marked up on its own watch page; here it is a news item that points there
+            node = {"@type": "CreativeWork", "genre": "News report (video)", "name": c.get("original") or c["headline"],
+                    "alternativeHeadline": c["headline"], "description": c["summary"],
+                    "url": SITE_URL + (watch_url(c["youtube"]) or "/recognition/"), "sameAs": c["url"], "publisher": publisher,
+                    "about": org, "inLanguage": "hi"}
         elif c["kind"] == "tv":
             node = {"@type": "CreativeWork", "genre": "News report (video)", "name": c["headline"], "url": c["url"],
                     "publisher": publisher, "description": c["summary"], "about": org}
@@ -1253,7 +1255,8 @@ def render_koomber_videos():
     psrc = {poster: (poster[:-4] + ".webp" if os.path.isfile(os.path.join(ROOT, poster.lstrip("/")[:-4] + ".webp")) else poster)
             for _, poster, _, _, _ in KOOMBER_VIDEOS}
     items = "".join(f'<figure class="kv kv--{o} reveal" data-d="{i}"><video data-poster="{psrc[poster]}" width="{dims[poster][0]}" height="{dims[poster][1]}" muted loop playsinline preload="none" data-autoplay '
-                    f'aria-label="{esc(cap)}"><source src="{src[:-4]}.webm" type="video/webm" /><source src="{src}" type="video/mp4" /></video><figcaption>{esc(cap)}</figcaption></figure>'
+                    f'aria-label="{esc(cap)}"><source src="{src[:-4]}.webm" type="video/webm" /><source src="{src}" type="video/mp4" /></video><figcaption>{esc(cap)} '
+                    f'<a class="kv-watch" href="{WATCH_BY_SRC[src]["file"]}">Open the Video Page</a></figcaption></figure>'
                     for i, (src, poster, cap, _, o) in enumerate(KOOMBER_VIDEOS))
     return f'<div class="kv-grid">{items}</div>'
 
@@ -1627,7 +1630,7 @@ def render_project_page(p):
                    "image": [{"@type": "ImageObject", "contentUrl": f"{SITE_URL}/{src}", "caption": alt, **image_rights()}
                              for src, alt in p["album"]]})
     if p.get("videos"):
-        ld.extend(koomber_video_ld())
+        pass  # the inauguration videos are marked up on their own watch pages (see WATCH)
         # the inauguration is described through the people it involved (it was an invitation-only event,
         # so Event markup, which Google reads as a public, ticketed event, does not fit)
         ld[0]["mentions"] += [
@@ -1766,9 +1769,7 @@ def render_article_page(a):
         for b in sec["blocks"]:
             if not isinstance(b, str) and b[0] == "yt":
                 c = next(x for x in COVERAGE if x["id"] == b[1])
-                ld.append({"@context": "https://schema.org", "@type": "VideoObject", "name": c.get("original") or c["headline"],
-                           "description": c["summary"], "thumbnailUrl": f"{SITE_URL}/{c['img']}", "uploadDate": ist(c["date"]),
-                           "embedUrl": f"https://www.youtube-nocookie.com/embed/{c['youtube']}", "url": c["url"]})
+                pass  # marked up on the video's own watch page
     body = page_hero(a["hero"][0], a["hero"][1], f"Guide · {esc(a['tag'])}", a["title"], esc(a["summary"]),
                      [("Insights", "insights.html"), (a["short"], None)]) + f"""
 <div class="read-progress" aria-hidden="true"><span></span></div>
@@ -2128,7 +2129,90 @@ def render_quote_page():
     return page_shell("quote", body, hero, "Arrays Ingenieria: the 595 kWp Koomber solar plant inaugurated by the Chief Minister of Assam", ld)
 
 
+# ------------------------------------------------------- watch pages ----
+# Google indexes a video only on a "watch page": a page whose main content is that one video.
+# Each video gets one; everywhere else the video still plays, but only the watch page carries VideoObject markup.
+_KV1, _KV2 = KOOMBER_VIDEOS[0], KOOMBER_VIDEOS[1]
+_PB = next(c for c in COVERAGE if c["id"] == "prerana-bharati-koomber-video")
+WATCH = [
+    dict(file="video-koomber-cm-ribbon-cutting.html", kind="file", src=_KV1[0], poster=_KV1[1], dur=_KV1[3], orient=_KV1[4],
+         h1="The Chief Minister Cuts the Ribbon at Koomber Solar Plant",
+         title="Video: CM Opens Koomber 595 kWp Solar Plant, Assam",
+         desc="Video: Assam Chief Minister Dr Himanta Biswa Sarma cuts the ribbon at the 595 kWp Koomber Tea Estate solar plant built by Arrays Ingenieria, 1 Oct 2026.",
+         name=_KV1[2], date="2026-10-01"),
+    dict(file="video-koomber-solar-plant-inauguration.html", kind="file", src=_KV2[0], poster=_KV2[1], dur=_KV2[3], orient=_KV2[4],
+         h1="Inauguration of the 595 kWp Koomber Solar Plant",
+         title="Video: Koomber 595 kWp Solar Plant Inauguration, Assam",
+         desc="Video of the inauguration ceremony at the 595 kWp ground-mounted solar plant at Koomber Tea Estate, Assam, installed by Arrays Ingenieria, 1 Oct 2026.",
+         name=_KV2[2], date="2026-10-01"),
+    dict(file="video-prerana-bharati-koomber-solar-report.html", kind="youtube", yt=_PB["youtube"], poster=_PB["img"],
+         h1="News Report: 595 kW Solar Plant Inaugurated at Koomber Tea Garden",
+         title="Video: Prerana Bharati Report on Koomber Solar Plant",
+         desc="Prerana Bharati's Hindi news video on the Chief Minister inaugurating the 595 kWp Koomber Tea Garden solar plant installed by Arrays Ingenieria in Assam.",
+         name=_PB["original"], date=_PB["date"], outlet=_PB["outlet"], url=_PB["url"], summary=_PB["summary"]),
+]
+for _w in WATCH:
+    PAGES[_w["file"]] = dict(path=page_url(_w["file"]), crumb=_w["h1"], parent="gallery", title=_w["title"], desc=_w["desc"])
+WATCH_BY_SRC = {w.get("src") or w.get("yt"): w for w in WATCH}
+
+
+def watch_url(key):
+    """The watch page of a video file path or YouTube id, for links from other pages."""
+    w = WATCH_BY_SRC.get(key)
+    return page_url(w["file"]) if w else None
+
+
+def video_ld(w):
+    base = {"@context": "https://schema.org", "@type": "VideoObject", "name": w["name"], "description": w["desc"],
+            "thumbnailUrl": [f"{SITE_URL}/{w['poster']}"], "uploadDate": ist(w["date"]),
+            "url": SITE_URL + page_url(w["file"]), "inLanguage": "hi" if w["kind"] == "youtube" else "en"}
+    if w["kind"] == "file":
+        base.update({"contentUrl": f"{SITE_URL}/{w['src']}", "duration": w["dur"], "publisher": {"@id": SITE_URL + "/#organization"},
+                     "creator": image_rights()["creator"],
+                     "contentLocation": {"@type": "Place", "name": "Koomber Tea Estate, Cachar, Assam"}})
+    else:
+        base.update({"embedUrl": f"https://www.youtube-nocookie.com/embed/{w['yt']}", "sameAs": w["url"],
+                     "publisher": {"@type": "Organization", "name": w["outlet"]}})
+    return base
+
+
+def render_watch_page(w):
+    case = "project-koomber-tea-estate-595kwp-solar-cm-inauguration.html"
+    others = "".join(f'<a class="btn btn--outline" href="{x["file"]}">{esc(x["h1"])}</a>' for x in WATCH if x is not w)
+    if w["kind"] == "file":
+        dims = image_size(os.path.join(ROOT, w["poster"])) or (16, 9)
+        player = (f'<video class="watch-video watch-video--{w["orient"]}" controls playsinline preload="metadata" poster="{w["poster"]}" '
+                  f'width="{dims[0]}" height="{dims[1]}" aria-label="{esc(w["name"])}"><source src="{w["src"][:-4]}.webm" type="video/webm" />'
+                  f'<source src="{w["src"]}" type="video/mp4" /></video>')
+        about = (f"<p>{esc(w['name'])}. On 1 October 2026 the Chief Minister of Assam, Dr Himanta Biswa Sarma, inaugurated the 595 kWp "
+                 f"ground-mounted, on-grid solar power plant at Koomber Tea Estate in Cachar, Assam.{esc(VIDEO_DESC)}</p>"
+                 f"<p>Filmed at the plant on 1 October 2026. Length: {int(w['dur'].strip('PTS'))} seconds, no sound needed.</p>")
+    else:
+        player = (f'<div class="watch-frame"><iframe src="https://www.youtube-nocookie.com/embed/{w["yt"]}?rel=0" title="{esc(w["name"])}" '
+                  f'allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>')
+        about = (f"<p>{esc(w['summary'])}</p><p>Original title (Hindi): <span lang=\"hi\">{esc(w['name'])}</span>. Published by "
+                 f"{esc(w['outlet'])} on YouTube on 1 October 2026. <a href=\"{w['url']}\" target=\"_blank\" rel=\"noopener\">Watch on YouTube</a>.</p>")
+    body = f"""
+<section class="section watch">
+  <div class="container watch__in">
+    <nav class="breadcrumb watch__crumb" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span><a href="gallery.html">Photo &amp; Video Gallery</a><span>/</span>Video</nav>
+    <h1 class="watch__title">{esc(w["h1"])}</h1>
+    <div class="watch__player">{player}</div>
+    <div class="watch__about">
+      <p class="watch__meta"><time datetime="{w["date"]}">1 Oct 2026</time> · Koomber Tea Estate, Cachar, Assam</p>
+      {about}
+      <div class="section-cta watch__cta"><a class="btn btn--outline" href="{case}">Read the Koomber Case Study</a><a class="btn btn--outline" href="gallery.html">Photo &amp; Video Gallery</a></div>
+      <h2 class="watch__more">More Videos</h2>
+      <div class="section-cta watch__cta">{others}</div>
+    </div>
+  </div>
+</section>"""
+    return page_shell("gallery", body, w["poster"], w["name"], [video_ld(w)])
+
+
 def write_generated_pages():
+    for w in WATCH:
+        write_page(w["file"], render_watch_page(w))
     for p in PROJECTS:
         write_page(p["file"], render_project_page(p))
     for a in ARTICLES:
@@ -2676,14 +2760,15 @@ def write_sitemap():
         out.append(f"  <url>\n    <loc>{SITE_URL}{meta['path']}</loc>\n    <lastmod>{LASTMOD.get(fname, TODAY)}</lastmod>")
         for src in imgs:
             out.append(f"    <image:image><image:loc>{SITE_URL}/{src}</image:loc></image:image>")
+        watch = next((w for w in WATCH if w["file"] == fname), None)
         for c in COVERAGE:
-            if c.get("youtube") and f'data-yt="{c["youtube"]}"' in body:
+            if watch and watch["kind"] == "youtube" and c.get("youtube") == watch["yt"]:
                 out.append(f"    <video:video><video:thumbnail_loc>{SITE_URL}/{c['img']}</video:thumbnail_loc>"
                            f"<video:title>{esc(c.get('original') or c['headline'])}</video:title><video:description>{esc(c['summary'])}</video:description>"
                            f"<video:player_loc>https://www.youtube-nocookie.com/embed/{c['youtube']}</video:player_loc>"
                            f"<video:family_friendly>yes</video:family_friendly></video:video>")
         for vsrc, poster, cap, dur, _ in KOOMBER_VIDEOS:
-            if vsrc in body:
+            if watch and watch.get("src") == vsrc:
                 secs = int(dur.strip("PTS"))
                 out.append(f"    <video:video><video:thumbnail_loc>{SITE_URL}/{poster}</video:thumbnail_loc>"
                            f"<video:title>{esc(cap)}</video:title><video:description>{esc(cap + '.' + VIDEO_DESC)}</video:description>"
