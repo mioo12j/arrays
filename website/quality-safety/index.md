@@ -2,7 +2,7 @@
 title: Quality, Safety & Environment (ISO) | Arrays Ingenieria
 description: ISO 9001, ISO 14001 and ISO 45001 certified: how Arrays Ingenieria's veteran-led teams build solar plants safely, to quality and with care for the site.
 url: https://arraysingenieria.com/quality-safety/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 

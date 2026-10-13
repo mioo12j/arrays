@@ -2,7 +2,7 @@
 title: Solar Projects Across India | Arrays Ingenieria Portfolio
 description: Solar EPC projects by Arrays Ingenieria: 300 MW SECI piling, 14.36 MW YIAPL, 10 MW DCM Hisar, Assam tea-estate solar plants and industrial rooftops.
 url: https://arraysingenieria.com/projects/
-last_updated: 2026-10-12
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 

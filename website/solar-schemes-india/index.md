@@ -2,7 +2,7 @@
 title: Government Solar Schemes in India 2026 | Arrays Ingenieria
 description: Solar schemes in India 2026: PM Surya Ghar, PM-KUSUM deadlines, ALMM List-II, GST at 5%, Assam tea-garden solar, depreciation and net metering.
 url: https://arraysingenieria.com/solar-schemes-india/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 

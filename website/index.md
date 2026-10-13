@@ -2,11 +2,11 @@
 title: Arrays Ingenieria | Veteran-Led Solar EPC Company in India
 description: Veteran-led, ISO-certified solar installation & commissioning, EPC and civil works on the CAPEX model, for Tata Power, Jay Shree Tea and more across India.
 url: https://arraysingenieria.com/
-last_updated: 2026-10-12
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
-**Veteran-Led** ISO 9001 · 14001 · 45001 Certified Solar EPC
+**Olive Green to Go Green** Ex-servicemen-led · ISO 9001 · 14001 · 45001 certified solar EPC
 
 # Developing Green Energy
 for the Nation
@@ -14,17 +14,6 @@ for the Nation
 Ingenieria (Arrays Ingenieria Pvt. Ltd.) engineers ground-mount & rooftop solar power plants Pan-India, combining military precision with renewable-energy expertise to power a brighter, cleaner future.
 
 Start Your Solar Project   [Explore Our Projects](https://arraysingenieria.com/projects/)
-
-**50+** MW Solar
-Capacity Worked On
-
-**3×** ISO
-Certified
-
-**100%** Ex-Servicemen
-Led
-
-Scroll
 
 Trusted by India's leading EPC majors, developers and plant owners
 
@@ -414,7 +403,7 @@ Shri Rajdeep Goala, MLA, Udharbond, on X and Facebook
 
 Shared and reported by[CM's Office on X](https://x.com/CMOfficeAssam/status/2105545750054928662)[CM's Office on Facebook](https://www.facebook.com/cmofficeassam/photos/d41d8cd9/1422387263413542/?set=a.302403535411926)[MLA Kaushik Rai on X](https://x.com/iKaushikRai/status/2105642116089008488)[MLA Kaushik Rai on Facebook](https://www.facebook.com/100065189221572/posts/pfbid0MmznkBYfeKxNF66pmnNDk3iEFfGnY1wan7LNwMDm4316vznz3bg86ZkZwAgdjheHl/)[MLA Rajdeep Goala on X](https://x.com/RajdeepGoala14/status/2105730931860574342)[MLA Rajdeep Goala on Facebook](https://www.facebook.com/100063684971835/posts/1732055695593913/)[MLA Pallab Lochan Das on X](https://x.com/pallablochandas/status/2105636063217885672)[The Sentinel](https://www.sentinelassam.com/breakingnews/assam-himanta-biswa-sarma-inaugurates-595-kwp-solar-plant-at-koomber-tea-estate)[The Sentinel on Instagram](https://www.instagram.com/p/Dd89-ViDQcG/)[The Sentinel on Facebook](https://www.facebook.com/100066523279937/posts/pfbid05Ug3kevPqUdUBp7ZyFbD8Eix3hYRzu78MVR8yNixHt17o5B3cShMNFXW1o4Mw1Y8l/)
 
-[See the inauguration](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Photo album (20)](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/#album)
+[See the Inauguration](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Photo album (20)](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/#album)
 
 In the News
 

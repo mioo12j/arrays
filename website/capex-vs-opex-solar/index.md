@@ -95,7 +95,7 @@ Jay Shree Tea's 1035 kWp across Towkok and Manjushree Tea Estates: a CAPEX groun
 
 Tell us your bills, roof or land, and plans; we will show you CAPEX numbers you can compare with any PPA offer.
 
-[Get a free solar quote](https://arraysingenieria.com/free-solar-quote/)
+[Get a Free Solar Quote](https://arraysingenieria.com/free-solar-quote/)
 
 ## Frequently asked questions
 
@@ -140,4 +140,4 @@ Keep Reading
 
 [Tax: **GST on Solar in India (2026): 5% on Equipment, About 8.9% on EPC Contracts**The GST Council cut GST on solar devices from 12% to 5% from 22 September 2025. How it applies to modules, inverters and full EPC contracts, what the 70:30 rule means, and how much a plant saves.4 min read · Updated 11 Oct 2026](https://arraysingenieria.com/gst-on-solar-india/)[Tax: **Accelerated Depreciation on Solar in India: How a Business Recovers the Cost Faster**Owning your solar plant lets you write it off at 40% a year on the written-down value. How accelerated depreciation works from April 2026 under the new Income-tax Act, the half-year rule, and a worked example.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/accelerated-depreciation-solar/)[Buyer's Guide: **How to Choose a Solar EPC and Installation Partner in India: 12 Questions to Ask**The partner you choose decides how your plant performs for 25 years. Twelve questions to ask any solar EPC or installation contractor, what good answers look like, and the red flags to walk away from.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/choose-solar-epc-partner/)
 
-[All Solar Guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)
+[All Solar Guides](https://arraysingenieria.com/insights/)[Government Solar Schemes](https://arraysingenieria.com/solar-schemes-india/)

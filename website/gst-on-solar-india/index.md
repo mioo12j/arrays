@@ -91,7 +91,7 @@ For a business that cannot claim input tax credit, the saving is a straight redu
 
 Want a quotation with the 5% rate and the 70:30 split shown line by line? Tell us about your site.
 
-[Get a free solar quote](https://arraysingenieria.com/free-solar-quote/)
+[Get a Free Solar Quote](https://arraysingenieria.com/free-solar-quote/)
 
 ## Other taxes that affect a solar project
 
@@ -148,4 +148,4 @@ Keep Reading
 
 [Policy: **Solar Import Duty in India (2026): Customs on Modules and Cells, and What Budget 2026-27 Changed**Customs duty on imported solar equipment was restructured in Budget 2025-26 and adjusted again in Budget 2026-27. The rates, the reasoning, and how they shape module prices and your choice of supplier.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-import-duty-india/)[Tax: **Accelerated Depreciation on Solar in India: How a Business Recovers the Cost Faster**Owning your solar plant lets you write it off at 40% a year on the written-down value. How accelerated depreciation works from April 2026 under the new Income-tax Act, the half-year rule, and a worked example.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/accelerated-depreciation-solar/)[Business Models: **CAPEX vs OPEX (RESCO) Solar: Which Model Suits Your Business?**Own your solar plant and keep every unit, or pay a developer per unit with no upfront cost? A side-by-side comparison of CAPEX and OPEX solar, with the numbers that decide it.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/capex-vs-opex-solar/)
 
-[All Solar Guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)
+[All Solar Guides](https://arraysingenieria.com/insights/)[Government Solar Schemes](https://arraysingenieria.com/solar-schemes-india/)

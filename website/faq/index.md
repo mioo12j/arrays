@@ -2,7 +2,7 @@
 title: Solar EPC FAQs: CAPEX, I&C & Civil Works | Arrays Ingenieria
 description: Answers on CAPEX solar, installation & commissioning, civil works, DG synchronisation, net-metering and working with Arrays Ingenieria.
 url: https://arraysingenieria.com/faq/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 

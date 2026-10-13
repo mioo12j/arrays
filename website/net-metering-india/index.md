@@ -84,7 +84,7 @@ The AC distribution board at the 230 kWp Borpatra Tea Estate plant. We obtained 
 
 We handle net-metering and CEIG paperwork as part of every CAPEX project. Ask us what your state requires.
 
-[Get a free solar quote](https://arraysingenieria.com/free-solar-quote/)
+[Get a Free Solar Quote](https://arraysingenieria.com/free-solar-quote/)
 
 ## Frequently asked questions
 
@@ -130,4 +130,4 @@ Keep Reading
 
 [Grid & Regulation: **Green Energy Open Access in India: Buy Solar Power from Off-Site Plants from 100 kW**Can't fit enough solar on your roof? Green Energy Open Access lets consumers from 100 kW buy power from a solar plant elsewhere. Eligibility, approvals, charges, banking, and the ISTS waiver phase-out.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/green-energy-open-access/)[Storage: **Battery Storage with Solar in India (2026): Mandates, Incentives and When It Pays**Storage is becoming part of India's solar story. The two-hour co-located storage advisory for tenders, the viability gap funding for batteries, transmission waivers, the draft rule for large prosumers, and when a battery makes sense for a business.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/battery-storage-with-solar/)[Installation & Commissioning: **Solar Plant Installation and Commissioning: The Complete Step-by-Step Checklist**What actually happens between the purchase order and the day a solar plant goes live. Every stage of installation and commissioning, the tests that prove the plant is safe, and the documents you should receive at handover.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/solar-plant-commissioning-checklist/)
 
-[All Solar Guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)
+[All Solar Guides](https://arraysingenieria.com/insights/)[Government Solar Schemes](https://arraysingenieria.com/solar-schemes-india/)

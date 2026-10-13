@@ -68,7 +68,7 @@ Where none of these apply, a solar plant sized to daytime load, without storage,
 
 Thinking about adding storage to an existing plant? We can review your load and tariff first.
 
-[Get a free solar quote](https://arraysingenieria.com/free-solar-quote/)
+[Get a Free Solar Quote](https://arraysingenieria.com/free-solar-quote/)
 
 ## Frequently asked questions
 
@@ -113,4 +113,4 @@ Keep Reading
 
 [Market Update: **India's Solar Capacity in 2026: 171 GW and What It Means for Your Business**MNRE data put India's solar fleet at 171.05 GW on 30 September 2026. Where the growth is, why rooftop and C&I solar are surging, and how to plan a plant in a crowded market.4 min read · Updated 11 Oct 2026](https://arraysingenieria.com/india-solar-capacity-2026/)[Grid & Regulation: **Net Metering in India (2026): Net Billing, Gross Metering, ToD Tariffs and the Draft 2026 Rules**How your solar plant connects to the DISCOM and how exported units are paid for: net metering, net billing and gross metering, the 500 kW rule, time-of-day tariffs, the draft 2026 amendments, and the step-by-step approval process.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/net-metering-india/)[Grid & Regulation: **Green Energy Open Access in India: Buy Solar Power from Off-Site Plants from 100 kW**Can't fit enough solar on your roof? Green Energy Open Access lets consumers from 100 kW buy power from a solar plant elsewhere. Eligibility, approvals, charges, banking, and the ISTS waiver phase-out.3 min read · Updated 11 Oct 2026](https://arraysingenieria.com/green-energy-open-access/)
 
-[All Solar Guides](https://arraysingenieria.com/insights/)[Government solar schemes](https://arraysingenieria.com/solar-schemes-india/)
+[All Solar Guides](https://arraysingenieria.com/insights/)[Government Solar Schemes](https://arraysingenieria.com/solar-schemes-india/)

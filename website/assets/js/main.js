@@ -44,6 +44,29 @@ async function formAccepted(res) {
     return { restart: start };
   }
 
+  /* ---------- Scrolling strips: press and hold to stop them, or pause them for good with the button ---------- */
+  $$(".marquee, .testi-marquee").forEach(m => {
+    const wrap = document.createElement("div");
+    wrap.className = "marquee-wrap";
+    m.before(wrap); wrap.appendChild(m);
+    const btn = document.createElement("button");
+    btn.type = "button"; btn.className = "rotate-toggle marquee-toggle";
+    const what = m.classList.contains("testi-marquee") ? "client quotes" : "client names";
+    const paint = () => {
+      const paused = m.classList.contains("is-paused");
+      btn.setAttribute("aria-pressed", paused ? "true" : "false");
+      btn.setAttribute("aria-label", (paused ? "Play the scrolling " : "Pause the scrolling ") + what);
+      btn.innerHTML = paused
+        ? '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+    };
+    btn.addEventListener("click", () => { m.classList.toggle("is-paused"); paint(); });
+    wrap.appendChild(btn); paint();
+    // feedback on press: the strip stops under the finger the moment it is touched
+    m.addEventListener("pointerdown", () => m.classList.add("is-held"));
+    ["pointerup", "pointercancel", "pointerleave"].forEach(ev => m.addEventListener(ev, () => m.classList.remove("is-held")));
+  });
+
   /* ---------- Auto-stagger: sibling reveals without data-d cascade in ---------- */
   const staggerGroups = new Map();
   $$(".reveal:not([data-d])").forEach(el => {

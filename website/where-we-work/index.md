@@ -2,7 +2,7 @@
 title: Where We Work: Solar Projects by State | Arrays Ingenieria
 description: Arrays Ingenieria's solar projects across Assam, West Bengal, Bihar, Jharkhand, Uttar Pradesh, Uttarakhand, Haryana and Karnataka, state by state.
 url: https://arraysingenieria.com/where-we-work/
-last_updated: 2026-10-12
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 

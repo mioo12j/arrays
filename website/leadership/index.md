@@ -2,7 +2,7 @@
 title: Message from the Leadership | Arrays Ingenieria Solar
 description: A message from Lt. Gen. A.R. Prasad (Retd), AVSM, VSM, ADC, Ph.D, Chief Executive Officer of Arrays Ingenieria, the ex-servicemen-led solar MSME.
 url: https://arraysingenieria.com/leadership/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 

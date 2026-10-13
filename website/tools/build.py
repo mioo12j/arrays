@@ -751,7 +751,7 @@ def render_header(page_key, fname=""):
       <nav class="nav-links" id="navLinks" aria-label="Primary">{links}<a class="nav-quote" href="free-solar-quote.html">Get a Free Quote</a></nav>
       <div class="nav-cta">
         <a href="projects.html" class="btn btn--outline">Our Work</a>
-        <a href="free-solar-quote.html" class="btn btn--primary">Get a Quote</a>
+        <a href="free-solar-quote.html" class="btn btn--sun">Get a Quote</a>
         <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
           <span></span><span></span><span></span>
         </button>
@@ -1297,7 +1297,7 @@ def render_cm_showcase(videos=True):
         <blockquote class="cm-quote"><p>“{esc(rai['quote'])}”</p><cite>{esc(rai['outlet'])}, on X and Facebook</cite></blockquote>
         <blockquote class="cm-quote"><p>“{esc(goala['quote'])}”</p><cite>{esc(goala['outlet'])}, on X and Facebook</cite></blockquote>
         <div class="cm-chips"><span>Shared and reported by</span>{chips}</div>
-        <div class="cm-cta"><a class="btn btn--sun" href="{case}">See the inauguration {ARROW_SVG}</a><a class="btn btn--ghost" href="{case}#album">Photo album ({len(KOOMBER_ALBUM)})</a></div>
+        <div class="cm-cta"><a class="btn btn--outline" href="{case}">See the Inauguration {ARROW_SVG}</a><a class="btn btn--ghost" href="{case}#album">Photo album ({len(KOOMBER_ALBUM)})</a></div>
       </div>
     </div>""" + (f"""
     <div class="kv-head reveal"><span class="cm-kicker">Watch</span><b>The inauguration on video</b></div>
@@ -1492,7 +1492,7 @@ def render_project_detail(p):
   <div class="container">
     <div class="section-head center reveal"><span class="eyebrow">Installation &amp; Commissioning</span><h2>What Our I&amp;C Scope <span class="text-grad">Covered</span></h2><p>The standard {"rooftop" if p["ic_scope"] == "rooftop" else "ground-mount"} installation &amp; commissioning scope we deliver to EPC majors' specifications, after the mandatory quality and safety training and contractor safety sign-off.</p></div>
     <div class="ic-grid">{groups}</div>
-    <div class="section-cta reveal"><a class="btn btn--outline" href="solar-plant-commissioning-checklist.html">The Full Commissioning Checklist</a><a class="btn btn--primary" href="solar-installation-commissioning.html">Our I&amp;C service {ARROW_SVG}</a></div>
+    <div class="section-cta reveal"><a class="btn btn--outline" href="solar-plant-commissioning-checklist.html">The Full Commissioning Checklist</a><a class="btn btn--outline" href="solar-installation-commissioning.html">Our I&amp;C Service {ARROW_SVG}</a></div>
   </div>
 </section>"""
     return out
@@ -1663,7 +1663,7 @@ def render_faq_page():
   <div class="container">
     <div class="faq-list reveal">{items}
     </div>
-    <div class="section-cta reveal"><a class="btn btn--primary" href="contact.html">Ask Us Anything {ARROW_SVG}</a><a class="btn btn--outline" href="solar-glossary.html">Solar Glossary</a></div>
+    <div class="section-cta reveal"><a class="btn btn--sun" href="contact.html">Ask Us Anything {ARROW_SVG}</a><a class="btn btn--outline" href="solar-glossary.html">Solar Glossary</a></div>
   </div>
 </section>"""
     return page_shell("faq", body, "assets/photos/arrays-ingenieria-towkok-tea-estate-535kwp-ground-mount-solar-assam.jpg", "Towkok Tea Estate solar plant by Arrays Ingenieria", ld)
@@ -1719,7 +1719,7 @@ def art_block(b):
         _, text, cite = b
         return f"\n        <blockquote class=\"art-quote\"><p>{text}</p><cite>{cite}</cite></blockquote>"
     if kind == "cta":
-        return (f'\n        <div class="art-cta"><p>{b[1]}</p><a class="btn btn--sun" href="free-solar-quote.html">Get a free solar quote {ARROW_SVG}</a></div>')
+        return (f'\n        <div class="art-cta"><p>{b[1]}</p><a class="btn btn--sun" href="free-solar-quote.html">Get a Free Solar Quote {ARROW_SVG}</a></div>')
     raise ValueError(f"unknown article block {kind}")
 
 
@@ -1799,7 +1799,7 @@ def render_article_page(a):
   <div class="container">
     <div class="section-head center reveal"><span class="eyebrow">Keep Reading</span><h2>Related <span class="text-grad">Guides</span></h2></div>
     <div class="art-grid-cards">{"".join(art_card(x, i) for i, x in enumerate(related))}</div>
-    <div class="section-cta reveal"><a class="btn btn--outline" href="insights.html">All Solar Guides</a><a class="btn btn--primary" href="solar-schemes-india.html">Government solar schemes {ARROW_SVG}</a></div>
+    <div class="section-cta reveal"><a class="btn btn--outline" href="insights.html">All Solar Guides</a><a class="btn btn--outline" href="solar-schemes-india.html">Government Solar Schemes {ARROW_SVG}</a></div>
   </div>
 </section>"""
     return page_shell("insights", body, a["hero"][0], a["hero"][1], ld)
@@ -1829,7 +1829,7 @@ def render_insights_page():
 <section class="section" id="guides">
   <div class="container">{anchors}
     <a class="art-feature reveal" href="{lead['file']}" data-art-feature><span class="af-img"><img src="{lead['hero'][0]}" alt="{esc(lead['hero'][1])}" /></span>
-      <span class="af-body"><span class="ins-tag">Latest · {esc(lead['tag'])}</span><b>{esc(lead['title'])}</b><span>{esc(lead['summary'])}</span><span class="btn btn--primary">Read the guide {ARROW_SVG}</span></span></a>
+      <span class="af-body"><span class="ins-tag">Latest · {esc(lead['tag'])}</span><b>{esc(lead['title'])}</b><span>{esc(lead['summary'])}</span><span class="btn btn--outline">Read the Guide {ARROW_SVG}</span></span></a>
     <div class="filters reveal" role="group" aria-label="Filter guides by topic">{filters}</div>
     <p class="sr-only" aria-live="polite" data-art-count></p>
     <div class="art-grid-cards" data-art-grid>{art_card(lead, 0).replace('class="art-card reveal"', 'class="art-card reveal is-hidden" data-lead="1"', 1)}{"".join(art_card(a, i) for i, a in enumerate(rest))}</div>
@@ -1875,7 +1875,7 @@ def render_glossary_page():
   <div class="container gl-wrap">
     <nav class="gl-index reveal" aria-label="Glossary index">{index}</nav>
     {"".join(blocks)}
-    <div class="section-cta reveal"><a class="btn btn--primary" href="faq.html">Read the FAQ {ARROW_SVG}</a><a class="btn btn--outline" href="insights.html">Solar Guides</a></div>
+    <div class="section-cta reveal"><a class="btn btn--outline" href="faq.html">Read the FAQ {ARROW_SVG}</a><a class="btn btn--outline" href="insights.html">Solar Guides</a></div>
   </div>
 </section>"""
     return page_shell("insights", body, "assets/photos/arrays-ingenieria-industrial-rooftop-solar-array.jpg", "Rooftop solar array by Arrays Ingenieria", ld)
@@ -1997,7 +1997,7 @@ def render_quote_page():
         <legend>Who is the solar plant for?</legend>
         <p class="q-sub">Pick one. It helps us send the right engineer.</p>
         <div class="q-opts q-opts--3">{seg_cards}</div>
-        <div class="q-nav"><span></span><button type="button" class="btn btn--primary" data-next>Continue {ARROW_SVG}</button></div>
+        <div class="q-nav"><span></span><button type="button" class="btn btn--sun" data-next>Continue {ARROW_SVG}</button></div>
       </fieldset>
 
       <fieldset class="q-step" data-step="2">
@@ -2009,7 +2009,7 @@ def render_quote_page():
           <p class="q-label">How would you like to pay for it?</p>
           <div class="q-opts q-opts--3">{own}</div>
         </div>
-        <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--primary" data-next>Continue {ARROW_SVG}</button></div>
+        <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--sun" data-next>Continue {ARROW_SVG}</button></div>
       </fieldset>
 
       <fieldset class="q-step" data-step="3">
@@ -2024,7 +2024,7 @@ def render_quote_page():
         </div>
         <div class="field" data-service-only hidden><label for="q-scope">About the plant and the work *</label><textarea id="q-scope" name="scope_details" maxlength="1500" placeholder="For O&amp;M: capacity, age, inverter make and any performance issue. For piling, civil or I&amp;C: capacity, scope and whether drawings are ready."></textarea></div>
         <div class="field"><label for="q-capacity">Capacity in mind (optional)</label><div class="q-inline"><input type="number" id="q-capacity" name="capacity_kw" min="0" step="any" inputmode="decimal" placeholder="If you already know it" /><span class="q-unit">kWp</span></div></div>
-        <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--primary" data-next>Continue {ARROW_SVG}</button></div>
+        <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--sun" data-next>Continue {ARROW_SVG}</button></div>
       </fieldset>
 
       <fieldset class="q-step" data-step="4" data-plant-step>
@@ -2051,7 +2051,7 @@ def render_quote_page():
           <p class="q-est__loss" data-est="loss"></p>
           <p class="q-est__note">Indicative only. Same model as our savings calculator: <span data-est="assume"></span> Your free proposal will be based on your actual site.</p>
         </div>
-        <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--primary" data-next>Continue {ARROW_SVG}</button></div>
+        <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--sun" data-next>Continue {ARROW_SVG}</button></div>
       </fieldset>
 
       <fieldset class="q-step" data-step="5">
@@ -2061,7 +2061,7 @@ def render_quote_page():
           {sel("funding", "How will it be funded?", ["Own funds", "Bank or green loan", "Need financing options", "Not decided yet"])}
           {sel("role", "Your role", ["Owner / Director", "Plant or energy manager", "Engineer / consultant", "Purchase / procurement", "Other"])}
         </div>
-        <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--primary" data-next>Last step {ARROW_SVG}</button></div>
+        <div class="q-nav"><button type="button" class="btn btn--outline" data-back>Back</button><button type="button" class="btn btn--sun" data-next>Last Step {ARROW_SVG}</button></div>
       </fieldset>
 
       <fieldset class="q-step" data-step="6">
@@ -2092,7 +2092,7 @@ def render_quote_page():
         <h2>Thank you<span data-done-name></span>! Your request is in.</h2>
         <p>An engineer from our team will study your details and contact you to plan the next step. Meanwhile, see what we have built for others.</p>
         <ol class="q-done__next"><li><b>Review</b>We study your site, load and goals.</li><li><b>Call &amp; survey</b>We talk, and survey the site where needed.</li><li><b>Proposal</b>Plant size, scope and price, with no obligation.</li></ol>
-        <div class="q-nav q-nav--center"><a class="btn btn--outline" href="/projects/">See Our Projects</a><a class="btn btn--primary" href="/project-koomber-tea-estate-595kwp-solar-cm-inauguration/">Koomber: Inaugurated by the CM</a></div>
+        <div class="q-nav q-nav--center"><a class="btn btn--outline" href="/projects/">See Our Projects</a><a class="btn btn--outline" href="/project-koomber-tea-estate-595kwp-solar-cm-inauguration/">Koomber: Inaugurated by the CM</a></div>
       </div>
     </form>
 
@@ -2239,7 +2239,7 @@ def render_gallery_page():
     {render_koomber_videos()}
     <h3 class="kv-sub reveal">News channel reports</h3>
     <!-- build:videos --><!-- /build:videos -->
-    <div class="section-cta reveal"><a class="btn btn--primary" href="recognition.html">All News &amp; Recognition {ARROW_SVG}</a></div>
+    <div class="section-cta reveal"><a class="btn btn--outline" href="recognition.html">All News &amp; Recognition {ARROW_SVG}</a></div>
   </div>
 </section>
 

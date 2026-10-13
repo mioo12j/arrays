@@ -2,7 +2,7 @@
 title: Solar Glossary: EPC, CAPEX, I&C Terms | Arrays Ingenieria
 description: Plain-English definitions of solar terms: EPC, I&C, CAPEX vs OPEX, net metering, kWp, ALMM, pile foundations, DG synchronisation and more.
 url: https://arraysingenieria.com/solar-glossary/
-last_updated: 2026-10-11
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 

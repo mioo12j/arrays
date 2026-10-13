@@ -2,7 +2,7 @@
 title: Photo & Video Gallery | Arrays Ingenieria Solar Projects
 description: Photos and videos of Arrays Ingenieria solar power plants, inaugurations, awards, certifications and news coverage from Assam to Karnataka.
 url: https://arraysingenieria.com/gallery/
-last_updated: 2026-10-12
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 

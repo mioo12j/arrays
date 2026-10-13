@@ -954,7 +954,7 @@ h1, h2, h3, h4 { font-family: var(--head); color: var(--ink); line-height: 1.15;
   .container { padding-inline: 16px; }
   .brand-mark { height: 34px; }
   .brand-word { font-size: 19px; }
-  .nav-cta .btn--primary { display: none; }
+  .nav-cta .btn--primary, .nav-cta .btn--sun { display: none; }
   .menu-toggle { width: 40px; height: 40px; }
 }
 
@@ -2327,8 +2327,10 @@ th a, td a:only-child { display: inline-flex; align-items: center; min-height: 2
 /* phones: the (now properly sized) page dots sit along the top edge, clear of the caption; swiping is the main way to move */
 @media (max-width: 700px) {
   .slideshow .slide-dots { top: 8px; bottom: auto; left: 8px; right: 8px; justify-content: center; flex-wrap: wrap; }
-  .slide-dot { width: 22px; height: 28px; }
-  .slide-dot.active { width: 34px; }
+  .slide-dot { width: 28px; height: 28px; }
+  .slide-dot.active { width: 36px; }
+  .slide-dot::before { width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; }
+  .slide-dot.active::before { width: 20px; margin-left: -10px; }
 }
 /* the slow zoom applies to the photo only, so the caption is never cropped at the edges */
 .slideshow .slide, .slideshow .slide.active { scale: 1; }
@@ -2336,3 +2338,20 @@ th a, td a:only-child { display: inline-flex; align-items: center; min-height: 2
 .slideshow .slide.active img { scale: 1.06; }
 .slide-dot::before { box-shadow: 0 0 0 1px rgba(0, 0, 0, .28); }
 .slideshow .slide__cap { padding-right: 64px; }
+/* Spacing rhythm: two sections on the same background read as one surface, so the space between them is
+   one section's worth, not two (no 220px gaps) */
+main > .section:not([class*="section--"]) + .section:not([class*="section--"]),
+main > .section--soft + .section--soft,
+main > .section--mint + .section--mint,
+main > .section--news + .section--news,
+main > .section--dark + .section--dark { padding-top: 0; }
+/* scrolling strips stop on press and can be paused for good */
+.marquee-wrap { position: relative; }
+.marquee.is-paused .marquee__track, .marquee.is-held .marquee__track,
+.testi-marquee.is-paused .testi-track, .testi-marquee.is-held .testi-track { animation-play-state: paused; }
+.marquee-toggle { right: 0; top: 50%; bottom: auto; transform: translateY(-50%); }
+.marquee-toggle:active { transform: translateY(-50%) scale(.97); }
+.testi-marquee + .marquee-toggle { top: auto; bottom: -46px; transform: none; right: 4px; }
+@media (prefers-reduced-motion: reduce) { .marquee-toggle { display: none; } }
+/* the mobile menu settles on the same spring as everything else, and can be reversed mid-way */
+.nav-links { transition-timing-function: var(--spring); }

@@ -2,7 +2,7 @@
 title: Ex-Servicemen-Led Solar EPC MSME | Arrays Ingenieria
 description: Arrays Ingenieria is an ex-servicemen-led MSME founded by Lt. Gen. A.R. Prasad (Retd): Olive Green to Go Green, a second innings of national service.
 url: https://arraysingenieria.com/ex-servicemen-led-msme/
-last_updated: 2026-10-12
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 

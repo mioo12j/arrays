@@ -2,7 +2,7 @@
 title: Solar for Industry, Tea Estates & Homes | Arrays Ingenieria
 description: Solar power for every sector in India: factories, tea estates, commercial buildings, institutions, homes and government/PSU projects by Arrays Ingenieria.
 url: https://arraysingenieria.com/industries/
-last_updated: 2026-10-12
+last_updated: 2026-10-13
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
