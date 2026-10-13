@@ -86,19 +86,19 @@ PB: **Prerana Bharati Digital (PBNN)**Silchar, Assam · on YouTube
 
 ### Video report: the Koomber Tea Estate solar plant inauguration
 
-News Axom's video report from the inauguration of the 595 kWp solar plant at Koomber Tea Estate, which Arrays Ingenieria installed, opened by the Chief Minister of Assam. October 2026Watch the report](https://www.facebook.com/61564147994036/videos/122210688668471599/) [News channel  NR: **NE Reports**Dibrugarh, Assam · on Facebook
+News Axom's video report from the inauguration of the 595 kWp solar plant at Koomber Tea Estate, which Arrays Ingenieria installed, opened by the Chief Minister of Assam. October 2026Watch the Report](https://arraysingenieria.com/video-news-axom-koomber-595kwp-solar-inauguration/) [News channel  NR: **NE Reports**Dibrugarh, Assam · on Facebook
 
 ### Janmashtami launch: 450 kW solar plant at Orangajuli Tea Estate, Udalguri
 
-NE Reports filmed the ribbon-cutting at the 450 kW ground-mount solar plant Arrays Ingenieria built for Goodricke Group's Orangajuli Tea Estate, commissioned on Janmashtami. September 2026Watch the report](https://www.facebook.com/reel/1678209397245830/) [News channel  SL: **Sonari Live**Sonari, Assam · on Facebook
+NE Reports filmed the ribbon-cutting at the 450 kW ground-mount solar plant Arrays Ingenieria built for Goodricke Group's Orangajuli Tea Estate, commissioned on Janmashtami. September 2026Watch the Report](https://arraysingenieria.com/video-ne-reports-orangajuli-450kw-solar-launch/) [News channel  SL: **Sonari Live**Sonari, Assam · on Facebook
 
 ### Exclusive: 230 kW solar project launched at Borpatra tea garden
 
-Sonari Live's exclusive report on the launch of the 230 kW solar plant Arrays Ingenieria built at Goodricke's Borpatra Tea Garden: "বৰপাত্ৰা চাহ বাগিচাত ২৩০ কিলোৱাট সৌৰ শক্তি প্ৰকল্পৰ শুভাৰম্ভ". Watch the report](https://www.facebook.com/100089972142580/videos/1069048716104190/) [News channel  NA: **News Axom**Nagaon, Assam · on Facebook
+Sonari Live's exclusive report on the launch of the 230 kW solar plant Arrays Ingenieria built at Goodricke's Borpatra Tea Garden: "বৰপাত্ৰা চাহ বাগিচাত ২৩০ কিলোৱাট সৌৰ শক্তি প্ৰকল্পৰ শুভাৰম্ভ". Watch the Report](https://arraysingenieria.com/video-sonari-live-borpatra-230kw-solar-report/) [News channel  NA: **News Axom**Nagaon, Assam · on Facebook
 
 ### A new era of solar power at Borpatra tea garden: 230 kW project launched
 
-News Axom TV on the 230 kW plant at Borpatra: "Important step towards decarbonization, 230 kw solar project at Barpatra." Watch the report](https://www.facebook.com/61564147994036/videos/122210117936471599/)
+News Axom TV on the 230 kW plant at Borpatra: "Important step towards decarbonization, 230 kw solar project at Barpatra." Watch the Report](https://arraysingenieria.com/video-news-axom-borpatra-230kw-solar-report/)
 
 In the Newspapers
 

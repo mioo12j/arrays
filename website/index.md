@@ -421,11 +421,11 @@ PB: **Prerana Bharati Digital (PBNN)**Silchar, Assam · on YouTube
 
 ### Video report: the Koomber Tea Estate solar plant inauguration
 
-News Axom's video report from the inauguration of the 595 kWp solar plant at Koomber Tea Estate, which Arrays Ingenieria installed, opened by the Chief Minister of Assam. October 2026Watch the report](https://www.facebook.com/61564147994036/videos/122210688668471599/)[News channel  NR: **NE Reports**Dibrugarh, Assam · on Facebook
+News Axom's video report from the inauguration of the 595 kWp solar plant at Koomber Tea Estate, which Arrays Ingenieria installed, opened by the Chief Minister of Assam. October 2026Watch the Report](https://arraysingenieria.com/video-news-axom-koomber-595kwp-solar-inauguration/)[News channel  NR: **NE Reports**Dibrugarh, Assam · on Facebook
 
 ### Janmashtami launch: 450 kW solar plant at Orangajuli Tea Estate, Udalguri
 
-NE Reports filmed the ribbon-cutting at the 450 kW ground-mount solar plant Arrays Ingenieria built for Goodricke Group's Orangajuli Tea Estate, commissioned on Janmashtami. September 2026Watch the report](https://www.facebook.com/reel/1678209397245830/)
+NE Reports filmed the ribbon-cutting at the 450 kW ground-mount solar plant Arrays Ingenieria built for Goodricke Group's Orangajuli Tea Estate, commissioned on Janmashtami. September 2026Watch the Report](https://arraysingenieria.com/video-ne-reports-orangajuli-450kw-solar-launch/)
 
 From the newspapers
 

@@ -2384,3 +2384,5 @@ main > .section--dark + .section--dark { padding-top: 0; }
 .kv-watch { display: inline-flex; align-items: center; min-height: 32px; font-weight: 600; color: var(--gold-300, #fcd34d); text-decoration: underline; text-underline-offset: 3px; }
 .tv-foot .tv-go + .tv-go { margin-left: 12px; }
 .watch__cta .btn { white-space: normal; max-width: 100%; text-align: center; }
+.watch-frame--portrait { aspect-ratio: 9 / 16; max-width: min(100%, 420px); margin-inline: auto; }
+.testi-track { animation-duration: 45s; }

@@ -915,13 +915,15 @@ def tv_card(c, lead=False, with_id=True, eager=False):
     tile = "" if c.get("img") else f'<span class="tv-tile"><b>{esc(c["outlet"])}</b><small>News report · {esc(c["place"])}</small></span>'
     cls = "tv-card reveal" + (" tv-card--lead" if lead else "") + ("" if c.get("img") else " tv-card--tile")
     ident = f' id="{c["id"]}"' if with_id else ""
-    return f"""<a class="{cls}"{ident} href="{c['url']}" target="_blank" rel="noopener">
+    w = WATCH_BY_SRC.get(c["id"])
+    target = f'href="{w["file"]}"' if w else f'href="{c["url"]}" target="_blank" rel="noopener"'
+    return f"""<a class="{cls}"{ident} {target}>
         <span class="tv-thumb"><img src="{img}" alt="{esc(c['alt'])}"{' data-eager="1"' if eager else ''} />{tile}<span class="tv-onair"><i></i>News channel</span><span class="vc-play">{PLAY_SVG}</span></span>
         <span class="tv-body">
           <span class="tv-outlet"><span class="tv-mono">{initials(c['outlet'])}</span><span><b>{esc(c['outlet'])}</b><small>{esc(c['place'])} · on {c['platform']}</small></span></span>
           <h3 class="tv-title">{esc(c['headline'])}</h3>
           <span class="tv-sum">{esc(c['summary'])}</span>
-          <span class="tv-foot">{time_tag(c['date'])}<span class="tv-go">Watch the report {EXT_SVG}</span></span>
+          <span class="tv-foot">{time_tag(c['date'])}<span class="tv-go">{"Watch the Report" if w else "Watch the report " + EXT_SVG}</span></span>
         </span>
       </a>"""
 
@@ -2151,9 +2153,39 @@ WATCH = [
          desc="Prerana Bharati's Hindi news video on the Chief Minister inaugurating the 595 kWp Koomber Tea Garden solar plant installed by Arrays Ingenieria in Assam.",
          name=_PB["original"], date=_PB["date"], outlet=_PB["outlet"], url=_PB["url"], summary=_PB["summary"]),
 ]
+# news reports posted as Facebook videos (shown in Facebook's own player). The date shown is the day of the event each report
+# covers; Facebook's exact posting dates could not be read, so the markup uses the event date too (see the note in README).
+_FB_EVENT = {"ne-reports-orangajuli": ("2026-09-04", "4 Sep 2026", "Orangajuli Tea Estate, Udalguri, Assam"),
+             "sonari-live": ("2026-09-25", "25 Sep 2026", "Borpatra Tea Estate, Sonari, Assam"),
+             "news-axom": ("2026-09-25", "25 Sep 2026", "Borpatra Tea Estate, Sonari, Assam"),
+             "news-axom-koomber": ("2026-10-01", "1 Oct 2026", "Koomber Tea Estate, Cachar, Assam")}
+_FB_PAGES = {
+    "ne-reports-orangajuli": ("video-ne-reports-orangajuli-450kw-solar-launch.html",
+        "NE Reports: Orangajuli 450 kW Solar Plant Launch",
+        "Video: NE Reports on the Orangajuli 450 kW Solar Plant",
+        "NE Reports video of the ribbon-cutting at the 450 kW ground-mount solar plant Arrays Ingenieria built at Orangajuli Tea Estate, Assam, on Janmashtami."),
+    "sonari-live": ("video-sonari-live-borpatra-230kw-solar-report.html",
+        "Sonari Live: Borpatra 230 kW Solar Plant Launched",
+        "Video: Sonari Live on the Borpatra 230 kW Solar Plant",
+        "Sonari Live's report on the launch of the 230 kW solar plant Arrays Ingenieria built at Goodricke's Borpatra Tea Garden in Sonari, Assam, in Sep 2026."),
+    "news-axom": ("video-news-axom-borpatra-230kw-solar-report.html",
+        "News Axom: Borpatra 230 kW Solar Project Launch",
+        "Video: News Axom on the Borpatra 230 kW Solar Project",
+        "News Axom TV's report on the 230 kW solar project at Borpatra Tea Garden, Assam, built by Arrays Ingenieria: a step towards decarbonisation, Sep 2026."),
+    "news-axom-koomber": ("video-news-axom-koomber-595kwp-solar-inauguration.html",
+        "News Axom: Koomber 595 kWp Solar Plant Inauguration",
+        "Video: News Axom on the Koomber 595 kWp Solar Inauguration",
+        "News Axom's video report from the CM's inauguration of the 595 kWp solar plant at Koomber Tea Estate, Assam, installed by Arrays Ingenieria, 1 Oct 2026."),
+}
+for _cid, (_file, _h1, _title, _desc) in _FB_PAGES.items():
+    _c = next(c for c in COVERAGE if c["id"] == _cid)
+    _d, _shown, _place = _FB_EVENT[_cid]
+    WATCH.append(dict(file=_file, kind="facebook", fb=_c["url"], cid=_cid, poster=_c["img"], h1=_h1, title=_title, desc=_desc,
+                      name=_c.get("original") or _c["headline"], date=_d, shown=_shown, place=_place,
+                      outlet=_c["outlet"], url=_c["url"], summary=_c["summary"]))
 for _w in WATCH:
     PAGES[_w["file"]] = dict(path=page_url(_w["file"]), crumb=_w["h1"], parent="gallery", title=_w["title"], desc=_w["desc"])
-WATCH_BY_SRC = {w.get("src") or w.get("yt"): w for w in WATCH}
+WATCH_BY_SRC = {w.get("src") or w.get("yt") or w.get("cid"): w for w in WATCH}
 
 
 def watch_url(key):
@@ -2170,14 +2202,24 @@ def video_ld(w):
         base.update({"contentUrl": f"{SITE_URL}/{w['src']}", "duration": w["dur"], "publisher": {"@id": SITE_URL + "/#organization"},
                      "creator": image_rights()["creator"],
                      "contentLocation": {"@type": "Place", "name": "Koomber Tea Estate, Cachar, Assam"}})
-    else:
+    elif w["kind"] == "youtube":
         base.update({"embedUrl": f"https://www.youtube-nocookie.com/embed/{w['yt']}", "sameAs": w["url"],
                      "publisher": {"@type": "Organization", "name": w["outlet"]}})
+    else:
+        base.pop("inLanguage")
+        base.update({"embedUrl": fb_player(w["fb"]), "sameAs": w["url"], "publisher": {"@type": "Organization", "name": w["outlet"]},
+                     "contentLocation": {"@type": "Place", "name": w["place"]}})
     return base
 
 
+def fb_player(url):
+    from urllib.parse import quote
+    return "https://www.facebook.com/plugins/video.php?href=" + quote(url, safe="") + "&show_text=false&width=560"
+
+
 def render_watch_page(w):
-    case = "project-koomber-tea-estate-595kwp-solar-cm-inauguration.html"
+    case = {"ne-reports-orangajuli": "project-orangajuli-tea-estate-450kw-solar.html", "sonari-live": "project-barpatra-tea-estate-230kw-solar.html",
+            "news-axom": "project-barpatra-tea-estate-230kw-solar.html"}.get(w.get("cid"), "project-koomber-tea-estate-595kwp-solar-cm-inauguration.html")
     others = "".join(f'<a class="btn btn--outline" href="{x["file"]}">{esc(x["h1"])}</a>' for x in WATCH if x is not w)
     if w["kind"] == "file":
         dims = image_size(os.path.join(ROOT, w["poster"])) or (16, 9)
@@ -2187,6 +2229,11 @@ def render_watch_page(w):
         about = (f"<p>{esc(w['name'])}. On 1 October 2026 the Chief Minister of Assam, Dr Himanta Biswa Sarma, inaugurated the 595 kWp "
                  f"ground-mounted, on-grid solar power plant at Koomber Tea Estate in Cachar, Assam.{esc(VIDEO_DESC)}</p>"
                  f"<p>Filmed at the plant on 1 October 2026. Length: {int(w['dur'].strip('PTS'))} seconds, no sound needed.</p>")
+    elif w["kind"] == "facebook":
+        player = (f'<div class="watch-frame watch-frame--fb{" watch-frame--portrait" if "/reel/" in w["fb"] else ""}"><iframe src="{esc(fb_player(w["fb"]))}" title="{esc(w["h1"])}" '
+                  f'allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe></div>')
+        about = (f"<p>{esc(w['summary'])}</p><p>A news report by {esc(w['outlet'])}, shared on Facebook, about the event on {w['shown']}. "
+                 f"<a href=\"{w['url']}\" target=\"_blank\" rel=\"noopener\">Watch on Facebook</a>.</p>")
     else:
         player = (f'<div class="watch-frame"><iframe src="https://www.youtube-nocookie.com/embed/{w["yt"]}?rel=0" title="{esc(w["name"])}" '
                   f'allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>')
@@ -2199,9 +2246,9 @@ def render_watch_page(w):
     <h1 class="watch__title">{esc(w["h1"])}</h1>
     <div class="watch__player">{player}</div>
     <div class="watch__about">
-      <p class="watch__meta"><time datetime="{w["date"]}">1 Oct 2026</time> · Koomber Tea Estate, Cachar, Assam</p>
+      <p class="watch__meta"><time datetime="{w["date"]}">{w.get("shown", "1 Oct 2026")}</time> · {esc(w.get("place", "Koomber Tea Estate, Cachar, Assam"))}</p>
       {about}
-      <div class="section-cta watch__cta"><a class="btn btn--outline" href="{case}">Read the Koomber Case Study</a><a class="btn btn--outline" href="gallery.html">Photo &amp; Video Gallery</a></div>
+      <div class="section-cta watch__cta"><a class="btn btn--outline" href="{case}">Read the Case Study</a><a class="btn btn--outline" href="gallery.html">Photo &amp; Video Gallery</a></div>
       <h2 class="watch__more">More Videos</h2>
       <div class="section-cta watch__cta">{others}</div>
     </div>
@@ -2783,6 +2830,11 @@ def write_sitemap():
                            f"<video:title>{esc(c.get('original') or c['headline'])}</video:title><video:description>{esc(c['summary'])}</video:description>"
                            f"<video:player_loc>https://www.youtube-nocookie.com/embed/{c['youtube']}</video:player_loc>"
                            f"<video:family_friendly>yes</video:family_friendly></video:video>")
+        if watch and watch["kind"] == "facebook":
+            out.append(f"    <video:video><video:thumbnail_loc>{SITE_URL}/{watch['poster']}</video:thumbnail_loc>"
+                       f"<video:title>{esc(watch['h1'])}</video:title><video:description>{esc(watch['desc'])}</video:description>"
+                       f"<video:player_loc>{esc(fb_player(watch['fb']))}</video:player_loc>"
+                       f"<video:publication_date>{ist(watch['date'])}</video:publication_date><video:family_friendly>yes</video:family_friendly></video:video>")
         for vsrc, poster, cap, dur, _ in KOOMBER_VIDEOS:
             if watch and watch.get("src") == vsrc:
                 secs = int(dur.strip("PTS"))
