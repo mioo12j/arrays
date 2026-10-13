@@ -1132,7 +1132,7 @@ def coverage_ld():
             node = {"@type": "SocialMediaPosting", "headline": c["headline"], "url": c["links"][0][1],
                     "sameAs": [u for _, u in c["links"][1:]] or None, "author": {"@type": "Person" if c["kind"] == "official" and c["outlet"].startswith(("Shri", "Dr")) else "Organization",
                                "name": c["outlet"], "url": profile_url(c["links"][0][1])},
-                    "articleBody": c["quote"], "about": org}
+                    "text": c["quote"], "articleBody": c["quote"], "about": org}
         elif c.get("youtube"):
             # the video itself is marked up on its own watch page; here it is a news item that points there
             node = {"@type": "CreativeWork", "genre": "News report (video)", "name": c.get("original") or c["headline"],
@@ -2579,7 +2579,8 @@ def breadcrumb_ld(fname):
     meta = PAGES[fname]
     if meta.get("parent"):
         name, path = PARENTS[meta["parent"]]
-        items.append({"@type": "ListItem", "position": 2, "name": name, "item": SITE_URL + path})
+        if "#" not in path:  # a #section of another page is not a page of its own (Google drops the fragment)
+            items.append({"@type": "ListItem", "position": 2, "name": name, "item": SITE_URL + path})
     if fname != "index.html":
         items.append({"@type": "ListItem", "position": len(items) + 1, "name": meta["crumb"], "item": SITE_URL + meta["path"]})
     return {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": items}
@@ -2706,6 +2707,21 @@ def process_page(fname):
             return m.group(1) + "\n" + json.dumps(data, ensure_ascii=False, indent=2) + "\n</script>"
         return m.group(0)
     head = re.sub(r'(<script type="application/ld\+json">)\s*(.*?)\s*</script>', link_provider, head, flags=re.S)
+
+    def clean_breadcrumbs(m):
+        # a #section of another page is not a page of its own: drop such steps and renumber (Search Console: Breadcrumbs)
+        try:
+            data = json.loads(m.group(2))
+        except ValueError:
+            return m.group(0)
+        if not (isinstance(data, dict) and data.get("@type") == "BreadcrumbList"):
+            return m.group(0)
+        items = [it for it in data.get("itemListElement", []) if "#" not in str(it.get("item", ""))]
+        for i, it in enumerate(items):
+            it["position"] = i + 1
+        data["itemListElement"] = items
+        return m.group(1) + "\n" + json.dumps(data, ensure_ascii=False, indent=2) + "\n</script>"
+    head = re.sub(r'(<script type="application/ld\+json">)\s*(.*?)\s*</script>', clean_breadcrumbs, head, flags=re.S)
     if PAGES[fname]["path"] and '"BreadcrumbList"' not in head:
         head += '<script type="application/ld+json">\n' + json.dumps(breadcrumb_ld(fname), ensure_ascii=False, indent=2) + "\n</script>\n"
     head = re.sub(r'<script type="application/ld\+json" data-build="coverage">.*?</script>\n', "", head, flags=re.S)
