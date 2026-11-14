@@ -2,7 +2,7 @@
 title: 1980.3 kWp Rooftop Solar, Super Smelters | Arrays Ingenieria
 description: Case study: a 1980.3 kWp industrial rooftop solar plant at Super Smelters Ltd., Jamuria, West Bengal, built by Arrays Ingenieria with Tata Power Solar.
 url: https://arraysingenieria.com/project-super-smelters-1980kwp-rooftop-solar/
-last_updated: 2026-10-13
+last_updated: 2026-11-14
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 

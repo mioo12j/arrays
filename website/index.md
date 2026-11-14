@@ -2,7 +2,7 @@
 title: Arrays Ingenieria | Veteran-Led Solar EPC Company in India
 description: Veteran-led, ISO-certified solar installation & commissioning, EPC and civil works on the CAPEX model, for Tata Power, Jay Shree Tea and more across India.
 url: https://arraysingenieria.com/
-last_updated: 2026-10-13
+last_updated: 2026-11-14
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
