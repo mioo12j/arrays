@@ -165,8 +165,6 @@ Documents
 
 The documents behind this case study. Tap to view full size.
 
-Dewan Group of Tea Estates work completion certificate: 1940 kWp, commissioned 8 Jan 2026 (project value withheld)
-
 Jay Shree Tea certificate of appreciation: 735 kWp, Dewan Tea Estate
 
 Jay Shree Tea certificate of appreciation: 620 kWp, Burtoll Tea Estate

@@ -360,8 +360,6 @@ GALLERY = [
      "Jay Shree Tea certificate of appreciation to Arrays Ingenieria for the 535 kWp Towkok solar plant"),
     ("assets/certs/arrays-ingenieria-jay-shree-tea-500kwp-certificate-of-appreciation-signed.jpg", "certificates", "Jay Shree Tea: appreciation for 500 kWp ground-mount solar",
      "Jay Shree Tea certificate of appreciation to Arrays Ingenieria for a 500 kWp solar plant"),
-    ("assets/certs/arrays-ingenieria-jay-shree-tea-dewan-group-1940kwp-work-completion-certificate.jpg", "certificates", "Jay Shree Tea, Dewan Group: work completion certificate, 1940 kWp",
-     "Dewan Group of Tea Estates work completion certificate to Arrays Ingenieria for 1940 kWp of grid-connected solar"),
     ("assets/certs/arrays-ingenieria-jay-shree-tea-dewan-735kwp-certificate-of-appreciation.jpg", "certificates", "Jay Shree Tea: appreciation for 735 kWp, Dewan Tea Estate",
      "Jay Shree Tea certificate of appreciation to Arrays Ingenieria for the 735 kWp Dewan Tea Estate solar plant"),
     ("assets/certs/arrays-ingenieria-jay-shree-tea-burtoll-620kwp-certificate-of-appreciation.jpg", "certificates", "Jay Shree Tea: appreciation for 620 kWp, Burtoll Tea Estate",

@@ -56,12 +56,6 @@ Towkok Tea Estate, Assam
 
 Jay Shree Tea
 
-#### 1940 kWp, Work Completed
-
-Dewan Group of Tea Estates, Cachar, Assam
-
-Jay Shree Tea
-
 #### 735 kWp Ground-Mount
 
 Dewan Tea Estate, Assam

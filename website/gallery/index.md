@@ -14,7 +14,7 @@ Solar plants we have built from Assam's tea gardens to Karnataka's solar parks, 
 
 Photos
 
-## 104 Photos from Our Projects & Milestones
+## 103 Photos from Our Projects & Milestones
 
 Filter by category and tap any photo to view it full size.
 
@@ -179,8 +179,6 @@ India 5000 Best MSME Awards: nomination for quality excellence (2024)
 Jay Shree Tea (BK Birla Group): appreciation for 535 kWp Towkok solar
 
 Jay Shree Tea: appreciation for 500 kWp ground-mount solar
-
-Jay Shree Tea, Dewan Group: work completion certificate, 1940 kWp
 
 Jay Shree Tea: appreciation for 735 kWp, Dewan Tea Estate
 
