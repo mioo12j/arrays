@@ -504,12 +504,6 @@ Inauguration: **Harmutty Tea Estate, 400 kWp**Inaugurated 7 October 2026; Goodri
 
 Inauguration: **Orangajuli Tea Estate, 450 kW**Commissioned on Janmashtami, 4 September 2026.
 
-National Honour: **Honoured by the President of India**Recognition for distinguished service and leadership.
-
-Rashtrapati Bhavan: **A Moment of National Pride**Welcomed at the President's residence.
-
-Leadership: **With the Hon'ble Prime Minister**Shri Narendra Modi.
-
 Raksha Mantri: **With the Hon'ble Defence Minister**Shri Rajnath Singh.
 
 DEFCOM India: **Keynote at DEFCOM India**Addressing the nation's defence-tech community.

@@ -38,16 +38,10 @@ A Life of Service
 
 Tap any photo to view it full size.
 
-Honoured by the President of India
-
-With the Prime Minister
-
 With the Raksha Mantri
 
 Keynote at DEFCOM India
 
 Koomber inauguration, 2026
-
-A distinguished military career
 
 [Read His Full Profile](https://arraysingenieria.com/lt-gen-ashish-ranjan-prasad/)[Our Ex-Servicemen Story](https://arraysingenieria.com/ex-servicemen-led-msme/)[Our Founder on National TV](https://arraysingenieria.com/recognition/#national-tv)

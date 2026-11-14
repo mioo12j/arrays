@@ -392,27 +392,11 @@ India Today
 
 Strategic commentary as a senior defence voice.
 
-Aaj Tak
-
-#### Prime-Time National Debate
-
-Featured panellist on national security.
-
 India TV
 
 #### Border & Defence Coverage
 
 Expert insight on breaking national stories.
-
-Aaj Tak
-
-#### Breaking News Analysis
-
-Live commentary as events unfold.
-
-National Honour: **Honoured by the President of India**Recognition for distinguished service and leadership.
-
-Leadership: **With the Hon'ble Prime Minister, Shri Narendra Modi**A shared vision for a renewable, self-reliant India.
 
 Raksha Mantri: **With the Hon'ble Defence Minister, Shri Rajnath Singh**Honouring the ex-servicemen behind our mission.
 
@@ -424,31 +408,11 @@ Moments of Pride
 
 Tap any photo to view it full-size.
 
-Honoured by the President of India
-
-A moment of national pride
-
-With the Prime Minister of India
-
 With the Defence Minister
-
-Ceremonial engagement
 
 Keynote at DEFCOM India
 
 Meeting national leadership
-
-A distinguished military career
-
-Armed forces ceremony
-
-With fellow officers
-
-Felicitation & honours
-
-A national celebration
-
-Celebrating a milestone
 
 1980.3 kWp plant inauguration
 
