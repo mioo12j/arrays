@@ -2,7 +2,7 @@
 title: About Arrays Ingenieria | Veteran-Led Solar EPC, India
 description: Founded in 2018 by ex-servicemen and led by Lt. Gen. A.R. Prasad (Retd), Arrays Ingenieria is an ISO 9001/14001/45001-certified solar EPC company.
 url: https://arraysingenieria.com/about/
-last_updated: 2026-10-13
+last_updated: 2026-11-14
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -94,6 +94,8 @@ Our Leadership
 ## Lieutenant General A.R. Prasad (Retd)
 
 AVSM, VSM, ADC, Ph.D · Former Signal Officer-in-Chief & Senior Colonel Commandant · Chief Executive Officer, INGENIERIA
+
+[Read his full profile](https://arraysingenieria.com/lt-gen-ashish-ranjan-prasad/)
 
 Ingenieria is led by a decorated military visionary and staffed entirely by former armed-forces professionals. This unique heritage means every project benefits from rigorous planning, operational excellence and an unwavering commitment to mission success.
 

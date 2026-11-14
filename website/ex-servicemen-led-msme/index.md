@@ -2,7 +2,7 @@
 title: Ex-Servicemen-Led Solar EPC MSME | Arrays Ingenieria
 description: Arrays Ingenieria is an ex-servicemen-led MSME founded by Lt. Gen. A.R. Prasad (Retd): Olive Green to Go Green, a second innings of national service.
 url: https://arraysingenieria.com/ex-servicemen-led-msme/
-last_updated: 2026-10-13
+last_updated: 2026-11-14
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -103,6 +103,8 @@ AVSM, VSM, ADC, Ph.D · Founder & Chief Executive Officer
 - Promoted to Lieutenant General on 1 August 2016
 - Former Signal Officer-in-Chief and Senior Colonel Commandant of the Corps of Signals
 - Keynote speaker at DEFCOM India, and a defence commentator on India Today, Aaj Tak and India TV
+
+[Read the full profile of Lt. Gen. Ashish Ranjan Prasad (Retd)](https://arraysingenieria.com/lt-gen-ashish-ranjan-prasad/)
 
 Sources: [Jharkhand State News, 1 Aug 2016](https://jharkhandstatenews.com/article/top-stories/964/major-general-ashish-ranjan-prasad-becomes-lt-general); [The Sentinel, 22 May 2025](https://arraysingenieria.com/recognition/#sentinel-jayshree).
 

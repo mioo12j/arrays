@@ -131,6 +131,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from content import (PROJECTS, FAQ, GLOSSARY, CLIENTS, LEADER_QUOTES, NATIONAL_FACTS, SCHEMES, TIMELINE,  # noqa: E402
                      PANCHAMRIT, PANCHAMRIT_URL, STATES, KOOMBER_ALBUM, BORPATRA_ALBUM, INSIGHTS, TRACK_RECORD)
 from articles import ARTICLES  # noqa: E402  long-form guides, one page each
+import profile as PROFILE  # noqa: E402  founder & CEO profile page
 
 PAGES.update({
     "capex-solar-epc.html": dict(path="/capex-solar-epc.html", crumb="CAPEX Solar EPC", parent="services",
@@ -176,6 +177,8 @@ PAGES.update({
         title="Contact Arrays Ingenieria | Solar EPC, Greater Noida",
         desc="Contact Arrays Ingenieria for solar EPC, installation & commissioning or civil works. Corporate office Greater Noida, branch office Madhubani, Bihar."),
 })
+PAGES[PROFILE.FILE] = dict(path="/" + PROFILE.FILE, crumb="Lt. Gen. A.R. Prasad (Retd)", parent="about", title=PROFILE.SEO_TITLE,
+                           desc=PROFILE.DESC, kind="profile")
 for _p in PROJECTS:
     PAGES[_p["file"]] = dict(path="/" + _p["file"], crumb=_p["short"], parent="projects", title=_p["title"], desc=_p["desc"])
 for _a in ARTICLES:
@@ -203,7 +206,7 @@ def page_path(fname):
 for _f, _m in PAGES.items():
     if _m["path"]:
         _m["path"] = page_url(_f)
-PARENTS = {"services": ("Services", "/#services"), "projects": ("Projects", "/projects/"),
+PARENTS = {"about": ("About", "/about/"), "services": ("Services", "/#services"), "projects": ("Projects", "/projects/"),
            "industries": ("Industries", "/industries/"), "insights": ("Insights", "/insights/"),
            "gallery": ("Photo & Video Gallery", "/gallery/")}
 SERVICE_PAGES = [p for p in PAGES if p.startswith("service-")]
@@ -714,7 +717,7 @@ PLATFORM_ICON = {
 # Top-level menu: (label, href, page keys that light it up, dropdown items or None)
 NAV = [
     ("About", "about.html", {"about", "clients", "achievements"}, [
-        ("About Us", "about.html"), ("Message from the Leadership", "leadership.html"), ("Ex-Servicemen-Led MSME", "ex-servicemen-led-msme.html"),
+        ("About Us", "about.html"), ("Message from the Leadership", "leadership.html"), ("Our Founder & CEO", "lt-gen-ashish-ranjan-prasad.html"), ("Ex-Servicemen-Led MSME", "ex-servicemen-led-msme.html"),
         ("Quality & Safety", "quality-safety.html"), ("Clients & Partners", "clients.html"), ("Achievements", "achievements.html")]),
     ("Services", "/#services", {"services", "industries"}, [
         ("CAPEX Solar EPC", "capex-solar-epc.html"), ("Installation & Commissioning", "solar-installation-commissioning.html"),
@@ -794,6 +797,7 @@ FOOTER = f"""<section class="cta-strip" aria-label="Contact Arrays Ingenieria">
           <ul>
             <li><a href="about.html">About Us</a></li>
             <li><a href="leadership.html">Message from the Leadership</a></li>
+            <li><a href="lt-gen-ashish-ranjan-prasad.html">Our Founder &amp; CEO</a></li>
             <li><a href="ex-servicemen-led-msme.html">Ex-Servicemen-Led MSME</a></li>
             <li><a href="how-it-works.html">How It Works</a></li>
             <li><a href="quality-safety.html">Quality &amp; Safety</a></li>
@@ -1814,6 +1818,74 @@ def render_article_page(a):
     return page_shell("insights", body, a["hero"][0], a["hero"][1], ld)
 
 
+def render_profile_page():
+    P = PROFILE
+    a = dict(sections=P.SECTIONS, faq=P.FAQ)
+    words = art_words(a)
+    mins = max(3, round(words / 220))
+    toc = "".join(f'<li><a href="#{art_slug(sec["h"])}">{sec["h"]}</a></li>' for sec in P.SECTIONS)
+    toc += '<li><a href="#photos">Photographs</a></li><li><a href="#faq">Frequently asked questions</a></li><li><a href="#sources">Sources</a></li>'
+    keys = "".join(f"<li>{t}</li>" for t in P.KEYS)
+    secs = "".join(f'\n      <section class="art-sec" id="{art_slug(sec["h"])}">\n        <h2>{sec["h"]}</h2>'
+                   + "".join(art_block(b) for b in sec["blocks"]) + "\n      </section>" for sec in P.SECTIONS)
+    photos = "".join(f'<figure class="art-fig" data-full="{src}" data-gallery="profile" data-caption="{esc(cap)}">'
+                     f'<img src="{src}" alt="Lt. Gen. A.R. Prasad (Retd): {esc(cap)}" loading="lazy" /><figcaption>{esc(cap)}</figcaption></figure>'
+                     for src, cap in P.GALLERY)
+    faq = "".join(f'<details class="faq"><summary>{esc(q)}</summary><div class="faq-a">{ans}</div></details>' for q, ans in P.FAQ)
+    srcs = "".join(f'<li><a href="{u}" target="_blank" rel="noopener">{esc(n)}</a></li>' for n, u in P.SOURCES)
+    url = SITE_URL + page_url(P.FILE)
+    person = {"@type": "Person", "@id": url + "#person", "name": "Ashish Ranjan Prasad",
+              "alternateName": ["Lt. Gen. A.R. Prasad", "Lt Gen AR Prasad", "Lieutenant General Ashish Ranjan Prasad"],
+              "honorificPrefix": "Lt. Gen. (Retd)", "honorificSuffix": "AVSM, VSM, ADC, Ph.D",
+              "jobTitle": "Founder and Chief Executive Officer", "worksFor": {"@id": SITE_URL + "/#organization"},
+              "image": f"{SITE_URL}/{P.PORTRAIT[0]}", "url": url, "description": P.DESC,
+              "alumniOf": {"@type": "CollegeOrUniversity", "name": "Birla Institute of Technology, Mesra"},
+              "award": ["Ati Vishisht Seva Medal (AVSM), 2017", "Vishisht Seva Medal (VSM), 2016"],
+              "hasOccupation": [{"@type": "Occupation", "name": "Signal Officer-in-Chief, Indian Army (retired 2018)"},
+                                {"@type": "Occupation", "name": "Chief Executive Officer, Arrays Ingenieria Pvt. Ltd."}],
+              "memberOf": {"@type": "Organization", "name": "Indian Army, Corps of Signals"},
+              "knowsAbout": ["Military communications", "Corps of Signals", "Solar EPC", "Renewable energy", "Defence and national security"],
+              "subjectOf": [u for _, u in P.SOURCES[:6]]}
+    plain = lambda t: html.unescape(re.sub(r"<[^>]+>", "", t))
+    ld = [{"@context": "https://schema.org", "@type": "ProfilePage", "@id": url, "url": url, "name": P.TITLE,
+           "description": P.DESC, "datePublished": ist(P.PUBLISHED), "dateModified": ist(P.UPDATED), "inLanguage": "en-IN",
+           "isPartOf": {"@id": SITE_URL + "/#website"}, "mainEntity": person},
+          {"@context": "https://schema.org", "@type": "FAQPage",
+           "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": plain(ans)}} for q, ans in P.FAQ]}]
+    body = page_hero(P.HERO[0], P.HERO[1], "Our Founder &amp; CEO",
+                     'Lt. Gen. Ashish Ranjan Prasad (Retd), <span class="text-sun">AVSM, VSM, ADC, Ph.D</span>', esc(P.SUMMARY),
+                     [("About", "about.html"), ("Lt. Gen. A.R. Prasad (Retd)", None)]) + f"""
+<div class="read-progress" aria-hidden="true"><span></span></div>
+<section class="section art-wrap">
+  <div class="container art-grid">
+    <aside class="art-toc" aria-label="On this page">
+      <details open><summary>On this page</summary><ol>{toc}</ol></details>
+    </aside>
+    <article class="art-body prose">
+      <p class="art-byline">Profile by <a href="about.html">Arrays Ingenieria</a> · <time datetime="{P.UPDATED}">Updated {fmt_date(P.UPDATED)}</time> · {mins} min read</p>
+      <figure class="art-fig" data-full="{P.PORTRAIT[0]}" data-gallery="profile" data-caption="Lt. Gen. Ashish Ranjan Prasad (Retd)"><img src="{P.PORTRAIT[0]}" alt="{esc(P.PORTRAIT[1])}" /><figcaption>Lt. Gen. Ashish Ranjan Prasad (Retd), founder and CEO of Arrays Ingenieria.</figcaption></figure>
+      <div class="ins-keys"><b>Key facts</b><ul>{keys}</ul></div>{secs}
+      <section class="art-sec" id="photos">
+        <h2>Photographs</h2>
+        <p>Moments from a life of service. Tap any photo to view it full size, or see more in the <a href="gallery.html">gallery</a>.</p>
+        <div class="prof-photos">{photos}</div>
+      </section>
+      <section class="art-sec" id="faq">
+        <h2>Frequently asked questions</h2>
+        <div class="faq-list">{faq}</div>
+      </section>
+      <section class="art-sec" id="sources">
+        <h2>Sources</h2>
+        <ol class="art-sources">{srcs}</ol>
+        <p class="art-disclaimer">This profile draws on public reports and official honours lists, linked above. Last checked {fmt_date(P.UPDATED)}.</p>
+      </section>
+      <div class="svc-other art-services"><a href="leadership.html">Message from the Leadership</a><a href="ex-servicemen-led-msme.html">Ex-Servicemen-Led MSME</a><a href="recognition.html#national-tv">Our Founder on National TV</a><a href="projects.html">Our Projects</a></div>
+    </article>
+  </div>
+</section>"""
+    return page_shell("about", body, P.HERO[0], P.HERO[1], ld)
+
+
 def render_insights_page():
     img = "assets/photos/arrays-ingenieria-industrial-rooftop-solar-array.jpg"
     tags = []
@@ -2270,6 +2342,7 @@ def write_generated_pages():
         write_page(p["file"], render_project_page(p))
     for a in ARTICLES:
         write_page(a["file"], render_article_page(a))
+    write_page(PROFILE.FILE, render_profile_page())
     for fname, render in (("free-solar-quote.html", render_quote_page), ("faq.html", render_faq_page), ("solar-glossary.html", render_glossary_page), ("insights.html", render_insights_page),
                           ("clients.html", render_clients_page)):
         write_page(fname, render())
@@ -2882,7 +2955,7 @@ def write_llms():
         m = PAGES[f]
         return f"- [{m['title'].split(' | ')[0]}]({SITE_URL}{m['path']}): {m['desc']}"
     groups = [
-        ("Company", ["about.html", "leadership.html", "ex-servicemen-led-msme.html", "quality-safety.html", "where-we-work.html",
+        ("Company", ["about.html", "leadership.html", "lt-gen-ashish-ranjan-prasad.html", "ex-servicemen-led-msme.html", "quality-safety.html", "where-we-work.html",
                      "clients.html", "achievements.html", "recognition.html", "contact.html", "free-solar-quote.html"]),
         ("Services", ["capex-solar-epc.html", "solar-installation-commissioning.html", "service-ground-mount.html", "service-rooftop.html",
                       "service-epc.html", "service-piling.html", "service-civil.html", "service-om.html", "solar-for-tea-estates.html",

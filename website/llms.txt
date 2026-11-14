@@ -16,6 +16,7 @@ Every page below also has a clean Markdown version: add `index.md` to its URL (f
 ## Company
 - [About Arrays Ingenieria](https://arraysingenieria.com/about/): Founded in 2018 by ex-servicemen and led by Lt. Gen. A.R. Prasad (Retd), Arrays Ingenieria is an ISO 9001/14001/45001-certified solar EPC company.
 - [Message from the Leadership](https://arraysingenieria.com/leadership/): A message from Lt. Gen. A.R. Prasad (Retd), AVSM, VSM, ADC, Ph.D, Chief Executive Officer of Arrays Ingenieria, the ex-servicemen-led solar MSME.
+- [Lt Gen Ashish Ranjan Prasad (Retd), CEO](https://arraysingenieria.com/lt-gen-ashish-ranjan-prasad/): Profile of Lt. Gen. Ashish Ranjan Prasad (Retd), AVSM, VSM, ADC: former Signal Officer-in-Chief of the Indian Army, founder and CEO of Arrays Ingenieria.
 - [Ex-Servicemen-Led Solar EPC MSME](https://arraysingenieria.com/ex-servicemen-led-msme/): Arrays Ingenieria is an ex-servicemen-led MSME founded by Lt. Gen. A.R. Prasad (Retd): Olive Green to Go Green, a second innings of national service.
 - [Quality, Safety & Environment (ISO)](https://arraysingenieria.com/quality-safety/): ISO 9001, ISO 14001 and ISO 45001 certified: how Arrays Ingenieria's veteran-led teams build solar plants safely, to quality and with care for the site.
 - [Where We Work: Solar Projects by State](https://arraysingenieria.com/where-we-work/): Arrays Ingenieria's solar projects across Assam, West Bengal, Bihar, Jharkhand, Uttar Pradesh, Uttarakhand, Haryana and Karnataka, state by state.
