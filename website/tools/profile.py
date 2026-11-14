@@ -12,9 +12,10 @@ DESC = ("Profile of Lt. Gen. Ashish Ranjan Prasad (Retd), AVSM, VSM, ADC: former
 PUBLISHED = "2026-11-14"
 UPDATED = "2026-11-14"
 
-HERO = ("assets/press/arrays-ingenieria-founder-ceo-lt-gen-ashish-ranjan-prasad-retd.jpg",
+HERO = ("assets/press/arrays-ingenieria-founder-ceo-lt-gen-ashish-ranjan-prasad-retd-hd.jpg",
         "Lieutenant General Ashish Ranjan Prasad (Retd), founder and CEO of Arrays Ingenieria")
-PORTRAIT = HERO
+PORTRAIT = ("assets/press/arrays-ingenieria-ceo-lt-gen-ashish-ranjan-prasad-official-portrait.jpg",
+            "Official portrait of Lt. Gen. Ashish Ranjan Prasad, AVSM, VSM, ADC, as Lieutenant General")
 
 SUMMARY = ("Thirty-seven years in the Indian Army's Corps of Signals, rising to Signal Officer-in-Chief, followed by a second "
            "innings building India's solar plants at the head of a veteran-led MSME.")
@@ -95,6 +96,9 @@ SECTIONS = [
         "the Corps of Signals. The Signal Officer-in-Chief heads the Corps at Army Headquarters in New Delhi and is responsible for "
         "the communication and information-technology backbone of the whole Army; the Senior Colonel Commandant is the senior-most "
         "officer of the Corps and the guardian of its traditions.",
+        ("fig", "assets/press/arrays-ingenieria-lt-gen-ar-prasad-signal-officer-in-chief-office.jpg",
+         "Lt. Gen. A.R. Prasad in his office as Signal Officer-in-Chief, Corps of Signals",
+         "In his office as Signal Officer-in-Chief, beneath the Senior Colonel Commandant's banner of the Corps of Signals."),
         ("h3", "Building a digital Army"),
         f"In March 2017 he addressed DEFCOM INDIA 2017, a two-day seminar organised by the Corps of Signals with the Confederation of "
         f"Indian Industry (CII) on the theme <i>\"Infrastructure and Skilled Human Resource for Digital Army\"</i>. The Press Information "
@@ -106,6 +110,9 @@ SECTIONS = [
         ("fig", "assets/press/arrays-ingenieria-founder-lt-gen-ar-prasad-defcom-india-keynote.jpg",
          "Lt. Gen. A.R. Prasad delivering the keynote at DEFCOM India",
          "Lt. Gen. A.R. Prasad as Signal Officer-in-Chief, delivering the keynote at DEFCOM India."),
+        ("fig", "assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-with-fellow-officers-hd.jpg",
+         "Lt. Gen. A.R. Prasad with General Bipin Rawat at DEFCOM India 2017",
+         "With General Bipin Rawat, then Chief of the Army Staff, at DEFCOM India 2017 on the Digital Army."),
         ("h3", "Joint communications and need-based networks"),
         f"When he retired, the news agency IANS reported that he was known for his efforts towards integrating the communications of "
         f"the three services, the Army, Navy and Air Force, and that he introduced need-based networks built on the internet and "
@@ -128,9 +135,9 @@ SECTIONS = [
              "Post-nominal used in his official designation"),
             ("Ph.D", "Doctorate", "Post-nominal used in his official designation"),
         ]),
-        ("fig", "assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-honoured-by-president-of-india.jpg",
-         "Lt. Gen. A.R. Prasad honoured by the President of India",
-         "Honoured by the President of India."),
+        ("fig", "assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-honoured-by-president-of-india-hd.jpg",
+         "Lt. Gen. A.R. Prasad with President Shri Ram Nath Kovind, holding an ADC aiguillette",
+         "With President Shri Ram Nath Kovind, holding the gold aiguillette worn by Aides-de-Camp to the President."),
     ]),
     dict(h="Retirement after 37 years of service", blocks=[
         f"Lt. Gen. Prasad retired as Signal Officer-in-Chief on 31 July 2018 ({a(IANS, 'IANS, 31 July 2018')}), after more than 37 "
@@ -186,10 +193,24 @@ SECTIONS = [
     dict(h="A voice on national television", blocks=[
         "Drawing on his years at the top of the Army's communications and technology arm, Lt. Gen. Prasad appears as a defence "
         "analyst on national news channels, including <b>India Today</b>, <b>Aaj Tak</b> and <b>India TV</b>, on border and "
-        "national-security stories. See <a href=\"recognition.html#national-tv\">our founder on national TV</a>.",
+        "national-security stories, including Aaj Tak's coverage of Operation Sindoor. See <a href=\"recognition.html#national-tv\">our founder on national TV</a>.",
+        ("fig", "assets/press/arrays-ingenieria-lt-gen-ar-prasad-aaj-tak-operation-sindoor.jpg",
+         "Lt. Gen. A.R. Prasad (Retd) on Aaj Tak during Operation Sindoor coverage",
+         "On Aaj Tak's Operation Sindoor coverage, as a defence analyst (bottom left)."),
         ("fig", "assets/press/arrays-ingenieria-lt-gen-ar-prasad-india-today-analysis.jpg",
          "Lt. Gen. A.R. Prasad (Retd) on India Today",
          "On India Today, giving expert analysis on the India-China faceoff."),
+    ]),
+    dict(h="With the nation's leaders", blocks=[
+        "Over a long career at the top of the Army, Lt. Gen. Prasad has met the country's leadership on many occasions, often with his "
+        "wife beside him: calling on President Shri Ram Nath Kovind, being greeted by President Shri Pranab Mukherjee and Prime Minister "
+        "Shri Narendra Modi at receptions, and meeting Bihar Chief Minister Shri Nitish Kumar.",
+        ("fig", "assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-rashtrapati-bhavan-hd.jpg",
+         "Lt. Gen. A.R. Prasad and his wife calling on President Shri Ram Nath Kovind",
+         "Calling on President Shri Ram Nath Kovind, with his wife."),
+        ("fig", "assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-national-ceremonial-event-hd.jpg",
+         "Lt. Gen. A.R. Prasad with Shri Ram Nath Kovind and Bihar Chief Minister Shri Nitish Kumar",
+         "With Shri Ram Nath Kovind and Bihar Chief Minister Shri Nitish Kumar."),
     ]),
     dict(h="Leadership philosophy", blocks=[
         "His message to clients and colleagues sets out how he leads the company: the values of military service applied to "
@@ -223,12 +244,20 @@ SECTIONS = [
 ]
 
 GALLERY = [
-    ("assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-with-pm-narendra-modi.jpg", "With Prime Minister Shri Narendra Modi"),
+    ("assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-with-pm-narendra-modi-hd.jpg", "With Prime Minister Shri Narendra Modi at a reception"),
+    ("assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-felicitated-hd.jpg", "Greeted by President Shri Pranab Mukherjee"),
     ("assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-with-defence-minister-rajnath-singh.jpg", "With Defence Minister Shri Rajnath Singh"),
-    ("assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-rashtrapati-bhavan.jpg", "Welcomed at Rashtrapati Bhavan"),
-    ("assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-armed-forces-ceremony.jpg", "At an armed-forces ceremony"),
-    ("assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-with-fellow-officers.jpg", "With fellow officers"),
-    ("assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-felicitated.jpg", "Felicitation and honours"),
+    ("assets/press/arrays-ingenieria-leadership-national-celebration-hd.jpg", "Greeting Bihar Chief Minister Shri Nitish Kumar"),
+    ("assets/press/arrays-ingenieria-founder-ceo-lt-gen-ashish-ranjan-prasad-retd-hd.jpg", "At his desk as Signal Officer-in-Chief"),
+    ("assets/press/arrays-ingenieria-lt-gen-ar-prasad-vijay-chowk-new-delhi.jpg", "At Vijay Chowk, New Delhi, in ceremonial uniform"),
+    ("assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-armed-forces-ceremony-hd.jpg", "At a ceremonial event with his wife, among tri-service bandsmen"),
+    ("assets/press/arrays-ingenieria-lt-gen-ar-prasad-winter-visit.jpg", "On a winter visit, with the national flag and Army colours"),
+    ("assets/press/arrays-ingenieria-leadership-milestone-celebration-hd.jpg", "With his wife and Shri Amitabh Bachchan"),
+    ("assets/press/arrays-ingenieria-lt-gen-ar-prasad-with-wife-garden.jpg", "With his wife"),
+    ("assets/press/arrays-ingenieria-lt-gen-ar-prasad-with-wife-at-home.jpg", "With his wife at home"),
+    ("assets/press/arrays-ingenieria-lt-gen-ar-prasad-aaj-tak-breaking-news-hd.jpg", "Breaking-news analysis on Aaj Tak"),
+    ("assets/press/arrays-ingenieria-lt-gen-ar-prasad-aaj-tak-panel-hd.jpg", "On Aaj Tak as a defence expert"),
+    ("assets/press/arrays-ingenieria-lt-gen-ar-prasad-india-tv-studio-panel.jpg", "On an India TV studio panel"),
 ]
 
 FAQ = [

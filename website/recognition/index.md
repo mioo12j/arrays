@@ -2,7 +2,7 @@
 title: Arrays Ingenieria in the News | CM Inauguration, TV & Press
 description: Koomber solar plant inaugurated by Assam CM Dr Himanta Biswa Sarma; coverage on CMO Assam, The Sentinel, NE Reports, Prerna Bharati and Dainik Bhaskar.
 url: https://arraysingenieria.com/recognition/
-last_updated: 2026-10-13
+last_updated: 2026-11-14
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 

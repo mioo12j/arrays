@@ -14,7 +14,7 @@ Solar plants we have built from Assam's tea gardens to Karnataka's solar parks, 
 
 Photos
 
-## 103 Photos from Our Projects & Milestones
+## 111 Photos from Our Projects & Milestones
 
 Filter by category and tap any photo to view it full size.
 
@@ -192,37 +192,53 @@ Arrays Ingenieria's welcome banner for the Chief Minister, with Lt. Gen. A.R. Pr
 
 India Today: expert analysis on the India–China faceoff
 
-Aaj Tak: prime-time national debate panellist
+Aaj Tak: on the panel as a defence expert
+
+Aaj Tak: Operation Sindoor coverage, as a defence analyst
 
 India TV: border & defence coverage
 
+India TV: on the studio panel during breaking war coverage
+
 Aaj Tak: breaking-news analysis
 
-Honoured by the President of India
+Official portrait as Lieutenant General
 
-Welcomed at Rashtrapati Bhavan
+With President Shri Ram Nath Kovind, holding an ADC aiguillette
 
-With Prime Minister Shri Narendra Modi
+Calling on President Shri Ram Nath Kovind, with his wife
+
+With Prime Minister Shri Narendra Modi at a reception
+
+Greeted by President Shri Pranab Mukherjee at a reception
 
 With Defence Minister Shri Rajnath Singh
 
-At a national ceremonial event
+With General Bipin Rawat, Chief of the Army Staff, at DEFCOM India 2017
 
 Keynote at DEFCOM India
 
+With Shri Ram Nath Kovind and Bihar Chief Minister Shri Nitish Kumar
+
+Greeting Bihar Chief Minister Shri Nitish Kumar
+
+In his office as Signal Officer-in-Chief & Senior Colonel Commandant
+
+At his desk as Signal Officer-in-Chief
+
+At Vijay Chowk, New Delhi, with North and South Block lit up
+
+At a ceremonial event with his wife, among tri-service bandsmen
+
 Meeting national leadership
 
-A distinguished military career
+With his wife and Shri Amitabh Bachchan
 
-Armed forces ceremony
+On a winter visit, with the national flag and Army colours
 
-With fellow officers
+With his wife
 
-Felicitation & honours
-
-A national celebration
-
-Celebrating a milestone
+With his wife at home
 
 Videos
 
