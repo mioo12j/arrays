@@ -412,7 +412,7 @@ With the Defence Minister
 
 Keynote at DEFCOM India
 
-Meeting national leadership
+With the Governor of Jharkhand, Ranchi
 
 1980.3 kWp plant inauguration
 

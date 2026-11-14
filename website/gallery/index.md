@@ -198,7 +198,7 @@ With Defence Minister Shri Rajnath Singh
 
 Keynote at DEFCOM India
 
-Meeting national leadership
+With the Governor of Jharkhand, Ranchi
 
 Videos
 
