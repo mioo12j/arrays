@@ -12,8 +12,8 @@ DESC = ("Profile of Lt. Gen. Ashish Ranjan Prasad (Retd), AVSM, VSM, ADC: former
 PUBLISHED = "2026-11-14"
 UPDATED = "2026-11-14"
 
-HERO = ("assets/press/arrays-ingenieria-founder-ceo-lt-gen-ashish-ranjan-prasad-retd-hd.jpg",
-        "Lieutenant General Ashish Ranjan Prasad (Retd), founder and CEO of Arrays Ingenieria")
+HERO = ("assets/press/arrays-ingenieria-ceo-lt-gen-ar-prasad-honoured-by-president-of-india-hd.jpg",
+        "Lieutenant General Ashish Ranjan Prasad (Retd) with President Shri Ram Nath Kovind")
 PORTRAIT = ("assets/press/arrays-ingenieria-ceo-lt-gen-ashish-ranjan-prasad-official-portrait.jpg",
             "Official portrait of Lt. Gen. Ashish Ranjan Prasad, AVSM, VSM, ADC, as Lieutenant General")
 
