@@ -2,7 +2,7 @@
 title: Assam CM Opens 595 kWp Koomber Solar | Arrays Ingenieria
 description: Assam CM Dr Himanta Biswa Sarma inaugurated the 595 kWp solar plant at Koomber Tea Estate, Cachar, on 1 Oct 2026. Installation partner: Arrays Ingenieria.
 url: https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/
-last_updated: 2026-10-13
+last_updated: 2026-11-14
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -189,4 +189,4 @@ More Case Studies
 
 ## Other Projects by Arrays Ingenieria
 
-[Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arraysingenieria.com/project-jayshree-tea-1mw-solar-assam/)[Tea Estate · Ground-Mount: **Orangajuli Tea Estate: 450 kWp Ground-Mount Solar Plant**450 kWp · Orangajuli, Panerihaat, Udalguri district, AssamRead the case study](https://arraysingenieria.com/project-orangajuli-tea-estate-450kw-solar/)[Tea Estate · Ground-Mount: **Borpatra (Barpatra) Tea Estate: 230 kWp On-Grid Solar Plant**230 kWp · Borhat, Sivasagar district, AssamRead the case study](https://arraysingenieria.com/project-barpatra-tea-estate-230kw-solar/)
+[Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arraysingenieria.com/project-jayshree-tea-1mw-solar-assam/)[Tea Estates · Ground-Mount I&C: **Dewan Group of Tea Estates: 1940 kWp Ground-Mount Solar**1940 kWp (735 + 620 + 585 kWp) · Dewan, Burtoll and Labac Tea Estates, P.O. Dewan, Cachar district, Assam 788102Read the case study](https://arraysingenieria.com/project-dewan-group-tea-estates-1940kwp-solar-assam/)[Tea Estate · Ground-Mount: **Orangajuli Tea Estate: 450 kWp Ground-Mount Solar Plant**450 kWp · Orangajuli, Panerihaat, Udalguri district, AssamRead the case study](https://arraysingenieria.com/project-orangajuli-tea-estate-450kw-solar/)

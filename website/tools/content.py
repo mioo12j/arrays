@@ -395,7 +395,7 @@ CLIENTS = [
      ["project-super-smelters-1980kwp-rooftop-solar.html", "project-amalgamated-plantations-assam-tea-estates-solar.html",
       "project-tata-motors-jamshedpur-5-5mw-solar-piling.html", "project-dcm-hisar-10mw-solar-civil-works.html"]),
     ("Jay Shree Tea & Industries Ltd. (BK Birla Group)", "Client",
-     "1035 kWp across Towkok and Manjushree Tea Estates, and solar plants at the Dewan, Labac and Burtoll gardens of the Dewan Group of Tea Estates.",
+     "1035 kWp across Towkok and Manjushree Tea Estates, and 1940 kWp at the Dewan (735), Burtoll (620) and Labac (585 kWp) gardens of the Dewan Group of Tea Estates.",
      ["project-jayshree-tea-1mw-solar-assam.html"]),
     ("Goodricke Group", "Plant owner",
      "Solar plants at Koomber (595 kWp, inaugurated by the Chief Minister of Assam), Orangajuli (450 kWp) and Barpatra (230 kWp) Tea Estates under the 3.11 MW programme with Tata Power Renewable Energy and Sustvest, and the 400 kWp plant at Harmutty Tea Estate, North Lakhimpur; Goodricke has issued certificates of appreciation for Koomber, Borpatra and Harmutty.",
@@ -579,8 +579,8 @@ TIMELINE = [
      "Tata Power outline agreement for pile foundations on the 300 MW SECI project.", "project-seci-300mw-koppal-pile-foundation.html"),
     ("May 2025", "2025-05", "Jay Shree Tea's first solar plants",
      "Inaugurated on 20 May; reported by The Sentinel and announced by Jay Shree Tea.", "recognition.html#sentinel-jayshree"),
-    ("Nov 2025", "2025-11", "Dewan Group of Tea Estates",
-     "Solar plants at Dewan, Labac and Burtoll for Jay Shree Tea.", "recognition.html#jayshree-dewan"),
+    ("Jan 2026", "2026-01", "Dewan Group of Tea Estates, 1940 kWp",
+     "Plants at Dewan, Burtoll and Labac for Jay Shree Tea, commissioned on 8 January.", "project-dewan-group-tea-estates-1940kwp-solar-assam.html"),
     ("Mar 2026", "2026-03", "Sustvest, 1711.66 kWp",
      "Appointed for supply, installation and commissioning of an on-grid project in Assam.", "project-assam-1711kwp-on-grid-solar.html"),
     ("Sep 2026", "2026-09", "Orangajuli and Borpatra",
@@ -1219,6 +1219,7 @@ TRACK_RECORD = [
     ("2024-25", "A K Automatics, Rohtak", "531 kWp", "Haryana", "Rooftop I&C, BOS, module cleaning"),
     ("2025", "SECI 300 MW solar project, Koppal", "300 MW", "Karnataka", "Pile foundations; DC installation: tracker modules, string combiner boxes, cable trenching and terminations"),
     ("2025", "YIAPL, Noida International Airport", "14.36 MW", "Uttar Pradesh", "Pile foundations, chain-link fencing"),
+    ("2025-26", "Jay Shree Tea, Dewan Group: Dewan, Burtoll, Labac", "1940 kWp (735 + 620 + 585)", "Assam", "BOS supply, installation & commissioning"),
     ("2026", "Luhit Tea Estate, Golaghat", "488 kWp", "Assam", "I&C with BOS services"),
     ("2026", "Monokholi and Kadamba Tea Estates", "220 kWp and 234 kWp", "Assam", "I&C with BOS services"),
     ("2026", "Amalgamated project for SolarGridX (Sustvest)", "2862 kWp", "Assam", "BOS works, piling, transport"),
@@ -1265,7 +1266,54 @@ PROJECTS.append(dict(
 ))
 
 # Case-study order: the Chief Minister's inauguration, then installation & commissioning work, then piling and civil works.
-_ORDER = ["koomber", "jayshree", "orangajuli", "barpatra", "harmutty", "super-smelters", "amalgamated", "rossell", "balaji", "srmb", "apar",
+# Jay Shree Tea, Dewan Group of Tea Estates: facts from Dewan Group's work completion certificate (22 Jan 2026)
+# and the three certificates of appreciation (Dewan 735, Burtoll 620, Labac 585 kWp).
+PROJECTS.append(dict(
+    file="project-dewan-group-tea-estates-1940kwp-solar-assam.html",
+    name="Dewan Group of Tea Estates: 1940 kWp Ground-Mount Solar",
+    short="Jay Shree Tea, Cachar, Assam · 1940 kWp",
+    title="1940 kWp Solar, Dewan Group Tea Estates | Arrays Ingenieria",
+    desc="Case study: supply of BOS plus installation & commissioning of 1940 kWp of ground-mount solar at Dewan, Burtoll and Labac tea estates, Cachar, Assam.",
+    capacity="1940 kWp (735 + 620 + 585 kWp)", kind="Ground-mounted, on-grid (three plants)",
+    location="Dewan, Burtoll and Labac Tea Estates, P.O. Dewan, Cachar district, Assam 788102",
+    client="Jay Shree Tea & Industries Ltd. (BK Birla Group), Dewan Group of Tea Estates",
+    partner="Tata Power Renewable Energy Ltd. (TPREL)",
+    role="Implementing partner of TPREL: supply of balance of system, installation & commissioning",
+    year="2025-26 (commissioned 8 January 2026)", cat="ground", tag="Tea Estates · Ground-Mount I&C",
+    hero="assets/press/arrays-ingenieria-solar-plant-commissioning-ceremony.jpg",
+    hero_alt="Solar power plant commissioning ceremony, Arrays Ingenieria",
+    intro="Three ground-mounted, on-grid solar plants, 1940 kWp in all, for the Dewan Group of Tea Estates of Jay Shree Tea & Industries "
+          "(BK Birla Group) in Cachar, Assam: 735 kWp at Dewan, 620 kWp at Burtoll and 585 kWp at Labac.",
+    body=["Arrays Ingenieria worked as the implementing partner of Tata Power Renewable Energy Ltd. (TPREL). The work order is dated "
+          "25 June 2025; the scope covered supply of the balance of system along with installation & commissioning of the 1940 kWp "
+          "grid-connected solar power generation system.",
+          "Work began on 9 October 2025 and was completed on 8 January 2026, the commissioning date. In its work completion certificate "
+          "of 22 January 2026, the Dewan Group of Tea Estates confirms that the plants are fully operational, have been taken over, and that "
+          "performance has been verified and found to meet the agreed standards, to the complete satisfaction of the Dewan Group and TPREL.",
+          "Jay Shree Tea also issued a certificate of appreciation for each plant, citing Arrays Ingenieria's professionalism in installation "
+          "and commissioning: \"Their competence is indeed praiseworthy.\" This was the second Jay Shree Tea solar project for Arrays "
+          "Ingenieria, after the 1035 kWp at Towkok and Manjushree."],
+    scope=["Supply of balance of system (BOS)", "Installation of the ground-mount plants at three estates",
+           "Testing and commissioning of the 1940 kWp grid-connected system", "Handover to the Dewan Group and TPREL"],
+    photos=[],
+    docs=[("assets/certs/arrays-ingenieria-jay-shree-tea-dewan-group-1940kwp-work-completion-certificate.jpg", "Dewan Group of Tea Estates work completion certificate: 1940 kWp, commissioned 8 Jan 2026 (project value withheld)"),
+          ("assets/certs/arrays-ingenieria-jay-shree-tea-dewan-735kwp-certificate-of-appreciation.jpg", "Jay Shree Tea certificate of appreciation: 735 kWp, Dewan Tea Estate"),
+          ("assets/certs/arrays-ingenieria-jay-shree-tea-burtoll-620kwp-certificate-of-appreciation.jpg", "Jay Shree Tea certificate of appreciation: 620 kWp, Burtoll Tea Estate"),
+          ("assets/certs/arrays-ingenieria-jay-shree-tea-labac-585kwp-certificate-of-appreciation.jpg", "Jay Shree Tea certificate of appreciation: 585 kWp, Labac Tea Estate")],
+    coverage=["jayshree-dewan"],
+    services=["solar-installation-commissioning.html", "service-ground-mount.html", "solar-for-tea-estates.html"],
+    ic_scope="ground",
+    phases=[("25 Jun 2025", "Work order", "Work order for BOS supply and installation & commissioning of 1940 kWp."),
+            ("9 Oct 2025", "Work begins", "Installation starts across Dewan, Burtoll and Labac Tea Estates."),
+            ("8 Jan 2026", "Commissioned", "All three plants completed and commissioned; performance verified."),
+            ("22 Jan 2026", "Completion certificate", "Dewan Group confirms handover to its complete satisfaction and TPREL's.")],
+    detail=[("Three estates, one schedule", "Dewan (735 kWp), Burtoll (620 kWp) and Labac (585 kWp) were built and commissioned together in "
+             "three months, from 9 October 2025 to 8 January 2026."),
+            ("Documented completion", "A work completion certificate and three certificates of appreciation from the client record "
+             "the result, plant by plant.")],
+))
+
+_ORDER = ["koomber", "jayshree", "dewan-group", "orangajuli", "barpatra", "harmutty", "super-smelters", "amalgamated", "rossell", "balaji", "srmb", "apar",
           "tcpl", "assam-1711", "tata-motors", "dcm", "yiapl", "seci"]
 PROJECTS.sort(key=lambda p: next(i for i, k in enumerate(_ORDER) if k in p["file"]))
 

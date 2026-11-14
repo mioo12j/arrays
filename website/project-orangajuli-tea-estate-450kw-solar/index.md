@@ -2,7 +2,7 @@
 title: 450 kWp Solar, Orangajuli Tea Estate | Arrays Ingenieria
 description: Case study: 450 kWp grid-connected ground-mount solar plant at Goodricke's Orangajuli Tea Estate, Udalguri, Assam, commissioned on Janmashtami 2026.
 url: https://arraysingenieria.com/project-orangajuli-tea-estate-450kw-solar/
-last_updated: 2026-10-11
+last_updated: 2026-11-14
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -72,4 +72,4 @@ More Case Studies
 
 ## Other Projects by Arrays Ingenieria
 
-[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arraysingenieria.com/project-jayshree-tea-1mw-solar-assam/)[Tea Estate · Ground-Mount: **Borpatra (Barpatra) Tea Estate: 230 kWp On-Grid Solar Plant**230 kWp · Borhat, Sivasagar district, AssamRead the case study](https://arraysingenieria.com/project-barpatra-tea-estate-230kw-solar/)
+[Tea Estate · Inaugurated by the CM: **Koomber Tea Estate: 595 kWp Solar Plant, Inaugurated by the Chief Minister of Assam**595 kWp · Koomber Tea Garden, Silchar, Cachar district (Barak Valley), AssamRead the case study](https://arraysingenieria.com/project-koomber-tea-estate-595kwp-solar-cm-inauguration/)[Tea Estate · Ground-Mount: **Jay Shree Tea: 1 MW Solar at Towkok & Manjushree Tea Estates**1035 kWp (535 + 500 kWp) · Sonari, Charaideo district, AssamRead the case study](https://arraysingenieria.com/project-jayshree-tea-1mw-solar-assam/)[Tea Estates · Ground-Mount I&C: **Dewan Group of Tea Estates: 1940 kWp Ground-Mount Solar**1940 kWp (735 + 620 + 585 kWp) · Dewan, Burtoll and Labac Tea Estates, P.O. Dewan, Cachar district, Assam 788102Read the case study](https://arraysingenieria.com/project-dewan-group-tea-estates-1940kwp-solar-assam/)

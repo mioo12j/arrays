@@ -2,7 +2,7 @@
 title: Awards, Client Certificates & ISO | Arrays Ingenieria
 description: Client appreciation from Jay Shree Tea, Super Smelters & Bharat Petroleum, ISO 9001, 14001 & 45001 certification and other recognition we have earned.
 url: https://arraysingenieria.com/achievements/
-last_updated: 2026-10-11
+last_updated: 2026-11-14
 source: Arrays Ingenieria (Arrays Ingenieria Pvt. Ltd.)
 ---
 
@@ -53,6 +53,30 @@ Jay Shree Tea
 #### 535 kWp Ground-Mount
 
 Towkok Tea Estate, Assam
+
+Jay Shree Tea
+
+#### 1940 kWp, Work Completed
+
+Dewan Group of Tea Estates, Cachar, Assam
+
+Jay Shree Tea
+
+#### 735 kWp Ground-Mount
+
+Dewan Tea Estate, Assam
+
+Jay Shree Tea
+
+#### 620 kWp Ground-Mount
+
+Burtoll Tea Estate, Assam
+
+Jay Shree Tea
+
+#### 585 kWp Ground-Mount
+
+Labac Tea Estate, Assam
 
 Super Smelters Ltd.
 
