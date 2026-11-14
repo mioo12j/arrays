@@ -338,7 +338,7 @@ GALLERY = [
      "ISO 45001:2018 occupational health and safety certificate of Arrays Ingenieria Pvt. Ltd."),
     ("assets/certs/arrays-ingenieria-india-5000-msme-award.jpg", "certificates", "India 5000 Best MSME Awards: nomination for quality excellence (2024)",
      "India 5000 Best MSME Award for Quality Excellence nomination, Arrays Ingenieria Pvt. Ltd."),
-    ("assets/certs/goodricke-appreciation-koomber-595kwp-arrays-ingenieria.jpg", "certificates cm",
+    ("assets/certs/goodricke-appreciation-koomber-595kwp-arrays-ingenieria-signed.jpg", "certificates cm",
      "Goodricke: Certificate of Appreciation, installation & commissioning of 595 kWp at Koomber Tea Garden",
      "Goodricke certificate of appreciation to Arrays Ingenieria for the 595 kWp Koomber Tea Garden solar plant"),
     ("assets/harmutty/arrays-ingenieria-ex-servicemen-led-harmutty-tea-estate-400kwp-solar-ground-mount-array-inauguration-banner.jpg", "projects events",
@@ -353,12 +353,12 @@ GALLERY = [
     ("assets/certs/goodricke-appreciation-harmutty-400kwp-arrays-ingenieria.jpg", "certificates",
      "Goodricke: Certificate of Appreciation, installation & commissioning of 400 kWp at Harmutty Tea Estate",
      "Goodricke certificate of appreciation to Arrays Ingenieria for the 400 kWp Harmutty Tea Estate solar plant, North Lakhimpur, Assam"),
-    ("assets/certs/goodricke-appreciation-borpatra-230kwp-arrays-ingenieria.jpg", "certificates",
+    ("assets/certs/goodricke-appreciation-borpatra-230kwp-arrays-ingenieria-signed.jpg", "certificates",
      "Goodricke: Certificate of Appreciation, installation & commissioning of 230 kWp at Borpatra Tea Garden",
      "Goodricke certificate of appreciation to Arrays Ingenieria for the 230 kWp Borpatra Tea Garden solar plant"),
-    ("assets/certs/arrays-ingenieria-jay-shree-tea-towkok-535kwp-certificate-of-appreciation.jpg", "certificates", "Jay Shree Tea (BK Birla Group): appreciation for 535 kWp Towkok solar",
+    ("assets/certs/arrays-ingenieria-jay-shree-tea-towkok-535kwp-certificate-of-appreciation-signed.jpg", "certificates", "Jay Shree Tea (BK Birla Group): appreciation for 535 kWp Towkok solar",
      "Jay Shree Tea certificate of appreciation to Arrays Ingenieria for the 535 kWp Towkok solar plant"),
-    ("assets/certs/arrays-ingenieria-jay-shree-tea-500kwp-certificate-of-appreciation.jpg", "certificates", "Jay Shree Tea: appreciation for 500 kWp ground-mount solar",
+    ("assets/certs/arrays-ingenieria-jay-shree-tea-500kwp-certificate-of-appreciation-signed.jpg", "certificates", "Jay Shree Tea: appreciation for 500 kWp ground-mount solar",
      "Jay Shree Tea certificate of appreciation to Arrays Ingenieria for a 500 kWp solar plant"),
     ("assets/certs/arrays-ingenieria-jay-shree-tea-dewan-group-1940kwp-work-completion-certificate.jpg", "certificates", "Jay Shree Tea, Dewan Group: work completion certificate, 1940 kWp",
      "Dewan Group of Tea Estates work completion certificate to Arrays Ingenieria for 1940 kWp of grid-connected solar"),
@@ -368,7 +368,7 @@ GALLERY = [
      "Jay Shree Tea certificate of appreciation to Arrays Ingenieria for the 620 kWp Burtoll Tea Estate solar plant"),
     ("assets/certs/arrays-ingenieria-jay-shree-tea-labac-585kwp-certificate-of-appreciation.jpg", "certificates", "Jay Shree Tea: appreciation for 585 kWp, Labac Tea Estate",
      "Jay Shree Tea certificate of appreciation to Arrays Ingenieria for the 585 kWp Labac Tea Estate solar plant"),
-    ("assets/certs/arrays-ingenieria-super-smelters-certificate-of-appreciation.jpg", "certificates", "Super Smelters Ltd.: letter of appreciation, 1980.3 kWp solar",
+    ("assets/certs/arrays-ingenieria-super-smelters-certificate-of-appreciation-signed.jpg", "certificates", "Super Smelters Ltd.: letter of appreciation, 1980.3 kWp solar",
      "Super Smelters Ltd. letter of appreciation to Arrays Ingenieria for the 1980.3 kWp solar plant"),
     ("assets/certs/arrays-ingenieria-bharat-petroleum-certificate-of-appreciation.jpg", "certificates", "Bharat Petroleum: appreciation for RCC rooftop on-grid solar",
      "Bharat Petroleum certificate of appreciation to Arrays Ingenieria for rooftop solar"),
@@ -3154,7 +3154,7 @@ def write_redirects():
     # Only 301 rules: they work the same on Cloudflare Pages and Netlify (Cloudflare ignores 404/forced rules).
     lines += ["/index.html  /  301", "/index  /  301",
               "/privacy.html  /privacy-policy/  301", "/privacy  /privacy-policy/  301", "/privacy/  /privacy-policy/  301",
-              "/tools/*  /  301"]
+              "/tools/*  /  301"] + [f"/assets/certs/{n}.jpg  /assets/certs/{n}-signed.jpg  301" for n in ('goodricke-appreciation-koomber-595kwp-arrays-ingenieria', 'goodricke-appreciation-borpatra-230kwp-arrays-ingenieria', 'arrays-ingenieria-jay-shree-tea-towkok-535kwp-certificate-of-appreciation', 'arrays-ingenieria-jay-shree-tea-500kwp-certificate-of-appreciation', 'arrays-ingenieria-super-smelters-certificate-of-appreciation')]
     open(os.path.join(ROOT, "_redirects"), "w", encoding="utf8").write("\n".join(lines) + "\n")
 
 
