@@ -2389,3 +2389,4 @@ main > .section--dark + .section--dark { padding-top: 0; }
 .prof-photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-top: 1.2em; }
 .prof-photos .art-fig { margin: 0; }
 .prof-photos .art-fig img { aspect-ratio: 4 / 3; max-height: none; }
+.page-hero__bg img[src*="honoured-by-president-of-india"] { object-position: 50% 18%; }
